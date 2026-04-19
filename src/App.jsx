@@ -103,6 +103,20 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 @keyframes starDriftA{from{transform:translateY(0)}to{transform:translateY(-240px)}}
 @keyframes starDriftB{from{transform:translateY(0)}to{transform:translateY(-360px)}}
 @media(prefers-reduced-motion:reduce){.hero-stars::before,.hero-stars::after{animation:none}}
+.hero-mobile-logo {
+  display: none;
+}
+
+@media(max-width:768px) {
+  .hero-mobile-logo {
+    display: block;
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 18px rgba(0,200,240,.4));
+  }
+}
 
 .hero-left{position:relative;z-index:2;padding:120px 56px 80px 44px;display:flex;flex-direction:column;justify-content:center}
 .hero-pill{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;margin-bottom:28px;border:1px solid rgba(0,200,240,.2);background:rgba(0,200,240,.06);font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);width:fit-content}
@@ -382,6 +396,9 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
   .hero-btns{margin-top:20px;gap:10px}
   .btn-primary,.btn-secondary{padding:10px 18px;font-size:11px;letter-spacing:.1em}
   .hero-stats{display:none}
+  .hero-h1 {
+  display: none;
+}
 
   /* TICKER */
   .ticker-tag{font-size:8px;padding:0 10px;letter-spacing:.1em}
@@ -767,6 +784,7 @@ export default function AltairFC() {
         <div className="hero-split-line"/>
         <div className="hero-fade-b"/>
         <div className="hero-left">
+          <img src="/logo.png" alt="ALTAIR" className="hero-mobile-logo" />
           <div className="hero-pill">
             <span className="hero-pill-dot"/>
             FC 26 | 1. Lig · eMajor League · Season 2026
