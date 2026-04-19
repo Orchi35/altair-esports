@@ -330,7 +330,7 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 
 /* ── SQUAD ───────────────────────── */
 .squad-section{background:var(--ink2);border-top:1px solid var(--rim);border-bottom:1px solid var(--rim)}
-.pos-group{margin-bottom:52px}
+.pos-group{margin-bottom:20px}
 .pos-group:last-child{margin-bottom:0}
 .pos-group-label{display:flex;align-items:center;gap:10px;padding-bottom:14px;margin-bottom:22px;border-bottom:1px solid var(--rim);font-family:var(--fc);font-size:10px;font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
 .pos-group-pill{display:inline-flex;align-items:center;justify-content:center;padding:2px 9px;background:var(--cdim);border:1px solid rgba(0,200,240,.18);font-family:var(--fc);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
@@ -354,9 +354,9 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 .pstat-lbl{font-family:var(--fc);font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:2px}
 
 /* ── SPONSORS ────────────────────── */
-.sponsors-section{padding:72px 44px;border-top:1px solid var(--rim);border-bottom:1px solid var(--rim)}
+.sponsors-section{padding:72px 44px;border-top:1px solid var(--rim);border-bottom:1px solid var(--rim), text-align: left;}
 .sp-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;margin-bottom:64px}
-.sp-pitch-body{font-size:15px;font-weight:300;line-height:1.7;color:var(--silver);margin-top:14px}
+.sp-pitch-body{font-size:15px;font-weight:300;line-height:1.7;color:var(--silver);margin-top:14px;text-align: left;}
 .sp-kpis{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .sp-kpi{padding:22px;border:1px solid var(--rim);background:var(--ink2);transition:border-color .2s}
 .sp-kpi:hover{border-color:rgba(0,200,240,.18)}
@@ -394,8 +394,8 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 /* ── FOOTER ──────────────────────── */
 .footer{padding:56px 44px 32px;border-top:1px solid var(--rim)}
 .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:52px;margin-bottom:44px;padding-bottom:44px;border-bottom:1px solid var(--rim)}
-.footer-brand-name{font-family:var(--fd);font-size:18px;letter-spacing:.07em;text-transform:uppercase;color:var(--white)}
-.footer-brand-tag{font-family:var(--fc);font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin:5px 0 14px;opacity:.8}
+.footer-brand-name{font-family:var(--fd);font-size:35px;letter-spacing:.07em;text-transform:uppercase;color:var(--white)}
+.footer-brand-tag{font-family:var(--fc);font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin:5px 0 14px;opacity:.8}
 .footer-bio{font-size:13px;color:var(--muted);line-height:1.7;max-width:270px}
 .footer-col-title{font-family:var(--fc);font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--silver);margin-bottom:18px}
 .footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
@@ -791,7 +791,7 @@ export default function AltairFC() {
       </section>
 
       {/* SQUAD */}
-      <section className="section squad-section" id="squad">
+      <section className="section squad-section" id="squad" style={{paddingTop:30, paddingBottom:30}}>
         <div className="sec-hdr">
           <div className="sec-ey">Season 2026 · Full Squad</div>
           <h2 className="sec-h">THE <em>SQUAD</em></h2>
@@ -812,12 +812,12 @@ export default function AltairFC() {
 
       {/* SPONSORS */}
       <section className="sponsors-section" id="sponsors">
-        <div className="sp-layout">
-          <div>
-            <div className="sec-ey">Partners &amp; Sponsors</div>
-            <h2 className="sec-h" style={{marginBottom:14}}>OUR <em>PARTNERS</em></h2>
-            <p className="sp-pitch-body">ALTAIR partners with brands that share our drive for excellence. We deliver an authentic, engaged audience at the intersection of football and competitive gaming.</p>
-          </div>
+        <div className="sec-ey" style={{marginBottom:10,marginTop:-50}}>Partners &amp; Sponsors</div>
+<div className="sp-layout">
+  <div>
+    <h2 className="sec-h" style={{marginBottom:14}}>OUR <em>PARTNERS</em></h2>
+    ALTAIR partners with brands that share our drive for excellence. We deliver an authentic, engaged audience at the intersection of football and competitive gaming.
+  </div>
           <div className="sp-kpis">
             {[{val:"200K+",lbl:"Combined Reach"},{val:"*",lbl:"VPG Club Ranking"},{val:"1",lbl:"Titles Won"},{val:"14",lbl:"Active Players"}].map((k,i)=>(
               <div key={i} className="sp-kpi"><div className="sp-kpi-val">{k.val}</div><div className="sp-kpi-lbl">{k.lbl}</div></div>
@@ -840,7 +840,7 @@ export default function AltairFC() {
       </section>
 
       {/* SOCIAL */}
-      <section className="social-section" id="broadcast">
+      <section className="social-section" id="broadcast" style={{paddingTop:0, paddingBottom:50}}>
         <div className="sec-hdr">
           <div className="sec-ey">Broadcasts &amp; Community</div>
           <h2 className="sec-h">FOLLOW <em>ALTAIR</em></h2>
@@ -864,7 +864,7 @@ export default function AltairFC() {
           <div>
             <div className="footer-brand-name">ALTAIR eSports</div>
             <div className="footer-brand-tag">FC 26 Pro Clubs · eMajor League</div>
-            <p className="footer-bio">A competitive FC 26 Pro Clubs organisation built for structured league competition. Discipline, teamwork, and the relentless pursuit of promotion.</p>
+            <img src="/logo.png" alt="ALTAIR eSports" style={{width:150, height:150, objectFit:"contain", marginTop:16, marginBottom:4, filter:"drop-shadow(0 0 7px rgba(0,200,240,.4))"}} />
           </div>
           <div>
             <div className="footer-col-title">Club</div>
