@@ -115,6 +115,86 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
     object-fit: contain;
     margin-bottom: 20px;
     filter: drop-shadow(0 0 18px rgba(0,200,240,.4));
+     /* RESULTS — mobil kart layout */
+  .results-wrap { gap: 6px }
+
+  .result-row {
+    display: block;
+    min-height: auto;
+    border-left: 3px solid var(--rim);
+  }
+  .result-row.rW { border-left-color: var(--green) }
+  .result-row.rL { border-left-color: var(--red) }
+  .result-row.rD { border-left-color: var(--draw) }
+  .result-row::after { display: none }
+
+  /* meta — üst şerit */
+  .rr-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--rim);
+    background: rgba(255,255,255,.02);
+  }
+  .rr-date { display: none }
+  .rr-matchday { font-size: 8px }
+  .rr-comp { font-size: 10px; margin-top: 0 }
+
+  /* teams + score — yatay üç kolon */
+  .rr-team-row-mobile {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  /* home — sağa hizalı */
+  .rr-team.home {
+    justify-content: flex-end;
+    flex-direction: row;
+    padding: 0;
+    gap: 7px;
+  }
+  .rr-team.home .rr-team-info {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  /* away — sola hizalı */
+  .rr-team.away {
+    justify-content: flex-start;
+    flex-direction: row;
+    padding: 0;
+    gap: 7px;
+  }
+  .rr-team.away .rr-team-info {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .rr-name { font-size: 11px }
+  .rr-venue { font-size: 8px }
+  .rr-badge { width: 26px; height: 26px; font-size: 7px }
+
+  /* skor — orta */
+  .rr-score {
+    justify-content: center;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .rr-score::before { display: none }
+  .rr-score-val { font-size: 18px; min-width: 16px }
+  .rr-score-sep { font-size: 12px; padding: 0 3px }
+
+  /* result pill — alt */
+  .rr-result-col {
+    justify-content: flex-start;
+    padding: 0 12px 8px;
+  }
+  .rr-result-pill { font-size: 8px; padding: 3px 8px }
+}
   }
 }
 
