@@ -254,7 +254,7 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 /* table */
 .lts-table-wrap{position:relative;z-index:1}
 .lts-col-head{display:grid;grid-template-columns:56px 1fr 52px 52px 52px 52px 64px 88px 64px;padding:9px 44px;border-bottom:1px solid var(--rim);background:rgba(255,255,255,.015)}
-.lts-ch{font-family:var(--fc);font-size:9px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);text-align:center}
+.lts-ch{font-family:var(--fc);font-size:15px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);text-align:center}
 .lts-ch:nth-child(2){text-align:left}
 
 .lts-row{display:grid;grid-template-columns:56px 1fr 52px 52px 52px 52px 64px 88px 64px;padding:0 44px;align-items:center;min-height:62px;border-bottom:1px solid var(--rim);position:relative;transition:background .15s}
@@ -267,7 +267,7 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 .lts-row--me::after{content:'';position:absolute;right:0;top:0;bottom:0;width:120px;background:linear-gradient(to left,rgba(0,200,240,.04),transparent);pointer-events:none}
 
 .lts-rank{font-family:var(--fd);font-size:16px;color:var(--muted);text-align:center}
-.lts-row--me .lts-rank{font-size:20px;color:var(--cyan)}
+.lts-row--me .lts-rank{font-size:25px;color:var(--cyan)}
 
 .lts-club{display:flex;align-items:center;gap:13px}
 .lts-badge{width:36px;height:36px;border-radius:50%;background:var(--ink3);border:1px solid var(--rim2);display:flex;align-items:center;justify-content:center;font-family:var(--fc);font-size:10px;font-weight:800;color:var(--silver);flex-shrink:0}
@@ -276,7 +276,7 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 .lts-row--me .lts-club-name{font-size:17px;color:var(--white);letter-spacing:.05em}
 .lts-club-sub{font-family:var(--fc);font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-top:2px;opacity:.75}
 
-.lts-cell{font-family:var(--fc);font-size:13px;font-weight:600;color:var(--muted);text-align:center}
+.lts-cell{font-family:var(--fc);font-size:20px;font-weight:700;color:var(--muted);text-align:center}
 .lts-row--me .lts-cell{color:rgba(238,242,248,.6)}
 .lts-cell--w{color:var(--green)!important;font-weight:700}
 .lts-cell--l{color:var(--red)!important}
