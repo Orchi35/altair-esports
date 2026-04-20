@@ -43,8 +43,7 @@ const SQUAD = [
     { number:"77", name:"ORÇUN BEKTAŞ",          ign:"ORC-HI",        pos:"CM",  role:"Central Midfielder",           flag:"🇹🇷", init:"OB",  apps:12, goals:2, assists:3,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/Orçun.png" },
   ]},
   { group:"Forwards", abbr:"FWD", players:[
-    { number:"9", name:"GÖRKEM YAVUZ",   ign:"Grkm10Fire", pos:"ST", role:"Striker", flag:"🇹🇷", init:"GY", apps:2,  goals:2, assists:4, captain:false, profileUrl:"https://emajorleague.com/players/profile/6171/", image:"public/players/Görkem.png" },
-    { number:"7", name:"DOĞUKAN TOMBUL", ign:"Xwrdodo",    pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:12, goals:8, assists:3, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Doğukan.png" },
+    { number:"7", name:"DOĞUKAN TOMBUL", ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:12, goals:8, assists:3, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Doğukan.png" },
   ]},
 ];
 
@@ -69,17 +68,28 @@ html{scroll-behavior:smooth}
 body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
 :root{
-  --ink:#07090f;--ink2:#0c0f19;--ink3:#111622;
-  --rim:rgba(255,255,255,.055);--rim2:rgba(255,255,255,.1);
-  --cyan:#00c8f0;--cyan2:#40daff;--cdim:rgba(0,200,240,.1);
-  --white:#eef2f8;--silver:#8a95a8;--muted:#4a5568;
-  --green:#22c55e;--red:#ef4444;--draw:#64748b;
-  --fd:'Anton',sans-serif;--fc:'Barlow Condensed',sans-serif;--fb:'DM Sans',sans-serif;
+  --ink:   #0d1117;
+  --ink2:  #111827;
+  --ink3:  #1a2233;
+  --rim:rgba(255,255,255,.055);
+  --rim2:rgba(255,255,255,.1);
+  --cyan:#00c8f0;
+  --cyan2:#40daff;
+  --cdim:rgba(0,200,240,.1);
+  --white:#eef2f8;
+  --silver:#8a95a8;
+  --muted:#4a5568;
+  --green:#22c55e;
+  --red:#ef4444;
+  --draw:#64748b;
+  --fd:'Anton',sans-serif;
+  --fc:'Barlow Condensed',sans-serif;
+  --fb:'DM Sans',sans-serif;
 }
 
 /* NAV */
 .nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 44px;border-bottom:1px solid transparent;transition:background .35s,border-color .35s}
-.nav.scrolled{background:rgba(7,9,15,.97);border-color:var(--rim);backdrop-filter:blur(14px)}
+.nav.scrolled{background:rgba(13,17,23,.97);border-color:var(--rim);backdrop-filter:blur(14px)}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-logo-img{height:50px;width:50px;object-fit:contain;display:block;flex-shrink:0;filter:drop-shadow(0 0 7px rgba(0,200,240,.4))}
 .nav-wordmark{display:flex;flex-direction:column;line-height:1;justify-content:center}
@@ -103,100 +113,6 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 @keyframes starDriftA{from{transform:translateY(0)}to{transform:translateY(-240px)}}
 @keyframes starDriftB{from{transform:translateY(0)}to{transform:translateY(-360px)}}
 @media(prefers-reduced-motion:reduce){.hero-stars::before,.hero-stars::after{animation:none}}
-.hero-mobile-logo {
-  display: none;
-}
-
-@media(max-width:768px) {
-  .hero-mobile-logo {
-    display: block;
-    width: 120px;
-    height: 120px;
-    object-fit: contain;
-    margin-bottom: 20px;
-    filter: drop-shadow(0 0 18px rgba(0,200,240,.4));
-     /* RESULTS — mobil kart layout */
-  .results-wrap { gap: 6px }
-
-  .result-row {
-    display: block;
-    min-height: auto;
-    border-left: 3px solid var(--rim);
-  }
-  .result-row.rW { border-left-color: var(--green) }
-  .result-row.rL { border-left-color: var(--red) }
-  .result-row.rD { border-left-color: var(--draw) }
-  .result-row::after { display: none }
-
-  /* meta — üst şerit */
-  .rr-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 12px;
-    border-bottom: 1px solid var(--rim);
-    background: rgba(255,255,255,.02);
-  }
-  .rr-date { display: none }
-  .rr-matchday { font-size: 8px }
-  .rr-comp { font-size: 10px; margin-top: 0 }
-
-  /* teams + score — yatay üç kolon */
-  .rr-team-row-mobile {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 12px;
-  }
-
-  /* home — sağa hizalı */
-  .rr-team.home {
-    justify-content: flex-end;
-    flex-direction: row;
-    padding: 0;
-    gap: 7px;
-  }
-  .rr-team.home .rr-team-info {
-    text-align: right;
-    align-items: flex-end;
-  }
-
-  /* away — sola hizalı */
-  .rr-team.away {
-    justify-content: flex-start;
-    flex-direction: row;
-    padding: 0;
-    gap: 7px;
-  }
-  .rr-team.away .rr-team-info {
-    text-align: left;
-    align-items: flex-start;
-  }
-
-  .rr-name { font-size: 11px }
-  .rr-venue { font-size: 8px }
-  .rr-badge { width: 26px; height: 26px; font-size: 7px }
-
-  /* skor — orta */
-  .rr-score {
-    justify-content: center;
-    padding: 0;
-    flex-shrink: 0;
-  }
-  .rr-score::before { display: none }
-  .rr-score-val { font-size: 18px; min-width: 16px }
-  .rr-score-sep { font-size: 12px; padding: 0 3px }
-
-  /* result pill — alt */
-  .rr-result-col {
-    justify-content: flex-start;
-    padding: 0 12px 8px;
-  }
-  .rr-result-pill { font-size: 8px; padding: 3px 8px }
-}
-  }
-}
 
 .hero-left{position:relative;z-index:2;padding:120px 56px 80px 44px;display:flex;flex-direction:column;justify-content:center}
 .hero-pill{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;margin-bottom:28px;border:1px solid rgba(0,200,240,.2);background:rgba(0,200,240,.06);font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);width:fit-content}
@@ -225,6 +141,7 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 .hfs-label{font-family:var(--fc);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-right:4px}
 .hfs-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fc);font-size:9px;font-weight:800;color:#fff}
 .hfs-w{background:#16a34a}.hfs-l{background:#dc2626}.hfs-d{background:#475569}
+.hero-mobile-logo{display:none}
 
 /* TICKER */
 .ticker{height:38px;display:flex;align-items:center;overflow:hidden;border-top:1px solid var(--rim);border-bottom:1px solid var(--rim);background:var(--ink2)}
@@ -247,12 +164,14 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 
 /* RESULTS */
 .results-wrap{display:flex;flex-direction:column;gap:3px}
-.result-row{display:grid;grid-template-columns:160px 1fr 120px 1fr 100px;align-items:center;background:var(--ink2);border:1px solid var(--rim);position:relative;overflow:hidden;transition:background .18s,border-color .18s;min-height:72px}
-.result-row::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
-.result-row.rW::after{background:var(--green)}
-.result-row.rL::after{background:var(--red)}
-.result-row.rD::after{background:var(--draw)}
+.result-row{display:block;background:var(--ink2);border:1px solid var(--rim);position:relative;overflow:hidden;transition:background .18s,border-color .18s}
+.result-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;z-index:1}
+.result-row.rW::before{background:var(--green)}
+.result-row.rL::before{background:var(--red)}
+.result-row.rD::before{background:var(--draw)}
 .result-row:hover{background:var(--ink3);border-color:rgba(0,200,240,.1)}
+.rr-desktop{display:grid;grid-template-columns:160px 1fr 120px 1fr 100px;align-items:center;min-height:72px}
+.rr-mobile{display:none}
 .rr-meta{padding:0 20px 0 24px}
 .rr-matchday{font-family:var(--fc);font-size:9px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan)}
 .rr-comp{font-family:var(--fc);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--silver);margin-top:3px}
@@ -277,6 +196,14 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 .rr-result-pill.loss{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);color:var(--red)}
 .rr-result-pill.draw{background:rgba(100,116,139,.08);border:1px solid rgba(100,116,139,.25);color:var(--draw)}
 .rr-result-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.rr-mob-meta{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid var(--rim);background:rgba(255,255,255,.02)}
+.rr-mob-teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;padding:10px 14px}
+.rr-mob-team{display:flex;align-items:center;gap:7px}
+.rr-mob-team--right{flex-direction:row-reverse}
+.rr-mob-name{font-family:var(--fc);font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--white);line-height:1.2}
+.rr-mob-score{display:flex;align-items:center;justify-content:center;gap:4px;font-family:var(--fd);font-size:20px;color:var(--white);flex-shrink:0}
+.rr-mob-sep{font-family:var(--fc);font-size:13px;color:var(--muted);font-weight:300}
+.rr-mob-footer{padding:0 14px 10px}
 
 /* LIVE TABLE */
 .lts{position:relative;background:var(--ink);border-top:1px solid var(--rim);border-bottom:1px solid var(--rim);overflow:hidden}
@@ -372,14 +299,14 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 .pcard-cap{position:absolute;top:10px;right:34px;z-index:2;font-family:var(--fc);font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--cyan);border:1px solid rgba(0,200,240,.3);padding:2px 6px;background:rgba(0,200,240,.08)}
 .pcard-avatar{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,#0e1e32,#080f1e);border:2px solid rgba(0,200,240,.18);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:24px;color:var(--cyan);position:relative;z-index:1}
 .pcard-avatar-img{width:96px;height:96px;object-fit:cover;border-radius:10%;border:2px solid rgba(0,200,240,.22);box-shadow:0 0 18px rgba(0,200,240,.08);position:relative;z-index:1}
-.pcard-bottom{padding:15px 14px 0;background:var(--ink2);border-top:1px solid var(--rim)}
+.pcard-bottom{padding:15px 14px 0;background:#0d1117;border-top:1px solid var(--rim)}
 .pcard-role{font-family:var(--fc);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:3px}
 .pcard-name{font-family:var(--fc);font-size:18px;font-weight:900;letter-spacing:.03em;text-transform:uppercase;line-height:1.1;color:var(--white)}
 .pcard-ign{font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--fb)}
 .pcard-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;margin-top:12px;background:var(--rim);border-top:1px solid var(--rim)}
-.pstat{background:var(--ink2);padding:9px 0;text-align:center}
+.pstat{background:#0d1117;padding:9px 0;text-align:center}
 .pstat-val{font-family:var(--fd);font-size:16px;color:var(--white);line-height:1}
-.pstat-lbl{font-family:var(--fc);font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.pstat-lbl{font-family:var(--fc);font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--silver);margin-top:2px}
 
 /* SPONSORS */
 .sponsors-section{padding:72px 44px;border-top:1px solid var(--rim);border-bottom:1px solid var(--rim)}
@@ -432,9 +359,7 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
 .footer-bottom a{color:var(--muted);text-decoration:none;transition:color .2s}
 .footer-bottom a:hover{color:var(--cyan)}
 
-/* ═══════════════════
-   TABLET 1024
-═══════════════════ */
+/* TABLET */
 @media(max-width:1024px){
   .hero{grid-template-columns:1fr 1fr}
   .hero-left{padding:100px 28px 60px 28px}
@@ -450,11 +375,18 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
   .sp-layout{gap:40px}
 }
 
-/* ═══════════════════
-   MOBILE 768
-   Sıfırdan yazıldı
-═══════════════════ */
+/* MOBILE — tek blok, iç içe @media YOK */
 @media(max-width:768px){
+
+  /* RESULTS toggle */
+  .rr-desktop{display:none !important}
+  .rr-mobile{display:block !important}
+  .result-row{border-left:3px solid var(--rim)}
+  .result-row.rW{border-left-color:var(--green)}
+  .result-row.rL{border-left-color:var(--red)}
+  .result-row.rD{border-left-color:var(--draw)}
+  .result-row::before{display:none}
+  .results-wrap{gap:6px}
 
   /* NAV */
   .nav{padding:0 16px;height:54px}
@@ -464,21 +396,19 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
   .nav-wm-sub{display:none}
   .nav-cta{padding:7px 12px;font-size:10px;letter-spacing:.1em}
 
-  /* HERO — tek kolon, temiz */
+  /* HERO */
   .hero{grid-template-columns:1fr;min-height:auto}
   .hero-right{display:none}
   .hero-split-line{display:none}
   .hero-fade-b{display:none}
   .hero-left{padding:80px 16px 52px;align-items:flex-start}
+  .hero-mobile-logo{display:block;width:110px;height:110px;object-fit:contain;margin-bottom:20px;filter:drop-shadow(0 0 18px rgba(0,200,240,.4))}
+  .hero-h1{display:none}
   .hero-pill{font-size:8px;padding:4px 10px;margin-bottom:14px;letter-spacing:.12em}
-  .hero-h1{font-size:clamp(38px,10vw,60px)}
   .hero-sub{font-size:13px;margin-top:12px;max-width:100%}
   .hero-btns{margin-top:20px;gap:10px}
   .btn-primary,.btn-secondary{padding:10px 18px;font-size:11px;letter-spacing:.1em}
   .hero-stats{display:none}
-  .hero-h1 {
-  display: none;
-}
 
   /* TICKER */
   .ticker-tag{font-size:8px;padding:0 10px;letter-spacing:.1em}
@@ -486,7 +416,7 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
   .tick-score{font-size:12px}
   .tick-badge{width:12px;height:12px;font-size:7px}
 
-  /* SECTION COMMONS */
+  /* SECTIONS */
   .section{padding:36px 16px}
   .social-section{padding:36px 16px}
   .sponsors-section{padding:36px 16px}
@@ -494,105 +424,23 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
   .sec-h{font-size:clamp(22px,7vw,36px)}
   .sec-ey{font-size:9px;letter-spacing:.16em}
 
-  /* RESULTS — kart stili, binişme yok */
-  .results-wrap{gap:6px}
-  .result-row{
-    display:block;
-    min-height:auto;
-    padding:0;
-    border:1px solid var(--rim);
-    border-left:3px solid var(--rim);
-    overflow:hidden;
-  }
-  .result-row.rW{border-left-color:var(--green)}
-  .result-row.rL{border-left-color:var(--red)}
-  .result-row.rD{border-left-color:var(--draw)}
-  .result-row::after{display:none}
-
-  .rr-meta{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 14px;
-    border-bottom:1px solid var(--rim);
-    background:rgba(255,255,255,.02);
-  }
-  .rr-matchday{font-size:8px;letter-spacing:.16em}
-  .rr-comp{font-size:10px;margin-top:0}
-  .rr-date{display:none}
-
-  /* score row inside card */
-  .rr-score-row{
-    display:flex;
-    align-items:center;
-    padding:10px 14px;
-    gap:8px;
-  }
-  .rr-team{padding:0;flex:1;gap:8px}
-  .rr-team.home{justify-content:flex-end;flex-direction:row-reverse}
-  .rr-team.away{justify-content:flex-start;flex-direction:row}
-  .rr-team.home .rr-team-info{text-align:right;align-items:flex-end}
-  .rr-team.away .rr-team-info{text-align:left;align-items:flex-start}
-  .rr-name{font-size:11px;letter-spacing:.02em}
-  .rr-venue{font-size:8px}
-  .rr-badge{width:26px;height:26px;font-size:7px;flex-shrink:0}
-
-  .rr-score{flex-shrink:0;padding:0 4px;justify-content:center}
-  .rr-score::before{display:none}
-  .rr-score-val{font-size:18px;min-width:18px}
-  .rr-score-sep{font-size:12px;padding:0 2px}
-
-  .rr-result-col{
-    padding:6px 14px 10px;
-    justify-content:flex-start;
-  }
-  .rr-result-pill{font-size:8px;padding:3px 8px;letter-spacing:.08em}
-
   /* LIVE TABLE */
   .lts-topbar{padding:0 16px;height:38px}
   .lts-season{display:none}
   .lts-comp-label{font-size:9px;letter-spacing:.14em}
   .lts-live-pill{font-size:8px;padding:2px 8px;letter-spacing:.14em}
-
   .lts-head{padding:18px 16px 14px;flex-direction:column;align-items:flex-start;gap:14px}
   .lts-head-title{font-size:24px}
-
-  .lts-kpi-row{
-    width:100%;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    padding-bottom:2px;
-    border-top:1px solid var(--rim);
-    padding-top:12px;
-  }
-  .lts-kpi{
-    flex-shrink:0;
-    border-left:none;
-    border-right:1px solid var(--rim);
-    padding:0 14px 0 0;
-    margin-right:14px;
-    min-width:auto;
-    align-items:flex-start;
-  }
+  .lts-kpi-row{width:100%;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;border-top:1px solid var(--rim);padding-top:12px}
+  .lts-kpi{flex-shrink:0;border-left:none;border-right:1px solid var(--rim);padding:0 14px 0 0;margin-right:14px;min-width:auto;align-items:flex-start}
   .lts-kpi:last-child{border-right:none;margin-right:0}
   .lts-kpi-val{font-size:17px}
   .lts-kpi-val em{font-size:11px}
   .lts-kpi-lbl{font-size:7px;letter-spacing:.1em}
-
   .lts-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .lts-col-head{
-    grid-template-columns:32px 1fr 32px 32px 32px 32px 44px 56px 44px;
-    padding:7px 16px;
-    min-width:440px;
-  }
+  .lts-col-head{grid-template-columns:32px 1fr 32px 32px 32px 32px 44px 56px 44px;padding:7px 16px;min-width:440px}
   .lts-ch{font-size:8px;letter-spacing:.06em}
-  .lts-row{
-    grid-template-columns:32px 1fr 32px 32px 32px 32px 44px 56px 44px;
-    padding:0 16px;
-    min-height:48px;
-    min-width:440px;
-  }
+  .lts-row{grid-template-columns:32px 1fr 32px 32px 32px 32px 44px 56px 44px;padding:0 16px;min-height:48px;min-width:440px}
   .lts-row--me{min-height:58px}
   .lts-rank{font-size:12px}
   .lts-row--me .lts-rank{font-size:15px}
@@ -609,31 +457,60 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
   .lts-footer-note,.lts-footer-link{font-size:8px}
 
   /* FIXTURES */
-  .fixtures-panel{gap:6px}
   .fxr-card{
-    grid-template-columns:72px 1px 1fr 1px 72px;
-    min-height:70px;
+    grid-template-columns:80px 1px 1fr 1px 90px;
+    grid-template-rows:auto auto;
+    min-height:auto;
   }
-  .fxr-date{padding:0 10px}
-  .fxr-day{font-size:18px;line-height:1.3}
-  .fxr-month{font-size:8px;letter-spacing:.1em}
+  .fxr-date{
+    grid-column:1;
+    grid-row:1 / 3;
+    border-right:1px solid var(--rim);
+    padding:0 14px;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    align-self:stretch;
+  }
+  .fxr-day{font-size:28px;line-height:1}
+  .fxr-month{font-size:10px;letter-spacing:.1em}
   .fxr-gw{display:none}
-  .fxr-matchup{padding:0 8px;grid-template-columns:1fr 28px 1fr;gap:2px}
-  .fxr-tname{font-size:10px;letter-spacing:.02em;line-height:1.2}
-  .fxr-badge{width:28px;height:28px;font-size:8px}
-  .fxr-vs{font-size:8px;letter-spacing:.1em}
-  .fxr-team{gap:5px}
-  .fxr-meta{padding:0 8px;gap:2px}
-  .fxr-time{font-size:13px}
-  .fxr-tz{font-size:7px}
-  .fxr-venue{font-size:7px;padding:2px 5px;margin-top:3px}
+  .fxr-divider-v{display:none}
+  .fxr-matchup{
+    grid-column:2 / 4;
+    grid-row:1;
+    grid-template-columns:1fr 32px 1fr;
+    padding:10px 12px 6px;
+    gap:2px;
+  }
+  .fxr-tname{font-size:13px;line-height:1.2}
+  .fxr-badge{width:34px;height:34px;font-size:9px}
+  .fxr-vs{font-size:10px;letter-spacing:.12em}
+  .fxr-team{gap:7px}
+  .fxr-meta{
+    grid-column:2 / 4;
+    grid-row:2;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    border-left:none;
+    border-top:1px solid var(--rim);
+    padding:8px 12px;
+    align-self:auto;
+  }
+  .fxr-time{font-size:16px}
+  .fxr-tz{font-size:8px;margin-left:4px}
+  .fxr-venue{margin-top:0;font-size:8px;padding:2px 8px}
 
   /* SQUAD */
-  .squad-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .squad-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:stretch}
+  .pcard{height:100%;display:flex;flex-direction:column}
   .pcard-top{height:130px}
   .pcard-avatar-img{width:72px;height:72px}
-  .pcard-name{font-size:13px}
+  .pcard-bottom{flex:1;display:flex;flex-direction:column;padding:10px 10px 0}
+  .pcard-name{font-size:13px;word-break:break-word;overflow-wrap:break-word}
   .pcard-ign{font-size:9px}
+  .pcard-stats{margin-top:auto}
   .pstat-val{font-size:14px}
 
   /* SPONSORS */
@@ -668,15 +545,11 @@ body{background:#07090f;color:#eef2f8;font-family:'DM Sans',sans-serif;overflow-
   .footer-bottom{flex-direction:column;gap:6px;text-align:center;font-size:8px}
 }
 
-/* ═══════════════════
-   KÜÇÜK TEL 480
-═══════════════════ */
 @media(max-width:480px){
-  .squad-grid{grid-template-columns:repeat(2,1fr)}
+  .squad-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .social-grid{grid-template-columns:1fr}
   .footer-top{grid-template-columns:1fr;gap:20px}
-  .fxr-tname{font-size:9px}
-  .sp-kpis{grid-template-columns:1fr 1fr}
+  .fxr-tname{font-size:11px}
   .lts-kpi-row{flex-wrap:nowrap;overflow-x:auto}
 }
 `;
@@ -686,13 +559,13 @@ function Logo() {
 }
 
 function Ticker() {
-  const items = [...RESULTS, ...RESULTS, ...RESULTS, ...RESULTS];
+  const items = [...RESULTS,...RESULTS,...RESULTS,...RESULTS];
   return (
     <div className="ticker">
       <div className="ticker-tag">EML | 1. Lig · Latest Results</div>
       <div className="ticker-body">
         <div className="ticker-track">
-          {items.concat(items).map((r, i) => (
+          {items.concat(items).map((r,i)=>(
             <div key={i} className="tick-item">
               <div className={`tick-badge ${r.result==="W"?"tb-w":r.result==="L"?"tb-l":"tb-d"}`}>{r.result}</div>
               <span>{r.home}</span>
@@ -710,13 +583,13 @@ function HeroVisual() {
   const form = ["W","W","W","W","W"];
   return (
     <div className="hero-right">
-      <div className="hero-glow-orb" />
+      <div className="hero-glow-orb"/>
       {[480,340,220,120].map((s,i)=>(
-        <div key={i} className="hero-arc" style={{width:s,height:s,top:"50%",left:"50%",transform:"translate(-50%,-50%)"}} />
+        <div key={i} className="hero-arc" style={{width:s,height:s,top:"50%",left:"50%",transform:"translate(-50%,-50%)"}}/>
       ))}
-      <div className="hero-logo-ring" style={{width:280,height:280}} />
+      <div className="hero-logo-ring" style={{width:280,height:280}}/>
       <div className="hero-logo-display">
-        <img src="/logo.png" alt="ALTAIR" className="hero-logo-img" />
+        <img src="/logo.png" alt="ALTAIR" className="hero-logo-img"/>
       </div>
       <div className="hero-form-strip">
         <span className="hfs-label">Form</span>
@@ -728,50 +601,79 @@ function HeroVisual() {
   );
 }
 
-function ResultRow({ r }) {
-  const homeIsAltair = r.home === "ALTAIR eSports";
-  const awayIsAltair = r.away === "ALTAIR eSports";
-  const badgeLabel = r.result==="W" ? "Victory" : r.result==="L" ? "Defeat" : "Draw";
-  const badgeCls   = r.result==="W" ? "win"     : r.result==="L" ? "loss"   : "draw";
+function ResultRow({r}) {
+  const homeIsAltair = r.home==="ALTAIR eSports";
+  const awayIsAltair = r.away==="ALTAIR eSports";
+  const badgeLabel = r.result==="W"?"Victory":r.result==="L"?"Defeat":"Draw";
+  const badgeCls   = r.result==="W"?"win":r.result==="L"?"loss":"draw";
   return (
     <div className={`result-row r${r.result}`}>
-      <div className="rr-meta">
-        <div className="rr-matchday">{r.matchday}</div>
-        <div className="rr-comp">{r.competition}</div>
-        <div className="rr-date">{r.date}</div>
-      </div>
-      <div className="rr-team home">
-        <div className="rr-team-info">
-          <div className="rr-name">{r.home}</div>
-          {homeIsAltair && <div className="rr-venue">Home</div>}
+      <div className="rr-desktop">
+        <div className="rr-meta">
+          <div className="rr-matchday">{r.matchday}</div>
+          <div className="rr-comp">{r.competition}</div>
+          <div className="rr-date">{r.date}</div>
         </div>
-        <div className={`rr-badge ${homeIsAltair ? "mine" : ""}`}>{r.homeAbbr}</div>
-      </div>
-      <div className="rr-score">
-        <span className="rr-score-val">{r.hs}</span>
-        <span className="rr-score-sep">–</span>
-        <span className="rr-score-val">{r.as}</span>
-      </div>
-      <div className="rr-team away">
-        <div className={`rr-badge ${awayIsAltair ? "mine" : ""}`}>{r.awayAbbr}</div>
-        <div className="rr-team-info">
-          <div className="rr-name">{r.away}</div>
-          {awayIsAltair && <div className="rr-venue">Away</div>}
+        <div className="rr-team home">
+          <div className="rr-team-info">
+            <div className="rr-name">{r.home}</div>
+            {homeIsAltair&&<div className="rr-venue">Home</div>}
+          </div>
+          <div className={`rr-badge ${homeIsAltair?"mine":""}`}>{r.homeAbbr}</div>
+        </div>
+        <div className="rr-score">
+          <span className="rr-score-val">{r.hs}</span>
+          <span className="rr-score-sep">–</span>
+          <span className="rr-score-val">{r.as}</span>
+        </div>
+        <div className="rr-team away">
+          <div className={`rr-badge ${awayIsAltair?"mine":""}`}>{r.awayAbbr}</div>
+          <div className="rr-team-info">
+            <div className="rr-name">{r.away}</div>
+            {awayIsAltair&&<div className="rr-venue">Away</div>}
+          </div>
+        </div>
+        <div className="rr-result-col">
+          <div className={`rr-result-pill ${badgeCls}`}>
+            <span className="rr-result-dot"/>
+            {badgeLabel}
+          </div>
         </div>
       </div>
-      <div className="rr-result-col">
-        <div className={`rr-result-pill ${badgeCls}`}>
-          <span className="rr-result-dot" />
-          {badgeLabel}
+      <div className="rr-mobile">
+        <div className="rr-mob-meta">
+          <span className="rr-matchday">{r.matchday}</span>
+          <span className="rr-comp">{r.competition}</span>
+        </div>
+        <div className="rr-mob-teams">
+          <div className="rr-mob-team">
+            <div className={`rr-badge ${homeIsAltair?"mine":""}`}>{r.homeAbbr}</div>
+            <div className="rr-mob-name">{r.home}</div>
+          </div>
+          <div className="rr-mob-score">
+            <span>{r.hs}</span>
+            <span className="rr-mob-sep">–</span>
+            <span>{r.as}</span>
+          </div>
+          <div className="rr-mob-team rr-mob-team--right">
+            <div className={`rr-badge ${awayIsAltair?"mine":""}`}>{r.awayAbbr}</div>
+            <div className="rr-mob-name">{r.away}</div>
+          </div>
+        </div>
+        <div className="rr-mob-footer">
+          <div className={`rr-result-pill ${badgeCls}`}>
+            <span className="rr-result-dot"/>
+            {badgeLabel}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function FixtureCard({ f }) {
-  const altairHome = f.home === "ALTAIR eSports";
-  const altairAway = f.away === "ALTAIR eSports";
+function FixtureCard({f}) {
+  const altairHome = f.home==="ALTAIR eSports";
+  const altairAway = f.away==="ALTAIR eSports";
   return (
     <div className="fxr-card">
       <div className="fxr-date">
@@ -779,41 +681,41 @@ function FixtureCard({ f }) {
         <span className="fxr-month">{f.month}</span>
         <span className="fxr-gw">{f.matchday}</span>
       </div>
-      <div className="fxr-divider-v" />
+      <div className="fxr-divider-v"/>
       <div className="fxr-matchup">
         <div className="fxr-team fxr-team--home">
           <span className="fxr-tname">{f.home}</span>
-          <div className={`fxr-badge ${altairHome ? "fxr-badge--mine" : ""}`}>{f.homeAbbr}</div>
+          <div className={`fxr-badge ${altairHome?"fxr-badge--mine":""}`}>{f.homeAbbr}</div>
         </div>
         <div className="fxr-vs-block"><span className="fxr-vs">VS</span></div>
         <div className="fxr-team fxr-team--away">
-          <div className={`fxr-badge ${altairAway ? "fxr-badge--mine" : ""}`}>{f.awayAbbr}</div>
+          <div className={`fxr-badge ${altairAway?"fxr-badge--mine":""}`}>{f.awayAbbr}</div>
           <span className="fxr-tname">{f.away}</span>
         </div>
       </div>
-      <div className="fxr-divider-v" />
+      <div className="fxr-divider-v"/>
       <div className="fxr-meta">
         <span className="fxr-time">{f.time}</span>
-        <span className="fxr-tz">CET</span>
-        <span className={`fxr-venue ${altairHome ? "fxr-venue--home" : "fxr-venue--away"}`}>
-          {altairHome ? "Home" : "Away"}
+        <span className="fxr-tz">UTC+3</span>
+        <span className={`fxr-venue ${altairHome?"fxr-venue--home":"fxr-venue--away"}`}>
+          {altairHome?"Home":"Away"}
         </span>
       </div>
     </div>
   );
 }
 
-function PlayerCard({ p }) {
+function PlayerCard({p}) {
   return (
     <a href={p.profileUrl} target="_blank" rel="noopener noreferrer" className="pcard">
       <div className="pcard-top">
         <div className="pcard-pos">{p.pos}</div>
-        {p.captain && <div className="pcard-cap">C</div>}
+        {p.captain&&<div className="pcard-cap">C</div>}
         <span className="pcard-flag">{p.flag}</span>
         <div className="pcard-num">{p.number}</div>
         {p.image
-          ? <img src={p.image} alt={p.name} className="pcard-avatar-img" />
-          : <div className="pcard-avatar">{p.init}</div>
+          ?<img src={p.image} alt={p.name} className="pcard-avatar-img"/>
+          :<div className="pcard-avatar">{p.init}</div>
         }
       </div>
       <div className="pcard-bottom">
@@ -831,11 +733,11 @@ function PlayerCard({ p }) {
 }
 
 export default function AltairFC() {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled,setScrolled] = useState(false);
   useEffect(()=>{
-    const fn = ()=>setScrolled(window.scrollY > 54);
-    window.addEventListener("scroll", fn);
-    return ()=>window.removeEventListener("scroll", fn);
+    const fn = ()=>setScrolled(window.scrollY>54);
+    window.addEventListener("scroll",fn);
+    return ()=>window.removeEventListener("scroll",fn);
   },[]);
 
   return (
@@ -844,7 +746,7 @@ export default function AltairFC() {
 
       <nav className={`nav${scrolled?" scrolled":""}`}>
         <a href="#top" className="nav-logo">
-          <Logo />
+          <Logo/>
           <div className="nav-wordmark">
             <span className="nav-wm-top">ALTAIR</span>
             <span className="nav-wm-sub">FC 26 Pro Clubs</span>
@@ -864,7 +766,7 @@ export default function AltairFC() {
         <div className="hero-split-line"/>
         <div className="hero-fade-b"/>
         <div className="hero-left">
-          <img src="/logo.png" alt="ALTAIR" className="hero-mobile-logo" />
+          <img src="/logo.png" alt="ALTAIR" className="hero-mobile-logo"/>
           <div className="hero-pill">
             <span className="hero-pill-dot"/>
             FC 26 | 1. Lig · eMajor League · Season 2026
@@ -874,44 +776,31 @@ export default function AltairFC() {
             <span className="line-accent">PLAY</span>
             <span className="line-ghost">AS ONE</span>
           </h1>
-          <p className="hero-sub">
-            ALTAIR eSports competes in the eMajor League FC 26 Pro Clubs 1. Lig — a professional eSports team.
-          </p>
+          <p className="hero-sub">ALTAIR eSports competes in the eMajor League FC 26 Pro Clubs 1. Lig — a professional eSports team.</p>
           <div className="hero-btns">
             <a href="https://www.twitch.tv/altairespor" className="btn-primary">Watch Matches</a>
             <a href="#squad" className="btn-secondary">View Squad</a>
           </div>
-          <div className="hero-stats" />
+          <div className="hero-stats"/>
         </div>
-        <HeroVisual />
+        <HeroVisual/>
       </section>
 
-      <Ticker />
+      <Ticker/>
 
       <div className="lts" id="standings">
         <div className="lts-topbar">
           <div className="lts-topbar-left">
             <span className="lts-comp-label">eMajor League</span>
-            <div className="lts-sep" />
+            <div className="lts-sep"/>
             <span className="lts-season">FC 26 · 1. Lig · Season 2026</span>
           </div>
-          <div className="lts-live-pill">
-            <span className="lts-live-dot" />
-            Live Standings
-          </div>
+          <div className="lts-live-pill"><span className="lts-live-dot"/>Live Standings</div>
         </div>
         <div className="lts-head">
-          <div>
-            <h2 className="lts-head-title">LIVE <em>TABLE</em></h2>
-          </div>
+          <div><h2 className="lts-head-title">LIVE <em>TABLE</em></h2></div>
           <div className="lts-kpi-row">
-            {[
-              {val:"6",  unit:"th",  lbl:"Position"},
-              {val:"28", unit:"pts", lbl:"Points"},
-              {val:"9",  unit:"W",   lbl:"Wins"},
-              {val:"+21",unit:"",    lbl:"Goal Diff"},
-              {val:"15", unit:"GP",  lbl:"Played"},
-            ].map((k,i)=>(
+            {[{val:"6",unit:"th",lbl:"Position"},{val:"28",unit:"pts",lbl:"Points"},{val:"9",unit:"W",lbl:"Wins"},{val:"+21",unit:"",lbl:"Goal Diff"},{val:"15",unit:"GP",lbl:"Played"}].map((k,i)=>(
               <div key={i} className="lts-kpi">
                 <div className="lts-kpi-val">{k.val}<em>{k.unit}</em></div>
                 <div className="lts-kpi-lbl">{k.lbl}</div>
@@ -923,13 +812,8 @@ export default function AltairFC() {
           <div className="lts-col-head">
             <span className="lts-ch">#</span>
             <span className="lts-ch" style={{textAlign:"left"}}>Club</span>
-            <span className="lts-ch">P</span>
-            <span className="lts-ch">W</span>
-            <span className="lts-ch">D</span>
-            <span className="lts-ch">L</span>
-            <span className="lts-ch">GD</span>
-            <span className="lts-ch">Form</span>
-            <span className="lts-ch">Pts</span>
+            <span className="lts-ch">P</span><span className="lts-ch">W</span><span className="lts-ch">D</span><span className="lts-ch">L</span>
+            <span className="lts-ch">GD</span><span className="lts-ch">Form</span><span className="lts-ch">Pts</span>
           </div>
           {STANDINGS_COMPACT.map(s=>(
             <div key={s.abbr} className={`lts-row${s.me?" lts-row--me":""}`}>
@@ -954,9 +838,7 @@ export default function AltairFC() {
         </div>
         <div className="lts-footer">
           <span className="lts-footer-note">Showing ranks 5–7 · 18 clubs total</span>
-          <a className="lts-footer-link" href="https://emajorleague.com/tournaments/league_table/39/" target="_blank" rel="noopener noreferrer">
-            Full table on eMajor League →
-          </a>
+          <a className="lts-footer-link" href="https://emajorleague.com/tournaments/league_table/39/" target="_blank" rel="noopener noreferrer">Full table on eMajor League →</a>
         </div>
       </div>
 
@@ -1052,7 +934,7 @@ export default function AltairFC() {
           <div>
             <div className="footer-brand-name">ALTAIR eSports</div>
             <div className="footer-brand-tag">FC 26 Pro Clubs · eMajor League</div>
-            <img src="/logo.png" alt="ALTAIR eSports" style={{width:120,height:120,objectFit:"contain",marginTop:16,marginBottom:4,filter:"drop-shadow(0 0 7px rgba(0,200,240,.4))"}} />
+            <img src="/logo.png" alt="ALTAIR eSports" style={{width:120,height:120,objectFit:"contain",marginTop:16,marginBottom:4,filter:"drop-shadow(0 0 7px rgba(0,200,240,.4))"}}/>
           </div>
           <div>
             <div className="footer-col-title">Club</div>
