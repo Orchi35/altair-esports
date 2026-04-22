@@ -133,6 +133,41 @@ const COMPETITION     = "EML | 1. Lig";
 
 // Ay numarasını kısa metne çevirir: "3" → "MAR"
 const MONTHS = ["","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+const MONTH_ALIASES = {
+  OCA: "JAN",
+  SUB: "FEB",
+  ŞUB: "FEB",
+  MAR: "MAR",
+  NIS: "APR",
+  NİS: "APR",
+  APR: "APR",
+  MAY: "MAY",
+  HAZ: "JUN",
+  JUN: "JUN",
+  TEM: "JUL",
+  JUL: "JUL",
+  AGU: "AUG",
+  AĞU: "AUG",
+  AUG: "AUG",
+  EYL: "SEP",
+  SEP: "SEP",
+  EKI: "OCT",
+  EKİ: "OCT",
+  OCT: "OCT",
+  KAS: "NOV",
+  NOV: "NOV",
+  ARA: "DEC",
+  DEC: "DEC",
+};
+
+function toEnglishMonthAbbr(value) {
+  const key = String(value || "")
+    .trim()
+    .toUpperCase()
+    .replace(/\./g, "");
+
+  return MONTH_ALIASES[key] || key.slice(0, 3) || "APR";
+}
 
 function abbr3(name) {
   return (name || "").replace(/[^A-Za-z]/g,"").slice(0,3).toUpperCase() || "???";
@@ -1202,7 +1237,7 @@ body::after{
 
 .fix-date{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 24px;gap:4px;
+  padding:14px 24px 4px;gap:2px;
   background:
     linear-gradient(135deg,rgba(34,211,238,.08),transparent 72%),
     linear-gradient(180deg,rgba(255,255,255,.03),transparent);
@@ -1211,7 +1246,7 @@ body::after{
 .fix-month{font-family:var(--f-narrow);font-weight:700;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-2)}
 .fix-gw{
   font-family:var(--f-mono);font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--muted);margin-top:6px;
+  color:var(--muted);margin-top:4px;
 }
 
 .fix-divider{width:1px;background:var(--line)}
@@ -1259,13 +1294,13 @@ body::after{
 
 .fix-meta{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 22px;gap:4px;
+  padding:0 22px;gap:2px;
   background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
 }
 .fix-time{font-family:var(--f-display);font-weight:700;font-size:22px;color:var(--text);line-height:1;letter-spacing:-.01em;text-shadow:0 0 14px rgba(255,255,255,.08)}
 .fix-tz{font-family:var(--f-mono);font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .fix-venue{
-  margin-top:8px;padding:4px 12px;
+  margin-top:6px;padding:4px 12px;
   font-family:var(--f-mono);font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
 }
 .fix-venue.home{
@@ -1806,6 +1841,7 @@ body::after{
     background:
       linear-gradient(90deg,rgba(34,211,238,.14),transparent 72%),
       linear-gradient(180deg,rgba(255,255,255,.03),transparent);
+    transform:none;
   }
   .fix-day{font-size:30px}
   .fix-month{
@@ -2517,7 +2553,7 @@ function FixtureCard({ f }) {
     <div className="fix-card">
       <div className="fix-date">
         <span className="fix-day">{f.day}</span>
-        <span className="fix-month">{f.month}</span>
+        <span className="fix-month">{toEnglishMonthAbbr(f.month)}</span>
         <span className="fix-gw">{f.matchday}</span>
       </div>
       <div className="fix-divider"/>
