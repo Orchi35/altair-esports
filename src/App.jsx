@@ -524,6 +524,52 @@ body::after{
 .section-compact{padding:calc(var(--sec-y) * .55) var(--pad-x)}
 .container{max-width:1360px;margin:0 auto;position:relative;z-index:2}
 
+.standings,
+#matches.section,
+#fixtures.section,
+#squad.section,
+#sponsors.section,
+#broadcast.section,
+.footer{
+  position:relative;
+  isolation:isolate;
+}
+.standings::after,
+#matches.section::after,
+#fixtures.section::after,
+#squad.section::after,
+#sponsors.section::after,
+#broadcast.section::after,
+.footer::after{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,.16),transparent);
+  opacity:.68;
+  pointer-events:none;
+  z-index:1;
+}
+#matches.section{
+  background:
+    linear-gradient(180deg,rgba(10,18,31,.9),rgba(7,12,22,.98));
+}
+#fixtures.section{
+  background:
+    linear-gradient(180deg,rgba(6,12,22,.92),rgba(9,16,28,.98));
+}
+#squad.section{
+  background:
+    linear-gradient(180deg,rgba(9,16,28,.94),rgba(6,10,18,.99));
+}
+#sponsors.section{
+  background:
+    linear-gradient(180deg,rgba(7,13,23,.95),rgba(11,19,33,.98));
+}
+#broadcast.section{
+  background:
+    linear-gradient(180deg,rgba(10,18,30,.94),rgba(6,10,18,.99));
+}
+
 /* ─── Section header ─── */
 .sec-hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:44px;flex-wrap:wrap}
 .sec-hdr-left{max-width:720px}
@@ -1570,6 +1616,59 @@ body::after{
 @media (max-width:768px){
   :root{--pad-x:18px;--sec-y:56px}
 
+  .standings,
+  #matches.section,
+  #fixtures.section,
+  #squad.section,
+  #sponsors.section,
+  #broadcast.section,
+  .footer{
+    position:relative;
+    isolation:isolate;
+  }
+  .standings::after,
+  #matches.section::after,
+  #fixtures.section::after,
+  #squad.section::after,
+  #sponsors.section::after,
+  #broadcast.section::after,
+  .footer::after{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(34,211,238,.18),transparent);
+    opacity:.75;
+    pointer-events:none;
+    z-index:1;
+  }
+  .standings{
+    background:linear-gradient(180deg,rgba(9,16,28,.96),rgba(6,10,18,.98));
+  }
+  #matches.section{
+    background:
+      linear-gradient(180deg,rgba(12,21,36,.92),rgba(9,15,27,.98));
+  }
+  #fixtures.section{
+    background:
+      linear-gradient(180deg,rgba(7,14,25,.94),rgba(10,18,31,.98));
+  }
+  #squad.section{
+    background:
+      linear-gradient(180deg,rgba(11,19,33,.96),rgba(7,12,22,.99));
+  }
+  #sponsors.section{
+    background:
+      linear-gradient(180deg,rgba(8,14,25,.96),rgba(13,22,37,.98));
+  }
+  #broadcast.section{
+    background:
+      linear-gradient(180deg,rgba(10,18,30,.96),rgba(8,13,23,.98));
+  }
+  .footer{
+    background:
+      linear-gradient(180deg,rgba(7,12,21,.98),rgba(4,7,13,1));
+  }
+
   /* Nav */
   .nav{height:60px}
   .nav.scrolled{height:56px}
@@ -1648,28 +1747,42 @@ body::after{
   .res-mob{display:block}
   .res-mob-top{
     display:flex;align-items:center;justify-content:space-between;gap:8px;
-    padding:10px 14px;
+    padding:11px 14px;
+    flex-wrap:wrap;
     border-bottom:1px solid var(--line);
     background:
       linear-gradient(90deg,rgba(34,211,238,.1),transparent 72%),
       rgba(255,255,255,.015);
   }
   .res-mob-teams{
-    display:grid;grid-template-columns:1fr auto 1fr;gap:10px;
-    align-items:center;padding:14px 14px 12px;
+    display:flex;flex-direction:column;gap:10px;
+    align-items:stretch;padding:14px 14px 12px;
     background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);
   }
   .res-mob-team{
-    display:flex;align-items:center;gap:8px;min-width:0;
-    padding:10px 10px;
+    display:flex;align-items:center;gap:10px;min-width:0;
+    width:100%;
+    justify-content:flex-start;
+    padding:12px 12px;
     background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
     border:1px solid rgba(255,255,255,.08);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 10px 22px rgba(0,0,0,.12);
   }
-  .res-mob-team.away{flex-direction:row-reverse}
-  .res-mob-name{font-family:var(--f-narrow);font-weight:700;font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--text);line-height:1.15;min-width:0;word-break:break-word}
+  .res-mob-team.away{flex-direction:row-reverse;justify-content:flex-start}
+  .res-mob-name{
+    font-family:var(--f-narrow);font-weight:700;font-size:13px;letter-spacing:.03em;text-transform:uppercase;color:var(--text);
+    line-height:1.2;min-width:0;word-break:break-word;
+  }
+  .res-mob-team.home .res-mob-name{margin-right:auto;text-align:left}
+  .res-mob-team.away .res-mob-name{margin-left:auto;text-align:right}
+  .res-mob-team .res-badge{width:40px;height:40px}
   .res-mob-score{
-    display:flex;align-items:center;justify-content:center;gap:6px;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    align-self:center;min-width:110px;
+    padding:8px 14px;
+    border:1px solid rgba(34,211,238,.16);
+    background:linear-gradient(180deg,rgba(34,211,238,.08),rgba(255,255,255,.02));
+    box-shadow:0 0 18px rgba(34,211,238,.08),inset 0 1px 0 rgba(255,255,255,.04);
     font-family:var(--f-display);font-weight:800;font-size:22px;color:var(--text);letter-spacing:-.02em;
     text-shadow:0 0 14px rgba(255,255,255,.08);
   }
@@ -1834,6 +1947,13 @@ body::after{
   .fix-meta{padding:10px 14px 12px;gap:10px}
   .fix-time{font-size:15px}
   .fix-venue{margin-left:0}
+
+  .res-mob-top{padding:10px 13px}
+  .res-mob-teams{padding:12px 13px 10px;gap:9px}
+  .res-mob-team{padding:10px 11px}
+  .res-mob-name{font-size:12px}
+  .res-mob-team .res-badge{width:36px;height:36px}
+  .res-mob-score{min-width:98px;padding:7px 12px;font-size:20px}
 
   .p-card:hover{transform:translateY(-5px)}
   .p-card::after{width:150px;height:150px;opacity:.24}
@@ -2332,7 +2452,7 @@ function ResultCard({ r }) {
           <div className="res-date">{r.date}</div>
         </div>
         <div className="res-mob-teams">
-          <div className="res-mob-team">
+          <div className="res-mob-team home">
             <ClubBadge className={`res-badge ${homeMe ? "me" : ""}`} isAltair={homeMe} label={r.homeAbbr} />
             <div className="res-mob-name">{r.home}</div>
           </div>
