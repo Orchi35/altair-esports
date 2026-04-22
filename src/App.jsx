@@ -1,12 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 
-/* ─────────────────────────────────────────────────────────────
-   useStandings — inline hook (EML puan durumu scraper)
-   ───────────────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   useStandings â€” inline hook (EML puan durumu scraper)
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const CACHE_KEY  = "altair_standings_v1";
 const CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
-const FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
+const FRIDAY_TTL = 60 * 60 * 1000;       // Cuma gÃ¼nÃ¼ 1 saat
 
 const STANDINGS_FALLBACK = [
   { rank:5, abbr:"SOH", name:"Sons Of Hell",   pld:15, w:10, d:1, l:4, gf:43, ga:15, gd:"+28", pts:31, form:"LLD", me:false },
@@ -24,10 +24,10 @@ function parseEMLTable(html) {
       const td = [...tr.querySelectorAll("td")];
       if (td.length < 10) return null;
       const raw  = (s) => td[s]?.textContent?.trim() || "0";
-      const name = td[1]?.querySelector("a")?.textContent?.trim() || td[1]?.textContent?.trim() || "–";
+      const name = td[1]?.querySelector("a")?.textContent?.trim() || td[1]?.textContent?.trim() || "â€“";
       const gd   = parseInt(raw(8)) || 0;
       const form = (td[10]?.textContent || "").replace(/\s+/g,"").toUpperCase().slice(0,5);
-      const abbr = name.replace(/[^A-Za-zĞÜŞİÖÇğüşiöç]/g,"").slice(0,3).toUpperCase() || "???";
+      const abbr = name.replace(/[^A-Za-zÄÃœÅÄ°Ã–Ã‡ÄŸÃ¼ÅŸiÃ¶Ã§]/g,"").slice(0,3).toUpperCase() || "???";
       return {
         rank: parseInt(raw(0)) || idx + 1,
         abbr, name,
@@ -94,7 +94,7 @@ function useStandings() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const html   = await res.text();
         const parsed = parseEMLTable(html);
-        if (!parsed) throw new Error("Parse hatası");
+        if (!parsed) throw new Error("Parse hatasÄ±");
         writeCache(parsed);
         if (!cancelled) { setAllTeams(parsed); setLastUpdate(new Date()); }
       } catch (err) {
@@ -115,31 +115,29 @@ function useStandings() {
   return { standings, allTeams, altairRow, loading, error, lastUpdate, refetch };
 }
 
-/* ─────────────────────────────────────────────────────────────
-   useFixtures — EML fikstür scraper
-   Tüm matchday'leri tarar, ALTAIR maçlarını filtreler,
-   oynananları RESULTS, oynanmayanları FIXTURES olarak ayırır.
-   ───────────────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   useFixtures â€” EML fikstÃ¼r scraper
+   TÃ¼m matchday'leri tarar, ALTAIR maÃ§larÄ±nÄ± filtreler,
+   oynananlarÄ± RESULTS, oynanmayanlarÄ± FIXTURES olarak ayÄ±rÄ±r.
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const FIX_CACHE_KEY  = "altair_fixtures_v3";
 const FIX_CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
-const FIX_FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
+const FIX_FRIDAY_TTL = 60 * 60 * 1000;       // Cuma gÃ¼nÃ¼ 1 saat
 const TOTAL_MATCHDAYS = 34;
 const TOURNAMENT_ID   = 39;
-// ALTAIR'ın oynadığı bilinen matchday'ler — gereksiz 34 istek yerine sadece bunlar
+// ALTAIR'Ä±n oynadÄ±ÄŸÄ± bilinen matchday'ler â€” gereksiz 34 istek yerine sadece bunlar
 const ALTAIR_MATCHDAYS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34];
 const ALTAIR_NAME     = "altair esports";
-const COMPETITION     = "EML | 1. Lig";
+const COMPETITION     = "EML | Division 1";
 
-// Ay numarasını kısa metne çevirir: "3" → "MAR"
+// Month helpers
 const MONTHS = ["","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 const MONTH_ALIASES = {
   OCA: "JAN",
   SUB: "FEB",
-  ŞUB: "FEB",
   MAR: "MAR",
   NIS: "APR",
-  NİS: "APR",
   APR: "APR",
   MAY: "MAY",
   HAZ: "JUN",
@@ -147,12 +145,10 @@ const MONTH_ALIASES = {
   TEM: "JUL",
   JUL: "JUL",
   AGU: "AUG",
-  AĞU: "AUG",
   AUG: "AUG",
   EYL: "SEP",
   SEP: "SEP",
   EKI: "OCT",
-  EKİ: "OCT",
   OCT: "OCT",
   KAS: "NOV",
   NOV: "NOV",
@@ -169,6 +165,96 @@ function toEnglishMonthAbbr(value) {
   return MONTH_ALIASES[key] || key.slice(0, 3) || "APR";
 }
 
+function getMonthIndex(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return null;
+  const numeric = Number(raw);
+  if (Number.isInteger(numeric) && numeric >= 1 && numeric <= 12) return numeric;
+
+  const key = raw.toUpperCase().replace(/\./g, "");
+  return MONTH_INDEX_BY_ALIAS[key] || null;
+}
+
+function getMonthAbbr(value, lang = "EN") {
+  const monthIndex = getMonthIndex(value);
+  if (!monthIndex) return lang === "TR" ? "NIS" : "APR";
+  return lang === "TR" ? (MONTHS_TR[monthIndex] || "NIS") : (MONTHS[monthIndex] || "APR");
+}
+
+function getMonthTitle(value, lang = "EN") {
+  const monthIndex = getMonthIndex(value);
+  if (!monthIndex) return lang === "TR" ? "Nis" : "Apr";
+  return lang === "TR" ? (MONTH_TITLES_TR[monthIndex] || "Nis") : (MONTH_TITLES_EN[monthIndex] || "Apr");
+}
+
+function toEnglishDateLabel(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "01 Apr 2026";
+
+  const textMatch = raw.match(/(\d{1,2})\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})/i);
+  if (textMatch) {
+    const day = textMatch[1].padStart(2, "0");
+    const month = getMonthTitle(textMatch[2], "EN");
+    const year = textMatch[3];
+    return `${day} ${month} ${year}`;
+  }
+
+  const numericMatch = raw.match(/(\d{1,2})[./-](\d{1,2})[./-](\d{4})/);
+  if (numericMatch) {
+    const day = numericMatch[1].padStart(2, "0");
+    const month = getMonthTitle(numericMatch[2], "EN");
+    const year = numericMatch[3];
+    return `${day} ${month} ${year}`;
+  }
+
+  return raw;
+}
+
+function toTurkishDateLabel(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "01 Nis 2026";
+
+  const textMatch = raw.match(/(\d{1,2})\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})/i);
+  if (textMatch) {
+    const day = textMatch[1].padStart(2, "0");
+    const month = getMonthTitle(textMatch[2], "TR");
+    const year = textMatch[3];
+    return `${day} ${month} ${year}`;
+  }
+
+  const numericMatch = raw.match(/(\d{1,2})[./-](\d{1,2})[./-](\d{4})/);
+  if (numericMatch) {
+    const day = numericMatch[1].padStart(2, "0");
+    const month = getMonthTitle(numericMatch[2], "TR");
+    const year = numericMatch[3];
+    return `${day} ${month} ${year}`;
+  }
+
+  return raw;
+}
+
+function localizeCompetition(lang = "EN") {
+  return lang === "TR" ? "EML | 1. Lig" : "EML | Division 1";
+}
+
+function localizeDisplayMatch(match, lang = "EN") {
+  return {
+    ...match,
+    competition: localizeCompetition(lang),
+    date: match.date ? (lang === "TR" ? toTurkishDateLabel(match.date) : toEnglishDateLabel(match.date)) : match.date,
+    month: match.month ? getMonthAbbr(match.month, lang) : match.month,
+  };
+}
+
+function normalizeFixtureMatch(match) {
+  return {
+    ...match,
+    competition: COMPETITION,
+    date: match.date ? toEnglishDateLabel(match.date) : match.date,
+    month: match.month ? toEnglishMonthAbbr(match.month) : match.month,
+  };
+}
+
 function abbr3(name) {
   return (name || "").replace(/[^A-Za-z]/g,"").slice(0,3).toUpperCase() || "???";
 }
@@ -179,7 +265,7 @@ function parseFixturePage(html, matchday) {
   const rows   = [...doc.querySelectorAll("table tbody tr")];
   const matches = [];
 
-  // Tarih/saat başlık satırını bul
+  // Tarih/saat baÅŸlÄ±k satÄ±rÄ±nÄ± bul
   let date = "", time = "22:30";
   const dateCandidates = [
     ...doc.querySelectorAll("h1, h2, h3, h4, h5, h6, caption, th, td[colspan], .card-body, .text-center"),
@@ -189,7 +275,7 @@ function parseFixturePage(html, matchday) {
     if (!t) return;
 
     const dateMatch =
-      t.match(/(\d{1,2})\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})/i) ||
+      t.match(/(\d{1,2})\s+([A-Za-zÃ‡ÄÄ°Ã–ÅÃœÃ§ÄŸÄ±Ã¶ÅŸÃ¼]+)\s+(\d{4})/i) ||
       t.match(/(\d{1,2})[./-](\d{1,2})[./-](\d{4})/);
 
     if (dateMatch) {
@@ -209,7 +295,7 @@ function parseFixturePage(html, matchday) {
     const tds = [...tr.querySelectorAll("td")];
     if (tds.length < 5) return;
 
-    // home takım, skorlar, away takım
+    // home takÄ±m, skorlar, away takÄ±m
     const homeEl   = tds[1]?.querySelector("a") || tds[1];
     const awayEl   = tds[5]?.querySelector("a") || tds[5];
     const homeName = homeEl?.textContent?.trim().replace(/\s+/g," ") || "";
@@ -225,7 +311,7 @@ function parseFixturePage(html, matchday) {
     if (!isAltair) return;
 
     // Tarih parse
-    const dateParts = date.match(/(\d+)\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})/i);
+    const dateParts = date.match(/(\d+)\s+([A-Za-zÃ‡ÄÄ°Ã–ÅÃœÃ§ÄŸÄ±Ã¶ÅŸÃ¼]+)\s+(\d{4})/i);
     const dayNum    = dateParts ? dateParts[1].padStart(2,"0") : "01";
     const monthName = dateParts ? dateParts[2].toUpperCase().slice(0,3) : "APR";
     const year      = dateParts ? dateParts[3] : "2026";
@@ -234,7 +320,7 @@ function parseFixturePage(html, matchday) {
       id:          matchday,
       matchday:    `GW ${matchday}`,
       competition: COMPETITION,
-      date:        date || `${dayNum} ${monthName} ${year}`,
+      date:        toEnglishDateLabel(date || `${dayNum} ${monthName} ${year}`),
       day:         dayNum,
       month:       monthName,
       time,
@@ -319,7 +405,7 @@ function useFixtures() {
       const cached = readFixCache();
       if (cached) {
         if (!cancelled) {
-          setAllMatches(cached);
+          setAllMatches(cached.map(normalizeFixtureMatch));
           setFixturesLoading(false);
         }
         return;
@@ -337,10 +423,10 @@ function useFixtures() {
       };
 
       try {
-        // Strateji: oynanan maça göre pencere aç, ama ekranda görünen en ileri
-        // ALTAIR fikstürünü de kapsayacak şekilde sağ tarafa kaydır.
-        // Böylece refresh, Samurai gibi ileride görünen maçların tarihini de
-        // tekrar isteyebilir; toplam istek sayısı yine en fazla 11 kalır.
+        // Strateji: oynanan maÃ§a gÃ¶re pencere aÃ§, ama ekranda gÃ¶rÃ¼nen en ileri
+        // ALTAIR fikstÃ¼rÃ¼nÃ¼ de kapsayacak ÅŸekilde saÄŸ tarafa kaydÄ±r.
+        // BÃ¶ylece refresh, Samurai gibi ileride gÃ¶rÃ¼nen maÃ§larÄ±n tarihini de
+        // tekrar isteyebilir; toplam istek sayÄ±sÄ± yine en fazla 11 kalÄ±r.
         const latestPlayedCount = await getLatestPlayedCount();
         const latestPlayedIndex = Math.min(
           TOTAL_MATCHDAYS - 1,
@@ -358,14 +444,14 @@ function useFixtures() {
         const fromIndex = Math.max(0, toIndex - 10);
         const mds = ALTAIR_MATCHDAYS.slice(fromIndex, toIndex + 1);
 
-        // 3'erli gruplar halinde — site yoğulmaz
+        // 3'erli gruplar halinde â€” site yoÄŸulmaz
         const results = [];
         const batchSize = 3;
         for (let i = 0; i < mds.length; i += batchSize) {
           const batch = mds.slice(i, i + batchSize);
           const pages = await Promise.all(batch.map(fetchPage));
           pages.forEach(matches => results.push(...matches));
-          // İstekler arası kısa bekleme
+          // Ä°stekler arasÄ± kÄ±sa bekleme
           if (i + batchSize < mds.length) await new Promise(r => setTimeout(r, 300));
         }
 
@@ -373,10 +459,11 @@ function useFixtures() {
 
         if (!cancelled) {
           if (results.length) {
-            writeFixCache(results);
-            setAllMatches(results);
+            const normalizedResults = results.map(normalizeFixtureMatch);
+            writeFixCache(normalizedResults);
+            setAllMatches(normalizedResults);
           } else {
-            // Hiç veri gelmediyse fallback
+            // HiÃ§ veri gelmediyse fallback
             if (!hasExistingData) setAllMatches([]);
           }
           setFixturesLoading(false);
@@ -400,7 +487,7 @@ function useFixtures() {
   const played   = (allMatches || []).filter(m => m.played);
   const upcoming = (allMatches || []).filter(m => !m.played);
 
-  // result kodu: ev sahibiyse kendi skoru, değilse karşı skor
+  // result kodu: ev sahibiyse kendi skoru, deÄŸilse karÅŸÄ± skor
   const withResult = played.map(m => {
     const myScore    = m.home.toLowerCase().includes(ALTAIR_NAME) ? m.hs : m.as;
     const theirScore = m.home.toLowerCase().includes(ALTAIR_NAME) ? m.as : m.hs;
@@ -413,8 +500,8 @@ function useFixtures() {
   return {
     loading,
     error,
-    results:  withResult.slice(-5).reverse(),   // son 5 maç, yeniden eskiye
-    fixtures: upcoming.slice(0, 4),             // sonraki 4 maç
+    results:  withResult.slice(-5).reverse(),   // son 5 maÃ§, yeniden eskiye
+    fixtures: upcoming.slice(0, 4),             // sonraki 4 maÃ§
     refetch,
   };
 }
@@ -431,23 +518,23 @@ function ClubBadge({ className, isAltair, label }) {
   );
 }
 
-/* ─────────────────────────────────────────────────────────────
-   STATIC FALLBACK DATA (otomasyon çalışmazsa görünür)
-   ───────────────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   STATIC FALLBACK DATA (otomasyon Ã§alÄ±ÅŸmazsa gÃ¶rÃ¼nÃ¼r)
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const RESULTS_FALLBACK = [
-  { id:11, date:"10 Apr 2026", matchday:"GW 11", competition:"EML | 1. Lig", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Revenge Esports", awayAbbr:"REV", hs:2, as:0, result:"W", venue:"Home" },
-  { id:12, date:"10 Apr 2026", matchday:"GW 12", competition:"EML | 1. Lig", home:"VOGUE",          homeAbbr:"VOG", away:"ALTAIR eSports", awayAbbr:"ALT", hs:0, as:2, result:"W", venue:"Away" },
-  { id:13, date:"17 Apr 2026", matchday:"GW 13", competition:"EML | 1. Lig", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Blackburn FC",   awayAbbr:"BLA", hs:2, as:0, result:"W", venue:"Home" },
-  { id:14, date:"17 Apr 2026", matchday:"GW 14", competition:"EML | 1. Lig", home:"Anatomy FC",     homeAbbr:"ANA", away:"ALTAIR eSports", awayAbbr:"ALT", hs:0, as:5, result:"W", venue:"Away" },
-  { id:15, date:"17 Apr 2026", matchday:"GW 15", competition:"EML | 1. Lig", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Bolton VFC",     awayAbbr:"BOL", hs:3, as:0, result:"W", venue:"Home" },
+  { id:11, date:"10 Apr 2026", matchday:"GW 11", competition:"EML | Division 1", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Revenge Esports", awayAbbr:"REV", hs:2, as:0, result:"W", venue:"Home" },
+  { id:12, date:"10 Apr 2026", matchday:"GW 12", competition:"EML | Division 1", home:"VOGUE",          homeAbbr:"VOG", away:"ALTAIR eSports", awayAbbr:"ALT", hs:0, as:2, result:"W", venue:"Away" },
+  { id:13, date:"17 Apr 2026", matchday:"GW 13", competition:"EML | Division 1", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Blackburn FC",   awayAbbr:"BLA", hs:2, as:0, result:"W", venue:"Home" },
+  { id:14, date:"17 Apr 2026", matchday:"GW 14", competition:"EML | Division 1", home:"Anatomy FC",     homeAbbr:"ANA", away:"ALTAIR eSports", awayAbbr:"ALT", hs:0, as:5, result:"W", venue:"Away" },
+  { id:15, date:"17 Apr 2026", matchday:"GW 15", competition:"EML | Division 1", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Bolton VFC",     awayAbbr:"BOL", hs:3, as:0, result:"W", venue:"Home" },
 ];
 
 const FIXTURES_FALLBACK = [
-  { id:16, day:"24", month:"APR", time:"22:30", matchday:"GW 16", competition:"EML | 1. Lig", home:"Abrakadabra eSports", homeAbbr:"ABR", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
-  { id:17, day:"24", month:"APR", time:"23:00", matchday:"GW 17", competition:"EML | 1. Lig", home:"ALTAIR eSports",      homeAbbr:"ALT", away:"Pure Focus",      awayAbbr:"PUR", venue:"Home" },
-  { id:18, day:"24", month:"APR", time:"23:30", matchday:"GW 18", competition:"EML | 1. Lig", home:"Redus EFC",           homeAbbr:"RED", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
-  { id:19, day:"01", month:"MAY", time:"22:30", matchday:"GW 19", competition:"EML | 1. Lig", home:"SAMURAI",             homeAbbr:"SAM", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
+  { id:16, day:"24", month:"APR", time:"22:30", matchday:"GW 16", competition:"EML | Division 1", home:"Abrakadabra eSports", homeAbbr:"ABR", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
+  { id:17, day:"24", month:"APR", time:"23:00", matchday:"GW 17", competition:"EML | Division 1", home:"ALTAIR eSports",      homeAbbr:"ALT", away:"Pure Focus",      awayAbbr:"PUR", venue:"Home" },
+  { id:18, day:"24", month:"APR", time:"23:30", matchday:"GW 18", competition:"EML | Division 1", home:"Redus EFC",           homeAbbr:"RED", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
+  { id:19, day:"01", month:"MAY", time:"22:30", matchday:"GW 19", competition:"EML | Division 1", home:"SAMURAI",             homeAbbr:"SAM", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
 ];
 
 const SQUAD = [
@@ -456,23 +543,23 @@ const SQUAD = [
     { number:"31", name:"BERK SER",          ign:"Bwrkser",      pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"BS",  apps:5,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6644/", image:"public/players/Berk.png" },
   ]},
   { group:"Defenders", abbr:"DEF", players:[
-    { number:"5",  name:"AYBERK ÖZTÜRK",     ign:"LethalGullit", pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"AÖ",  apps:12, goals:2, assists:1, captain:false, profileUrl:"https://emajorleague.com/players/profile/8829/", image:"public/players/Ayberk.png" },
-    { number:"99", name:"EGE YILMAZ",        ign:"Zeppettoo",    pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"EY",  apps:12, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9059/", image:"public/players/Ege.png" },
-    { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",  ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:3,  goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/Ömür.png" },
-    { number:"15", name:"EFE GÜLER",         ign:"TRU-xEf3s",    pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"EG",  apps:2,  goals:3, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/7200/", image:"public/players/Efes.png" },
-    { number:"57", name:"SACİT KARACA",      ign:"Sparostago1",  pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"SK",  apps:0,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9224/" },
-    { number:"21", name:"RÜŞTÜ ALPER GÜLER", ign:"DreamArmyA",   pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"RAG", apps:0,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9054/" },
-    { number:"11", name:"HAZAR TARASHOHİ",   ign:"KingHzrq",     pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"HT",  apps:9,  goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8814/", image:"public/players/Hazar.png" },
-    { number:"66", name:"EFE DEMİR",         ign:"future1444",   pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"ED",  apps:6,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9929/", image:"public/players/Efe.png" },
-    { number:"14", name:"YUSUF EREN ZİYREK", ign:"Sk4y0",        pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"YEZ", apps:7,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/Sky/", image:"public/players/Yusuf.png" },
+    { number:"5",  name:"AYBERK ÖZTÜRK",      ign:"LethalGullit", pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"AÖ",  apps:12, goals:2, assists:1, captain:false, profileUrl:"https://emajorleague.com/players/profile/8829/", image:"public/players/Ayberk.png" },
+    { number:"99", name:"EGE YILMAZ",         ign:"Zeppettoo",    pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"EY",  apps:12, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9059/", image:"public/players/Ege.png" },
+    { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",   ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:3,  goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/Ömür.png" },
+    { number:"15", name:"EFE GÜLER",          ign:"TRU-xEf3s",    pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"EG",  apps:2,  goals:3, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/7200/", image:"public/players/Efes.png" },
+    { number:"57", name:"SACİT KARACA",       ign:"Sparostago1",  pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"SK",  apps:0,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9224/" },
+    { number:"21", name:"RÜŞTÜ ALPER GÜLER",  ign:"DreamArmyA",   pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"RAG", apps:0,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9054/" },
+    { number:"11", name:"HAZAR TARASHOHİ",    ign:"KingHzrq",     pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"HT",  apps:9,  goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8814/", image:"public/players/Hazar.png" },
+    { number:"66", name:"EFE DEMİR",          ign:"future1444",   pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"ED",  apps:6,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9929/", image:"public/players/Efe.png" },
+    { number:"14", name:"YUSUF EREN ZİYREK",  ign:"Sk4y0",        pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"YEZ", apps:7,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/Sky/", image:"public/players/Yusuf.png" },
   ]},
   { group:"Midfielders", abbr:"MID", players:[
-    { number:"35", name:"KARAHAN ZEKİ TAŞKAN",  ign:"maniac_kara35", pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"KZT", apps:12, goals:0, assists:1,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/9020/", image:"public/players/Karahan.png" },
-    { number:"10", name:"ŞENER YİĞİT ÇOKYÜCEL", ign:"yigitinski",    pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"ŞYÇ", apps:12, goals:0, assists:10, captain:true,  profileUrl:"https://emajorleague.com/yigitinski/", image:"public/players/Yiğit.png" },
-    { number:"77", name:"ORÇUN BEKTAŞ",         ign:"ORC-HI",        pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"OB",  apps:12, goals:2, assists:3,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/Orçun.png" },
+    { number:"35", name:"KARAHAN ZEKİ TAŞKAN",   ign:"maniac_kara35", pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"KZT", apps:12, goals:0, assists:1,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/9020/", image:"public/players/Karahan.png" },
+    { number:"10", name:"ŞENER YİĞİT ÇOKYÜCEL",  ign:"yigitinski",    pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"ŞYÇ", apps:12, goals:0, assists:10, captain:true,  profileUrl:"https://emajorleague.com/yigitinski/", image:"public/players/Yiğit.png" },
+    { number:"77", name:"ORÇUN BEKTAŞ",          ign:"ORC-HI",        pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"OB",  apps:12, goals:2, assists:3,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/Orçun.png" },
   ]},
   { group:"Forwards", abbr:"FWD", players:[
-    { number:"7", name:"DOĞUKAN TOMBUL", ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:12, goals:8, assists:3, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Doğukan.png" },
+    { number:"7", name:"DOĞUKAN TOMBUL",  ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:12, goals:8, assists:3, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Doğukan.png" },
   ]},
 ];
 
@@ -489,9 +576,275 @@ const SOCIAL = [
   { cls:"dc", icon:"DC", platform:"Discord",   handle:"Join our server", desc:"Join our community, connect with players and stay updated.",  cta:"Join",       url:"https://discord.gg/uMgQKQmr" },
 ];
 
-/* ─────────────────────────────────────────────────────────────
-   DESIGN SYSTEM — one consistent CSS layer for the whole site
-   ───────────────────────────────────────────────────────────── */
+const LANG_OPTIONS = [
+  { code:"EN", label:"English", note:"Current site language" },
+  { code:"TR", label:"Turkce",  note:"Turkish version" },
+];
+
+const UI_COPY = {
+  EN: {
+    nav: {
+      links: { results:"Results", table:"Table", fixtures:"Fixtures", squad:"Squad", partners:"Partners", watch:"Watch" },
+      cta:"Follow the Club",
+      langHead:"Site Language",
+    },
+    hero: {
+      tagLeague:"FC 26 · eMajor League",
+      tagSeason:"Division 1 · S26",
+      lines:["WE PLAY", "AS ONE.", "WE WIN TOGETHER."],
+      sub:"ALTAIR eSports competes in the eMajor League FC 26 Pro Clubs Division 1 — a disciplined, modern pro club built on chemistry, structure and relentless standards.",
+      primary:"Watch Live",
+      secondary:"Meet the Squad",
+      scroll:"Scroll",
+    },
+    ticker: {
+      tag:"EML · DIVISION 1",
+      form:"CURRENT FORM · W · W · W · W · W",
+      next:"NEXT UP · ABRAKADABRA ESPORTS · 24 APR · 22:30 UTC+3",
+      live:"BROADCAST LIVE ON TWITCH · /ALTAIRESPOR",
+      aria:"Latest results ticker",
+    },
+    standings: {
+      season:"FC 26 · Division 1 · Season 2026",
+      updating:"Updating…",
+      cached:"Cached data",
+      refresh:"Refresh",
+      live:"Live Standings",
+      title:["LIVE", "TABLE"],
+      kpis:{ position:"Position", points:"Points", wins:"Wins", goalDiff:"Goal Diff", played:"Played" },
+      table:{ club:"Club", form:"Form" },
+      loading:"Loading…",
+      showing:(from, to) => `Showing ranks ${from}-${to} · 18 clubs total`,
+      cachedPrefix:(err) => `Cached · ${err}`,
+      full:"Full table on eMajor League →",
+      rankUnit:"th",
+      pointUnit:"pts",
+      winUnit:"W",
+      playedUnit:"GP",
+    },
+    results: {
+      eyebrow:"Matchday Report",
+      title:["RECENT", "RESULTS"],
+      subLoading:"Loading latest results…",
+      sub:"The last five matchdays, played and decided. Every performance measured.",
+      cached:"Cached",
+      viewFixtures:"View Fixtures",
+      labels:{ W:"Victory", L:"Defeat", D:"Draw" },
+      venue:{ home:"Home", away:"Away" },
+    },
+    fixtures: {
+      eyebrow:"Upcoming Schedule",
+      title:["NEXT", "FIXTURES"],
+      subLoading:"Loading upcoming fixtures…",
+      sub:"Every upcoming matchday on the EML Division 1 calendar. Broadcast live on Twitch.",
+      cached:"Cached",
+      watch:"Watch on Twitch",
+      venue:{ home:"Home", away:"Away" },
+      vs:"VS",
+    },
+    squad: {
+      eyebrow:"Season 2026 Roster",
+      title:["THE", "SQUAD"],
+      sub:"Fourteen players. One club. The current ALTAIR roster competing in the FC 26 Pro Clubs Division 1.",
+      players:(count) => `${count} Players`,
+      count:(count) => `${count} ${count > 1 ? "players" : "player"}`,
+      stats:{ apps:"Apps", goals:"Goals", assists:"Assists" },
+      captain:"Captain",
+      groups:{
+        Goalkeepers:"Goalkeepers",
+        Defenders:"Defenders",
+        Midfielders:"Midfielders",
+        Forwards:"Forwards",
+      },
+      roles:{
+        Goalkeeper:"Goalkeeper",
+        "Centre-Back":"Centre-Back",
+        "Right Wing Back":"Right Wing Back",
+        "Left Wing Back":"Left Wing Back",
+        "Defensive Midfielder":"Defensive Midfielder",
+        "Central Midfielder":"Central Midfielder",
+        Striker:"Striker",
+      },
+    },
+    sponsors: {
+      eyebrow:"Partners & Sponsors",
+      title:["OUR", "PARTNERS"],
+      sub:"ALTAIR partners with brands that share our drive for excellence. We deliver an authentic, engaged audience at the intersection of football and competitive gaming — a growing community that watches, streams, and buys.",
+      kpis:{ reach:"Combined Reach", ranking:"Club Ranking", titles:"Titles Won", active:"Active Players" },
+      tiers:{ title:"Title Partner", gold:"Gold Partners", official:"Official Partners" },
+      ctaTitle:"Become an ALTAIR Partner",
+      ctaSub:"Reach the next generation of competitive football fans through matchday broadcasts, digital content and on-kit placement.",
+      ctaPrimary:"Get in Touch",
+      ctaSecondary:"Partnership Deck",
+    },
+    social: {
+      eyebrow:"Broadcasts & Community",
+      title:["FOLLOW", "ALTAIR"],
+      sub:"Every live match, every highlight, every behind-the-scenes moment — across the channels where the ALTAIR community lives.",
+      official:"Official",
+      cards:{
+        tw:{ desc:"Live match broadcasts every matchday with full commentary.", cta:"Watch Live" },
+        yt:{ desc:"Match replays, player breakdowns and season recaps.", cta:"Subscribe" },
+        ig:{ desc:"Behind the scenes, squad content and matchday graphics.", cta:"Follow" },
+        dc:{ desc:"Join our community, connect with players and stay updated.", cta:"Join" },
+      },
+    },
+    footer: {
+      brandTag:"FC 26 Pro Clubs · eMajor League",
+      bio:"A professional FC 26 Pro Clubs organisation competing in EML Division 1. Built on structure, chemistry and a relentless standard.",
+      titles:{ club:"Club", competition:"Competition", connect:"Connect" },
+      clubLinks:["About ALTAIR","Season History","Honours","Press Kit","Careers"],
+      compLinks:["Team Page","League Table","Fixtures","Statistics","Squad"],
+      connectLinks:["Sponsorships","Media Enquiries","Fan Community","Merchandise","Contact Us"],
+      rights:"© 2026 ALTAIR eSports · All rights reserved",
+      competing:"Competing in",
+      privacy:"Privacy",
+      terms:"Terms",
+    },
+  },
+  TR: {
+    nav: {
+      links: { results:"Sonuclar", table:"Tablo", fixtures:"Fikstur", squad:"Kadro", partners:"Partnerler", watch:"Izle" },
+      cta:"Kulubu Takip Et",
+      langHead:"Site Dili",
+    },
+    hero: {
+      tagLeague:"FC 26 · eMajor League",
+      tagSeason:"1. Lig · S26",
+      lines:["BIRLIKTE", "OYNARIZ.", "BIRLIKTE KAZANIRIZ."],
+      sub:"ALTAIR eSports, eMajor League FC 26 Pro Clubs 1. Lig'de mucadele eden; kimya, duzen ve yuksek standartlar uzerine kurulu modern bir pro club yapisidir.",
+      primary:"Canli Izle",
+      secondary:"Kadroyu Incele",
+      scroll:"Kaydir",
+    },
+    ticker: {
+      tag:"EML · 1. LIG",
+      form:"GUNCEL FORM · G · G · G · G · G",
+      next:"SIRADAKI MAC · ABRAKADABRA ESPORTS · 24 NIS · 22:30 UTC+3",
+      live:"YAYIN TWITCH'TE CANLI · /ALTAIRESPOR",
+      aria:"Sonuclar kayan seridi",
+    },
+    standings: {
+      season:"FC 26 · 1. Lig · 2026 Sezonu",
+      updating:"Guncelleniyor…",
+      cached:"Onbellek verisi",
+      refresh:"Yenile",
+      live:"Canli Puan Durumu",
+      title:["CANLI", "TABLO"],
+      kpis:{ position:"Sira", points:"Puan", wins:"Galibiyet", goalDiff:"Averaj", played:"Oynanan" },
+      table:{ club:"Kulup", form:"Form" },
+      loading:"Yukleniyor…",
+      showing:(from, to) => `${from}-${to} siralar gosteriliyor · toplam 18 kulup`,
+      cachedPrefix:(err) => `Onbellek · ${err}`,
+      full:"Tam tablo eMajor League'de →",
+      rankUnit:"",
+      pointUnit:"puan",
+      winUnit:"G",
+      playedUnit:"OM",
+    },
+    results: {
+      eyebrow:"Mac Haftasi Raporu",
+      title:["SON", "SONUCLAR"],
+      subLoading:"Son sonuclar yukleniyor…",
+      sub:"Son bes mac haftasi. Oynandi, sonuclandi ve kayda gecti.",
+      cached:"Onbellek",
+      viewFixtures:"Fiksture Git",
+      labels:{ W:"Galibiyet", L:"Maglubiyet", D:"Beraberlik" },
+      venue:{ home:"Ic Saha", away:"Deplasman" },
+    },
+    fixtures: {
+      eyebrow:"Yaklasan Program",
+      title:["SIRADAKI", "FIKSTUR"],
+      subLoading:"Yaklasan fikstur yukleniyor…",
+      sub:"EML 1. Lig takvimindeki yaklasan tum mac haftalari. Yayinlar Twitch'te canli.",
+      cached:"Onbellek",
+      watch:"Twitch'te Izle",
+      venue:{ home:"Ic Saha", away:"Deplasman" },
+      vs:"VS",
+    },
+    squad: {
+      eyebrow:"2026 Sezonu Kadrosu",
+      title:["TAKIM", "KADROSU"],
+      sub:"On dort oyuncu. Tek kulup. FC 26 Pro Clubs 1. Lig'de mucadele eden guncel ALTAIR kadrosu.",
+      players:(count) => `${count} Oyuncu`,
+      count:(count) => `${count} oyuncu`,
+      stats:{ apps:"Mac", goals:"Gol", assists:"Asist" },
+      captain:"Kaptan",
+      groups:{
+        Goalkeepers:"Kaleciler",
+        Defenders:"Defans",
+        Midfielders:"Orta Saha",
+        Forwards:"Hucum",
+      },
+      roles:{
+        Goalkeeper:"Kaleci",
+        "Centre-Back":"Stoper",
+        "Right Wing Back":"Sag Kanat Bek",
+        "Left Wing Back":"Sol Kanat Bek",
+        "Defensive Midfielder":"Defansif Orta Saha",
+        "Central Midfielder":"Merkez Orta Saha",
+        Striker:"Forvet",
+      },
+    },
+    sponsors: {
+      eyebrow:"Partnerler ve Sponsorlar",
+      title:["IS", "ORTAKLARIMIZ"],
+      sub:"ALTAIR, mukemmellik hedefini paylasan markalarla birlikte calisir. Futbol ile rekabetci oyunculugun kesisimindeki gercek ve etkilesimi yuksek bir topluluga ulasiriz.",
+      kpis:{ reach:"Toplam Erisim", ranking:"Kulup Sirasi", titles:"Kazanilan Kupa", active:"Aktif Oyuncu" },
+      tiers:{ title:"Ana Partner", gold:"Altin Partnerler", official:"Resmi Partnerler" },
+      ctaTitle:"ALTAIR Partneri Olun",
+      ctaSub:"Mac gunu yayinlari, dijital icerikler ve forma ustu gorunurluk ile rekabetci futbol izleyicisinin yeni nesline ulasin.",
+      ctaPrimary:"Iletisime Gec",
+      ctaSecondary:"Partnerlik Dosyasi",
+    },
+    social: {
+      eyebrow:"Yayinlar ve Topluluk",
+      title:["ALTAIR'I", "TAKIP ET"],
+      sub:"Her canli mac, her ozet, her kulis icerigi — ALTAIR toplulugunun bulustugu tum kanallarda.",
+      official:"Resmi",
+      cards:{
+        tw:{ desc:"Her mac haftasinda tam anlatimla canli mac yayinlari.", cta:"Canli Izle" },
+        yt:{ desc:"Mac tekrarlarÄ±, oyuncu analizleri ve sezon ozetleri.", cta:"Abone Ol" },
+        ig:{ desc:"Sahne arkasi, kadro icerikleri ve mac gunu tasarimlari.", cta:"Takip Et" },
+        dc:{ desc:"Toplulugumuza katilin, oyuncularla baglanti kurun ve guncel kalin.", cta:"Katil" },
+      },
+    },
+    footer: {
+      brandTag:"FC 26 Pro Clubs · eMajor League",
+      bio:"EML 1. Lig'de mucadele eden profesyonel bir FC 26 Pro Clubs organizasyonu. Yapisi, uyumu ve bitmeyen standart arayisiyla kuruldu.",
+      titles:{ club:"Kulup", competition:"Rekabet", connect:"Baglanti" },
+      clubLinks:["ALTAIR Hakkinda","Sezon Gecmisi","Basarilar","Basin Kiti","Kariyer"],
+      compLinks:["Takim Sayfasi","Puan Durumu","Fikstur","Istatistikler","Kadro"],
+      connectLinks:["Sponsorluk","Medya Iletisimi","Taraftar Toplulugu","Magaza","Bize Ulasin"],
+      rights:"© 2026 ALTAIR eSports · Tum haklari saklidir",
+      competing:"Mucadele ettigi lig",
+      privacy:"Gizlilik",
+      terms:"Kosullar",
+    },
+  },
+};
+
+const MONTHS_TR = ["","OCA","SUB","MAR","NIS","MAY","HAZ","TEM","AGU","EYL","EKI","KAS","ARA"];
+const MONTH_TITLES_EN = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTH_TITLES_TR = ["","Oca","Sub","Mar","Nis","May","Haz","Tem","Agu","Eyl","Eki","Kas","Ara"];
+const MONTH_INDEX_BY_ALIAS = {
+  JAN:1, OCA:1,
+  FEB:2, SUB:2,
+  MAR:3,
+  APR:4, NIS:4,
+  MAY:5,
+  JUN:6, HAZ:6,
+  JUL:7, TEM:7,
+  AUG:8, AGU:8,
+  SEP:9, EYL:9,
+  OCT:10, EKI:10,
+  NOV:11, KAS:11,
+  DEC:12, ARA:12,
+};
+
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   DESIGN SYSTEM â€” one consistent CSS layer for the whole site
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
@@ -554,26 +907,28 @@ button{font-family:inherit}
   /* rhythm */
   --pad-x: clamp(20px, 5vw, 72px);
   --sec-y: clamp(60px, 9vw, 120px);
+  --hero-frame-max: 920px;
+  --side-rail: max(0px, calc((100vw - var(--hero-frame-max)) / 2));
 }
 
 
-/* ─── Side art panels — fixed, full viewport height ─── */
+/* â”€â”€â”€ Side art panels â€” fixed, full viewport height â”€â”€â”€ */
 body::before{
   content:'';
-  position:fixed;top:0;left:0;width:340px;height:100vh;
+  position:fixed;top:0;left:0;width:var(--side-rail);height:100vh;
   background:linear-gradient(to right,rgba(34,211,238,.055) 0%,rgba(34,211,238,.018) 45%,transparent 100%);
   pointer-events:none;z-index:0;
 }
 body::after{
   content:'';
-  position:fixed;top:0;right:0;width:340px;height:100vh;
+  position:fixed;top:0;right:0;width:var(--side-rail);height:100vh;
   background:linear-gradient(to left,rgba(34,211,238,.055) 0%,rgba(34,211,238,.018) 45%,transparent 100%);
   pointer-events:none;z-index:0;
 }
 .side-canvas-wrap{
   position:fixed;
   top:0;bottom:0;
-  width:300px;
+  width:var(--side-rail);
   pointer-events:none;
   z-index:5;
 }
@@ -584,9 +939,6 @@ body::after{
   width:100%;height:100%;
   display:block;
 }
-@media(max-width:1600px){.side-canvas-wrap{width:220px}}
-@media(max-width:1400px){.side-canvas-wrap{width:150px}}
-@media(max-width:1200px){.side-canvas-wrap{width:80px}}
 @media(max-width:1000px){
   .side-canvas-wrap{display:none}
   body::before,body::after{display:none}
@@ -644,7 +996,7 @@ body::after{
     linear-gradient(180deg,rgba(10,18,30,.94),rgba(6,10,18,.99));
 }
 
-/* ─── Section header ─── */
+/* â”€â”€â”€ Section header â”€â”€â”€ */
 .sec-hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:44px;flex-wrap:wrap}
 .sec-hdr-left{max-width:720px}
 .sec-eyebrow{display:inline-flex;align-items:center;gap:12px;font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
@@ -658,9 +1010,9 @@ body::after{
 .sec-link-arrow{transition:transform .2s ease}
 .sec-link:hover .sec-link-arrow{transform:translateX(4px)}
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    NAVIGATION
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .nav{
   position:fixed;top:0;left:0;right:0;z-index:500;
   height:72px;
@@ -682,6 +1034,7 @@ body::after{
 .nav-wm{display:flex;flex-direction:column;line-height:1;gap:4px}
 .nav-wm-top{font-family:var(--f-display);font-weight:800;font-size:16px;letter-spacing:.04em;color:var(--text);text-transform:uppercase}
 .nav-wm-sub{font-family:var(--f-mono);font-size:9px;font-weight:500;letter-spacing:.22em;color:var(--cyan);text-transform:uppercase;opacity:.85}
+.nav-right{display:flex;align-items:center;gap:14px}
 
 .nav-links{display:flex;align-items:center;gap:4px;list-style:none}
 .nav-links a{
@@ -711,12 +1064,105 @@ body::after{
 @keyframes navPulse{0%,100%{opacity:1}50%{opacity:.35}}
 .nav-cta:hover{background:var(--cyan-2);box-shadow:0 0 0 4px rgba(34,211,238,.15),0 10px 30px rgba(34,211,238,.25);transform:translateY(-1px)}
 
-.nav-burger{display:none;width:38px;height:38px;border:1px solid var(--line-2);background:transparent;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px}
-.nav-burger span{display:block;width:18px;height:1.5px;background:var(--text)}
+.nav-lang{position:relative}
+.nav-burger{
+  display:flex;min-width:98px;height:38px;padding:0 12px;border:1px solid var(--line-2);
+  background:linear-gradient(180deg,rgba(17,25,39,.95),rgba(10,16,27,.98));
+  color:var(--text);cursor:pointer;align-items:center;justify-content:space-between;gap:10px;
+  transition:border-color .2s ease,background .2s ease,box-shadow .2s ease,transform .18s ease;
+}
+.nav-burger:hover,
+.nav-burger.active{
+  border-color:var(--cyan-edge);
+  background:linear-gradient(180deg,rgba(17,27,43,.98),rgba(8,15,26,1));
+  box-shadow:0 0 0 3px rgba(34,211,238,.08),0 12px 32px rgba(4,10,20,.35);
+}
+.nav-burger:active{transform:translateY(1px)}
+.nav-lang-trigger-main{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.nav-lang-trigger-label{
+  font-family:var(--f-mono);font-size:8px;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--muted);
+}
+.nav-lang-trigger-value{
+  font-family:var(--f-narrow);font-size:11px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text);
+}
+.nav-lang-trigger-icon{
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+  font-family:var(--f-mono);font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--cyan);
+}
+.nav-lang-trigger-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--cyan);
+  box-shadow:0 0 12px rgba(34,211,238,.5);
+}
+.nav-lang-trigger-caret{
+  color:var(--text-2);
+  transition:transform .2s ease,color .2s ease;
+}
+.nav-burger.active .nav-lang-trigger-caret{
+  transform:rotate(180deg);
+  color:var(--cyan);
+}
+.nav-lang-panel{
+  position:absolute;top:calc(100% + 12px);right:0;min-width:220px;
+  padding:12px;border:1px solid var(--line-cyan);
+  background:
+    linear-gradient(180deg,rgba(12,19,31,.98),rgba(8,13,22,.98)),
+    radial-gradient(circle at top right,rgba(34,211,238,.12),transparent 55%);
+  box-shadow:0 24px 70px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+  backdrop-filter:blur(20px) saturate(130%);
+}
+.nav-lang-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:0 2px 10px;margin-bottom:10px;border-bottom:1px solid var(--line);
+  font-family:var(--f-mono);font-size:10px;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text-2);
+}
+.nav-lang-live{color:var(--cyan)}
+.nav-lang-list{display:flex;flex-direction:column;gap:8px}
+.nav-lang-option{
+  width:100%;padding:11px 12px;border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(19,28,42,.82),rgba(13,20,32,.94));
+  color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:12px;
+  cursor:pointer;text-align:left;transition:border-color .2s ease,transform .18s ease,background .2s ease;
+}
+.nav-lang-option:hover{
+  border-color:var(--cyan-edge);
+  background:linear-gradient(180deg,rgba(21,33,50,.9),rgba(13,22,36,.98));
+  transform:translateY(-1px);
+}
+.nav-lang-option.active{
+  border-color:var(--cyan-edge);
+  box-shadow:inset 3px 0 0 var(--cyan);
+  background:linear-gradient(180deg,rgba(11,35,47,.92),rgba(10,23,35,.98));
+}
+.nav-lang-main{display:flex;flex-direction:column;gap:3px}
+.nav-lang-code{
+  font-family:var(--f-display);font-size:20px;font-weight:800;line-height:1;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--text);
+}
+.nav-lang-label{
+  font-family:var(--f-narrow);font-size:12px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-2);
+}
+.nav-lang-note{
+  font-family:var(--f-mono);font-size:9px;font-weight:500;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);
+}
+.nav-lang-check{
+  width:10px;height:10px;border-radius:50%;
+  background:rgba(34,211,238,.18);border:1px solid rgba(34,211,238,.28);
+  box-shadow:0 0 0 0 rgba(34,211,238,.25);
+}
+.nav-lang-option.active .nav-lang-check{
+  background:var(--cyan);
+  box-shadow:0 0 0 6px rgba(34,211,238,.08);
+}
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    HERO
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hero{
   position:relative;min-height:100vh;
   display:grid;grid-template-columns:1.15fr .85fr;align-items:center;
@@ -822,6 +1268,8 @@ body::after{
 
 /* Left column */
 .hero-left{position:relative;z-index:4;padding:40px var(--pad-x) 80px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;overflow:hidden}
+.hero.hero--tr .hero-left{padding-right:calc(var(--pad-x) + 56px)}
+.hero.hero--tr .hero-h1 .l-3{font-size:.48em}
 .hero-tag{
   display:inline-flex;align-items:center;gap:10px;padding:7px 14px;width:fit-content;
   border:1px solid var(--cyan-edge);background:var(--cyan-soft);
@@ -875,7 +1323,7 @@ body::after{
 .btn-arrow{font-family:var(--f-mono);font-size:14px;transition:transform .2s ease}
 .btn:hover .btn-arrow{transform:translateX(4px)}
 
-/* Right column — logo composition */
+/* Right column â€” logo composition */
 .hero-right{position:relative;z-index:3;height:100%;display:flex;align-items:center;justify-content:center;padding:60px 40px 60px 20px}
 .hero-stage{
   position:relative;width:min(500px,100%);aspect-ratio:1;
@@ -896,9 +1344,9 @@ body::after{
 .hero-scroll-line::after{content:'';position:absolute;top:0;left:0;right:0;height:10px;background:var(--cyan);animation:scrollDown 2s ease infinite}
 @keyframes scrollDown{0%{transform:translateY(-100%)}100%{transform:translateY(360%)}}
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    TICKER / STATUS STRIP
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .ticker{
   position:relative;
   display:flex;align-items:stretch;
@@ -937,12 +1385,12 @@ body::after{
 .ticker-result.d{background:var(--draw)}
 .ticker-meta{color:var(--muted);font-size:11px;letter-spacing:.12em}
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    STANDINGS
-   ═══════════════════════════════════════════════════════════ */
-/* ═══════════════════════════════════════════════════════════
-   STANDINGS — broadcast-style redesign
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   STANDINGS â€” broadcast-style redesign
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .standings{
   background:var(--bg);
   border-top:1px solid var(--line);
@@ -973,7 +1421,7 @@ body::after{
 }
 .st-live-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:navPulse 1.6s ease infinite}
 
-/* Hero header — title left, kpis right on same line */
+/* Hero header â€” title left, kpis right on same line */
 .st-hero{
   display:flex;align-items:center;justify-content:space-between;gap:32px;
   padding:44px var(--pad-x) 40px;
@@ -992,7 +1440,7 @@ body::after{
 }
 .st-hero-title em{font-style:normal;color:var(--cyan)}
 
-/* KPIs — compact horizontal right side */
+/* KPIs â€” compact horizontal right side */
 .st-kpis{
   display:flex;align-items:stretch;gap:0;
   flex-shrink:0;
@@ -1152,9 +1600,9 @@ body::after{
 .st-foot-link:hover{opacity:.7}
 
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    RESULTS
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .results-grid{display:flex;flex-direction:column;gap:6px}
 .res-card{
   position:relative;
@@ -1244,9 +1692,9 @@ body::after{
 
 .res-mob{display:none}
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    FIXTURES
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .fix-grid{display:flex;flex-direction:column;gap:4px}
 .fix-card{
   position:relative;
@@ -1353,9 +1801,9 @@ body::after{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SQUAD
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .squad{background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
 .squad::before{
   content:'';position:absolute;top:-160px;left:50%;transform:translateX(-50%);
@@ -1516,9 +1964,9 @@ body::after{
   font-family:var(--f-mono);font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:6px;
 }
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SPONSORS
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .sponsors{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--bg),var(--surface-0) 100%)}
 .sp-top{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:end;margin-bottom:56px}
 .sp-top p{font-size:15px;line-height:1.75;color:var(--text-2);font-weight:400;max-width:540px}
@@ -1581,9 +2029,9 @@ body::after{
 .sp-cta-sub{font-size:14px;color:var(--text-2);line-height:1.6}
 .sp-cta-actions{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SOCIAL
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .sc{
   position:relative;overflow:hidden;
@@ -1631,9 +2079,9 @@ body::after{
 }
 .sc:hover .sc-cta{color:var(--sc-color)}
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    FOOTER
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .footer{
   padding:72px var(--pad-x) 28px;
   border-top:1px solid var(--line);
@@ -1670,9 +2118,9 @@ body::after{
 .footer-bottom a:hover{color:var(--cyan)}
 .footer-legal{display:flex;gap:24px;flex-wrap:wrap}
 
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    RESPONSIVE
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /* TABLET */
 @media (max-width:1100px){
@@ -1747,7 +2195,12 @@ body::after{
   .nav{height:60px}
   .nav.scrolled{height:56px}
   .nav-links{display:none}
-  .nav-burger{display:flex}
+  .nav-right{gap:10px}
+  .nav-lang-panel{right:0;min-width:200px}
+  .nav-burger{min-width:88px;padding:0 10px;gap:8px}
+  .nav-lang-trigger-label{font-size:7px}
+  .nav-lang-trigger-value{font-size:10px}
+  .nav-lang-trigger-icon{gap:6px;font-size:9px}
   .nav-logo-img{height:34px;width:34px}
   .nav-wm-top{font-size:14px}
   .nav-wm-sub{display:none}
@@ -1757,6 +2210,7 @@ body::after{
   .hero{grid-template-columns:1fr;min-height:auto;padding-top:60px}
   .hero-right{display:none}
   .hero-left{padding:40px var(--pad-x) 60px}
+  .hero.hero--tr .hero-left{padding-right:var(--pad-x)}
   .hero-mobile-logo{display:block;width:110px;height:110px;object-fit:contain;margin-bottom:28px;filter:drop-shadow(0 0 20px rgba(34,211,238,.4))}
   .hero-tag{font-size:9px;padding:6px 11px;margin-bottom:20px;letter-spacing:.14em}
   .hero-h1{font-size:clamp(44px,11vw,68px)}
@@ -1779,7 +2233,7 @@ body::after{
   .sec-eyebrow{font-size:10px;letter-spacing:.14em}
   .sec-link{font-size:10px;padding:8px 14px}
 
-  /* Standings — mobilde */
+  /* Standings â€” mobilde */
   .st-hero{flex-direction:column;align-items:flex-start;gap:16px;padding:20px var(--pad-x) 16px}
   .st-hero-title{font-size:clamp(28px,8vw,44px)}
   .st-kpis{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%}
@@ -2001,7 +2455,7 @@ body::after{
   .footer-top{grid-template-columns:1fr;gap:22px}
   .footer-brand{order:-1}
   .social-grid{grid-template-columns:1fr}
-  /* KPI 480'de de yatay kalır, sadece biraz daha küçük */
+  /* KPI 480'de de yatay kalÄ±r, sadece biraz daha kÃ¼Ã§Ã¼k */
   .st-kpis{flex-wrap:nowrap;overflow-x:auto}
   .st-kpi{flex:0 0 auto;min-width:70px;padding:10px 12px 8px}
   .st-kpi:nth-child(odd){border-right:1px solid var(--line)}
@@ -2042,13 +2496,13 @@ body::after{
 }
 `;
 
-/* ─────────────────────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    COMPONENTS
-   ───────────────────────────────────────────────────────────── */
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
-/* ─────────────────────────────────────────────────────────────
-   STARFIELD CANVAS — sağ ve sol kenar hareketli yıldızlar
-   ───────────────────────────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   STARFIELD CANVAS â€” saÄŸ ve sol kenar hareketli yÄ±ldÄ±zlar
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 
 function StarCanvas({ side }) {
@@ -2070,7 +2524,7 @@ function StarCanvas({ side }) {
     resize();
     window.addEventListener("resize", resize, { passive: true });
 
-    /* ── Stars ── */
+    /* â”€â”€ Stars â”€â”€ */
     const stars = Array.from({ length: 160 }, () => ({
       x: Math.random(), y: Math.random(),
       r: Math.random() < 0.1 ? Math.random() * 1.6 + 0.8 : Math.random() * 0.65 + 0.15,
@@ -2082,27 +2536,27 @@ function StarCanvas({ side }) {
       to: Math.random() * Math.PI * 2,
     }));
 
-    /* ── Shooting stars ── */
+    /* â”€â”€ Shooting stars â”€â”€ */
     const shoots = Array.from({ length: 4 }, (_, i) => ({
       prog: Math.random(), speed: Math.random() * 0.004 + 0.002,
       x: Math.random(), y: Math.random() * 0.6, delay: i * 0.25,
     }));
 
-    /* ── Geometric rings ── */
+    /* â”€â”€ Geometric rings â”€â”€ */
     const rings = [
       { cx: 0.5, cy: 0.28, r: 0.28, rot: 0,   rotSpeed: 0.0003,   a: 0.12, dashes: [12, 8],  w: 0.6 },
       { cx: 0.3, cy: 0.65, r: 0.18, rot: 1.2,  rotSpeed: -0.0005,  a: 0.09, dashes: [6, 14],  w: 0.5 },
       { cx: 0.7, cy: 0.45, r: 0.14, rot: 0.5,  rotSpeed: 0.0007,   a: 0.08, dashes: [20, 6],  w: 0.4 },
     ];
 
-    /* ── Pulse circles ── */
+    /* â”€â”€ Pulse circles â”€â”€ */
     const pulses = [
       { cx: 0.5,  cy: 0.28, phase: 0,   speed: 0.008, maxR: 0.22, a: 0.18 },
       { cx: 0.25, cy: 0.72, phase: 2.1, speed: 0.006, maxR: 0.16, a: 0.14 },
       { cx: 0.75, cy: 0.5,  phase: 4.2, speed: 0.009, maxR: 0.18, a: 0.12 },
     ];
 
-    /* ── Floating particles ── */
+    /* â”€â”€ Floating particles â”€â”€ */
     const particles = Array.from({ length: 18 }, () => ({
       x: Math.random(), y: Math.random(),
       r: Math.random() * 2 + 1, a: Math.random() * 0.4 + 0.1,
@@ -2112,7 +2566,7 @@ function StarCanvas({ side }) {
       cyan: Math.random() < 0.5,
     }));
 
-    /* ── Arc segments ── */
+    /* â”€â”€ Arc segments â”€â”€ */
     const arcs = [
       { cx: 0.5, cy: 0.28, r: 0.32, start: 0.2,  len: 0.8,  rot: 0,   rotSpeed: 0.0004,  a: 0.20, w: 1   },
       { cx: 0.5, cy: 0.28, r: 0.38, start: 2.5,  len: 1.2,  rot: 0,   rotSpeed: -0.0003, a: 0.12, w: 0.6 },
@@ -2120,7 +2574,7 @@ function StarCanvas({ side }) {
       { cx: 0.7, cy: 0.45, r: 0.17, start: 3.5,  len: 1.4,  rot: 0.5, rotSpeed: -0.0004, a: 0.14, w: 0.7 },
     ];
 
-    /* ── Diamond dots ── */
+    /* â”€â”€ Diamond dots â”€â”€ */
     const diamonds = Array.from({ length: 6 }, () => ({
       x: Math.random(), y: Math.random(),
       s: Math.random() * 3 + 1.5, a: Math.random() * 0.35 + 0.1,
@@ -2238,14 +2692,36 @@ function StarCanvas({ side }) {
 }
 
 
-function Navigation({ scrolled }) {
+function Navigation({ scrolled, activeLang, setActiveLang, copy }) {
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const langMenuRef = useRef(null);
+
+  useEffect(() => {
+    const onPointerDown = (event) => {
+      if (!langMenuRef.current?.contains(event.target)) {
+        setLangMenuOpen(false);
+      }
+    };
+
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setLangMenuOpen(false);
+    };
+
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
+
   const links = [
-    ["#matches",   "Results"],
-    ["#standings", "Table"],
-    ["#fixtures",  "Fixtures"],
-    ["#squad",     "Squad"],
-    ["#sponsors",  "Partners"],
-    ["#broadcast", "Watch"],
+    ["#matches",   copy.nav.links.results],
+    ["#standings", copy.nav.links.table],
+    ["#fixtures",  copy.nav.links.fixtures],
+    ["#squad",     copy.nav.links.squad],
+    ["#sponsors",  copy.nav.links.partners],
+    ["#broadcast", copy.nav.links.watch],
   ];
   return (
     <nav className={`nav${scrolled ? " scrolled" : ""}`}>
@@ -2263,18 +2739,65 @@ function Navigation({ scrolled }) {
           <li key={l}><a href={h}>{l}</a></li>
         ))}
       </ul>
-      <a href="#broadcast" className="nav-cta">Follow the Club</a>
-      <button className="nav-burger" aria-label="Menu">
-        <span/><span/><span/>
-      </button>
+      <div className="nav-right">
+        <a href="#broadcast" className="nav-cta">{copy.nav.cta}</a>
+        <div className="nav-lang" ref={langMenuRef}>
+          <button
+            className={`nav-burger${langMenuOpen ? " active" : ""}`}
+            aria-label={copy.nav.langHead}
+            aria-expanded={langMenuOpen}
+            aria-haspopup="menu"
+            onClick={() => setLangMenuOpen((open) => !open)}
+          >
+            <span className="nav-lang-trigger-main">
+              <span className="nav-lang-trigger-label">Lang</span>
+              <span className="nav-lang-trigger-value">{activeLang === "TR" ? "Turkce" : "English"}</span>
+            </span>
+            <span className="nav-lang-trigger-icon" aria-hidden="true">
+              <span className="nav-lang-trigger-dot"/>
+              <span>{activeLang}</span>
+              <span className="nav-lang-trigger-caret">v</span>
+            </span>
+          </button>
+          {langMenuOpen && (
+            <div className="nav-lang-panel" role="menu" aria-label="Language options">
+              <div className="nav-lang-head">
+                <span>{copy.nav.langHead}</span>
+                <span className="nav-lang-live">{activeLang}</span>
+              </div>
+              <div className="nav-lang-list">
+                {LANG_OPTIONS.map((option) => (
+                  <button
+                    key={option.code}
+                    className={`nav-lang-option${activeLang === option.code ? " active" : ""}`}
+                    role="menuitemradio"
+                    aria-checked={activeLang === option.code}
+                    onClick={() => {
+                      setActiveLang(option.code);
+                      setLangMenuOpen(false);
+                    }}
+                  >
+                    <span className="nav-lang-main">
+                      <span className="nav-lang-code">{option.code}</span>
+                      <span className="nav-lang-label">{option.label}</span>
+                      <span className="nav-lang-note">{option.note}</span>
+                    </span>
+                    <span className="nav-lang-check" aria-hidden="true"/>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </nav>
   );
 }
 
 
-function Hero() {
+function Hero({ copy, lang }) {
   return (
-    <section className="hero" id="top">
+    <section className={`hero${lang === "TR" ? " hero--tr" : ""}`} id="top">
       <div className="hero-bg-base"/>
       <div className="hero-bg-grid"/>
       <div className="hero-bg-glow"/>
@@ -2287,30 +2810,29 @@ function Hero() {
         <img src="/logo.png" alt="ALTAIR" className="hero-mobile-logo"/>
         <div className="hero-tag">
           <span className="hero-tag-dot"/>
-          <span>FC 26 · eMajor League</span>
+          <span>{copy.hero.tagLeague}</span>
           <span className="hero-tag-sep"/>
-          <span>1. Lig · S26</span>
+          <span>{copy.hero.tagSeason}</span>
         </div>
 
         <h1 className="hero-h1">
-          <span className="l">WE PLAY</span>
-          <span className="l l-2">AS ONE.</span>
-          <span className="l l-3">WE WIN TOGETHER.</span>
+          <span className="l">{copy.hero.lines[0]}</span>
+          <span className="l l-2">{copy.hero.lines[1]}</span>
+          <span className="l l-3">{copy.hero.lines[2]}</span>
         </h1>
 
         <p className="hero-sub">
-          <strong>ALTAIR eSports</strong> competes in the eMajor League FC 26 Pro Clubs 1. Lig — a disciplined, modern pro club built on chemistry, structure and relentless standards.
+          <strong>ALTAIR eSports</strong> {copy.hero.sub}
         </p>
 
         <div className="hero-ctas">
           <a href="https://www.twitch.tv/altairespor" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-            Watch Live <span className="btn-arrow">→</span>
+            {copy.hero.primary} <span className="btn-arrow">›</span>
           </a>
           <a href="#squad" className="btn btn-secondary">
-            Meet the Squad
+            {copy.hero.secondary}
           </a>
         </div>
-
       </div>
 
       <div className="hero-right">
@@ -2323,29 +2845,30 @@ function Hero() {
 
       <div className="hero-fade-bottom"/>
       <div className="hero-scroll">
-        <span>Scroll</span>
+        <span>{copy.hero.scroll}</span>
         <div className="hero-scroll-line"/>
       </div>
     </section>
   );
 }
 
-function Ticker() {
+function Ticker({ lang, copy }) {
+  const tickerResults = RESULTS_FALLBACK.map((match) => localizeDisplayMatch(match, lang));
   const items = [];
-  RESULTS_FALLBACK.forEach(r => {
+  tickerResults.forEach((r) => {
     items.push({ type:"result", r });
   });
-  items.push({ type:"meta", text:"CURRENT FORM · W · W · W · W · W" });
-  items.push({ type:"meta", text:"NEXT UP · ABRAKADABRA ESPORTS · 24 APR · 22:30 UTC+3" });
-  items.push({ type:"meta", text:"BROADCAST LIVE ON TWITCH · /ALTAIRESPOR" });
+  items.push({ type:"meta", text:copy.ticker.form });
+  items.push({ type:"meta", text:copy.ticker.next });
+  items.push({ type:"meta", text:copy.ticker.live });
 
   const loop = [...items, ...items];
 
   return (
-    <div className="ticker" aria-label="Latest results ticker">
+    <div className="ticker" aria-label={copy.ticker.aria}>
       <div className="ticker-tag">
         <span className="ticker-tag-dot"/>
-        EML · 1. LIG
+        {copy.ticker.tag}
       </div>
       <div className="ticker-body">
         <div className="ticker-track">
@@ -2363,9 +2886,9 @@ function Ticker() {
             return (
               <div key={i} className="ticker-item">
                 <div className={`ticker-result ${r.result.toLowerCase()}`}>{r.result}</div>
-                <span className={`t-team ${homeMe ? "me":""}`}>{r.homeAbbr}</span>
-                <span className="t-score">{r.hs} – {r.as}</span>
-                <span className={`t-team ${awayMe ? "me":""}`}>{r.awayAbbr}</span>
+                <span className={`t-team ${homeMe ? "me" : ""}`}>{r.homeAbbr}</span>
+                <span className="t-score">{r.hs} - {r.as}</span>
+                <span className={`t-team ${awayMe ? "me" : ""}`}>{r.awayAbbr}</span>
                 <span className="ticker-meta">· {r.matchday}</span>
               </div>
             );
@@ -2376,50 +2899,47 @@ function Ticker() {
   );
 }
 
-function Standings() {
+function Standings({ lang, copy }) {
   const { standings, altairRow, loading, error, lastUpdate, refetch } = useStandings();
 
-  const alt = altairRow || STANDINGS_FALLBACK.find(t => t.me);
+  const alt = altairRow || STANDINGS_FALLBACK.find((t) => t.me);
   const kpis = [
-    { val: alt?.rank ? `${alt.rank}` : "–", unit: alt?.rank ? "th" : "", lbl:"Position" },
-    { val: alt?.pts  ?? "–", unit:"pts", lbl:"Points" },
-    { val: alt?.w    ?? "–", unit:"W",   lbl:"Wins"   },
-    { val: alt?.gd   ?? "–", unit:"",    lbl:"Goal Diff" },
-    { val: alt?.pld  ?? "–", unit:"GP",  lbl:"Played" },
+    { val: alt?.rank ? `${alt.rank}` : "-", unit: copy.standings.rankUnit, lbl:copy.standings.kpis.position },
+    { val: alt?.pts ?? "-", unit:copy.standings.pointUnit, lbl:copy.standings.kpis.points },
+    { val: alt?.w ?? "-", unit:copy.standings.winUnit, lbl:copy.standings.kpis.wins },
+    { val: alt?.gd ?? "-", unit:"", lbl:copy.standings.kpis.goalDiff },
+    { val: alt?.pld ?? "-", unit:copy.standings.playedUnit, lbl:copy.standings.kpis.played },
   ];
 
   const updatedLabel = lastUpdate
-    ? lastUpdate.toLocaleTimeString("tr-TR", { hour:"2-digit", minute:"2-digit" })
+    ? lastUpdate.toLocaleTimeString(lang === "TR" ? "tr-TR" : "en-GB", { hour:"2-digit", minute:"2-digit" })
     : null;
 
   return (
     <section className="standings" id="standings">
       <div className="st-wrap">
-
-        {/* Topbar */}
         <div className="st-topbar">
           <div className="st-topbar-left">
             <span className="st-comp">eMajor League</span>
             <span className="st-sep"/>
-            <span className="st-season">FC 26 · 1. Lig · Season 2026</span>
+            <span className="st-season">{copy.standings.season}</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
-            {loading && <span style={{fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:"var(--muted)"}}>Updating…</span>}
-            {error && !loading && <span style={{fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:"var(--loss)"}}>Cached data</span>}
+            {loading && <span style={{fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:"var(--muted)"}}>{copy.standings.updating}</span>}
+            {error && !loading && <span style={{fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:"var(--loss)"}}>{copy.standings.cached}</span>}
             {updatedLabel && !loading && <span style={{fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:"var(--muted)"}}>{updatedLabel}</span>}
-            <button onClick={refetch} title="Refresh"
+            <button onClick={refetch} title={copy.standings.refresh}
               style={{background:"transparent",border:"1px solid var(--line-2)",color:"var(--muted)",padding:"3px 10px",cursor:"pointer",fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",transition:"all .2s"}}
               onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--cyan)";e.currentTarget.style.color="var(--cyan)"}}
               onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--line-2)";e.currentTarget.style.color="var(--muted)"}}>
-              ↻ Refresh
+              ↻ {copy.standings.refresh}
             </button>
-            <div className="st-live"><span className="st-live-dot"/>Live Standings</div>
+            <div className="st-live"><span className="st-live-dot"/>{copy.standings.live}</div>
           </div>
         </div>
 
-        {/* Hero — title + kpis side by side */}
         <div className="st-hero">
-          <h2 className="st-hero-title">LIVE <em>TABLE</em></h2>
+          <h2 className="st-hero-title">{copy.standings.title[0]} <em>{copy.standings.title[1]}</em></h2>
           <div className="st-kpis">
             {kpis.map((k, i) => (
               <div key={i} className={`st-kpi${loading ? " st-kpi--loading" : ""}`}>
@@ -2430,19 +2950,18 @@ function Standings() {
           </div>
         </div>
 
-        {/* Table */}
         <div className="st-table-wrap">
           <div className="st-table-scroll">
             <div className="st-hdr">
               <span className="st-hdr-cell">#</span>
-              <span className="st-hdr-cell left">Club</span>
+              <span className="st-hdr-cell left">{copy.standings.table.club}</span>
               <span className="st-hdr-cell">P</span>
               <span className="st-hdr-cell">W</span>
               <span className="st-hdr-cell">D</span>
               <span className="st-hdr-cell">L</span>
               <span className="st-hdr-cell">GD</span>
-              <span className="st-hdr-cell">Form</span>
-              <span className="st-hdr-cell">Pts</span>
+              <span className="st-hdr-cell">{copy.standings.table.form}</span>
+              <span className="st-hdr-cell">PTS</span>
             </div>
             {standings.map((s) => (
               <div key={s.abbr + s.rank} className={`st-row${s.me ? " me" : ""}`}>
@@ -2457,9 +2976,7 @@ function Standings() {
                 <span className="st-cell">{s.l}</span>
                 <span className={`st-cell ${String(s.gd).startsWith("+") ? "gd-pos" : "gd-neg"}`}>{s.gd}</span>
                 <div className="st-form">
-                  {String(s.form).split("").map((c, i) => (
-                    <div key={i} className={`st-form-dot ${c.toLowerCase()}`}/>
-                  ))}
+                  {String(s.form).split("").map((c, i) => <div key={i} className={`st-form-dot ${c.toLowerCase()}`}/>)}
                 </div>
                 <span className="st-pts">{s.pts}</span>
               </div>
@@ -2467,50 +2984,48 @@ function Standings() {
           </div>
           <div className="st-foot">
             <span className="st-foot-note">
-              {loading ? "Loading…" : error ? "Cached · " + error : `Showing ranks ${standings[0]?.rank}–${standings[standings.length-1]?.rank} · 18 clubs total`}
+              {loading ? copy.standings.loading : error ? copy.standings.cachedPrefix(error) : copy.standings.showing(standings[0]?.rank, standings[standings.length-1]?.rank)}
             </span>
-            <a className="st-foot-link" href="https://emajorleague.com/tournaments/league_table/39/" target="_blank" rel="noopener noreferrer">
-              Full table on eMajor League →
-            </a>
+            <a className="st-foot-link" href="https://emajorleague.com/tournaments/league_table/39/" target="_blank" rel="noopener noreferrer">{copy.standings.full}</a>
           </div>
         </div>
-
       </div>
     </section>
   );
 }
 
-function ResultCard({ r }) {
-  const homeMe = r.home === "ALTAIR eSports";
-  const awayMe = r.away === "ALTAIR eSports";
-  const cls = r.result.toLowerCase();
-  const label = r.result === "W" ? "Victory" : r.result === "L" ? "Defeat" : "Draw";
+function ResultCard({ r, lang, copy }) {
+  const localized = localizeDisplayMatch(r, lang);
+  const homeMe = localized.home === "ALTAIR eSports";
+  const awayMe = localized.away === "ALTAIR eSports";
+  const cls = localized.result.toLowerCase();
+  const label = copy.results.labels[localized.result] || localized.result;
 
   return (
     <div className={`res-card ${cls}`}>
       <div className="res-desk">
         <div className="res-meta">
-          <div className="res-gw">{r.matchday}</div>
-          <div className="res-comp">{r.competition}</div>
-          <div className="res-date">{r.date}</div>
+          <div className="res-gw">{localized.matchday}</div>
+          <div className="res-comp">{localized.competition}</div>
+          <div className="res-date">{localized.date}</div>
         </div>
         <div className="res-team home">
           <div className="res-team-info">
-            <div className="res-name">{r.home}</div>
-            <div className="res-venue">{homeMe ? "Home" : ""}</div>
+            <div className="res-name">{localized.home}</div>
+            <div className="res-venue">{homeMe ? copy.results.venue.home : ""}</div>
           </div>
-          <ClubBadge className={`res-badge ${homeMe ? "me" : ""}`} isAltair={homeMe} label={r.homeAbbr} />
+          <ClubBadge className={`res-badge ${homeMe ? "me" : ""}`} isAltair={homeMe} label={localized.homeAbbr} />
         </div>
         <div className="res-score">
-          <span className="res-score-val">{r.hs}</span>
-          <span className="res-score-sep">–</span>
-          <span className="res-score-val">{r.as}</span>
+          <span className="res-score-val">{localized.hs}</span>
+          <span className="res-score-sep">-</span>
+          <span className="res-score-val">{localized.as}</span>
         </div>
         <div className="res-team away">
-          <ClubBadge className={`res-badge ${awayMe ? "me" : ""}`} isAltair={awayMe} label={r.awayAbbr} />
+          <ClubBadge className={`res-badge ${awayMe ? "me" : ""}`} isAltair={awayMe} label={localized.awayAbbr} />
           <div className="res-team-info">
-            <div className="res-name">{r.away}</div>
-            <div className="res-venue">{awayMe ? "Away" : ""}</div>
+            <div className="res-name">{localized.away}</div>
+            <div className="res-venue">{awayMe ? copy.results.venue.away : ""}</div>
           </div>
         </div>
         <div className="res-pill-col">
@@ -2523,22 +3038,22 @@ function ResultCard({ r }) {
 
       <div className="res-mob">
         <div className="res-mob-top">
-          <div className="res-gw">{r.matchday}</div>
-          <div className="res-date">{r.date}</div>
+          <div className="res-gw">{localized.matchday}</div>
+          <div className="res-date">{localized.date}</div>
         </div>
         <div className="res-mob-teams">
           <div className="res-mob-team home">
-            <ClubBadge className={`res-badge ${homeMe ? "me" : ""}`} isAltair={homeMe} label={r.homeAbbr} />
-            <div className="res-mob-name">{r.home}</div>
+            <ClubBadge className={`res-badge ${homeMe ? "me" : ""}`} isAltair={homeMe} label={localized.homeAbbr} />
+            <div className="res-mob-name">{localized.home}</div>
           </div>
           <div className="res-mob-score">
-            <span>{r.hs}</span>
-            <span className="res-mob-sep">–</span>
-            <span>{r.as}</span>
+            <span>{localized.hs}</span>
+            <span className="res-mob-sep">-</span>
+            <span>{localized.as}</span>
           </div>
           <div className="res-mob-team away">
-            <ClubBadge className={`res-badge ${awayMe ? "me" : ""}`} isAltair={awayMe} label={r.awayAbbr} />
-            <div className="res-mob-name">{r.away}</div>
+            <ClubBadge className={`res-badge ${awayMe ? "me" : ""}`} isAltair={awayMe} label={localized.awayAbbr} />
+            <div className="res-mob-name">{localized.away}</div>
           </div>
         </div>
         <div className="res-mob-foot">
@@ -2552,114 +3067,112 @@ function ResultCard({ r }) {
   );
 }
 
-function Results({ loading, results=[], error, refetch }) {
-  const data = results.length ? results : RESULTS_FALLBACK;
+function Results({ lang, copy, loading, results=[], error, refetch }) {
+  const data = (results.length ? results : RESULTS_FALLBACK).map((match) => localizeDisplayMatch(match, lang));
 
   return (
     <section className="section" id="matches">
       <div className="container">
         <div className="sec-hdr">
           <div className="sec-hdr-left">
-            <div className="sec-eyebrow">Matchday Report</div>
-            <h2 className="sec-title">RECENT <span className="accent">RESULTS</span></h2>
-            <p className="sec-sub">
-              {loading ? "Loading latest results…" : "The last five matchdays, played and decided. Every performance measured."}
-            </p>
+            <div className="sec-eyebrow">{copy.results.eyebrow}</div>
+            <h2 className="sec-title">{copy.results.title[0]} <span className="accent">{copy.results.title[1]}</span></h2>
+            <p className="sec-sub">{loading ? copy.results.subLoading : copy.results.sub}</p>
           </div>
           <div style={{display:"flex",gap:8,alignItems:"center"}}>
-            {error && <span style={{fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"var(--loss)"}}>Cached</span>}
-            <button onClick={refetch} title="Refresh" style={{background:"transparent",border:"1px solid var(--line-2)",color:"var(--muted)",padding:"4px 10px",cursor:"pointer",fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase"}}
+            {error && <span style={{fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"var(--loss)"}}>{copy.results.cached}</span>}
+            <button onClick={refetch} title={copy.standings.refresh} style={{background:"transparent",border:"1px solid var(--line-2)",color:"var(--muted)",padding:"4px 10px",cursor:"pointer",fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase"}}
               onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--cyan)";e.currentTarget.style.color="var(--cyan)"}}
               onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--line-2)";e.currentTarget.style.color="var(--muted)"}}>
-              ↻ Refresh
+              ↻ {copy.standings.refresh}
             </button>
-            <a className="sec-link" href="#fixtures">View Fixtures <span className="sec-link-arrow">→</span></a>
+            <a className="sec-link" href="#fixtures">{copy.results.viewFixtures} <span className="sec-link-arrow">→</span></a>
           </div>
         </div>
         <div className="results-grid">
-          {data.map(r => <ResultCard key={r.id} r={r}/>)}
+          {data.map((r) => <ResultCard key={r.id} r={r} lang={lang} copy={copy}/>)}
         </div>
       </div>
     </section>
   );
 }
 
-function FixtureCard({ f }) {
-  const homeMe = f.home === "ALTAIR eSports";
-  const awayMe = f.away === "ALTAIR eSports";
-  const venue = homeMe ? "Home" : "Away";
+function FixtureCard({ f, lang, copy }) {
+  const localized = localizeDisplayMatch(f, lang);
+  const homeMe = localized.home === "ALTAIR eSports";
+  const awayMe = localized.away === "ALTAIR eSports";
+  const venue = homeMe ? copy.fixtures.venue.home : copy.fixtures.venue.away;
   return (
     <div className="fix-card">
       <div className="fix-date">
-        <span className="fix-day">{f.day}</span>
-        <span className="fix-month">{toEnglishMonthAbbr(f.month)}</span>
-        <span className="fix-gw">{f.matchday}</span>
+        <span className="fix-day">{localized.day}</span>
+        <span className="fix-month">{localized.month}</span>
+        <span className="fix-gw">{localized.matchday}</span>
       </div>
       <div className="fix-divider"/>
       <div className="fix-match">
         <div className="fix-team home">
-          <span className="fix-team-name">{f.home}</span>
-          <ClubBadge className={`fix-badge ${homeMe ? "me" : ""}`} isAltair={homeMe} label={f.homeAbbr} />
+          <span className="fix-team-name">{localized.home}</span>
+          <ClubBadge className={`fix-badge ${homeMe ? "me" : ""}`} isAltair={homeMe} label={localized.homeAbbr} />
         </div>
         <div className="fix-vs">
           <span className="fix-vs-line"/>
-          <span className="fix-vs-text">VS</span>
+          <span className="fix-vs-text">{copy.fixtures.vs}</span>
         </div>
         <div className="fix-team away">
-          <ClubBadge className={`fix-badge ${awayMe ? "me" : ""}`} isAltair={awayMe} label={f.awayAbbr} />
-          <span className="fix-team-name">{f.away}</span>
+          <ClubBadge className={`fix-badge ${awayMe ? "me" : ""}`} isAltair={awayMe} label={localized.awayAbbr} />
+          <span className="fix-team-name">{localized.away}</span>
         </div>
       </div>
       <div className="fix-divider"/>
       <div className="fix-meta">
-        <span className="fix-time">{f.time}</span>
+        <span className="fix-time">{localized.time}</span>
         <span className="fix-tz">UTC+3</span>
-        <span className={`fix-venue ${venue.toLowerCase()}`}>{venue}</span>
+        <span className={`fix-venue ${(homeMe ? "home" : "away")}`}>{venue}</span>
       </div>
     </div>
   );
 }
 
-function Fixtures({ loading, fixtures=[], error, refetch }) {
-  const data = fixtures.length ? fixtures : loading ? FIXTURES_FALLBACK : [];
+function Fixtures({ lang, copy, loading, fixtures=[], error, refetch }) {
+  const data = (fixtures.length ? fixtures : loading ? FIXTURES_FALLBACK : []).map((match) => localizeDisplayMatch(match, lang));
 
   return (
     <section className="section section-compact" id="fixtures">
       <div className="container">
         <div className="sec-hdr">
           <div className="sec-hdr-left">
-            <div className="sec-eyebrow">Upcoming Schedule</div>
-            <h2 className="sec-title">NEXT <span className="accent">FIXTURES</span></h2>
-            <p className="sec-sub">
-              {loading ? "Loading upcoming fixtures…" : "Every upcoming matchday on the EML 1. Lig calendar. Broadcast live on Twitch."}
-            </p>
+            <div className="sec-eyebrow">{copy.fixtures.eyebrow}</div>
+            <h2 className="sec-title">{copy.fixtures.title[0]} <span className="accent">{copy.fixtures.title[1]}</span></h2>
+            <p className="sec-sub">{loading ? copy.fixtures.subLoading : copy.fixtures.sub}</p>
           </div>
           <div style={{display:"flex",gap:8,alignItems:"center"}}>
-            {error && <span style={{fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"var(--loss)"}}>Cached</span>}
-            <button onClick={refetch} title="Refresh" style={{background:"transparent",border:"1px solid var(--line-2)",color:"var(--muted)",padding:"4px 10px",cursor:"pointer",fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase"}}
+            {error && <span style={{fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"var(--loss)"}}>{copy.fixtures.cached}</span>}
+            <button onClick={refetch} title={copy.standings.refresh} style={{background:"transparent",border:"1px solid var(--line-2)",color:"var(--muted)",padding:"4px 10px",cursor:"pointer",fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase"}}
               onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--cyan)";e.currentTarget.style.color="var(--cyan)"}}
               onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--line-2)";e.currentTarget.style.color="var(--muted)"}}>
-              ↻ Refresh
+              ↻ {copy.standings.refresh}
             </button>
             <a className="sec-link" href="https://www.twitch.tv/altairespor" target="_blank" rel="noopener noreferrer">
-              Watch on Twitch <span className="sec-link-arrow">→</span>
+              {copy.fixtures.watch} <span className="sec-link-arrow">→</span>
             </a>
           </div>
         </div>
         <div className="fix-grid">
-          {data.map(f => <FixtureCard key={f.id} f={f}/>)}
+          {data.map((f) => <FixtureCard key={f.id} f={f} lang={lang} copy={copy}/>)}
         </div>
       </div>
     </section>
   );
 }
 
-function PlayerCard({ p }) {
+function PlayerCard({ p, copy }) {
+  const roleLabel = copy.squad.roles[p.role] || p.role;
   return (
     <a href={p.profileUrl} target="_blank" rel="noopener noreferrer" className="p-card">
       <div className="p-top">
         <div className="p-pos">{p.pos}</div>
-        {p.captain && <div className="p-cap" title="Captain">C</div>}
+        {p.captain && <div className="p-cap" title={copy.squad.captain}>C</div>}
         <div className="p-flag">{p.flag}</div>
         <div className="p-number">{p.number}</div>
         {p.image
@@ -2667,21 +3180,21 @@ function PlayerCard({ p }) {
           : <div className="p-avatar">{p.init}</div>}
       </div>
       <div className="p-body">
-        <div className="p-role">{p.role}</div>
+        <div className="p-role">{roleLabel}</div>
         <div className="p-name">{p.name}</div>
         <div className="p-ign">{p.ign}</div>
         <div className="p-stats">
           <div className="p-stat">
             <div className="p-stat-val">{p.apps}</div>
-            <div className="p-stat-lbl">Apps</div>
+            <div className="p-stat-lbl">{copy.squad.stats.apps}</div>
           </div>
           <div className="p-stat">
             <div className="p-stat-val">{p.goals}</div>
-            <div className="p-stat-lbl">Goals</div>
+            <div className="p-stat-lbl">{copy.squad.stats.goals}</div>
           </div>
           <div className="p-stat">
             <div className="p-stat-val">{p.assists}</div>
-            <div className="p-stat-lbl">Assists</div>
+            <div className="p-stat-lbl">{copy.squad.stats.assists}</div>
           </div>
         </div>
       </div>
@@ -2689,19 +3202,19 @@ function PlayerCard({ p }) {
   );
 }
 
-function Squad() {
+function Squad({ copy }) {
   const total = SQUAD.reduce((n, g) => n + g.players.length, 0);
   return (
     <section className="section squad" id="squad">
       <div className="container">
         <div className="sec-hdr">
           <div className="sec-hdr-left">
-            <div className="sec-eyebrow">Season 2026 Roster</div>
-            <h2 className="sec-title">THE <span className="accent">SQUAD</span></h2>
-            <p className="sec-sub">Fourteen players. One club. The current ALTAIR roster competing in the FC 26 Pro Clubs 1. Lig.</p>
+            <div className="sec-eyebrow">{copy.squad.eyebrow}</div>
+            <h2 className="sec-title">{copy.squad.title[0]} <span className="accent">{copy.squad.title[1]}</span></h2>
+            <p className="sec-sub">{copy.squad.sub}</p>
           </div>
           <div className="sec-link" style={{ pointerEvents:"none", background:"var(--cyan-soft)", borderColor:"var(--cyan-edge)", color:"var(--cyan)" }}>
-            {total} Players
+            {copy.squad.players(total)}
           </div>
         </div>
 
@@ -2709,11 +3222,11 @@ function Squad() {
           <div key={gi} className="pos-section">
             <div className="pos-label">
               <span className="pos-pill">{g.abbr}</span>
-              <span className="pos-group-name">{g.group}</span>
-              <span className="pos-count">{g.players.length} {g.players.length > 1 ? "players" : "player"}</span>
+              <span className="pos-group-name">{copy.squad.groups[g.group] || g.group}</span>
+              <span className="pos-count">{copy.squad.count(g.players.length)}</span>
             </div>
             <div className="squad-grid">
-              {g.players.map((p, pi) => <PlayerCard key={pi} p={p}/>)}
+              {g.players.map((p, pi) => <PlayerCard key={pi} p={p} copy={copy}/>) }
             </div>
           </div>
         ))}
@@ -2722,28 +3235,28 @@ function Squad() {
   );
 }
 
-function Sponsors() {
+function Sponsors({ copy }) {
+  const sponsorKpis = [
+    { val:"200K+", lbl:copy.sponsors.kpis.reach },
+    { val:"VPG", lbl:copy.sponsors.kpis.ranking },
+    { val:"1", lbl:copy.sponsors.kpis.titles },
+    { val:"15", lbl:copy.sponsors.kpis.active },
+  ];
+
   return (
     <section className="section sponsors" id="sponsors">
       <div className="container">
         <div className="sec-hdr">
           <div className="sec-hdr-left">
-            <div className="sec-eyebrow">Partners &amp; Sponsors</div>
-            <h2 className="sec-title">OUR <span className="accent">PARTNERS</span></h2>
+            <div className="sec-eyebrow">{copy.sponsors.eyebrow}</div>
+            <h2 className="sec-title">{copy.sponsors.title[0]} <span className="accent">{copy.sponsors.title[1]}</span></h2>
           </div>
         </div>
 
         <div className="sp-top">
-          <p>
-            ALTAIR partners with brands that share our drive for excellence. We deliver an authentic, engaged audience at the intersection of football and competitive gaming — a growing community that watches, streams, and buys.
-          </p>
+          <p>{copy.sponsors.sub}</p>
           <div className="sp-kpis">
-            {[
-              { val:"200K+", lbl:"Combined Reach" },
-              { val:"VPG",   lbl:"Club Ranking" },
-              { val:"1",     lbl:"Titles Won" },
-              { val:"15",    lbl:"Active Players" },
-            ].map((k, i) => (
+            {sponsorKpis.map((k, i) => (
               <div key={i} className="sp-kpi">
                 <div className="sp-kpi-val">{k.val}</div>
                 <div className="sp-kpi-lbl">{k.lbl}</div>
@@ -2754,12 +3267,12 @@ function Sponsors() {
 
         <div className="sp-tier">
           <div className="sp-tier-head">
-            <span className="sp-tier-label">Title Partner</span>
+            <span className="sp-tier-label">{copy.sponsors.tiers.title}</span>
             <div className="sp-tier-line"/>
             <span className="sp-tier-count">01</span>
           </div>
           <div className="sp-row">
-            {SPONSORS.title.map(n => (
+            {SPONSORS.title.map((n) => (
               <div key={n} className="sp-tile featured"><span className="sp-name title">{n}</span></div>
             ))}
           </div>
@@ -2767,12 +3280,12 @@ function Sponsors() {
 
         <div className="sp-tier">
           <div className="sp-tier-head">
-            <span className="sp-tier-label">Gold Partners</span>
+            <span className="sp-tier-label">{copy.sponsors.tiers.gold}</span>
             <div className="sp-tier-line"/>
             <span className="sp-tier-count">0{SPONSORS.gold.length}</span>
           </div>
           <div className="sp-row">
-            {SPONSORS.gold.map(n => (
+            {SPONSORS.gold.map((n) => (
               <div key={n} className="sp-tile"><span className="sp-name gold">{n}</span></div>
             ))}
           </div>
@@ -2780,12 +3293,12 @@ function Sponsors() {
 
         <div className="sp-tier">
           <div className="sp-tier-head">
-            <span className="sp-tier-label">Official Partners</span>
+            <span className="sp-tier-label">{copy.sponsors.tiers.official}</span>
             <div className="sp-tier-line"/>
             <span className="sp-tier-count">0{SPONSORS.partners.length}</span>
           </div>
           <div className="sp-row">
-            {SPONSORS.partners.map(n => (
+            {SPONSORS.partners.map((n) => (
               <div key={n} className="sp-tile"><span className="sp-name partner">{n}</span></div>
             ))}
           </div>
@@ -2793,12 +3306,12 @@ function Sponsors() {
 
         <div className="sp-cta">
           <div className="sp-cta-text">
-            <div className="sp-cta-title">Become an ALTAIR Partner</div>
-            <div className="sp-cta-sub">Reach the next generation of competitive football fans through matchday broadcasts, digital content and on-kit placement.</div>
+            <div className="sp-cta-title">{copy.sponsors.ctaTitle}</div>
+            <div className="sp-cta-sub">{copy.sponsors.ctaSub}</div>
           </div>
           <div className="sp-cta-actions">
-            <a href="#" className="btn btn-primary">Get in Touch <span className="btn-arrow">→</span></a>
-            <a href="#" className="btn btn-secondary">Partnership Deck</a>
+            <a href="#" className="btn btn-primary">{copy.sponsors.ctaPrimary} <span className="btn-arrow">→</span></a>
+            <a href="#" className="btn btn-secondary">{copy.sponsors.ctaSecondary}</a>
           </div>
         </div>
       </div>
@@ -2806,15 +3319,15 @@ function Sponsors() {
   );
 }
 
-function Social() {
+function Social({ copy }) {
   return (
     <section className="section" id="broadcast">
       <div className="container">
         <div className="sec-hdr">
           <div className="sec-hdr-left">
-            <div className="sec-eyebrow">Broadcasts &amp; Community</div>
-            <h2 className="sec-title">FOLLOW <span className="accent">ALTAIR</span></h2>
-            <p className="sec-sub">Every live match, every highlight, every behind-the-scenes moment — across the channels where the ALTAIR community lives.</p>
+            <div className="sec-eyebrow">{copy.social.eyebrow}</div>
+            <h2 className="sec-title">{copy.social.title[0]} <span className="accent">{copy.social.title[1]}</span></h2>
+            <p className="sec-sub">{copy.social.sub}</p>
           </div>
         </div>
         <div className="social-grid">
@@ -2822,12 +3335,12 @@ function Social() {
             <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className={`sc ${s.cls}`}>
               <div className="sc-head">
                 <div className="sc-icon">{s.icon}</div>
-                <span className="sc-live">Official</span>
+                <span className="sc-live">{copy.social.official}</span>
               </div>
               <div className="sc-platform">{s.platform}</div>
               <div className="sc-handle">{s.handle}</div>
-              <div className="sc-desc">{s.desc}</div>
-              <span className="sc-cta">{s.cta} <span>→</span></span>
+              <div className="sc-desc">{copy.social.cards[s.cls].desc}</div>
+              <span className="sc-cta">{copy.social.cards[s.cls].cta} <span>→</span></span>
             </a>
           ))}
         </div>
@@ -2836,16 +3349,16 @@ function Social() {
   );
 }
 
-function Footer() {
-  const clubLinks = ["About ALTAIR","Season History","Honours","Press Kit","Careers"];
+function Footer({ lang, copy }) {
+  const clubLinks = copy.footer.clubLinks;
   const compLinks = [
-    { url:"https://emajorleague.com/teams/team/337/", label:"Team Page", external:true },
-    { url:"https://emajorleague.com/tournaments/league_table/39/", label:"League Table", external:true },
-    { url:"#fixtures", label:"Fixtures" },
-    { url:"#matches",  label:"Statistics" },
-    { url:"#squad",    label:"Squad" },
+    { url:"https://emajorleague.com/teams/team/337/", label:copy.footer.compLinks[0], external:true },
+    { url:"https://emajorleague.com/tournaments/league_table/39/", label:copy.footer.compLinks[1], external:true },
+    { url:"#fixtures", label:copy.footer.compLinks[2] },
+    { url:"#matches",  label:copy.footer.compLinks[3] },
+    { url:"#squad",    label:copy.footer.compLinks[4] },
   ];
-  const connectLinks = ["Sponsorships","Media Enquiries","Fan Community","Merchandise","Contact Us"];
+  const connectLinks = copy.footer.connectLinks;
 
   return (
     <footer className="footer">
@@ -2854,40 +3367,38 @@ function Footer() {
           <div className="footer-brand">
             <img src="/logo.png" alt="ALTAIR eSports" className="footer-brand-logo"/>
             <div className="footer-brand-name">ALTAIR eSports</div>
-            <div className="footer-brand-tag">FC 26 Pro Clubs · eMajor League</div>
-            <p className="footer-bio">A professional FC 26 Pro Clubs organisation competing in the EML 1. Lig. Built on structure, chemistry and a relentless standard.</p>
+            <div className="footer-brand-tag">{copy.footer.brandTag}</div>
+            <p className="footer-bio">{copy.footer.bio}</p>
           </div>
           <div>
-            <div className="footer-col-title">Club</div>
+            <div className="footer-col-title">{copy.footer.titles.club}</div>
             <ul className="footer-links">
-              {clubLinks.map(l => <li key={l}><a href="#">{l}</a></li>)}
+              {clubLinks.map((l) => <li key={l}><a href="#">{l}</a></li>)}
             </ul>
           </div>
           <div>
-            <div className="footer-col-title">Competition</div>
+            <div className="footer-col-title">{copy.footer.titles.competition}</div>
             <ul className="footer-links">
-              {compLinks.map(l => (
+              {compLinks.map((l) => (
                 <li key={l.label}>
-                  <a href={l.url} target={l.external ? "_blank" : undefined} rel={l.external ? "noopener noreferrer" : undefined}>
-                    {l.label}
-                  </a>
+                  <a href={l.url} target={l.external ? "_blank" : undefined} rel={l.external ? "noopener noreferrer" : undefined}>{l.label}</a>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <div className="footer-col-title">Connect</div>
+            <div className="footer-col-title">{copy.footer.titles.connect}</div>
             <ul className="footer-links">
-              {connectLinks.map(l => <li key={l}><a href="#">{l}</a></li>)}
+              {connectLinks.map((l) => <li key={l}><a href="#">{l}</a></li>)}
             </ul>
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2026 ALTAIR eSports · All rights reserved</span>
+          <span>{copy.footer.rights}</span>
           <div className="footer-legal">
-            <span>Competing in <a href="https://emajorleague.com/tournaments/league_table/39/" target="_blank" rel="noopener noreferrer">FC 26 · 1. Lig</a></span>
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
+            <span>{copy.footer.competing} <a href="https://emajorleague.com/tournaments/league_table/39/" target="_blank" rel="noopener noreferrer">{lang === "TR" ? "FC 26 · 1. Lig" : "FC 26 · Division 1"}</a></span>
+            <a href="#">{copy.footer.privacy}</a>
+            <a href="#">{copy.footer.terms}</a>
           </div>
         </div>
       </div>
@@ -2895,13 +3406,11 @@ function Footer() {
   );
 }
 
-/* ─────────────────────────────────────────────────────────────
-   ROOT
-   ───────────────────────────────────────────────────────────── */
-
 export default function AltairFC() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeLang, setActiveLang] = useState("EN");
   const fixtureData = useFixtures();
+  const copy = UI_COPY[activeLang] || UI_COPY.EN;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 32);
@@ -2913,22 +3422,22 @@ export default function AltairFC() {
   return (
     <>
       <style>{css}</style>
-      {/* Canvas'lar ana div'in DIŞINDA — fixed positioning için */}
       <StarCanvas side="left"/>
       <StarCanvas side="right"/>
 
       <div style={{position:"relative"}}>
-        <Navigation scrolled={scrolled}/>
-        <Hero/>
-        <Ticker/>
-        <Standings/>
-        <Results {...fixtureData}/>
-        <Fixtures {...fixtureData}/>
-        <Squad/>
-        <Sponsors/>
-        <Social/>
-        <Footer/>
+        <Navigation scrolled={scrolled} activeLang={activeLang} setActiveLang={setActiveLang} copy={copy}/>
+        <Hero copy={copy} lang={activeLang}/>
+        <Ticker lang={activeLang} copy={copy}/>
+        <Standings lang={activeLang} copy={copy}/>
+        <Results {...fixtureData} lang={activeLang} copy={copy}/>
+        <Fixtures {...fixtureData} lang={activeLang} copy={copy}/>
+        <Squad copy={copy}/>
+        <Sponsors copy={copy}/>
+        <Social copy={copy}/>
+        <Footer lang={activeLang} copy={copy}/>
       </div>
     </>
   );
 }
+
