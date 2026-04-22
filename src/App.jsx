@@ -121,7 +121,7 @@ function useStandings() {
    oynananları RESULTS, oynanmayanları FIXTURES olarak ayırır.
    ───────────────────────────────────────────────────────────── */
 
-const FIX_CACHE_KEY  = "altair_fixtures_v2";
+const FIX_CACHE_KEY  = "altair_fixtures_v3";
 const FIX_CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
 const FIX_FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
 const TOTAL_MATCHDAYS = 34;
@@ -227,6 +227,26 @@ function writeFixCache(data) {
   catch { /**/ }
 }
 
+async function getLatestPlayedCount() {
+  const cachedStandings = readCache();
+  const cachedAltair = cachedStandings?.data?.find((team) => team.me);
+  if (Number.isFinite(cachedAltair?.pld)) {
+    return Math.max(0, cachedAltair.pld);
+  }
+
+  const url = `/api/eml-proxy?path=/tournaments/league_table/${TOURNAMENT_ID}/`;
+  const res = await fetch(url, { cache:"no-store", signal:AbortSignal.timeout(6000) });
+  if (!res.ok) throw new Error(`Standings HTTP ${res.status}`);
+
+  const html = await res.text();
+  const parsed = parseEMLTable(html);
+  if (!parsed) throw new Error("Standings parse hatasi");
+
+  writeCache(parsed);
+  const altair = parsed.find((team) => team.me);
+  return Math.max(0, altair?.pld || 0);
+}
+
 function useFixtures() {
   const [allMatches,  setAllMatches]  = useState(null);
   const [error,       setError]       = useState(null);
@@ -254,18 +274,22 @@ function useFixtures() {
       };
 
       try {
-        // Strateji: Son 5 hafta + önümüzdeki 5 haftayı fetch et (max 10 istek)
-        // Mevcut haftayı tahmin et — bugünkü tarihe göre
-        const now = new Date();
-        // İlk maç GW1 = 13 Mar 2026, her hafta 7 gün
-        const season1Start = new Date("2026-03-13");
-        const weeksSinceStart = Math.floor((now - season1Start) / (7 * 24 * 60 * 60 * 1000));
-        const estimatedGW = Math.max(1, Math.min(TOTAL_MATCHDAYS, weeksSinceStart + 1));
+        // Tarihi tahmin etmek yerine standings'teki oynanan maç sayısını baz al.
+        // Böylece pencere ilk haftalara değil, sisteme girilen en son skora yaslanır.
+        const latestPlayedCount = await getLatestPlayedCount();
+        // ALTAIR'ın oynadığı matchday listesinde son oynanan maçı bul.
+        const latestPlayedIndex = Math.min(
+          TOTAL_MATCHDAYS - 1,
+          Math.max(-1, latestPlayedCount - 1),
+        );
 
-        // Son 7 + önümüzdeki 4 = max 11 matchday fetch et
-        const from = Math.max(1, estimatedGW - 7);
-        const to   = Math.min(TOTAL_MATCHDAYS, estimatedGW + 4);
-        const mds  = Array.from({ length: to - from + 1 }, (_, i) => from + i);
+        // Son 5 sonuç ve sonraki 4 fikstür için dar bir pencere çek.
+        const fromIndex = Math.max(0, latestPlayedIndex - 4);
+        const toIndex = Math.min(
+          TOTAL_MATCHDAYS - 1,
+          Math.max(latestPlayedIndex + 4, 3),
+        );
+        const mds = ALTAIR_MATCHDAYS.slice(fromIndex, toIndex + 1);
 
         // 3'erli gruplar halinde — site yoğulmaz
         const results = [];
