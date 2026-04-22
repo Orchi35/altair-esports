@@ -89,7 +89,7 @@ function useStandings() {
         return;
       }
       try {
-        const url = "/eml-proxy/tournaments/league_table/39/";
+        const url = "/api/eml-proxy?path=/tournaments/league_table/39/";
         const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const html   = await res.text();
@@ -245,7 +245,7 @@ function useFixtures() {
 
       const fetchPage = async (md) => {
         try {
-          const url = `/eml-proxy/tournaments/league_fixture/${TOURNAMENT_ID}/${md}/`;
+          const url = `/api/eml-proxy?path=/tournaments/league_fixture/${TOURNAMENT_ID}/${md}/`;
           const res = await fetch(url, { cache:"no-store", signal:AbortSignal.timeout(6000) });
           if (!res.ok) return [];
           const html = await res.text();
