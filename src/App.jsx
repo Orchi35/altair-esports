@@ -181,23 +181,28 @@ function parseFixturePage(html, matchday) {
 
   // Tarih/saat başlık satırını bul
   let date = "", time = "22:30";
-  const thRows = [...doc.querySelectorAll("table thead tr, table tr th")];
-  thRows.forEach(th => {
-    const t = th.textContent || "";
-    const dateMatch = t.match(/(\d+)\s+(\w+)\s+(\d{4})/);
-    if (dateMatch) date = dateMatch[0];
-    const timeMatch = t.match(/(\d{2}:\d{2})/);
-    if (timeMatch) time = timeMatch[1];
-  });
+  const dateCandidates = [
+    ...doc.querySelectorAll("h1, h2, h3, h4, h5, h6, caption, th, td[colspan], .card-body, .text-center"),
+  ];
+  dateCandidates.forEach((el) => {
+    const t = (el.textContent || "").replace(/\s+/g, " ").trim();
+    if (!t) return;
 
-  // Tablo caption ya da header'dan tarih al
-  const captions = [...doc.querySelectorAll("caption, th, td[colspan]")];
-  captions.forEach(el => {
-    const t = el.textContent || "";
-    const m = t.match(/(\d+)\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/i);
-    if (m) date = m[0];
-    const tm = t.match(/(\d{2}:\d{2})\s*UTC/i);
-    if (tm) time = tm[1];
+    const dateMatch =
+      t.match(/(\d{1,2})\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})/i) ||
+      t.match(/(\d{1,2})[./-](\d{1,2})[./-](\d{4})/);
+
+    if (dateMatch) {
+      if (dateMatch[2] && Number.isNaN(Number(dateMatch[2]))) {
+        date = `${dateMatch[1].padStart(2, "0")} ${dateMatch[2]} ${dateMatch[3]}`;
+      } else {
+        const numericMonth = Number(dateMatch[2]);
+        date = `${dateMatch[1].padStart(2, "0")} ${MONTHS[numericMonth] || "APR"} ${dateMatch[3]}`;
+      }
+    }
+
+    const timeMatch = t.match(/(\d{2}:\d{2})\s*(UTC)?/i);
+    if (timeMatch) time = timeMatch[1];
   });
 
   rows.forEach(tr => {
@@ -220,7 +225,7 @@ function parseFixturePage(html, matchday) {
     if (!isAltair) return;
 
     // Tarih parse
-    const dateParts = date.match(/(\d+)\s+(\w+)\s+(\d{4})/i);
+    const dateParts = date.match(/(\d+)\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})/i);
     const dayNum    = dateParts ? dateParts[1].padStart(2,"0") : "01";
     const monthName = dateParts ? dateParts[2].toUpperCase().slice(0,3) : "APR";
     const year      = dateParts ? dateParts[3] : "2026";
@@ -284,23 +289,46 @@ async function getLatestPlayedCount() {
 
 function useFixtures() {
   const [allMatches,  setAllMatches]  = useState(null);
+  const [fixturesLoading, setFixturesLoading] = useState(true);
   const [error,       setError]       = useState(null);
   const [tick,        setTick]        = useState(0);
+  const allMatchesRef = useRef(null);
+  const forceFreshRef = useRef(false);
 
-  const refetch = () => { localStorage.removeItem(FIX_CACHE_KEY); setTick(t => t+1); };
+  const refetch = () => {
+    localStorage.removeItem(FIX_CACHE_KEY);
+    forceFreshRef.current = true;
+    setTick(t => t+1);
+  };
+
+  useEffect(() => {
+    allMatchesRef.current = allMatches;
+  }, [allMatches]);
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
-      setAllMatches(null); setError(null);
+      const hasExistingData = Array.isArray(allMatchesRef.current);
+      const forceFresh = forceFreshRef.current;
+      forceFreshRef.current = false;
+      const refreshNonce = forceFresh ? Date.now() : null;
+      setFixturesLoading(true);
+      setError(null);
 
       const cached = readFixCache();
-      if (cached) { if (!cancelled) setAllMatches(cached); return; }
+      if (cached) {
+        if (!cancelled) {
+          setAllMatches(cached);
+          setFixturesLoading(false);
+        }
+        return;
+      }
 
       const fetchPage = async (md) => {
         try {
-          const url = `/api/eml-proxy?path=/tournaments/league_fixture/${TOURNAMENT_ID}/${md}/`;
+          const freshQuery = forceFresh ? `&fresh=1&ts=${refreshNonce}` : "";
+          const url = `/api/eml-proxy?path=/tournaments/league_fixture/${TOURNAMENT_ID}/${md}/${freshQuery}`;
           const res = await fetch(url, { cache:"no-store", signal:AbortSignal.timeout(6000) });
           if (!res.ok) return [];
           const html = await res.text();
@@ -309,21 +337,25 @@ function useFixtures() {
       };
 
       try {
-        // Strateji: Son 5 hafta + önümüzdeki 5 haftayı fetch et (max 10 istek)
-        // Mevcut haftayı tahmin et — bugünkü tarihe göre
+        // Strateji: oynanan maça göre pencere aç, ama ekranda görünen en ileri
+        // ALTAIR fikstürünü de kapsayacak şekilde sağ tarafa kaydır.
+        // Böylece refresh, Samurai gibi ileride görünen maçların tarihini de
+        // tekrar isteyebilir; toplam istek sayısı yine en fazla 11 kalır.
         const latestPlayedCount = await getLatestPlayedCount();
-        // İlk maç GW1 = 13 Mar 2026, her hafta 7 gün
         const latestPlayedIndex = Math.min(
           TOTAL_MATCHDAYS - 1,
           Math.max(-1, latestPlayedCount - 1),
         );
 
-        // Son 7 + önümüzdeki 4 = max 11 matchday fetch et
-        const fromIndex = Math.max(0, latestPlayedIndex - 4);
+        const visibleMaxIndex = Array.isArray(allMatchesRef.current) && allMatchesRef.current.length
+          ? Math.max(...allMatchesRef.current.map((match) => Math.max(0, (match.id || 1) - 1)))
+          : -1;
+
         const toIndex = Math.min(
           TOTAL_MATCHDAYS - 1,
-          Math.max(latestPlayedIndex + 4, 3),
+          Math.max(latestPlayedIndex + 4, visibleMaxIndex, 3),
         );
+        const fromIndex = Math.max(0, toIndex - 10);
         const mds = ALTAIR_MATCHDAYS.slice(fromIndex, toIndex + 1);
 
         // 3'erli gruplar halinde — site yoğulmaz
@@ -345,12 +377,17 @@ function useFixtures() {
             setAllMatches(results);
           } else {
             // Hiç veri gelmediyse fallback
-            setAllMatches([]);
+            if (!hasExistingData) setAllMatches([]);
           }
+          setFixturesLoading(false);
         }
       } catch (err) {
         console.warn("[useFixtures]", err.message);
-        if (!cancelled) { setError(err.message); setAllMatches([]); }
+        if (!cancelled) {
+          setError(err.message);
+          if (!hasExistingData) setAllMatches([]);
+          setFixturesLoading(false);
+        }
       }
     }
 
@@ -371,8 +408,10 @@ function useFixtures() {
     return { ...m, result };
   });
 
+  const loading = fixturesLoading;
+
   return {
-    loading:  allMatches === null,
+    loading,
     error,
     results:  withResult.slice(-5).reverse(),   // son 5 maç, yeniden eskiye
     fixtures: upcoming.slice(0, 4),             // sonraki 4 maç
@@ -2582,7 +2621,7 @@ function FixtureCard({ f }) {
 }
 
 function Fixtures({ loading, fixtures=[], error, refetch }) {
-  const data = fixtures.length ? fixtures : FIXTURES_FALLBACK;
+  const data = fixtures.length ? fixtures : loading ? FIXTURES_FALLBACK : [];
 
   return (
     <section className="section section-compact" id="fixtures">

@@ -12,6 +12,7 @@ export default async function handler(req, res) {
   }
 
   const path = req.query.path || "/";
+  const fresh = req.query.fresh === "1";
   const targetUrl = `https://emajorleague.com${path}`;
 
   try {
@@ -31,7 +32,10 @@ export default async function handler(req, res) {
 
     const html = await response.text();
     res.setHeader("Content-Type", "text/html; charset=utf-8");
-    res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate");
+    res.setHeader(
+      "Cache-Control",
+      fresh ? "no-store, no-cache, must-revalidate, max-age=0" : "s-maxage=3600, stale-while-revalidate",
+    );
     return res.status(200).send(html);
 
   } catch (err) {
