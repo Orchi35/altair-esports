@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/eml-proxy/:path*",
+      "destination": "https://emajorleague.com/:path*"
+    }
+  ]
+}

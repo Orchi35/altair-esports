@@ -7,8 +7,6 @@ import { useState, useEffect, useRef } from "react";
 const CACHE_KEY  = "altair_standings_v1";
 const CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
 const FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
-const EML_URL    = "https://emajorleague.com/tournaments/league_table/39/";
-const CORS_PROXY = "https://corsproxy.io/?url=";
 
 const STANDINGS_FALLBACK = [
   { rank:5, abbr:"SOH", name:"Sons Of Hell",   pld:15, w:10, d:1, l:4, gf:43, ga:15, gd:"+28", pts:31, form:"LLD", me:false },
@@ -91,11 +89,8 @@ function useStandings() {
         return;
       }
       try {
-        const isDev = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-        const url   = isDev
-          ? "/eml-proxy/tournaments/league_table/39/"
-          : `${CORS_PROXY}${encodeURIComponent(EML_URL)}`;
-        const res   = await fetch(url, { cache: "no-store" });
+        const url = "/eml-proxy/tournaments/league_table/39/";
+        const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const html   = await res.text();
         const parsed = parseEMLTable(html);
@@ -248,14 +243,9 @@ function useFixtures() {
       const cached = readFixCache();
       if (cached) { if (!cancelled) setAllMatches(cached); return; }
 
-      const isDev = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-
       const fetchPage = async (md) => {
         try {
-          const emlUrl = `https://emajorleague.com/tournaments/league_fixture/${TOURNAMENT_ID}/${md}/`;
-          const url = isDev
-            ? `/eml-proxy/tournaments/league_fixture/${TOURNAMENT_ID}/${md}/`
-            : `https://corsproxy.io/?url=${encodeURIComponent(emlUrl)}`;
+          const url = `/eml-proxy/tournaments/league_fixture/${TOURNAMENT_ID}/${md}/`;
           const res = await fetch(url, { cache:"no-store", signal:AbortSignal.timeout(6000) });
           if (!res.ok) return [];
           const html = await res.text();
