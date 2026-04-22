@@ -4,5 +4,20 @@
       "source": "/eml-proxy/:path*",
       "destination": "https://emajorleague.com/:path*"
     }
+  ],
+  "headers": [
+    {
+      "source": "/eml-proxy/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET,OPTIONS"
+        }
+      ]
+    }
   ]
 }

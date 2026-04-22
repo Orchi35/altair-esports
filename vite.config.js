@@ -5,11 +5,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // /eml-proxy/* → emajorleague.com/*  (CORS bypass in dev)
-      '/eml-proxy': {
+      // Dev'de /api/eml-proxy?path=... → emajorleague.com/...
+      '/api/eml-proxy': {
         target: 'https://emajorleague.com',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/eml-proxy/, ''),
+        rewrite: (path) => {
+          const match = path.match(/[?&]path=([^&]+)/);
+          return match ? decodeURIComponent(match[1]) : '/';
+        },
         secure: true,
         timeout: 8000,
         proxyTimeout: 8000,
