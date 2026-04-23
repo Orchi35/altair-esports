@@ -121,7 +121,7 @@ function useStandings() {
    oynananlarÄ± RESULTS, oynanmayanlarÄ± FIXTURES olarak ayÄ±rÄ±r.
    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
-const FIX_CACHE_KEY  = "altair_fixtures_v3";
+const FIX_CACHE_KEY  = "altair_fixtures_v5";
 const FIX_CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
 const FIX_FRIDAY_TTL = 60 * 60 * 1000;       // Cuma gÃ¼nÃ¼ 1 saat
 const TOTAL_MATCHDAYS = 34;
@@ -134,33 +134,67 @@ const COMPETITION     = "EML | Division 1";
 // Month helpers
 const MONTHS = ["","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 const MONTH_ALIASES = {
+  JAN: "JAN",
+  JANUARY: "JAN",
   OCA: "JAN",
+  OCAK: "JAN",
+  FEB: "FEB",
+  FEBRUARY: "FEB",
   SUB: "FEB",
+  SUBAT: "FEB",
   MAR: "MAR",
+  MARCH: "MAR",
+  MART: "MAR",
   NIS: "APR",
+  NISAN: "APR",
   APR: "APR",
+  APRIL: "APR",
   MAY: "MAY",
+  MAYIS: "MAY",
   HAZ: "JUN",
+  HAZIRAN: "JUN",
   JUN: "JUN",
+  JUNE: "JUN",
   TEM: "JUL",
+  TEMMUZ: "JUL",
   JUL: "JUL",
+  JULY: "JUL",
   AGU: "AUG",
+  AGUSTOS: "AUG",
   AUG: "AUG",
+  AUGUST: "AUG",
   EYL: "SEP",
+  EYLUL: "SEP",
   SEP: "SEP",
+  SEPTEMBER: "SEP",
   EKI: "OCT",
+  EKIM: "OCT",
   OCT: "OCT",
+  OCTOBER: "OCT",
   KAS: "NOV",
+  KASIM: "NOV",
   NOV: "NOV",
+  NOVEMBER: "NOV",
   ARA: "DEC",
+  ARALIK: "DEC",
   DEC: "DEC",
+  DECEMBER: "DEC",
 };
 
-function toEnglishMonthAbbr(value) {
-  const key = String(value || "")
+function normalizeMonthKey(value) {
+  return String(value || "")
     .trim()
-    .toUpperCase()
-    .replace(/\./g, "");
+    .replace(/ı/g, "i")
+    .replace(/İ/g, "I")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\./g, "")
+    .replace(/[^A-Za-z0-9]/g, "")
+    .toUpperCase();
+}
+
+function toEnglishMonthAbbr(value) {
+  const key = normalizeMonthKey(value);
 
   return MONTH_ALIASES[key] || key.slice(0, 3) || "APR";
 }
@@ -171,7 +205,7 @@ function getMonthIndex(value) {
   const numeric = Number(raw);
   if (Number.isInteger(numeric) && numeric >= 1 && numeric <= 12) return numeric;
 
-  const key = raw.toUpperCase().replace(/\./g, "");
+  const key = normalizeMonthKey(raw);
   return MONTH_INDEX_BY_ALIAS[key] || null;
 }
 
@@ -233,6 +267,18 @@ function toTurkishDateLabel(value) {
   return raw;
 }
 
+function getEnglishDateParts(value) {
+  const normalizedDate = toEnglishDateLabel(value);
+  const match = normalizedDate.match(/(\d{2})\s+([A-Za-z]{3})\s+(\d{4})/);
+
+  return {
+    date: normalizedDate,
+    day: match?.[1] || "01",
+    month: match?.[2] || "APR",
+    year: match?.[3] || "2026",
+  };
+}
+
 function localizeCompetition(lang = "EN") {
   return lang === "TR" ? "EML | 1. Lig" : "EML | Division 1";
 }
@@ -275,7 +321,7 @@ function parseFixturePage(html, matchday) {
     if (!t) return;
 
     const dateMatch =
-      t.match(/(\d{1,2})\s+([A-Za-zÃ‡ÄÄ°Ã–ÅÃœÃ§ÄŸÄ±Ã¶ÅŸÃ¼]+)\s+(\d{4})/i) ||
+      t.match(/(\d{1,2})\s+([\p{L}]+)\s+(\d{4})/iu) ||
       t.match(/(\d{1,2})[./-](\d{1,2})[./-](\d{4})/);
 
     if (dateMatch) {
@@ -310,19 +356,15 @@ function parseFixturePage(html, matchday) {
                      awayName.toLowerCase().includes(ALTAIR_NAME);
     if (!isAltair) return;
 
-    // Tarih parse
-    const dateParts = date.match(/(\d+)\s+([A-Za-zÃ‡ÄÄ°Ã–ÅÃœÃ§ÄŸÄ±Ã¶ÅŸÃ¼]+)\s+(\d{4})/i);
-    const dayNum    = dateParts ? dateParts[1].padStart(2,"0") : "01";
-    const monthName = dateParts ? dateParts[2].toUpperCase().slice(0,3) : "APR";
-    const year      = dateParts ? dateParts[3] : "2026";
+    const parsedDate = getEnglishDateParts(date);
 
     matches.push({
       id:          matchday,
       matchday:    `GW ${matchday}`,
       competition: COMPETITION,
-      date:        toEnglishDateLabel(date || `${dayNum} ${monthName} ${year}`),
-      day:         dayNum,
-      month:       monthName,
+      date:        parsedDate.date,
+      day:         parsedDate.day,
+      month:       parsedDate.month,
       time,
       home:        homeName,
       homeAbbr:    abbr3(homeName),
@@ -539,27 +581,28 @@ const FIXTURES_FALLBACK = [
 
 const SQUAD = [
   { group:"Goalkeepers", abbr:"GK", players:[
-    { number:"1",  name:"MEHMETCAN BABAT",   ign:"mcb06099",     pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"MB",  apps:7,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6666/", image:"public/players/Mehmetcan.png" },
-    { number:"31", name:"BERK SER",          ign:"Bwrkser",      pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"BS",  apps:5,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6644/", image:"public/players/Berk.png" },
+    { number:"1",  name:"MEHMETCAN BABAT",   ign:"mcb06099",     pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"MB",  apps:7, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6666/", image:"public/players/Mehmetcan.png" },
+    { number:"31", name:"BERK SER",          ign:"Bwrkser",      pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"BS",  apps:5, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6644/", image:"public/players/Berk.png" },
   ]},
   { group:"Defenders", abbr:"DEF", players:[
     { number:"5",  name:"AYBERK ÖZTÜRK",      ign:"LethalGullit", pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"AÖ",  apps:12, goals:2, assists:1, captain:false, profileUrl:"https://emajorleague.com/players/profile/8829/", image:"public/players/Ayberk.png" },
     { number:"99", name:"EGE YILMAZ",         ign:"Zeppettoo",    pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"EY",  apps:12, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9059/", image:"public/players/Ege.png" },
-    { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",   ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:3,  goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/Ömür.png" },
-    { number:"15", name:"EFE GÜLER",          ign:"TRU-xEf3s",    pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"EG",  apps:2,  goals:3, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/7200/", image:"public/players/Efes.png" },
-    { number:"57", name:"SACİT KARACA",       ign:"Sparostago1",  pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"SK",  apps:0,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9224/" },
-    { number:"21", name:"RÜŞTÜ ALPER GÜLER",  ign:"DreamArmyA",   pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"RAG", apps:0,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9054/" },
-    { number:"11", name:"HAZAR TARASHOHİ",    ign:"KingHzrq",     pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"HT",  apps:9,  goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8814/", image:"public/players/Hazar.png" },
-    { number:"66", name:"EFE DEMİR",          ign:"future1444",   pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"ED",  apps:6,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9929/", image:"public/players/Efe.png" },
-    { number:"14", name:"YUSUF EREN ZİYREK",  ign:"Sk4y0",        pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"YEZ", apps:7,  goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/Sky/", image:"public/players/Yusuf.png" },
+    { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",   ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:3, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/Ömür.png" },
+    { number:"15", name:"EFE GÜLER",          ign:"TRU-xEf3s",    pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"EG",  apps:2, goals:3, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/7200/", image:"public/players/Efes.png" },
+    { number:"57", name:"SACİT KARACA",       ign:"Sparostago1",  pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"SK",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9224/" },
+    { number:"21", name:"RÜŞTÜ ALPER GÜLER",  ign:"DreamArmyA",   pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"RAG", apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9054/" },
+    { number:"11", name:"HAZAR TARASHOHİ",    ign:"KingHzrq",     pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"HT",  apps:9, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8814/", image:"public/players/Hazar.png" },
+    { number:"66", name:"EFE DEMİR",          ign:"future1444",   pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"ED",  apps:6, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9929/", image:"public/players/Efe.png" },
   ]},
   { group:"Midfielders", abbr:"MID", players:[
     { number:"35", name:"KARAHAN ZEKİ TAŞKAN",   ign:"maniac_kara35", pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"KZT", apps:12, goals:0, assists:1,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/9020/", image:"public/players/Karahan.png" },
+    { number:"",   name:"YİĞİTHAN DALDAL",       ign:"Swindler3r",    pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"YD",  apps:0, goals:0, assists:0,  captain:false, profileUrl:"https://emajorleague.com/players/profile/2178/" },
     { number:"10", name:"ŞENER YİĞİT ÇOKYÜCEL",  ign:"yigitinski",    pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"ŞYÇ", apps:12, goals:0, assists:10, captain:true,  profileUrl:"https://emajorleague.com/yigitinski/", image:"public/players/Yiğit.png" },
     { number:"77", name:"ORÇUN BEKTAŞ",          ign:"ORC-HI",        pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"OB",  apps:12, goals:2, assists:3,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/Orçun.png" },
   ]},
   { group:"Forwards", abbr:"FWD", players:[
     { number:"7", name:"DOĞUKAN TOMBUL",  ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:12, goals:8, assists:3, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Doğukan.png" },
+    { number:"14", name:"YUSUF EREN ZİYREK", ign:"Sk4y0", pos:"ST", role:"Striker", flag:"🇹🇷", init:"YEZ", apps:7, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/Sky/", image:"public/players/Yusuf.png" },
   ]},
 ];
 
@@ -586,7 +629,6 @@ const UI_COPY = {
     nav: {
       links: { results:"Results", table:"Table", fixtures:"Fixtures", squad:"Squad", partners:"Partners", watch:"Watch" },
       cta:"Follow the Club",
-      ctaMobile:"Follow",
       langHead:"Site Language",
     },
     hero: {
@@ -627,7 +669,7 @@ const UI_COPY = {
       eyebrow:"Matchday Report",
       title:["RECENT", "RESULTS"],
       subLoading:"Loading latest results…",
-      sub:"The last five matchdays, played and decided. Every performance measured.",
+      sub:"Results from ALTAIR eSports’ last 5 matches played in EML Division 1.",
       cached:"Cached",
       viewFixtures:"View Fixtures",
       labels:{ W:"Victory", L:"Defeat", D:"Draw" },
@@ -637,7 +679,7 @@ const UI_COPY = {
       eyebrow:"Upcoming Schedule",
       title:["NEXT", "FIXTURES"],
       subLoading:"Loading upcoming fixtures…",
-      sub:"Every upcoming matchday on the EML Division 1 calendar. Broadcast live on Twitch.",
+      sub:"Upcoming match schedule and broadcast program in EML Division 1.",
       cached:"Cached",
       watch:"Watch on Twitch",
       venue:{ home:"Home", away:"Away" },
@@ -646,7 +688,7 @@ const UI_COPY = {
     squad: {
       eyebrow:"Season 2026 Roster",
       title:["THE", "SQUAD"],
-      sub:"Fourteen players. One club. The current ALTAIR roster competing in the FC 26 Pro Clubs Division 1.",
+      sub:"The current ALTAIR eSports player roster as of the 2026 season.",
       players:(count) => `${count} Players`,
       count:(count) => `${count} ${count > 1 ? "players" : "player"}`,
       stats:{ apps:"Apps", goals:"Goals", assists:"Assists" },
@@ -707,7 +749,6 @@ const UI_COPY = {
     nav: {
       links: { results:"Sonuclar", table:"Tablo", fixtures:"Fikstur", squad:"Kadro", partners:"Partnerler", watch:"Izle" },
       cta:"Kulubu Takip Et",
-      ctaMobile:"Takip Et",
       langHead:"Site Dili",
     },
     hero: {
@@ -748,7 +789,7 @@ const UI_COPY = {
       eyebrow:"Mac Haftasi Raporu",
       title:["SON", "SONUCLAR"],
       subLoading:"Son sonuclar yukleniyor…",
-      sub:"Son bes mac haftasi. Oynandi, sonuclandi ve kayda gecti.",
+      sub:"ALTAIR eSports’un EML 1. Lig kapsamında oynadığı son 5 karşılaşmanın sonuçları.",
       cached:"Onbellek",
       viewFixtures:"Fiksture Git",
       labels:{ W:"Galibiyet", L:"Maglubiyet", D:"Beraberlik" },
@@ -758,7 +799,7 @@ const UI_COPY = {
       eyebrow:"Yaklasan Program",
       title:["SIRADAKI", "FIKSTUR"],
       subLoading:"Yaklasan fikstur yukleniyor…",
-      sub:"EML 1. Lig takvimindeki yaklasan tum mac haftalari. Yayinlar Twitch'te canli.",
+      sub:"EML 1. Lig’de yaklaşan maç takvimi ve yayın programı.",
       cached:"Onbellek",
       watch:"Twitch'te Izle",
       venue:{ home:"Ic Saha", away:"Deplasman" },
@@ -767,7 +808,7 @@ const UI_COPY = {
     squad: {
       eyebrow:"2026 Sezonu Kadrosu",
       title:["TAKIM", "KADROSU"],
-      sub:"On dort oyuncu. Tek kulup. FC 26 Pro Clubs 1. Lig'de mucadele eden guncel ALTAIR kadrosu.",
+      sub:"2026 sezonu itibarıyla ALTAIR eSports’un güncel oyuncu kadrosu.",
       players:(count) => `${count} Oyuncu`,
       count:(count) => `${count} oyuncu`,
       stats:{ apps:"Mac", goals:"Gol", assists:"Asist" },
@@ -849,7 +890,7 @@ const MONTH_INDEX_BY_ALIAS = {
    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const css = `
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -901,8 +942,8 @@ button{font-family:inherit}
   --draw:      #64748b;
 
   /* type */
-  --f-display: 'Archivo', sans-serif;
-  --f-narrow:  'Archivo Narrow', sans-serif;
+  --f-display: 'Teko', sans-serif;
+  --f-narrow:  'Barlow Condensed', sans-serif;
   --f-body:    'Inter', sans-serif;
   --f-mono:    'JetBrains Mono', monospace;
 
@@ -1003,7 +1044,7 @@ body::after{
 .sec-hdr-left{max-width:720px}
 .sec-eyebrow{display:inline-flex;align-items:center;gap:12px;font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
 .sec-eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--cyan);opacity:.6}
-.sec-title{font-family:var(--f-display);font-weight:800;font-size:clamp(34px,4.5vw,58px);line-height:.96;letter-spacing:-.02em;text-transform:uppercase;color:var(--text)}
+.sec-title{font-family:var(--f-display);font-weight:700;font-size:clamp(38px,4.8vw,68px);line-height:.9;letter-spacing:.01em;text-transform:uppercase;color:var(--text)}
 .sec-title .accent{color:var(--cyan);font-style:normal}
 .sec-title .outline{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.2);font-style:normal}
 .sec-sub{margin-top:14px;color:var(--text-2);font-size:15px;line-height:1.65;max-width:560px;font-weight:400}
@@ -1065,7 +1106,6 @@ body::after{
 .nav-cta::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--bg);animation:navPulse 2s ease infinite}
 @keyframes navPulse{0%,100%{opacity:1}50%{opacity:.35}}
 .nav-cta:hover{background:var(--cyan-2);box-shadow:0 0 0 4px rgba(34,211,238,.15),0 10px 30px rgba(34,211,238,.25);transform:translateY(-1px)}
-.nav-cta-mobile{display:none}
 
 .nav-lang{position:relative}
 .nav-burger{
@@ -1284,9 +1324,9 @@ body::after{
 .hero-tag-sep{width:1px;height:10px;background:var(--cyan);opacity:.4}
 
 .hero-h1{
-  font-family:var(--f-display);font-weight:900;
-  font-size:clamp(52px,6.2vw,96px);
-  line-height:.92;letter-spacing:-.035em;text-transform:uppercase;
+  font-family:var(--f-display);font-weight:700;
+  font-size:clamp(58px,6.6vw,112px);
+  line-height:.88;letter-spacing:.01em;text-transform:uppercase;
   animation:heroUp .9s cubic-bezier(.16,1,.3,1) both;
   overflow:hidden;
 }
@@ -1297,9 +1337,11 @@ body::after{
   background:linear-gradient(to right,var(--cyan),transparent);
 }
 .hero-h1 .l-3{
-  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.15);
-  display:block;font-size:.52em;margin-top:14px;
-  letter-spacing:.01em;white-space:nowrap;
+  font-family:var(--f-narrow);font-weight:700;
+  color:rgba(222,236,255,.28);-webkit-text-stroke:.6px rgba(188,230,255,.2);
+  display:block;font-size:.4em;margin-top:16px;
+  letter-spacing:.08em;white-space:nowrap;
+  text-shadow:0 0 18px rgba(34,211,238,.06);
 }
 @keyframes heroUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
@@ -1436,9 +1478,9 @@ body::after{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
 }
 .st-hero-title{
-  font-family:var(--f-display);font-weight:900;
-  font-size:clamp(40px,6vw,80px);
-  line-height:.9;letter-spacing:-.03em;text-transform:uppercase;
+  font-family:var(--f-display);font-weight:700;
+  font-size:clamp(46px,6.2vw,90px);
+  line-height:.88;letter-spacing:.01em;text-transform:uppercase;
   color:var(--text);
 }
 .st-hero-title em{font-style:normal;color:var(--cyan)}
@@ -2306,19 +2348,16 @@ body::after{
   .nav{height:60px}
   .nav.scrolled{height:56px}
   .nav-links{display:none}
-  .nav-right{gap:8px}
+  .nav-right{gap:10px}
   .nav-lang-panel{right:0;min-width:200px}
-  .nav-burger{min-width:56px;padding:0 8px;gap:6px;justify-content:center}
-  .nav-lang-trigger-main{display:none}
-  .nav-lang-trigger-icon{gap:4px;font-size:10px}
-  .nav-lang-trigger-caret{display:none}
+  .nav-burger{min-width:88px;padding:0 10px;gap:8px}
+  .nav-lang-trigger-label{font-size:7px}
+  .nav-lang-trigger-value{font-size:10px}
+  .nav-lang-trigger-icon{gap:6px;font-size:9px}
   .nav-logo-img{height:34px;width:34px}
   .nav-wm-top{font-size:14px}
   .nav-wm-sub{display:none}
-  .nav-cta{padding:9px 11px;font-size:10px;letter-spacing:.08em}
-  .nav-cta::before{display:none}
-  .nav-cta-full{display:none}
-  .nav-cta-mobile{display:inline}
+  .nav-cta{padding:9px 14px;font-size:10px;letter-spacing:.1em}
 
   /* Hero */
   .hero{grid-template-columns:1fr;min-height:auto;padding-top:60px}
@@ -2480,10 +2519,9 @@ body::after{
   }
   .fix-team.home{background:linear-gradient(90deg,rgba(34,211,238,.08),rgba(255,255,255,.02) 45%)}
   .fix-team.away{background:linear-gradient(270deg,rgba(34,211,238,.08),rgba(255,255,255,.02) 45%)}
-  .fix-team.home,.fix-team.away{justify-content:flex-start}
+  .fix-team.home,.fix-team.away{justify-content:space-between}
   .fix-team-name{font-size:13px;line-height:1.2;flex:1}
-  .fix-team.home .fix-badge{order:-1}
-  .fix-team.home .fix-team-name{padding-left:12px;padding-right:0;text-align:left;flex:0 1 auto}
+  .fix-team.home .fix-team-name{padding-right:12px;text-align:left}
   .fix-team.away .fix-team-name{padding-left:12px;text-align:left}
   .fix-badge{width:40px;height:40px;font-size:10px}
   .fix-vs{min-height:22px}
@@ -2855,10 +2893,7 @@ function Navigation({ scrolled, activeLang, setActiveLang, copy }) {
         ))}
       </ul>
       <div className="nav-right">
-        <a href="#broadcast" className="nav-cta">
-          <span className="nav-cta-full">{copy.nav.cta}</span>
-          <span className="nav-cta-mobile">{copy.nav.ctaMobile || copy.nav.cta}</span>
-        </a>
+        <a href="#broadcast" className="nav-cta">{copy.nav.cta}</a>
         <div className="nav-lang" ref={langMenuRef}>
           <button
             className={`nav-burger${langMenuOpen ? " active" : ""}`}
@@ -3354,11 +3389,12 @@ function Squad({ copy }) {
 }
 
 function Sponsors({ copy }) {
+  const totalPlayers = SQUAD.reduce((count, group) => count + group.players.length, 0);
   const sponsorKpis = [
     { val:"200K+", lbl:copy.sponsors.kpis.reach },
     { val:"VPG", lbl:copy.sponsors.kpis.ranking },
     { val:"1", lbl:copy.sponsors.kpis.titles },
-    { val:"15", lbl:copy.sponsors.kpis.active },
+    { val:String(totalPlayers), lbl:copy.sponsors.kpis.active },
   ];
 
   return (
