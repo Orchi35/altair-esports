@@ -586,6 +586,7 @@ const UI_COPY = {
     nav: {
       links: { results:"Results", table:"Table", fixtures:"Fixtures", squad:"Squad", partners:"Partners", watch:"Watch" },
       cta:"Follow the Club",
+      ctaMobile:"Follow",
       langHead:"Site Language",
     },
     hero: {
@@ -706,6 +707,7 @@ const UI_COPY = {
     nav: {
       links: { results:"Sonuclar", table:"Tablo", fixtures:"Fikstur", squad:"Kadro", partners:"Partnerler", watch:"Izle" },
       cta:"Kulubu Takip Et",
+      ctaMobile:"Takip Et",
       langHead:"Site Dili",
     },
     hero: {
@@ -1063,6 +1065,7 @@ body::after{
 .nav-cta::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--bg);animation:navPulse 2s ease infinite}
 @keyframes navPulse{0%,100%{opacity:1}50%{opacity:.35}}
 .nav-cta:hover{background:var(--cyan-2);box-shadow:0 0 0 4px rgba(34,211,238,.15),0 10px 30px rgba(34,211,238,.25);transform:translateY(-1px)}
+.nav-cta-mobile{display:none}
 
 .nav-lang{position:relative}
 .nav-burger{
@@ -2303,16 +2306,19 @@ body::after{
   .nav{height:60px}
   .nav.scrolled{height:56px}
   .nav-links{display:none}
-  .nav-right{gap:10px}
+  .nav-right{gap:8px}
   .nav-lang-panel{right:0;min-width:200px}
-  .nav-burger{min-width:88px;padding:0 10px;gap:8px}
-  .nav-lang-trigger-label{font-size:7px}
-  .nav-lang-trigger-value{font-size:10px}
-  .nav-lang-trigger-icon{gap:6px;font-size:9px}
+  .nav-burger{min-width:56px;padding:0 8px;gap:6px;justify-content:center}
+  .nav-lang-trigger-main{display:none}
+  .nav-lang-trigger-icon{gap:4px;font-size:10px}
+  .nav-lang-trigger-caret{display:none}
   .nav-logo-img{height:34px;width:34px}
   .nav-wm-top{font-size:14px}
   .nav-wm-sub{display:none}
-  .nav-cta{padding:9px 14px;font-size:10px;letter-spacing:.1em}
+  .nav-cta{padding:9px 11px;font-size:10px;letter-spacing:.08em}
+  .nav-cta::before{display:none}
+  .nav-cta-full{display:none}
+  .nav-cta-mobile{display:inline}
 
   /* Hero */
   .hero{grid-template-columns:1fr;min-height:auto;padding-top:60px}
@@ -2474,9 +2480,10 @@ body::after{
   }
   .fix-team.home{background:linear-gradient(90deg,rgba(34,211,238,.08),rgba(255,255,255,.02) 45%)}
   .fix-team.away{background:linear-gradient(270deg,rgba(34,211,238,.08),rgba(255,255,255,.02) 45%)}
-  .fix-team.home,.fix-team.away{justify-content:space-between}
+  .fix-team.home,.fix-team.away{justify-content:flex-start}
   .fix-team-name{font-size:13px;line-height:1.2;flex:1}
-  .fix-team.home .fix-team-name{padding-right:12px;text-align:left}
+  .fix-team.home .fix-badge{order:-1}
+  .fix-team.home .fix-team-name{padding-left:12px;padding-right:0;text-align:left;flex:0 1 auto}
   .fix-team.away .fix-team-name{padding-left:12px;text-align:left}
   .fix-badge{width:40px;height:40px;font-size:10px}
   .fix-vs{min-height:22px}
@@ -2848,7 +2855,10 @@ function Navigation({ scrolled, activeLang, setActiveLang, copy }) {
         ))}
       </ul>
       <div className="nav-right">
-        <a href="#broadcast" className="nav-cta">{copy.nav.cta}</a>
+        <a href="#broadcast" className="nav-cta">
+          <span className="nav-cta-full">{copy.nav.cta}</span>
+          <span className="nav-cta-mobile">{copy.nav.ctaMobile || copy.nav.cta}</span>
+        </a>
         <div className="nav-lang" ref={langMenuRef}>
           <button
             className={`nav-burger${langMenuOpen ? " active" : ""}`}
