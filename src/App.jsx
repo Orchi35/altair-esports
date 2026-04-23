@@ -121,7 +121,7 @@ function useStandings() {
    oynananlarÄ± RESULTS, oynanmayanlarÄ± FIXTURES olarak ayÄ±rÄ±r.
    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
-const FIX_CACHE_KEY  = "altair_fixtures_v5";
+const FIX_CACHE_KEY  = "altair_fixtures_v6";
 const FIX_CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
 const FIX_FRIDAY_TTL = 60 * 60 * 1000;       // Cuma gÃ¼nÃ¼ 1 saat
 const TOTAL_MATCHDAYS = 34;
@@ -205,7 +205,8 @@ function getMonthIndex(value) {
   const numeric = Number(raw);
   if (Number.isInteger(numeric) && numeric >= 1 && numeric <= 12) return numeric;
 
-  const key = normalizeMonthKey(raw);
+  const normalizedKey = normalizeMonthKey(raw);
+  const key = MONTH_ALIASES[normalizedKey] || normalizedKey;
   return MONTH_INDEX_BY_ALIAS[key] || null;
 }
 
@@ -225,7 +226,7 @@ function toEnglishDateLabel(value) {
   const raw = String(value || "").trim();
   if (!raw) return "01 Apr 2026";
 
-  const textMatch = raw.match(/(\d{1,2})\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})/i);
+  const textMatch = raw.match(/(\d{1,2})\s+([\p{L}]+)\s+(\d{4})/iu);
   if (textMatch) {
     const day = textMatch[1].padStart(2, "0");
     const month = getMonthTitle(textMatch[2], "EN");
@@ -248,7 +249,7 @@ function toTurkishDateLabel(value) {
   const raw = String(value || "").trim();
   if (!raw) return "01 Nis 2026";
 
-  const textMatch = raw.match(/(\d{1,2})\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})/i);
+  const textMatch = raw.match(/(\d{1,2})\s+([\p{L}]+)\s+(\d{4})/iu);
   if (textMatch) {
     const day = textMatch[1].padStart(2, "0");
     const month = getMonthTitle(textMatch[2], "TR");
