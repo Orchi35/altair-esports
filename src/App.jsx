@@ -592,7 +592,7 @@ const UI_COPY = {
       tagLeague:"FC 26 · eMajor League",
       tagSeason:"Division 1 · S26",
       lines:["WE PLAY", "AS ONE.", "WE WIN TOGETHER."],
-      sub:"ALTAIR eSports competes in the eMajor League FC 26 Pro Clubs Division 1 — a disciplined, modern pro club built on chemistry, structure and relentless standards.",
+      sub:"Competing in the eMajor League FC 26 Pro Clubs Division 1 as an esports club. The club operates with a structure built on team play and discipline. Its aim is to produce consistent performances on the pitch and establish a lasting place in competition.",
       primary:"Watch Live",
       secondary:"Meet the Squad",
       scroll:"Scroll",
@@ -669,29 +669,29 @@ const UI_COPY = {
     sponsors: {
       eyebrow:"Partners & Sponsors",
       title:["OUR", "PARTNERS"],
-      sub:"ALTAIR partners with brands that share our drive for excellence. We deliver an authentic, engaged audience at the intersection of football and competitive gaming — a growing community that watches, streams, and buys.",
+      sub:"ALTAIR eSports aims to create mutual value with the brands it works with. These partnerships are built on a long-term structure, not just visibility. The goal is to establish a sustainable connection between the competitive scene and the brands involved.",
       kpis:{ reach:"Combined Reach", ranking:"Club Ranking", titles:"Titles Won", active:"Active Players" },
       tiers:{ title:"Title Partner", gold:"Gold Partners", official:"Official Partners" },
       ctaTitle:"Become an ALTAIR Partner",
-      ctaSub:"Reach the next generation of competitive football fans through matchday broadcasts, digital content and on-kit placement.",
+      ctaSub:"ALTAIR eSports provides brands with direct access and visibility. With the content and broadcast placements offered through collaboration, target audiences are reached effectively.",
       ctaPrimary:"Get in Touch",
       ctaSecondary:"Partnership Deck",
     },
     social: {
       eyebrow:"Broadcasts & Community",
       title:["FOLLOW", "ALTAIR"],
-      sub:"Every live match, every highlight, every behind-the-scenes moment — across the channels where the ALTAIR community lives.",
+      sub:"All broadcasts and content from ALTAIR eSports are shared through its official channels. Follow every development instantly, from matches to exclusive content.",
       official:"Official",
       cards:{
-        tw:{ desc:"Live match broadcasts every matchday with full commentary.", cta:"Watch Live" },
-        yt:{ desc:"Match replays, player breakdowns and season recaps.", cta:"Subscribe" },
-        ig:{ desc:"Behind the scenes, squad content and matchday graphics.", cta:"Follow" },
-        dc:{ desc:"Join our community, connect with players and stay updated.", cta:"Join" },
+        tw:{ desc:"Matches are broadcast live as part of the weekly fixture schedule. Follow every match in real time.", cta:"Watch Live" },
+        yt:{ desc:"Match replays, player analysis and season content are shared regularly.", cta:"Subscribe" },
+        ig:{ desc:"Squads, behind-the-scenes content and matchday posts are featured here.", cta:"Follow" },
+        dc:{ desc:"Connect directly with the community. Announcements and events are shared through this channel.", cta:"Join" },
       },
     },
     footer: {
       brandTag:"FC 26 Pro Clubs · eMajor League",
-      bio:"A professional FC 26 Pro Clubs organisation competing in EML Division 1. Built on structure, chemistry and a relentless standard.",
+      bio:"ALTAIR eSports is an FC 26 Pro Clubs organisation competing in EML Division 1. The club takes part in competition with a structure built on game discipline and team cohesion.",
       titles:{ club:"Club", competition:"Competition", connect:"Connect" },
       clubLinks:["About ALTAIR","Season History","Honours","Press Kit","Careers"],
       compLinks:["Team Page","League Table","Fixtures","Statistics","Squad"],
@@ -712,7 +712,7 @@ const UI_COPY = {
       tagLeague:"FC 26 · eMajor League",
       tagSeason:"1. Lig · S26",
       lines:["BIRLIKTE", "OYNARIZ.", "BIRLIKTE KAZANIRIZ."],
-      sub:"ALTAIR eSports, eMajor League FC 26 Pro Clubs 1. Lig'de mucadele eden; kimya, duzen ve yuksek standartlar uzerine kurulu modern bir pro club yapisidir.",
+      sub:"eMajor League FC 26 Pro Clubs 1. Ligi’nde mücadele eden bir e-spor kulübüdür. Kulüp, takım oyunu ve düzen üzerine kurulu bir yapıyla faaliyet gösterir. Amaç, sahada istikrarlı sonuçlar üretmek ve rekabet içinde kalıcı bir yer edinmektir.",
       primary:"Canli Izle",
       secondary:"Kadroyu Incele",
       scroll:"Kaydir",
@@ -789,29 +789,29 @@ const UI_COPY = {
     sponsors: {
       eyebrow:"Partnerler ve Sponsorlar",
       title:["IS", "ORTAKLARIMIZ"],
-      sub:"ALTAIR, mukemmellik hedefini paylasan markalarla birlikte calisir. Futbol ile rekabetci oyunculugun kesisimindeki gercek ve etkilesimi yuksek bir topluluga ulasiriz.",
+      sub:"ALTAIR eSports, birlikte çalıştığı markalarla karşılıklı değer üretmeyi hedefler. İş ortaklıkları, görünürlükten öte uzun vadeli bir yapı üzerine kuruludur. Amaç, rekabetçi sahne ile markalar arasında sürdürülebilir bir bağ oluşturmaktır.",
       kpis:{ reach:"Toplam Erisim", ranking:"Kulup Sirasi", titles:"Kazanilan Kupa", active:"Aktif Oyuncu" },
       tiers:{ title:"Ana Partner", gold:"Altin Partnerler", official:"Resmi Partnerler" },
       ctaTitle:"ALTAIR Partneri Olun",
-      ctaSub:"Mac gunu yayinlari, dijital icerikler ve forma ustu gorunurluk ile rekabetci futbol izleyicisinin yeni nesline ulasin.",
+      ctaSub:"ALTAIR eSports, markalar için doğrudan erişim ve görünürlük sunar. İş birliği kapsamında sunulan içerik ve yayın alanlarıyla hedef kitleye etkili şekilde ulaşılır.",
       ctaPrimary:"Iletisime Gec",
       ctaSecondary:"Partnerlik Dosyasi",
     },
     social: {
       eyebrow:"Yayinlar ve Topluluk",
       title:["ALTAIR'I", "TAKIP ET"],
-      sub:"Her canli mac, her ozet, her kulis icerigi — ALTAIR toplulugunun bulustugu tum kanallarda.",
+      sub:"ALTAIR eSports’a ait tüm yayın ve içerikler resmi kanallar üzerinden paylaşılır. Maçlardan özel içeriklere kadar tüm gelişmeleri anında takip edin.",
       official:"Resmi",
       cards:{
-        tw:{ desc:"Her mac haftasinda tam anlatimla canli mac yayinlari.", cta:"Canli Izle" },
-        yt:{ desc:"Mac tekrarlarÄ±, oyuncu analizleri ve sezon ozetleri.", cta:"Abone Ol" },
-        ig:{ desc:"Sahne arkasi, kadro icerikleri ve mac gunu tasarimlari.", cta:"Takip Et" },
-        dc:{ desc:"Toplulugumuza katilin, oyuncularla baglanti kurun ve guncel kalin.", cta:"Katil" },
+        tw:{ desc:"Maçlar, haftalık fikstür kapsamında canlı olarak yayınlanır. Tüm karşılaşmaları anlık takip edin.", cta:"Canli Izle" },
+        yt:{ desc:"Maç tekrarları, oyuncu analizleri ve sezon içerikleri düzenli olarak paylaşılır.", cta:"Abone Ol" },
+        ig:{ desc:"Kadrolar, sahne arkası içerikler ve maç günü paylaşımları burada yer alır.", cta:"Takip Et" },
+        dc:{ desc:"Topluluk ile doğrudan iletişim kurun. Duyurular ve etkinlikler bu kanal üzerinden paylaşılır.", cta:"Katil" },
       },
     },
     footer: {
       brandTag:"FC 26 Pro Clubs · eMajor League",
-      bio:"EML 1. Lig'de mucadele eden profesyonel bir FC 26 Pro Clubs organizasyonu. Yapisi, uyumu ve bitmeyen standart arayisiyla kuruldu.",
+      bio:"ALTAIR eSports, EML 1. Lig’de mücadele eden bir FC 26 Pro Clubs organizasyonudur. Kulüp, oyun disiplini ve takım uyumu üzerine kurulu bir yapı ile rekabet içinde yer alır.",
       titles:{ club:"Kulup", competition:"Rekabet", connect:"Baglanti" },
       clubLinks:["ALTAIR Hakkinda","Sezon Gecmisi","Basarilar","Basin Kiti","Kariyer"],
       compLinks:["Takim Sayfasi","Puan Durumu","Fikstur","Istatistikler","Kadro"],
@@ -1968,17 +1968,78 @@ body::after{
    SPONSORS
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .sponsors{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--bg),var(--surface-0) 100%)}
-.sp-top{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:end;margin-bottom:56px}
-.sp-top p{font-size:15px;line-height:1.75;color:var(--text-2);font-weight:400;max-width:540px}
-.sp-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.sp-kpi{
-  padding:22px 24px;
-  background:var(--surface-1);border:1px solid var(--line);
-  transition:all .22s ease;
+.sponsors .sec-hdr{margin-bottom:26px}
+.sp-top{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:start;margin-bottom:44px}
+.sp-top p{font-size:15px;line-height:1.75;color:var(--text-2);font-weight:400;max-width:540px;margin:0}
+.sp-kpis{
+  position:relative;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  align-self:start;
+  margin-top:-12px;
+  padding:12px;
+  background:
+    radial-gradient(circle at top right,rgba(34,211,238,.1),transparent 48%),
+    linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01) 44%,rgba(6,11,20,.6) 100%);
+  border:1px solid rgba(126,211,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 18px 38px rgba(0,0,0,.16);
 }
-.sp-kpi:hover{border-color:var(--cyan-edge);background:var(--surface-2)}
-.sp-kpi-val{font-family:var(--f-display);font-weight:800;font-size:32px;line-height:1;color:var(--cyan);letter-spacing:-.02em}
-.sp-kpi-lbl{font-family:var(--f-mono);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--text-2);margin-top:8px}
+.sp-kpis::before{
+  content:'';
+  position:absolute;top:0;left:18px;right:18px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,.7),transparent);
+  opacity:.95;
+}
+.sp-kpi{
+  position:relative;
+  overflow:hidden;
+  min-height:116px;
+  padding:24px 24px 22px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  background:
+    radial-gradient(circle at top right,rgba(34,211,238,.14),transparent 42%),
+    radial-gradient(circle at bottom left,rgba(255,255,255,.035),transparent 38%),
+    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015) 38%,rgba(7,13,24,.92) 100%),
+    linear-gradient(145deg,rgba(15,25,42,.96),rgba(10,17,31,.98));
+  border:1px solid rgba(126,211,255,.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 14px 32px rgba(0,0,0,.18),
+    0 0 0 1px rgba(34,211,238,.03);
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
+}
+.sp-kpi::before{
+  content:'';
+  position:absolute;top:0;left:18px;right:18px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,.85),transparent);
+  opacity:.9;
+}
+.sp-kpi::after{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    linear-gradient(120deg,transparent 0%,rgba(255,255,255,.04) 18%,transparent 38%),
+    repeating-linear-gradient(0deg,transparent,transparent 4px,rgba(255,255,255,.018) 4px,rgba(255,255,255,.018) 5px);
+  pointer-events:none;
+  opacity:.55;
+}
+.sp-kpi:hover{
+  transform:translateY(-2px);
+  border-color:rgba(34,211,238,.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 18px 40px rgba(0,0,0,.24),
+    0 0 26px rgba(34,211,238,.08);
+}
+.sp-kpi-val{
+  position:relative;z-index:1;
+  font-family:var(--f-display);font-weight:800;font-size:32px;line-height:1;color:var(--cyan);letter-spacing:-.02em;
+  text-shadow:0 0 18px rgba(34,211,238,.16),0 0 30px rgba(34,211,238,.08);
+}
+.sp-kpi-lbl{
+  position:relative;z-index:1;
+  font-family:var(--f-mono);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(229,238,255,.78);margin-top:12px
+}
 
 .sp-tier{margin-bottom:40px}
 .sp-tier:last-of-type{margin-bottom:56px}
@@ -1995,23 +2056,70 @@ body::after{
 .sp-tile{
   flex:1 1 0;min-width:170px;
   display:flex;align-items:center;justify-content:center;
-  padding:28px 32px;
-  background:var(--surface-1);border:1px solid var(--line);
-  transition:all .22s ease;position:relative;overflow:hidden;
+  min-height:112px;
+  padding:30px 34px;
+  background:
+    radial-gradient(circle at top right,rgba(34,211,238,.12),transparent 40%),
+    radial-gradient(circle at bottom left,rgba(255,255,255,.035),transparent 32%),
+    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012) 36%,rgba(6,11,20,.92) 100%),
+    linear-gradient(145deg,rgba(16,26,43,.98),rgba(9,15,27,1));
+  border:1px solid rgba(126,211,255,.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    inset 0 -1px 0 rgba(34,211,238,.05),
+    0 16px 34px rgba(0,0,0,.2);
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
+  position:relative;overflow:hidden;
+}
+.sp-tile::before{
+  content:'';
+  position:absolute;top:0;left:20px;right:20px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,.72),transparent);
+  opacity:.95;
 }
 .sp-tile::after{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,transparent 40%,rgba(34,211,238,.08) 50%,transparent 60%);
-  transform:translateX(-100%);transition:transform .6s ease;
+  background:
+    linear-gradient(135deg,transparent 36%,rgba(34,211,238,.08) 50%,transparent 64%),
+    repeating-linear-gradient(0deg,transparent,transparent 4px,rgba(255,255,255,.018) 4px,rgba(255,255,255,.018) 5px);
+  transform:translateX(-100%);transition:transform .7s ease;
+  opacity:.7;
 }
-.sp-tile:hover{border-color:var(--cyan-edge);background:var(--surface-2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.sp-tile:hover{
+  border-color:rgba(34,211,238,.34);
+  transform:translateY(-4px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(34,211,238,.08),
+    0 22px 44px rgba(0,0,0,.28),
+    0 0 28px rgba(34,211,238,.07);
+}
 .sp-tile:hover::after{transform:translateX(100%)}
 
-.sp-tile.featured{flex:1 1 100%;min-height:130px;padding:36px 56px;background:linear-gradient(135deg,var(--surface-1),var(--surface-2));border-color:var(--cyan-edge)}
-.sp-name{font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);position:relative;z-index:2}
-.sp-name.title{font-size:38px;color:var(--cyan);letter-spacing:.04em;text-shadow:0 0 30px rgba(34,211,238,.3)}
-.sp-name.gold{font-size:22px;color:var(--text)}
-.sp-name.partner{font-size:16px;color:var(--text-2)}
+.sp-tile.featured{
+  flex:1 1 100%;
+  min-height:136px;
+  padding:40px 56px;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(34,211,238,.12),transparent 42%),
+    radial-gradient(circle at top right,rgba(255,255,255,.05),transparent 28%),
+    linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012) 38%,rgba(7,14,25,.94) 100%),
+    linear-gradient(135deg,rgba(14,27,44,.98),rgba(10,18,31,1));
+  border-color:rgba(34,211,238,.26);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(34,211,238,.08),
+    0 22px 48px rgba(0,0,0,.24),
+    0 0 34px rgba(34,211,238,.08);
+}
+.sp-name{
+  font-family:var(--f-display);font-weight:800;font-size:24px;letter-spacing:.07em;text-transform:uppercase;color:var(--text);
+  position:relative;z-index:2;
+  text-shadow:0 0 14px rgba(255,255,255,.05);
+}
+.sp-name.title{font-size:42px;color:var(--cyan);letter-spacing:.05em;text-shadow:0 0 34px rgba(34,211,238,.28)}
+.sp-name.gold{font-size:24px;color:var(--text)}
+.sp-name.partner{font-size:17px;color:rgba(229,238,255,.84)}
 
 .sp-cta{
   display:flex;align-items:center;justify-content:space-between;gap:32px;
@@ -2413,7 +2521,7 @@ body::after{
   /* Sponsors */
   .sp-top{margin-bottom:36px;gap:28px}
   .sp-top p{font-size:13px}
-  .sp-kpis{grid-template-columns:1fr 1fr;gap:6px}
+  .sp-kpis{grid-template-columns:1fr 1fr;gap:6px;margin-top:0;padding:0;background:none;border:none;box-shadow:none}
   .sp-kpi{padding:14px 16px}
   .sp-kpi-val{font-size:22px}
   .sp-kpi-lbl{font-size:9px}
