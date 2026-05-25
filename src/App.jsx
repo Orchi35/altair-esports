@@ -580,30 +580,242 @@ const FIXTURES_FALLBACK = [
   { id:19, day:"01", month:"MAY", time:"22:30", matchday:"GW 19", competition:"EML | Division 1", home:"SAMURAI",             homeAbbr:"SAM", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
 ];
 
+const SQUAD_CACHE_KEY = "altair_squad_stats_v1";
+const SQUAD_CACHE_MAX = 15 * 60 * 1000;
+const SQUAD_POLL_MS = 60 * 1000;
+const TEAM_PAGE_PATH = "/team/ALTAIReSports/";
+const SQUAD_ROUTE_RE = /href=["']([^"'#?]*\/teams\/team\/\d+\/\d+\/\d+\/squad[^"'#?]*)["']/gi;
+
+function canonicalizeIgn(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&[a-z0-9#]+;/gi, "")
+    .replace(/[^a-z0-9]+/gi, "")
+    .toLowerCase();
+}
+
+function decodeHtmlValue(value) {
+  return String(value || "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&uuml;/gi, "u")
+    .replace(/&ouml;/gi, "o")
+    .replace(/&ccedil;/gi, "c")
+    .replace(/&Uuml;/gi, "U")
+    .replace(/&Ouml;/gi, "O")
+    .replace(/&Ccedil;/gi, "C")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&#x([a-f0-9]+);/gi, (_, code) => String.fromCharCode(Number.parseInt(code, 16)));
+}
+
+function stripHtmlTags(value) {
+  return decodeHtmlValue(String(value || "").replace(/<[^>]+>/g, " "))
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function findBestSquadStatsTable(html, playerKeys) {
+  const tables = html.match(/<table\b[\s\S]*?<\/table>/gi) || [];
+  let bestTable = null;
+  let bestScore = 0;
+
+  for (const tableHtml of tables) {
+    const cells = [...tableHtml.matchAll(/<t[dh]\b[\s\S]*?<\/t[dh]>/gi)].map((match) => stripHtmlTags(match[0]));
+    const score = cells.reduce((count, cell) => count + (playerKeys.has(canonicalizeIgn(cell)) ? 1 : 0), 0);
+    if (score > bestScore) {
+      bestScore = score;
+      bestTable = tableHtml;
+    }
+  }
+
+  return bestScore > 0 ? bestTable : null;
+}
+
+function parseSquadStatsTable(tableHtml, playerKeys) {
+  const statsByIgn = new Map();
+  const rowMatches = tableHtml.match(/<tr\b[\s\S]*?<\/tr>/gi) || [];
+
+  for (const rowHtml of rowMatches) {
+    const cells = [...rowHtml.matchAll(/<t[dh]\b[\s\S]*?<\/t[dh]>/gi)].map((match) => stripHtmlTags(match[0]));
+    if (cells.length < 4) continue;
+
+    const ignIndex = cells.findIndex((cell) => playerKeys.has(canonicalizeIgn(cell)));
+    if (ignIndex === -1) continue;
+
+    const numericCells = cells
+      .slice(ignIndex + 1)
+      .map((cell) => {
+        const normalized = cell.replace(",", ".").trim();
+        return /^\d+(\.\d+)?$/.test(normalized) ? Number(normalized) : null;
+      })
+      .filter((value) => value !== null);
+
+    if (numericCells.length < 3) continue;
+
+    statsByIgn.set(canonicalizeIgn(cells[ignIndex]), {
+      apps: Number(numericCells[0]),
+      goals: Number(numericCells[1]),
+      assists: Number(numericCells[2]),
+    });
+  }
+
+  return statsByIgn;
+}
+
+function resolveSquadStatsPath(html) {
+  const paths = [];
+  for (const match of html.matchAll(SQUAD_ROUTE_RE)) {
+    paths.push(match[1]);
+  }
+
+  const uniquePaths = [...new Set(paths)];
+  uniquePaths.sort((left, right) => right.localeCompare(left));
+  return uniquePaths[0] || null;
+}
+
+function applyLiveStatsToSquad(baseSquad, statsByIgn) {
+  return baseSquad.map((group) => ({
+    ...group,
+    players: group.players.map((player) => {
+      const stats = statsByIgn.get(canonicalizeIgn(player.ign));
+      return stats ? { ...player, ...stats } : player;
+    }),
+  }));
+}
+
+function readSquadCache() {
+  try {
+    const raw = localStorage.getItem(SQUAD_CACHE_KEY);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts < SQUAD_CACHE_MAX) {
+      return { ts, data };
+    }
+  } catch { /**/ }
+  return null;
+}
+
+function writeSquadCache(data) {
+  try {
+    localStorage.setItem(SQUAD_CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
+  } catch { /**/ }
+}
+
+function useSquadStats() {
+  const [squad, setSquad] = useState(SQUAD);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastUpdate, setLastUpdate] = useState(null);
+  const [tick, setTick] = useState(0);
+
+  const refetch = () => {
+    localStorage.removeItem(SQUAD_CACHE_KEY);
+    setTick((value) => value + 1);
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      setLoading(true);
+      setError(null);
+
+      const cached = readSquadCache();
+      if (cached) {
+        if (!cancelled) {
+          setSquad(cached.data);
+          setLastUpdate(new Date(cached.ts));
+          setLoading(false);
+        }
+        return;
+      }
+
+      try {
+        const teamRes = await fetch(`/api/eml-proxy?path=${encodeURIComponent(TEAM_PAGE_PATH)}`, { cache:"no-store" });
+        if (!teamRes.ok) throw new Error(`HTTP ${teamRes.status}`);
+        const teamHtml = await teamRes.text();
+
+        let tableHtml = findBestSquadStatsTable(
+          teamHtml,
+          new Set(SQUAD.flatMap((group) => group.players.map((player) => canonicalizeIgn(player.ign))).filter(Boolean)),
+        );
+
+        if (!tableHtml) {
+          const squadPath = resolveSquadStatsPath(teamHtml);
+          if (!squadPath) throw new Error("Squad page not found");
+          const squadRes = await fetch(`/api/eml-proxy?path=${encodeURIComponent(squadPath)}`, { cache:"no-store" });
+          if (!squadRes.ok) throw new Error(`HTTP ${squadRes.status}`);
+          const squadHtml = await squadRes.text();
+          tableHtml = findBestSquadStatsTable(
+            squadHtml,
+            new Set(SQUAD.flatMap((group) => group.players.map((player) => canonicalizeIgn(player.ign))).filter(Boolean)),
+          );
+        }
+
+        if (!tableHtml) throw new Error("Squad stats table not found");
+
+        const statsByIgn = parseSquadStatsTable(
+          tableHtml,
+          new Set(SQUAD.flatMap((group) => group.players.map((player) => canonicalizeIgn(player.ign))).filter(Boolean)),
+        );
+        if (!statsByIgn.size) throw new Error("No matching squad stats parsed");
+
+        const liveSquad = applyLiveStatsToSquad(SQUAD, statsByIgn);
+        writeSquadCache(liveSquad);
+
+        if (!cancelled) {
+          setSquad(liveSquad);
+          setLastUpdate(new Date());
+        }
+      } catch (err) {
+        console.warn("[useSquadStats]", err.message);
+        if (!cancelled) {
+          setError(err.message);
+          setSquad(SQUAD);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    const interval = setInterval(() => setTick((value) => value + 1), SQUAD_POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [tick]);
+
+  return { squad, loading, error, lastUpdate, refetch };
+}
+
 const SQUAD = [
   { group:"Goalkeepers", abbr:"GK", players:[
-    { number:"1",  name:"MEHMETCAN BABAT",   ign:"mcb06099",     pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"MB",  apps:7, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6666/", image:"public/players/Mehmetcan.png" },
+    { number:"1",  name:"MEHMETCAN BABAT",   ign:"mcb06099",     pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"MB",  apps:15, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6666/", image:"public/players/Mehmetcan.png" },
     { number:"31", name:"BERK SER",          ign:"Bwrkser",      pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"BS",  apps:5, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6644/", image:"public/players/Berk.png" },
   ]},
   { group:"Defenders", abbr:"DEF", players:[
-    { number:"5",  name:"AYBERK ÖZTÜRK",      ign:"LethalGullit", pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"AÖ",  apps:12, goals:2, assists:1, captain:false, profileUrl:"https://emajorleague.com/players/profile/8829/", image:"public/players/Ayberk.png" },
-    { number:"99", name:"EGE YILMAZ",         ign:"Zeppettoo",    pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"EY",  apps:12, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9059/", image:"public/players/Ege.png" },
-    { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",   ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:3, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/Ömür.png" },
+    { number:"5",  name:"AYBERK ÖZTÜRK",      ign:"LethalGullit", pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"AÖ",  apps:22, goals:3, assists:1, captain:false, profileUrl:"https://emajorleague.com/players/profile/8829/", image:"public/players/Ayberk.png" },
+    { number:"99", name:"EGE YILMAZ",         ign:"Zeppettoo",    pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"EY",  apps:15, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9059/", image:"public/players/Ege.png" },
+    { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",   ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:15, goals:4, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/Ömür.png" },
     { number:"15", name:"EFE GÜLER",          ign:"TRU-xEf3s",    pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"EG",  apps:2, goals:3, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/7200/", image:"public/players/Efes.png" },
     { number:"57", name:"SACİT KARACA",       ign:"Sparostago1",  pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"SK",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9224/" },
     { number:"21", name:"RÜŞTÜ ALPER GÜLER",  ign:"DreamArmyA",   pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"RAG", apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9054/" },
-    { number:"11", name:"HAZAR TARASHOHİ",    ign:"KingHzrq",     pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"HT",  apps:9, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8814/", image:"public/players/Hazar.png" },
+    { number:"11", name:"HAZAR TARASHOHİ",    ign:"KingHzrq",     pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"HT",  apps:21, goals:5, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8814/", image:"public/players/Hazar.png" },
     { number:"66", name:"EFE DEMİR",          ign:"future1444",   pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"ED",  apps:6, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9929/", image:"public/players/Efe.png" },
   ]},
   { group:"Midfielders", abbr:"MID", players:[
-    { number:"35", name:"KARAHAN ZEKİ TAŞKAN",   ign:"maniac_kara35", pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"KZT", apps:12, goals:0, assists:1,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/9020/", image:"public/players/Karahan.png" },
-    { number:"",   name:"YİĞİTHAN DALDAL",       ign:"Swindler3r",    pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"YD",  apps:0, goals:0, assists:0,  captain:false, profileUrl:"https://emajorleague.com/players/profile/2178/" },
-    { number:"10", name:"ŞENER YİĞİT ÇOKYÜCEL",  ign:"yigitinski",    pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"ŞYÇ", apps:12, goals:0, assists:10, captain:true,  profileUrl:"https://emajorleague.com/yigitinski/", image:"public/players/Yiğit.png" },
-    { number:"77", name:"ORÇUN BEKTAŞ",          ign:"ORC-HI",        pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"OB",  apps:12, goals:2, assists:3,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/Orçun.png" },
+    { number:"35", name:"KARAHAN ZEKİ TAŞKAN",   ign:"maniac_kara35", pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"KZT", apps:18, goals:0, assists:1,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/9020/", image:"public/players/Karahan.png" },
+    { number:"",   name:"YİĞİTHAN DALDAL",       ign:"Swindler3r",    pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"YD",  apps:8, goals:0, assists:3,  captain:false, profileUrl:"https://emajorleague.com/players/profile/2178/" },
+    { number:"10", name:"ŞENER YİĞİT ÇOKYÜCEL",  ign:"yigitinski",    pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"ŞYÇ", apps:24, goals:1, assists:20, captain:true,  profileUrl:"https://emajorleague.com/yigitinski/", image:"public/players/Yiğit.png" },
+    { number:"77", name:"ORÇUN BEKTAŞ",          ign:"ORC-HI",        pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"OB",  apps:24, goals:2, assists:4,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/Orçun.png" },
   ]},
   { group:"Forwards", abbr:"FWD", players:[
-    { number:"7", name:"DOĞUKAN TOMBUL",  ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:12, goals:8, assists:3, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Doğukan.png" },
-    { number:"14", name:"YUSUF EREN ZİYREK", ign:"Sk4y0", pos:"ST", role:"Striker", flag:"🇹🇷", init:"YEZ", apps:7, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/Sky/", image:"public/players/Yusuf.png" },
+    { number:"7", name:"DOĞUKAN TOMBUL",  ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:24, goals:26, assists:7, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Doğukan.png" },
+    { number:"14", name:"YUSUF EREN ZİYREK", ign:"Sk4y0", pos:"ST", role:"Striker", flag:"🇹🇷", init:"YEZ", apps:15, goals:5, assists:7, captain:false, profileUrl:"https://emajorleague.com/Sky/", image:"public/players/Yusuf.png" },
   ]},
 ];
 
@@ -690,6 +902,8 @@ const UI_COPY = {
       eyebrow:"Season 2026 Roster",
       title:["THE", "SQUAD"],
       sub:"The current ALTAIR eSports player roster as of the 2026 season.",
+      subLoading:"Refreshing live squad stats…",
+      cached:"Cached squad stats",
       players:(count) => `${count} Players`,
       count:(count) => `${count} ${count > 1 ? "players" : "player"}`,
       stats:{ apps:"Apps", goals:"Goals", assists:"Assists" },
@@ -810,6 +1024,8 @@ const UI_COPY = {
       eyebrow:"2026 Sezonu Kadrosu",
       title:["TAKIM", "KADROSU"],
       sub:"2026 sezonu itibarıyla ALTAIR eSports’un güncel oyuncu kadrosu.",
+      subLoading:"Canli kadro istatistikleri yenileniyor…",
+      cached:"Onbellek kadro verisi",
       players:(count) => `${count} Oyuncu`,
       count:(count) => `${count} oyuncu`,
       stats:{ apps:"Mac", goals:"Gol", assists:"Asist" },
@@ -3540,8 +3756,13 @@ function PlayerCard({ p, copy }) {
   );
 }
 
-function Squad({ copy }) {
-  const total = SQUAD.reduce((n, g) => n + g.players.length, 0);
+function Squad({ lang, copy }) {
+  const { squad, loading, error, lastUpdate, refetch } = useSquadStats();
+  const total = squad.reduce((n, g) => n + g.players.length, 0);
+  const updatedLabel = lastUpdate
+    ? lastUpdate.toLocaleTimeString(lang === "TR" ? "tr-TR" : "en-GB", { hour:"2-digit", minute:"2-digit" })
+    : null;
+
   return (
     <section className="section squad" id="squad">
       <div className="container">
@@ -3549,14 +3770,23 @@ function Squad({ copy }) {
           <div className="sec-hdr-left">
             <div className="sec-eyebrow">{copy.squad.eyebrow}</div>
             <h2 className="sec-title">{copy.squad.title[0]} <span className="accent">{copy.squad.title[1]}</span></h2>
-            <p className="sec-sub">{copy.squad.sub}</p>
+            <p className="sec-sub">{loading ? copy.squad.subLoading : copy.squad.sub}</p>
           </div>
-          <div className="sec-link" style={{ pointerEvents:"none", background:"var(--cyan-soft)", borderColor:"var(--cyan-edge)", color:"var(--cyan)" }}>
-            {copy.squad.players(total)}
+          <div className="sec-actions">
+            {error && <span style={{fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"var(--loss)"}}>{copy.squad.cached}</span>}
+            {updatedLabel && !loading && <span style={{fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase",color:"var(--muted)"}}>{updatedLabel}</span>}
+            <button className="refresh-btn" onClick={refetch} title={copy.standings.refresh} style={{background:"transparent",border:"1px solid var(--line-2)",color:"var(--muted)",padding:"4px 10px",cursor:"pointer",fontFamily:"var(--f-mono)",fontSize:10,letterSpacing:".14em",textTransform:"uppercase"}}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--cyan)";e.currentTarget.style.color="var(--cyan)"}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--line-2)";e.currentTarget.style.color="var(--muted)"}}>
+              ↻ {copy.standings.refresh}
+            </button>
+            <div className="sec-link" style={{ pointerEvents:"none", background:"var(--cyan-soft)", borderColor:"var(--cyan-edge)", color:"var(--cyan)" }}>
+              {copy.squad.players(total)}
+            </div>
           </div>
         </div>
 
-        {SQUAD.map((g, gi) => (
+        {squad.map((g, gi) => (
           <div key={gi} className="pos-section">
             <div className="pos-label">
               <span className="pos-pill">{g.abbr}</span>
@@ -3771,7 +4001,7 @@ export default function AltairFC() {
         <Standings lang={activeLang} copy={copy}/>
         <Results {...fixtureData} lang={activeLang} copy={copy}/>
         <Fixtures {...fixtureData} lang={activeLang} copy={copy}/>
-        <Squad copy={copy}/>
+        <Squad lang={activeLang} copy={copy}/>
         <Sponsors copy={copy}/>
         <Social copy={copy}/>
         <Footer lang={activeLang} copy={copy}/>
