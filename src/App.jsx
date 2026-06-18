@@ -2,15 +2,47 @@
 
 /* useStandings - inline hook for EML standings */
 
-const CACHE_KEY  = "altair_standings_v1";
 const CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
 const FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
 
-const STANDINGS_FALLBACK = [
+const STANDING_SEASONS = {
+  s2: {
+    key: "s2",
+    tournamentId: 39,
+    locked: true,
+    url: "https://emajorleague.com/tournaments/league_table/39/",
+    label: { EN:"EML FC26 S2", TR:"EML FC26 S2" },
+  },
+  summer: {
+    key: "summer",
+    tournamentId: 42,
+    locked: false,
+    url: "https://emajorleague.com/tournaments/league_table/42/",
+    label: { EN:"EML FC26 Summer League", TR:"EML FC26 Yaz Ligi" },
+  },
+};
+const DEFAULT_STANDING_SEASON = "summer";
+
+const STANDINGS_S2_LOCKED = [
   { rank:5, abbr:"SOH", name:"Sons Of Hell",   pld:15, w:10, d:1, l:4, gf:43, ga:15, gd:"+28", pts:31, form:"LLD", me:false },
   { rank:6, abbr:"ALT", name:"ALTAIR eSports", pld:15, w:9,  d:1, l:5, gf:32, ga:11, gd:"+21", pts:28, form:"WWW", me:true  },
   { rank:7, abbr:"RED", name:"Redus EFC",       pld:14, w:8,  d:1, l:5, gf:35, ga:20, gd:"+15", pts:25, form:"LWL", me:false },
 ];
+const STANDINGS_SUMMER_FALLBACK = [
+  { rank:"-", abbr:"ALT", name:"ALTAIR eSports", pld:0, w:0, d:0, l:0, gf:0, ga:0, gd:"0", pts:0, form:"", me:true },
+];
+const STANDINGS_BY_SEASON = {
+  s2: STANDINGS_S2_LOCKED,
+  summer: STANDINGS_SUMMER_FALLBACK,
+};
+
+function getStandingSeason(key = DEFAULT_STANDING_SEASON) {
+  return STANDING_SEASONS[key] || STANDING_SEASONS[DEFAULT_STANDING_SEASON];
+}
+
+function getStandingsCacheKey(seasonKey) {
+  return `altair_standings_${seasonKey}_v1`;
+}
 
 function parseEMLTable(html) {
   try {
@@ -52,9 +84,9 @@ function compactView(all) {
   return all.slice(from, from + 3);
 }
 
-function readCache() {
+function readCache(seasonKey) {
   try {
-    const raw = localStorage.getItem(CACHE_KEY);
+    const raw = localStorage.getItem(getStandingsCacheKey(seasonKey));
     if (!raw) return null;
     const { ts, data } = JSON.parse(raw);
     const ttl = new Date().getDay() === 5 ? FRIDAY_TTL : CACHE_MAX;
@@ -63,41 +95,57 @@ function readCache() {
   return null;
 }
 
-function writeCache(data) {
-  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); }
+function writeCache(seasonKey, data) {
+  try { localStorage.setItem(getStandingsCacheKey(seasonKey), JSON.stringify({ ts: Date.now(), data })); }
   catch { /* ignore */ }
 }
 
-function useStandings() {
+function useStandings(seasonKey = DEFAULT_STANDING_SEASON) {
+  const season = getStandingSeason(seasonKey);
+  const fallback = STANDINGS_BY_SEASON[season.key] || STANDINGS_SUMMER_FALLBACK;
   const [allTeams,   setAllTeams]   = useState([]);
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
   const [tick,       setTick]       = useState(0);
 
-  const refetch = () => { localStorage.removeItem(CACHE_KEY); setTick(t => t + 1); };
+  const refetch = () => {
+    if (season.locked) return;
+    localStorage.removeItem(getStandingsCacheKey(season.key));
+    setTick(t => t + 1);
+  };
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
+      if (season.locked) {
+        if (!cancelled) {
+          setAllTeams(fallback);
+          setLastUpdate(null);
+          setError(null);
+          setLoading(false);
+        }
+        return;
+      }
+
       setLoading(true); setError(null);
-      const cached = readCache();
+      const cached = readCache(season.key);
       if (cached) {
         if (!cancelled) { setAllTeams(cached.data); setLastUpdate(new Date(cached.ts)); setLoading(false); }
         return;
       }
       try {
-        const url = "/api/eml-proxy?path=/tournaments/league_table/39/";
+        const url = `/api/eml-proxy?path=/tournaments/league_table/${season.tournamentId}/`;
         const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const html   = await res.text();
         const parsed = parseEMLTable(html);
         if (!parsed) throw new Error("Parse hatası");
-        writeCache(parsed);
+        writeCache(season.key, parsed);
         if (!cancelled) { setAllTeams(parsed); setLastUpdate(new Date()); }
       } catch (err) {
         console.warn("[useStandings]", err.message);
-        if (!cancelled) { setError(err.message); setAllTeams(STANDINGS_FALLBACK); }
+        if (!cancelled) { setError(err.message); setAllTeams(fallback); }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -106,11 +154,11 @@ function useStandings() {
     const interval = new Date().getDay() === 5
       ? setInterval(() => setTick(t => t + 1), FRIDAY_TTL) : null;
     return () => { cancelled = true; if (interval) clearInterval(interval); };
-  }, [tick]);
+  }, [tick, season.key, season.locked, season.tournamentId, fallback]);
 
   const altairRow = allTeams.find(t => t.me) || null;
-  const standings = allTeams.length ? compactView(allTeams) : STANDINGS_FALLBACK;
-  return { standings, allTeams, altairRow, loading, error, lastUpdate, refetch };
+  const standings = allTeams.length ? compactView(allTeams) : fallback;
+  return { standings, allTeams, altairRow, loading, error, lastUpdate, refetch, season };
 }
 
 /* useFixtures - fetches EML matchdays, then splits ALTAIR results and fixtures */
@@ -854,16 +902,19 @@ const UI_COPY = {
       aria:"Latest results ticker",
     },
     standings: {
-      season:"FC 26 · Division 1 · Season 2026",
       updating:"Updating…",
       cached:"Cached data",
       refresh:"Refresh",
       live:"Live Standings",
+      locked:"Final Table",
+      filterLabel:"Season",
+      lockedNote:"EML FC26 S2 final table snapshot",
+      seasonOptions:{ s2:"EML FC26 S2", summer:"EML FC26 Summer League" },
       title:["LIVE", "TABLE"],
       kpis:{ position:"Position", points:"Points", wins:"Wins", goalDiff:"Goal Diff", played:"Played" },
       table:{ club:"Club", form:"Form" },
       loading:"Loading…",
-      showing:(from, to) => `Showing ranks ${from}-${to} · 18 clubs total`,
+      showing:(from, to, total) => `Showing ranks ${from}-${to} · ${total || 18} clubs total`,
       cachedPrefix:(err) => `Cached · ${err}`,
       full:"Full table on eMajor League →",
       rankUnit:"th",
@@ -985,16 +1036,19 @@ const UI_COPY = {
       aria:"Sonuçlar kayan şeridi",
     },
     standings: {
-      season:"FC 26 · 1. Lig · 2026 Sezonu",
       updating:"Güncelleniyor…",
       cached:"Önbellek verisi",
       refresh:"Yenile",
       live:"Canlı Puan Durumu",
+      locked:"Final Tablo",
+      filterLabel:"Sezon",
+      lockedNote:"EML FC26 S2 final tablo görünümü",
+      seasonOptions:{ s2:"EML FC26 S2", summer:"EML FC26 Yaz Ligi" },
       title:["CANLI", "TABLO"],
       kpis:{ position:"Sıra", points:"Puan", wins:"Galibiyet", goalDiff:"Averaj", played:"Oynanan" },
       table:{ club:"Kulüp", form:"Form" },
       loading:"Yükleniyor…",
-      showing:(from, to) => `${from}-${to} sıraları gösteriliyor · toplam 18 kulüp`,
+      showing:(from, to, total) => `${from}-${to} sıraları gösteriliyor · toplam ${total || 18} kulüp`,
       cachedPrefix:(err) => `Önbellek · ${err}`,
       full:"Tam tablo eMajor League'de →",
       rankUnit:"",
@@ -1736,6 +1790,37 @@ body::after{
   font-family:var(--f-mono);font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);
 }
 .st-live-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:navPulse 1.6s ease infinite}
+.st-live--locked{border-color:rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));color:var(--text-2)}
+.st-live--locked .st-live-dot{background:var(--muted);box-shadow:0 0 8px rgba(100,116,139,.35);animation:none}
+
+.st-season-filter{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:14px var(--pad-x);
+  border-bottom:1px solid var(--line);
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.025),transparent 58%),
+    rgba(0,0,0,.18);
+}
+.st-season-filter-label{
+  font-family:var(--f-mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+}
+.st-season-tabs{display:flex;align-items:center;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.st-season-tab{
+  border:1px solid rgba(255,255,255,.1);
+  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012));
+  color:var(--text-2);
+  padding:8px 14px;
+  font-family:var(--f-narrow);font-size:12px;font-weight:800;letter-spacing:var(--nav-tracking,.1em);text-transform:uppercase;
+  cursor:pointer;white-space:nowrap;
+  transition:border-color .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease,transform .15s ease;
+}
+.st-season-tab:hover{border-color:var(--cyan-edge);color:var(--cyan);background:var(--cyan-soft)}
+.st-season-tab.active{
+  border-color:var(--cyan);
+  color:var(--bg);
+  background:linear-gradient(135deg,var(--cyan),var(--cyan-2));
+  box-shadow:0 12px 28px rgba(34,211,238,.18);
+}
 
 /* Hero header â€” title left, kpis right on same line */
 .st-hero{
@@ -2853,6 +2938,9 @@ body::after{
     line-height:1.35;
   }
   .st-topbar{padding:10px var(--pad-x)}
+  .st-season-filter{align-items:flex-start;flex-direction:column;gap:10px;padding:12px var(--pad-x)}
+  .st-season-tabs{width:100%;padding-bottom:2px}
+  .st-season-tab{font-size:10px;padding:8px 11px}
   .st-comp{font-size:10px;letter-spacing:.14em}
   .st-season{display:none}
   .st-live{font-size:9px;padding:3px 9px}
@@ -3614,9 +3702,11 @@ function Ticker({ lang, copy, results = [], fixtures = [] }) {
 }
 
 function Standings({ lang, copy }) {
-  const { standings, altairRow, loading, error, lastUpdate, refetch } = useStandings();
+  const [seasonKey, setSeasonKey] = useState(DEFAULT_STANDING_SEASON);
+  const { standings, allTeams, altairRow, loading, error, lastUpdate, refetch, season } = useStandings(seasonKey);
 
-  const alt = altairRow || STANDINGS_FALLBACK.find((t) => t.me);
+  const fallback = STANDINGS_BY_SEASON[season.key] || STANDINGS_SUMMER_FALLBACK;
+  const alt = altairRow || fallback.find((t) => t.me);
   const kpis = [
     { val: alt?.rank ? `${alt.rank}` : "-", unit: copy.standings.rankUnit, lbl:copy.standings.kpis.position },
     { val: alt?.pts ?? "-", unit:copy.standings.pointUnit, lbl:copy.standings.kpis.points },
@@ -3636,19 +3726,42 @@ function Standings({ lang, copy }) {
           <div className="st-topbar-left">
             <span className="st-comp">eMajor League</span>
             <span className="st-sep"/>
-            <span className="st-season">{copy.standings.season}</span>
+            <span className="st-season">{season.label[lang]}</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
-            {loading && <span style={{fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:"var(--muted)"}}>{copy.standings.updating}</span>}
-            {error && !loading && <span style={{fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:"var(--loss)"}}>{copy.standings.cached}</span>}
+            {loading && !season.locked && <span style={{fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:"var(--muted)"}}>{copy.standings.updating}</span>}
+            {error && !loading && !season.locked && <span style={{fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:"var(--loss)"}}>{copy.standings.cached}</span>}
             {updatedLabel && !loading && <span style={{fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",color:"var(--muted)"}}>{updatedLabel}</span>}
-            <button onClick={refetch} title={copy.standings.refresh}
-              style={{background:"transparent",border:"1px solid var(--line-2)",color:"var(--muted)",padding:"3px 10px",cursor:"pointer",fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",transition:"all .2s"}}
-              onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--cyan)";e.currentTarget.style.color="var(--cyan)"}}
-              onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--line-2)";e.currentTarget.style.color="var(--muted)"}}>
-              ↻ {copy.standings.refresh}
-            </button>
-            <div className="st-live"><span className="st-live-dot"/>{copy.standings.live}</div>
+            {!season.locked && (
+              <button onClick={refetch} title={copy.standings.refresh}
+                style={{background:"transparent",border:"1px solid var(--line-2)",color:"var(--muted)",padding:"3px 10px",cursor:"pointer",fontFamily:"var(--f-mono)",fontSize:9,letterSpacing:".14em",textTransform:"uppercase",transition:"all .2s"}}
+                onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--cyan)";e.currentTarget.style.color="var(--cyan)"}}
+                onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--line-2)";e.currentTarget.style.color="var(--muted)"}}>
+                ↻ {copy.standings.refresh}
+              </button>
+            )}
+            <div className={`st-live${season.locked ? " st-live--locked" : ""}`}>
+              <span className="st-live-dot"/>
+              {season.locked ? copy.standings.locked : copy.standings.live}
+            </div>
+          </div>
+        </div>
+
+        <div className="st-season-filter" aria-label={copy.standings.filterLabel}>
+          <span className="st-season-filter-label">{copy.standings.filterLabel}</span>
+          <div className="st-season-tabs" role="tablist">
+            {Object.values(STANDING_SEASONS).map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                className={`st-season-tab${season.key === item.key ? " active" : ""}`}
+                aria-selected={season.key === item.key}
+                role="tab"
+                onClick={() => setSeasonKey(item.key)}
+              >
+                {copy.standings.seasonOptions[item.key]}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -3701,9 +3814,9 @@ function Standings({ lang, copy }) {
           </div>
           <div className="st-foot">
             <span className="st-foot-note">
-              {loading ? copy.standings.loading : error ? copy.standings.cachedPrefix(error) : copy.standings.showing(standings[0]?.rank, standings[standings.length-1]?.rank)}
+              {season.locked ? copy.standings.lockedNote : loading ? copy.standings.loading : error ? copy.standings.cachedPrefix(error) : copy.standings.showing(standings[0]?.rank, standings[standings.length-1]?.rank, allTeams.length)}
             </span>
-            <a className="st-foot-link" href="https://emajorleague.com/tournaments/league_table/39/" target="_blank" rel="noopener noreferrer">{copy.standings.full}</a>
+            <a className="st-foot-link" href={season.url} target="_blank" rel="noopener noreferrer">{copy.standings.full}</a>
           </div>
         </div>
       </div>
@@ -4127,7 +4240,7 @@ function Footer({ lang, copy }) {
   const clubLinks = copy.footer.clubLinks;
   const compLinks = [
     { url:"https://emajorleague.com/teams/team/337/", label:copy.footer.compLinks[0], external:true },
-    { url:"https://emajorleague.com/tournaments/league_table/39/", label:copy.footer.compLinks[1], external:true },
+    { url:STANDING_SEASONS.summer.url, label:copy.footer.compLinks[1], external:true },
     { url:"#fixtures", label:copy.footer.compLinks[2] },
     { url:"#matches",  label:copy.footer.compLinks[3] },
     { url:"#squad",    label:copy.footer.compLinks[4] },
@@ -4170,7 +4283,7 @@ function Footer({ lang, copy }) {
         <div className="footer-bottom">
           <span>{copy.footer.rights}</span>
           <div className="footer-legal">
-            <span>{copy.footer.competing} <a href="https://emajorleague.com/tournaments/league_table/39/" target="_blank" rel="noopener noreferrer">{lang === "TR" ? "FC 26 · 1. Lig" : "FC 26 · Division 1"}</a></span>
+            <span>{copy.footer.competing} <a href={STANDING_SEASONS.summer.url} target="_blank" rel="noopener noreferrer">{STANDING_SEASONS.summer.label[lang]}</a></span>
             <a href="#">{copy.footer.privacy}</a>
             <a href="#">{copy.footer.terms}</a>
           </div>
