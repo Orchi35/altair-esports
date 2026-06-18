@@ -814,7 +814,7 @@ const SQUAD = [
   { group:"Forwards", abbr:"FWD", players:[
     { number:"7", name:"DOĞUKAN TOMBUL",  ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:27, goals:28, assists:7, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Xwrdodo.jpg" },
     { number:"77", name:"ORÇUN BEKTAŞ",   ign:"ORC-HI",  pos:"ST", role:"Striker", flag:"🇹🇷", init:"OB", apps:27, goals:5, assists:5, captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/ORC-HI.jpg" },
-    { number:"34", name:"MEHMET BERK ÜSTÜNDAĞ", ign:"MBU", pos:"ST", role:"Striker", flag:"🇹🇷", init:"MBÜ", apps:0, goals:0, assists:0, captain:false, image:"public/players/MBU.jpg" },
+    { number:"34", name:"MEHMET BERK ÜSTÜNDAĞ", ign:"MBU", pos:"ST", role:"Striker", flag:"🇹🇷", init:"MBÜ", apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/MBU/", image:"public/players/MBU.jpg" },
   ]},
 ];
 
