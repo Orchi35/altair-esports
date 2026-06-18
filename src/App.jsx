@@ -797,24 +797,24 @@ const SQUAD = [
     { number:"1",  name:"MEHMETCAN BABAT",   ign:"mcb06099",     pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"MB",  apps:18, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6666/", image:"public/players/Mehmetcan.png" },
   ]},
   { group:"Defenders", abbr:"DEF", players:[
-    { number:"5",  name:"AYBERK ÖZTÜRK",      ign:"LethalGullit", pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"AÖ",  apps:25, goals:3, assists:1, captain:false, profileUrl:"https://emajorleague.com/players/profile/8829/", image:"public/players/Ayberk.png" },
+    { number:"5",  name:"AYBERK ÖZTÜRK",      ign:"LethalGullit", pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"AÖ",  apps:25, goals:3, assists:1, captain:false, profileUrl:"https://emajorleague.com/players/profile/8829/", image:"public/players/LethalGullit.jpg" },
     { number:"99", name:"EGE YILMAZ",         ign:"Zeppettoo",    pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"EY",  apps:19, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9059/", image:"public/players/Ege.png" },
-    { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",   ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:18, goals:4, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/Ömür.png" },
+    { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",   ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:18, goals:4, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/creedxzenci.jpg" },
     { number:"57", name:"SACİT KARACA",       ign:"Sparostago1",  pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"SK",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9224/" },
     { number:"21", name:"RÜŞTÜ ALPER GÜLER",  ign:"DreamArmyA",   pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"RAG", apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9054/" },
-    { number:"11", name:"HAZAR TARASHOHİ",    ign:"KingHzrq",     pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"HT",  apps:24, goals:5, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8814/", image:"public/players/Hazar.png" },
+    { number:"11", name:"HAZAR TARASHOHİ",    ign:"KingHzrq",     pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"HT",  apps:24, goals:5, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8814/", image:"public/players/KingHzrq.jpg" },
   ]},
   { group:"Midfielders", abbr:"MID", players:[
-    { number:"35", name:"KARAHAN ZEKİ TAŞKAN",   ign:"maniac_kara35", pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"KZT", apps:20, goals:0, assists:2,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/9020/", image:"public/players/Karahan.png" },
-    { number:"",   name:"YİĞİTHAN DALDAL",       ign:"Swindler3r",    pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"YD",  apps:11, goals:0, assists:3,  captain:false, profileUrl:"https://emajorleague.com/players/profile/2178/" },
+    { number:"35", name:"KARAHAN ZEKİ TAŞKAN",   ign:"maniac_kara35", pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"KZT", apps:20, goals:0, assists:2,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/9020/", image:"public/players/maniac_kara35.jpg" },
+    { number:"",   name:"YİĞİTHAN DALDAL",       ign:"Swindler3r",    pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"YD",  apps:11, goals:0, assists:3,  captain:false, profileUrl:"https://emajorleague.com/players/profile/2178/", image:"public/players/Swindler3r.jpg" },
     { number:"36", name:"SALİH ERAY AYTEKİN",    ign:"4SAAY",         pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"SEA", apps:0,  goals:0, assists:0,  captain:false, profileUrl:"https://emajorleague.com/players/profile/2808/" },
-    { number:"10", name:"ŞENER YİĞİT ÇOKYÜCEL",  ign:"yigitinski",    pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"ŞYÇ", apps:27, goals:1, assists:21, captain:true,  profileUrl:"https://emajorleague.com/yigitinski/", image:"public/players/Yiğit.png" },
-    { number:"14", name:"YİĞİTCAN ÖZBİRİNCİ",    ign:"LuckyS7even",   pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"YÖ",  apps:1, goals:0, assists:0,  captain:false, profileUrl:"https://emajorleague.com/LuckyS7even/" },
+    { number:"10", name:"ŞENER YİĞİT ÇOKYÜCEL",  ign:"yigitinski",    pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"ŞYÇ", apps:27, goals:1, assists:21, captain:true,  profileUrl:"https://emajorleague.com/yigitinski/", image:"public/players/yigitinski.jpg" },
+    { number:"14", name:"YİĞİTCAN ÖZBİRİNCİ",    ign:"LuckyS7even",   pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"YÖ",  apps:1, goals:0, assists:0,  captain:false, profileUrl:"https://emajorleague.com/LuckyS7even/", image:"public/players/LuckyS7even.jpg" },
   ]},
   { group:"Forwards", abbr:"FWD", players:[
-    { number:"7", name:"DOĞUKAN TOMBUL",  ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:27, goals:28, assists:7, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Doğukan.png" },
-    { number:"77", name:"ORÇUN BEKTAŞ",   ign:"ORC-HI",  pos:"ST", role:"Striker", flag:"🇹🇷", init:"OB", apps:27, goals:5, assists:5, captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/Orçun.png" },
-    { number:"34", name:"MEHMET BERK ÜSTÜNDAĞ", ign:"MBU", pos:"ST", role:"Striker", flag:"🇹🇷", init:"MBÜ", apps:0, goals:0, assists:0, captain:false },
+    { number:"7", name:"DOĞUKAN TOMBUL",  ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:27, goals:28, assists:7, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Xwrdodo.jpg" },
+    { number:"77", name:"ORÇUN BEKTAŞ",   ign:"ORC-HI",  pos:"ST", role:"Striker", flag:"🇹🇷", init:"OB", apps:27, goals:5, assists:5, captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/ORC-HI.jpg" },
+    { number:"34", name:"MEHMET BERK ÜSTÜNDAĞ", ign:"MBU", pos:"ST", role:"Striker", flag:"🇹🇷", init:"MBÜ", apps:0, goals:0, assists:0, captain:false, image:"public/players/MBU.jpg" },
   ]},
 ];
 
@@ -2317,7 +2317,7 @@ body::after{
   filter:blur(2px);
 }
 .p-avatar-img{
-  width:132px;height:132px;object-fit:cover;
+  width:150px;height:154px;object-fit:cover;object-position:center 22%;
   border:1px solid rgba(126,211,255,.25);border-radius:10px;
   box-shadow:0 0 36px rgba(34,211,238,.16),0 18px 38px rgba(0,0,0,.34);
 }
@@ -3024,7 +3024,7 @@ body::after{
     min-height:190px;
   }
   .p-number{font-size:70px;bottom:-10px;right:9px}
-  .p-avatar-img{width:112px;height:112px}
+  .p-avatar-img{width:132px;height:136px}
   .p-avatar{width:94px;height:94px;font-size:27px}
   .p-tags{left:12px;right:12px;bottom:12px}
   .p-tag{font-size:7px;letter-spacing:.11em}
@@ -3163,7 +3163,7 @@ body::after{
   .squad-filter{grid-template-columns:1fr}
   .p-card{min-height:0}
   .p-top{min-height:168px}
-  .p-avatar-img{width:94px;height:94px}
+  .p-avatar-img{width:118px;height:122px}
   .p-avatar{width:82px;height:82px;font-size:24px}
   .p-number{font-size:58px}
   .p-body{padding:12px 12px 0}
