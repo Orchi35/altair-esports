@@ -1,12 +1,10 @@
 ﻿import { useState, useEffect, useRef } from "react";
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-   useStandings â€” inline hook (EML puan durumu scraper)
-   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* useStandings - inline hook for EML standings */
 
 const CACHE_KEY  = "altair_standings_v1";
 const CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
-const FRIDAY_TTL = 60 * 60 * 1000;       // Cuma gÃ¼nÃ¼ 1 saat
+const FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
 
 const STANDINGS_FALLBACK = [
   { rank:5, abbr:"SOH", name:"Sons Of Hell",   pld:15, w:10, d:1, l:4, gf:43, ga:15, gd:"+28", pts:31, form:"LLD", me:false },
@@ -24,10 +22,10 @@ function parseEMLTable(html) {
       const td = [...tr.querySelectorAll("td")];
       if (td.length < 10) return null;
       const raw  = (s) => td[s]?.textContent?.trim() || "0";
-      const name = td[1]?.querySelector("a")?.textContent?.trim() || td[1]?.textContent?.trim() || "â€“";
+      const name = td[1]?.querySelector("a")?.textContent?.trim() || td[1]?.textContent?.trim() || "-";
       const gd   = parseInt(raw(8)) || 0;
       const form = (td[10]?.textContent || "").replace(/\s+/g,"").toUpperCase().slice(0,5);
-      const abbr = name.replace(/[^A-Za-zÄÃœÅÄ°Ã–Ã‡ÄŸÃ¼ÅŸiÃ¶Ã§]/g,"").slice(0,3).toUpperCase() || "???";
+      const abbr = name.replace(/[^\p{L}]/gu,"").slice(0,3).toUpperCase() || "???";
       return {
         rank: parseInt(raw(0)) || idx + 1,
         abbr, name,
@@ -94,7 +92,7 @@ function useStandings() {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const html   = await res.text();
         const parsed = parseEMLTable(html);
-        if (!parsed) throw new Error("Parse hatasÄ±");
+        if (!parsed) throw new Error("Parse hatası");
         writeCache(parsed);
         if (!cancelled) { setAllTeams(parsed); setLastUpdate(new Date()); }
       } catch (err) {
@@ -115,18 +113,14 @@ function useStandings() {
   return { standings, allTeams, altairRow, loading, error, lastUpdate, refetch };
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-   useFixtures â€” EML fikstÃ¼r scraper
-   TÃ¼m matchday'leri tarar, ALTAIR maÃ§larÄ±nÄ± filtreler,
-   oynananlarÄ± RESULTS, oynanmayanlarÄ± FIXTURES olarak ayÄ±rÄ±r.
-   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* useFixtures - fetches EML matchdays, then splits ALTAIR results and fixtures */
 
 const FIX_CACHE_KEY  = "altair_fixtures_v6";
 const FIX_CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
-const FIX_FRIDAY_TTL = 60 * 60 * 1000;       // Cuma gÃ¼nÃ¼ 1 saat
+const FIX_FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
 const TOTAL_MATCHDAYS = 34;
 const TOURNAMENT_ID   = 39;
-// ALTAIR'Ä±n oynadÄ±ÄŸÄ± bilinen matchday'ler â€” gereksiz 34 istek yerine sadece bunlar
+// ALTAIR'in oynadığı bilinen matchday'ler; gereksiz istekleri azaltır.
 const ALTAIR_MATCHDAYS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34];
 const ALTAIR_NAME     = "altair esports";
 const COMPETITION     = "EML | Division 1";
@@ -212,8 +206,8 @@ function getMonthIndex(value) {
 
 function getMonthAbbr(value, lang = "EN") {
   const monthIndex = getMonthIndex(value);
-  if (!monthIndex) return lang === "TR" ? "NIS" : "APR";
-  return lang === "TR" ? (MONTHS_TR[monthIndex] || "NIS") : (MONTHS[monthIndex] || "APR");
+  if (!monthIndex) return lang === "TR" ? "NİS" : "APR";
+  return lang === "TR" ? (MONTHS_TR[monthIndex] || "NİS") : (MONTHS[monthIndex] || "APR");
 }
 
 function getMonthTitle(value, lang = "EN") {
@@ -833,7 +827,7 @@ const SOCIAL = [
 
 const LANG_OPTIONS = [
   { code:"EN", label:"English", note:"Current site language" },
-  { code:"TR", label:"Turkce",  note:"Turkish version" },
+  { code:"TR", label:"Türkçe",  note:"Türkçe sürüm" },
 ];
 
 const UI_COPY = {
@@ -970,38 +964,38 @@ const UI_COPY = {
   },
   TR: {
     nav: {
-      links: { results:"Sonuclar", table:"Tablo", fixtures:"Fikstur", squad:"Kadro", partners:"Partnerler", watch:"Izle" },
-      cta:"Kulubu Takip Et",
+      links: { results:"Sonuçlar", table:"Tablo", fixtures:"Fikstür", squad:"Kadro", partners:"Partnerler", watch:"İzle" },
+      cta:"Kulübü Takip Et",
       langHead:"Site Dili",
     },
     hero: {
       tagLeague:"FC 26 · eMajor League",
       tagSeason:"1. Lig · S26",
-      lines:["BIRLIKTE", "OYNARIZ.", "BIRLIKTE KAZANIRIZ."],
+      lines:["BİRLİKTE", "OYNARIZ.", "BİRLİKTE KAZANIRIZ."],
       sub:"eMajor League FC 26 Pro Clubs 1. Ligi’nde mücadele eden bir e-spor kulübüdür. Kulüp, takım oyunu ve düzen üzerine kurulu bir yapıyla faaliyet gösterir. Amaç, sahada istikrarlı sonuçlar üretmek ve rekabet içinde kalıcı bir yer edinmektir.",
-      primary:"Canli Izle",
-      secondary:"Kadroyu Incele",
-      scroll:"Kaydir",
+      primary:"Canlı İzle",
+      secondary:"Kadroyu İncele",
+      scroll:"Kaydır",
     },
     ticker: {
-      tag:"EML · 1. LIG",
-      form:"GUNCEL FORM · G · G · G · G · G",
-      next:"SIRADAKI MAC · ABRAKADABRA ESPORTS · 24 NIS · 22:30 UTC+3",
+      tag:"EML · 1. LİG",
+      form:"GÜNCEL FORM · G · G · G · G · G",
+      next:"SIRADAKİ MAÇ · ABRAKADABRA ESPORTS · 24 NİS · 22:30 UTC+3",
       live:"YAYIN TWITCH'TE CANLI · /ALTAIRESPOR",
-      aria:"Sonuclar kayan seridi",
+      aria:"Sonuçlar kayan şeridi",
     },
     standings: {
       season:"FC 26 · 1. Lig · 2026 Sezonu",
-      updating:"Guncelleniyor…",
-      cached:"Onbellek verisi",
+      updating:"Güncelleniyor…",
+      cached:"Önbellek verisi",
       refresh:"Yenile",
-      live:"Canli Puan Durumu",
+      live:"Canlı Puan Durumu",
       title:["CANLI", "TABLO"],
-      kpis:{ position:"Sira", points:"Puan", wins:"Galibiyet", goalDiff:"Averaj", played:"Oynanan" },
-      table:{ club:"Kulup", form:"Form" },
-      loading:"Yukleniyor…",
-      showing:(from, to) => `${from}-${to} siralar gosteriliyor · toplam 18 kulup`,
-      cachedPrefix:(err) => `Onbellek · ${err}`,
+      kpis:{ position:"Sıra", points:"Puan", wins:"Galibiyet", goalDiff:"Averaj", played:"Oynanan" },
+      table:{ club:"Kulüp", form:"Form" },
+      loading:"Yükleniyor…",
+      showing:(from, to) => `${from}-${to} sıraları gösteriliyor · toplam 18 kulüp`,
+      cachedPrefix:(err) => `Önbellek · ${err}`,
       full:"Tam tablo eMajor League'de →",
       rankUnit:"",
       pointUnit:"puan",
@@ -1009,54 +1003,54 @@ const UI_COPY = {
       playedUnit:"OM",
     },
     results: {
-      eyebrow:"Mac Haftasi Raporu",
-      title:["SON", "SONUCLAR"],
-      subLoading:"Son sonuclar yukleniyor…",
+      eyebrow:"Maç Haftası Raporu",
+      title:["SON", "SONUÇLAR"],
+      subLoading:"Son sonuçlar yükleniyor…",
       sub:"ALTAIR eSports’un EML 1. Lig kapsamında oynadığı son 5 karşılaşmanın sonuçları.",
-      cached:"Onbellek",
-      viewFixtures:"Fiksture Git",
-      labels:{ W:"Galibiyet", L:"Maglubiyet", D:"Beraberlik" },
-      venue:{ home:"Ic Saha", away:"Deplasman" },
+      cached:"Önbellek",
+      viewFixtures:"Fikstüre Git",
+      labels:{ W:"Galibiyet", L:"Mağlubiyet", D:"Beraberlik" },
+      venue:{ home:"İç Saha", away:"Deplasman" },
     },
     fixtures: {
-      eyebrow:"Yaklasan Program",
-      title:["SIRADAKI", "FIKSTUR"],
-      subLoading:"Yaklasan fikstur yukleniyor…",
+      eyebrow:"Yaklaşan Program",
+      title:["SIRADAKİ", "FİKSTÜR"],
+      subLoading:"Yaklaşan fikstür yükleniyor…",
       sub:"EML 1. Lig’de yaklaşan maç takvimi ve yayın programı.",
-      cached:"Onbellek",
-      watch:"Twitch'te Izle",
-      venue:{ home:"Ic Saha", away:"Deplasman" },
+      cached:"Önbellek",
+      watch:"Twitch'te İzle",
+      venue:{ home:"İç Saha", away:"Deplasman" },
       vs:"VS",
     },
     squad: {
       eyebrow:"ALTAIR ROSTER",
-      title:["SAHADAKI", "KIMLIGIMIZ"],
+      title:["SAHADAKİ", "KİMLİĞİMİZ"],
       sub:"ALTAIR eSports kadrosu; disiplinli rol dağılımı, takım oyunu ve rekabetçi yapı üzerine kurulur.",
-      subLoading:"Canli kadro istatistikleri yenileniyor…",
-      cached:"Onbellek kadro verisi",
+      subLoading:"Canlı kadro istatistikleri yenileniyor…",
+      cached:"Önbellek kadro verisi",
       players:(count) => `${count} Oyuncu`,
       count:(count) => `${count} oyuncu`,
-      stats:{ apps:"Mac", goals:"Gol", assists:"Asist" },
+      stats:{ apps:"Maç", goals:"Gol", assists:"Asist" },
       captain:"Kaptan",
-      profile:"Profili Gor",
-      cta:"Takima katilmak, hazirlik maci veya rekabetci iletisim icin bizimle iletisime gec.",
+      profile:"Profili Gör",
+      cta:"Takıma katılmak, hazırlık maçı veya rekabetçi iletişim için bizimle iletişime geç.",
       filters:{
-        all:"Tum Kadro",
+        all:"Tüm Kadro",
         Goalkeepers:"Kaleciler",
         Defenders:"Defans",
         Midfielders:"Orta Saha",
-        Forwards:"Hucum",
+        Forwards:"Hücum",
       },
       groups:{
         Goalkeepers:"Kaleciler",
         Defenders:"Defans",
         Midfielders:"Orta Saha",
-        Forwards:"Hucum",
+        Forwards:"Hücum",
       },
       roles:{
         Goalkeeper:"Kaleci",
         "Centre-Back":"Stoper",
-        "Right Wing Back":"Sag Kanat Bek",
+        "Right Wing Back":"Sağ Kanat Bek",
         "Left Wing Back":"Sol Kanat Bek",
         "Defensive Midfielder":"Defansif Orta Saha",
         "Central Midfielder":"Merkez Orta Saha",
@@ -1065,45 +1059,45 @@ const UI_COPY = {
     },
     sponsors: {
       eyebrow:"Partnerler ve Sponsorlar",
-      title:["IS", "ORTAKLARIMIZ"],
+      title:["İŞ", "ORTAKLARIMIZ"],
       sub:"ALTAIR eSports, birlikte çalıştığı markalarla karşılıklı değer üretmeyi hedefler. İş ortaklıkları, görünürlükten öte uzun vadeli bir yapı üzerine kuruludur. Amaç, rekabetçi sahne ile markalar arasında sürdürülebilir bir bağ oluşturmaktır.",
-      kpis:{ reach:"Toplam Erisim", ranking:"Kulup Sirasi", titles:"Kazanilan Kupa", active:"Aktif Oyuncu" },
-      tiers:{ title:"Ana Partner", gold:"Altin Partnerler", official:"Resmi Partnerler" },
+      kpis:{ reach:"Toplam Erişim", ranking:"Kulüp Sırası", titles:"Kazanılan Kupa", active:"Aktif Oyuncu" },
+      tiers:{ title:"Ana Partner", gold:"Altın Partnerler", official:"Resmi Partnerler" },
       ctaTitle:"ALTAIR Partneri Olun",
       ctaSub:"ALTAIR eSports, markalar için doğrudan erişim ve görünürlük sunar. İş birliği kapsamında sunulan içerik ve yayın alanlarıyla hedef kitleye etkili şekilde ulaşılır.",
-      ctaPrimary:"Iletisime Gec",
-      ctaSecondary:"Partnerlik Dosyasi",
+      ctaPrimary:"İletişime Geç",
+      ctaSecondary:"Partnerlik Dosyası",
     },
     social: {
-      eyebrow:"Yayinlar ve Topluluk",
-      title:["ALTAIR'I", "TAKIP ET"],
+      eyebrow:"Yayınlar ve Topluluk",
+      title:["ALTAIR'I", "TAKİP ET"],
       sub:"ALTAIR eSports’a ait tüm yayın ve içerikler resmi kanallar üzerinden paylaşılır. Maçlardan özel içeriklere kadar tüm gelişmeleri anında takip edin.",
       official:"Resmi",
       cards:{
-        tw:{ desc:"Maçlar, haftalık fikstür kapsamında canlı olarak yayınlanır. Tüm karşılaşmaları anlık takip edin.", cta:"Canli Izle" },
+        tw:{ desc:"Maçlar, haftalık fikstür kapsamında canlı olarak yayınlanır. Tüm karşılaşmaları anlık takip edin.", cta:"Canlı İzle" },
         yt:{ desc:"Maç tekrarları, oyuncu analizleri ve sezon içerikleri düzenli olarak paylaşılır.", cta:"Abone Ol" },
         ig:{ desc:"Kadrolar, sahne arkası içerikler ve maç günü paylaşımları burada yer alır.", cta:"Takip Et" },
-        dc:{ desc:"Topluluk ile doğrudan iletişim kurun. Duyurular ve etkinlikler bu kanal üzerinden paylaşılır.", cta:"Katil" },
+        dc:{ desc:"Topluluk ile doğrudan iletişim kurun. Duyurular ve etkinlikler bu kanal üzerinden paylaşılır.", cta:"Katıl" },
       },
     },
     footer: {
       brandTag:"FC 26 Pro Clubs · eMajor League",
       bio:"ALTAIR eSports, EML 1. Lig’de mücadele eden bir FC 26 Pro Clubs organizasyonudur. Kulüp, oyun disiplini ve takım uyumu üzerine kurulu bir yapı ile rekabet içinde yer alır.",
-      titles:{ club:"Kulup", competition:"Rekabet", connect:"Baglanti" },
-      clubLinks:["ALTAIR Hakkinda","Sezon Gecmisi","Basarilar","Basin Kiti","Kariyer"],
-      compLinks:["Takim Sayfasi","Puan Durumu","Fikstur","Istatistikler","Kadro"],
-      connectLinks:["Sponsorluk","Medya Iletisimi","Taraftar Toplulugu","Magaza","Bize Ulasin"],
-      rights:"© 2026 ALTAIR eSports · Tum haklari saklidir",
-      competing:"Mucadele ettigi lig",
+      titles:{ club:"Kulüp", competition:"Rekabet", connect:"Bağlantı" },
+      clubLinks:["ALTAIR Hakkında","Sezon Geçmişi","Başarılar","Basın Kiti","Kariyer"],
+      compLinks:["Takım Sayfası","Puan Durumu","Fikstür","İstatistikler","Kadro"],
+      connectLinks:["Sponsorluk","Medya İletişimi","Taraftar Topluluğu","Mağaza","Bize Ulaşın"],
+      rights:"© 2026 ALTAIR eSports · Tüm hakları saklıdır",
+      competing:"Mücadele ettiği lig",
       privacy:"Gizlilik",
-      terms:"Kosullar",
+      terms:"Koşullar",
     },
   },
 };
 
-const MONTHS_TR = ["","OCA","SUB","MAR","NIS","MAY","HAZ","TEM","AGU","EYL","EKI","KAS","ARA"];
+const MONTHS_TR = ["","OCA","ŞUB","MAR","NİS","MAY","HAZ","TEM","AĞU","EYL","EKİ","KAS","ARA"];
 const MONTH_TITLES_EN = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const MONTH_TITLES_TR = ["","Oca","Sub","Mar","Nis","May","Haz","Tem","Agu","Eyl","Eki","Kas","Ara"];
+const MONTH_TITLES_TR = ["","Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
 const MONTH_INDEX_BY_ALIAS = {
   JAN:1, OCA:1,
   FEB:2, SUB:2,
@@ -1124,14 +1118,14 @@ const MONTH_INDEX_BY_ALIAS = {
    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const css = `
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
   background:#05080f;
   color:#e6ecf5;
-  font-family:'Inter',system-ui,sans-serif;
+  font-family:var(--f-body);
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
   letter-spacing:-.005em;
@@ -1143,6 +1137,13 @@ body{
 }
 a{color:inherit}
 button{font-family:inherit}
+.site{position:relative}
+.site--tr{
+  --copy-tracking: 0;
+  --label-tracking: .08em;
+  --nav-tracking: .08em;
+  --display-tracking: .006em;
+}
 
 :root{
   /* surfaces */
@@ -1176,9 +1177,9 @@ button{font-family:inherit}
   --draw:      #64748b;
 
   /* type */
-  --f-display: 'Teko', sans-serif;
+  --f-display: 'Rajdhani', sans-serif;
   --f-narrow:  'Barlow Condensed', sans-serif;
-  --f-body:    'Inter', sans-serif;
+  --f-body:    'Barlow', system-ui, sans-serif;
   --f-mono:    'JetBrains Mono', monospace;
 
   /* rhythm */
@@ -1276,13 +1277,13 @@ body::after{
 /* â”€â”€â”€ Section header â”€â”€â”€ */
 .sec-hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:44px;flex-wrap:wrap}
 .sec-hdr-left{max-width:720px}
-.sec-eyebrow{display:inline-flex;align-items:center;gap:12px;font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+.sec-eyebrow{display:inline-flex;align-items:center;gap:12px;font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:var(--label-tracking,.16em);text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
 .sec-eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--cyan);opacity:.6}
-.sec-title{font-family:var(--f-display);font-weight:700;font-size:clamp(38px,4.8vw,68px);line-height:.9;letter-spacing:.01em;text-transform:uppercase;color:var(--text)}
+.sec-title{font-family:var(--f-display);font-weight:700;font-size:clamp(34px,4.2vw,62px);line-height:1;letter-spacing:var(--display-tracking,.006em);text-transform:uppercase;color:var(--text);text-wrap:balance}
 .sec-title .accent{color:var(--cyan);font-style:normal}
 .sec-title .outline{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.2);font-style:normal}
-.sec-sub{margin-top:14px;color:var(--text-2);font-size:15px;line-height:1.65;max-width:560px;font-weight:400}
-.sec-link{font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--text-2);text-decoration:none;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border:1px solid var(--line-2);transition:all .2s ease}
+.sec-sub{margin-top:14px;color:var(--text-2);font-size:15px;line-height:1.72;max-width:620px;font-weight:400;letter-spacing:var(--copy-tracking,0);text-wrap:pretty}
+.sec-link{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:var(--label-tracking,.14em);text-transform:uppercase;color:var(--text-2);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border:1px solid var(--line-2);transition:all .2s ease;text-align:center}
 .sec-link:hover{color:var(--cyan);border-color:var(--cyan-edge);background:var(--cyan-soft)}
 .sec-link-arrow{transition:transform .2s ease}
 .sec-link:hover .sec-link-arrow{transform:translateX(4px)}
@@ -1311,7 +1312,7 @@ body::after{
 .nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none}
 .nav-logo-img{height:42px;width:42px;object-fit:contain;filter:drop-shadow(0 0 10px rgba(34,211,238,.35))}
 .nav-wm{display:flex;flex-direction:column;line-height:1;gap:4px}
-.nav-wm-top{font-family:var(--f-display);font-weight:800;font-size:16px;letter-spacing:.04em;color:var(--text);text-transform:uppercase}
+.nav-wm-top{font-family:var(--f-display);font-weight:700;font-size:17px;letter-spacing:.035em;color:var(--text);text-transform:uppercase}
 .nav-wm-sub{font-family:var(--f-mono);font-size:9px;font-weight:500;letter-spacing:.22em;color:var(--cyan);text-transform:uppercase;opacity:.85}
 .nav-right{display:flex;align-items:center;gap:14px}
 
@@ -1319,7 +1320,7 @@ body::after{
 .nav-links a{
   display:inline-block;
   padding:10px 16px;
-  font-family:var(--f-narrow);font-weight:600;font-size:13px;letter-spacing:.14em;
+  font-family:var(--f-narrow);font-weight:700;font-size:13px;letter-spacing:var(--nav-tracking,.12em);
   text-transform:uppercase;color:var(--text-2);text-decoration:none;
   position:relative;transition:color .2s ease;
 }
@@ -1333,10 +1334,11 @@ body::after{
 .nav-cta{
   display:inline-flex;align-items:center;gap:8px;
   padding:11px 22px;
-  font-family:var(--f-narrow);font-weight:700;font-size:12px;letter-spacing:.14em;
+  font-family:var(--f-narrow);font-weight:800;font-size:12px;letter-spacing:var(--nav-tracking,.11em);
   text-transform:uppercase;color:var(--bg);background:var(--cyan);
   border:none;cursor:pointer;text-decoration:none;
   position:relative;overflow:hidden;
+  text-align:center;line-height:1.05;
   transition:background .2s ease,box-shadow .2s ease,transform .15s ease;
 }
 .nav-cta::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--bg);animation:navPulse 2s ease infinite}
@@ -1548,11 +1550,11 @@ body::after{
 /* Left column */
 .hero-left{position:relative;z-index:4;padding:40px var(--pad-x) 80px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;overflow:hidden}
 .hero.hero--tr .hero-left{padding-right:calc(var(--pad-x) + 56px)}
-.hero.hero--tr .hero-h1 .l-3{font-size:.48em}
+.hero.hero--tr .hero-h1 .l-3{font-size:.46em;letter-spacing:.045em}
 .hero-tag{
   display:inline-flex;align-items:center;gap:10px;padding:7px 14px;width:fit-content;
   border:1px solid var(--cyan-edge);background:var(--cyan-soft);
-  font-family:var(--f-mono);font-size:10px;font-weight:500;letter-spacing:.2em;
+  font-family:var(--f-mono);font-size:10px;font-weight:600;letter-spacing:var(--label-tracking,.16em);
   text-transform:uppercase;color:var(--cyan);
   margin-bottom:32px;
 }
@@ -1561,8 +1563,8 @@ body::after{
 
 .hero-h1{
   font-family:var(--f-display);font-weight:700;
-  font-size:clamp(58px,6.6vw,112px);
-  line-height:.88;letter-spacing:.01em;text-transform:uppercase;
+  font-size:clamp(52px,6.1vw,96px);
+  line-height:.98;letter-spacing:var(--display-tracking,.004em);text-transform:uppercase;
   animation:heroUp .9s cubic-bezier(.16,1,.3,1) both;
   overflow:hidden;
 }
@@ -1573,18 +1575,22 @@ body::after{
   background:linear-gradient(to right,var(--cyan),transparent);
 }
 .hero-h1 .l-3{
-  font-family:var(--f-narrow);font-weight:700;
-  color:rgba(222,236,255,.28);-webkit-text-stroke:.6px rgba(188,230,255,.2);
-  display:block;font-size:.4em;margin-top:16px;
-  letter-spacing:.08em;white-space:nowrap;
-  text-shadow:0 0 18px rgba(34,211,238,.06);
+  font-family:var(--f-narrow);font-weight:800;
+  color:rgba(238,247,255,.9);
+  background:linear-gradient(90deg,#f7fbff 0%,#b8f3ff 42%,#d9e8f5 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-text-stroke:.35px rgba(255,255,255,.14);
+  display:block;font-size:.38em;margin-top:12px;
+  letter-spacing:.065em;white-space:nowrap;
+  text-shadow:0 10px 34px rgba(0,0,0,.5),0 0 24px rgba(34,211,238,.16);
 }
 @keyframes heroUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
 .hero-sub{
-  margin-top:24px;max-width:480px;
-  font-size:15px;line-height:1.7;color:var(--text-2);font-weight:400;
+  margin-top:24px;max-width:540px;
+  font-size:15px;line-height:1.78;color:var(--text-2);font-weight:400;letter-spacing:var(--copy-tracking,0);
   text-align:left;
+  text-wrap:pretty;
   animation:heroUp .9s .1s cubic-bezier(.16,1,.3,1) both;
 }
 .hero-sub strong{color:var(--text);font-weight:600}
@@ -1593,9 +1599,9 @@ body::after{
 .btn{
   display:inline-flex;align-items:center;gap:10px;
   padding:14px 26px;
-  font-family:var(--f-narrow);font-weight:700;font-size:13px;letter-spacing:.14em;
+  font-family:var(--f-narrow);font-weight:800;font-size:13px;letter-spacing:var(--nav-tracking,.11em);
   text-transform:uppercase;text-decoration:none;cursor:pointer;
-  transition:all .2s ease;white-space:nowrap;
+  transition:all .2s ease;white-space:nowrap;text-align:center;
 }
 .btn-primary{background:var(--cyan);color:var(--bg);border:1px solid var(--cyan)}
 .btn-primary:hover{background:var(--cyan-2);box-shadow:0 12px 32px rgba(34,211,238,.25);transform:translateY(-2px)}
@@ -1744,8 +1750,8 @@ body::after{
 }
 .st-hero-title{
   font-family:var(--f-display);font-weight:700;
-  font-size:clamp(46px,6.2vw,90px);
-  line-height:.88;letter-spacing:.01em;text-transform:uppercase;
+  font-size:clamp(34px,4.8vw,72px);
+  line-height:1;letter-spacing:.006em;text-transform:uppercase;
   color:var(--text);
 }
 .st-hero-title em{font-style:normal;color:var(--cyan)}
@@ -2044,7 +2050,7 @@ body::after{
     linear-gradient(135deg,rgba(34,211,238,.08),transparent 72%),
     linear-gradient(180deg,rgba(255,255,255,.03),transparent);
 }
-.fix-day{font-family:var(--f-display);font-weight:800;font-size:40px;line-height:1;color:var(--cyan);letter-spacing:-.04em;text-shadow:0 0 18px rgba(34,211,238,.2)}
+.fix-day{font-family:var(--f-display);font-weight:700;font-size:38px;line-height:1;color:var(--cyan);letter-spacing:-.015em;text-shadow:0 0 18px rgba(34,211,238,.2)}
 .fix-month{font-family:var(--f-narrow);font-weight:700;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--text-2)}
 .fix-gw{
   font-family:var(--f-mono);font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
@@ -2164,8 +2170,9 @@ body::after{
   border:1px solid rgba(126,211,255,.13);
   background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
   color:var(--text-2);
-  font-family:var(--f-narrow);font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  font-family:var(--f-narrow);font-weight:800;font-size:12px;letter-spacing:var(--nav-tracking,.1em);text-transform:uppercase;
   cursor:pointer;
+  text-align:center;line-height:1.1;
   transition:transform .18s ease,border-color .22s ease,background .22s ease,color .22s ease,box-shadow .22s ease;
 }
 .squad-filter-btn:hover,
@@ -2195,8 +2202,8 @@ body::after{
   font-family:var(--f-mono);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);
   box-shadow:0 0 22px rgba(34,211,238,.1),inset 0 1px 0 rgba(255,255,255,.05);
 }
-.pos-group-name{font-family:var(--f-narrow);font-weight:700;font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-2)}
-.pos-count{margin-left:auto;font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pos-group-name{font-family:var(--f-narrow);font-weight:800;font-size:14px;letter-spacing:var(--nav-tracking,.1em);text-transform:uppercase;color:var(--text-2)}
+.pos-count{margin-left:auto;font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:var(--label-tracking,.1em);text-transform:uppercase;color:var(--muted)}
 
 .squad-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:18px;align-items:stretch}
 
@@ -2332,17 +2339,17 @@ body::after{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
 }
 .p-kicker{
-  font-family:var(--f-mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;
+  font-family:var(--f-mono);font-size:10px;font-weight:700;letter-spacing:var(--label-tracking,.13em);text-transform:uppercase;color:var(--cyan);margin-bottom:8px;text-align:center;
   text-shadow:0 0 10px rgba(34,211,238,.14);
 }
 .p-ign{
-  font-family:var(--f-display);font-weight:900;font-size:clamp(30px,3.2vw,42px);letter-spacing:.01em;text-transform:uppercase;line-height:.92;color:var(--text);
+  font-family:var(--f-display);font-weight:700;font-size:clamp(27px,2.65vw,36px);letter-spacing:var(--display-tracking,.004em);text-transform:uppercase;line-height:1.02;color:var(--text);
   text-shadow:0 0 12px rgba(255,255,255,.05);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;
 }
 .p-name{
   min-height:34px;margin-top:8px;
-  font-family:var(--f-body);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;line-height:1.35;color:var(--text-2);
+  font-family:var(--f-body);font-weight:700;font-size:13px;letter-spacing:.025em;text-transform:uppercase;line-height:1.38;color:var(--text-2);text-align:center;
   overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
 }
 
@@ -2362,18 +2369,18 @@ body::after{
 }
 .p-stat:last-child{border-right:none}
 .p-stat-val{
-  font-family:var(--f-display);font-weight:900;font-size:22px;color:var(--text);line-height:1;letter-spacing:-.02em;
+  font-family:var(--f-display);font-weight:700;font-size:22px;color:var(--text);line-height:1;letter-spacing:-.01em;
   text-shadow:0 0 12px rgba(255,255,255,.07),0 0 18px rgba(34,211,238,.06);
 }
 .p-stat-lbl{
-  font-family:var(--f-mono);font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:6px;
+  font-family:var(--f-mono);font-size:9px;font-weight:600;letter-spacing:var(--label-tracking,.1em);text-transform:uppercase;color:var(--muted);margin-top:6px;
 }
 .p-profile{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   min-height:42px;padding:0 14px;margin:0 -18px;
   border-top:1px solid rgba(255,255,255,.07);
   color:var(--cyan);
-  font-family:var(--f-narrow);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+  font-family:var(--f-narrow);font-size:12px;font-weight:800;letter-spacing:var(--nav-tracking,.1em);text-transform:uppercase;
   background:linear-gradient(90deg,rgba(34,211,238,.08),rgba(255,255,255,.02));
 }
 .p-card:hover .p-profile,
@@ -2646,7 +2653,7 @@ body::after{
   border-bottom:1px solid var(--line);
 }
 .footer-brand-logo{height:56px;width:56px;object-fit:contain;filter:drop-shadow(0 0 14px rgba(34,211,238,.35));margin-bottom:20px}
-.footer-brand-name{font-family:var(--f-display);font-weight:800;font-size:28px;letter-spacing:.04em;text-transform:uppercase;color:var(--text);line-height:1}
+.footer-brand-name{font-family:var(--f-display);font-weight:700;font-size:28px;letter-spacing:.035em;text-transform:uppercase;color:var(--text);line-height:1}
 .footer-brand-tag{font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-top:8px;opacity:.85}
 .footer-bio{font-size:14px;line-height:1.7;color:var(--text-2);margin-top:18px;max-width:340px}
 .footer-col-title{font-family:var(--f-narrow);font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--text);margin-bottom:20px}
@@ -2783,7 +2790,7 @@ body::after{
   .hero.hero--tr .hero-left{padding-right:20px}
   .hero-mobile-logo{display:block;width:96px;height:96px;object-fit:contain;margin-bottom:22px;filter:drop-shadow(0 0 24px rgba(34,211,238,.42))}
   .hero-tag{font-size:8px;padding:7px 12px;margin-bottom:18px;letter-spacing:.16em;flex-wrap:wrap}
-  .hero-h1{font-size:clamp(46px,13vw,74px);line-height:.9}
+  .hero-h1{font-size:clamp(42px,12vw,66px);line-height:1}
   .hero-h1 .l{white-space:normal}
   .hero-h1 .l-2::after{width:100%;max-width:210px;height:2px}
   .hero-h1 .l-3{font-size:.34em;line-height:1.04;letter-spacing:.12em}
@@ -2805,7 +2812,7 @@ body::after{
   /* Section header */
   .sec-hdr{margin-bottom:24px;gap:18px;align-items:stretch}
   .sec-hdr-left{max-width:none}
-  .sec-title{font-size:clamp(30px,9.5vw,48px);line-height:.86}
+  .sec-title{font-size:clamp(30px,8.8vw,44px);line-height:1.02}
   .sec-eyebrow{font-size:10px;letter-spacing:.14em}
   .sec-sub{font-size:14px;max-width:none}
   .sec-actions{width:100%;justify-content:space-between;align-items:center;gap:10px}
@@ -2814,7 +2821,7 @@ body::after{
 
   /* Standings â€” mobilde */
   .st-hero{flex-direction:column;align-items:flex-start;gap:16px;padding:20px var(--pad-x) 16px}
-  .st-hero-title{font-size:clamp(28px,8vw,44px)}
+  .st-hero-title{font-size:clamp(28px,7.4vw,42px)}
   .st-kpis{
     display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
     width:100%;
@@ -3031,7 +3038,7 @@ body::after{
   .p-body{
     padding:16px 16px 0;
   }
-  .p-ign{font-size:34px}
+  .p-ign{font-size:30px}
   .p-name{font-size:12px;min-height:auto}
   .p-stat{
     padding:11px 6px 12px;
@@ -3123,7 +3130,7 @@ body::after{
   .nav-cta{max-width:122px;padding:0 12px}
 
   .hero-left{margin:12px var(--pad-x) 28px;padding:24px 18px 24px;border-radius:24px}
-  .hero-h1{font-size:clamp(40px,13vw,60px)}
+  .hero-h1{font-size:clamp(36px,12vw,54px)}
   .hero-h1 .l-3{font-size:.31em}
 
   .sec-actions{gap:8px}
@@ -3168,7 +3175,7 @@ body::after{
   .p-number{font-size:58px}
   .p-body{padding:12px 12px 0}
   .p-name{font-size:11px}
-  .p-ign{font-size:28px}
+  .p-ign{font-size:25px}
   .p-kicker{font-size:8px;letter-spacing:.12em}
   .p-stat{padding:10px 4px 11px;gap:4px}
   .p-stat-val{font-size:18px}
@@ -3441,7 +3448,7 @@ function Navigation({ scrolled, activeLang, setActiveLang, copy }) {
           >
             <span className="nav-lang-trigger-main">
               <span className="nav-lang-trigger-label">Lang</span>
-              <span className="nav-lang-trigger-value">{activeLang === "TR" ? "Turkce" : "English"}</span>
+              <span className="nav-lang-trigger-value">{activeLang === "TR" ? "Türkçe" : "English"}</span>
             </span>
             <span className="nav-lang-trigger-icon" aria-hidden="true">
               <span className="nav-lang-trigger-dot"/>
@@ -3542,14 +3549,31 @@ function Hero({ copy, lang }) {
   );
 }
 
-function Ticker({ lang, copy }) {
-  const tickerResults = RESULTS_FALLBACK.map((match) => localizeDisplayMatch(match, lang));
-  const items = [];
-  tickerResults.forEach((r) => {
-    items.push({ type:"result", r });
-  });
-  items.push({ type:"meta", text:copy.ticker.form });
-  items.push({ type:"meta", text:copy.ticker.next });
+function formatTickerResult(result, lang) {
+  if (lang !== "TR") return result;
+  return { W:"G", D:"B", L:"M" }[result] || result;
+}
+
+function getTickerOpponent(match) {
+  if (!match) return null;
+  return match.home === "ALTAIR eSports" ? match.away : match.home;
+}
+
+function Ticker({ lang, copy, results = [], fixtures = [] }) {
+  const tickerResults = (results.length ? results : RESULTS_FALLBACK).map((match) => localizeDisplayMatch(match, lang));
+  const nextMatch = (fixtures.length ? fixtures : FIXTURES_FALLBACK)
+    .map((match) => localizeDisplayMatch(match, lang))[0];
+  const form = tickerResults.map((r) => formatTickerResult(r.result, lang)).filter(Boolean);
+  const formText = form.length
+    ? `${lang === "TR" ? "GÜNCEL FORM" : "CURRENT FORM"} · ${form.join(" · ")}`
+    : copy.ticker.form;
+  const nextOpponent = getTickerOpponent(nextMatch);
+  const nextText = nextOpponent
+    ? `${lang === "TR" ? "SIRADAKİ MAÇ" : "NEXT UP"} · ${nextOpponent}${nextMatch?.matchday ? ` · ${nextMatch.matchday}` : ""}`
+    : copy.ticker.next;
+  const items = tickerResults.map((r) => ({ type:"result", r }));
+  items.push({ type:"meta", text:formText });
+  items.push({ type:"meta", text:nextText });
   items.push({ type:"meta", text:copy.ticker.live });
 
   const loop = [...items, ...items];
@@ -3977,7 +4001,7 @@ function Squad({ lang, copy }) {
 
         <div className="squad-cta">
           <span>{copy.squad.cta}</span>
-          <a href="#broadcast">{lang === "TR" ? "Iletisim" : "Contact"}</a>
+          <a href="#broadcast">{lang === "TR" ? "İletişim" : "Contact"}</a>
         </div>
       </div>
     </section>
@@ -4175,10 +4199,10 @@ export default function AltairFC() {
       <StarCanvas side="left"/>
       <StarCanvas side="right"/>
 
-      <div style={{position:"relative"}}>
+      <div className={`site site--${activeLang.toLowerCase()}`}>
         <Navigation scrolled={scrolled} activeLang={activeLang} setActiveLang={setActiveLang} copy={copy}/>
         <Hero copy={copy} lang={activeLang}/>
-        <Ticker lang={activeLang} copy={copy}/>
+        <Ticker lang={activeLang} copy={copy} results={fixtureData.results} fixtures={fixtureData.fixtures}/>
         <Standings lang={activeLang} copy={copy}/>
         <Results {...fixtureData} lang={activeLang} copy={copy}/>
         <Fixtures {...fixtureData} lang={activeLang} copy={copy}/>
