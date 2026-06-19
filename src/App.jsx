@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 /* useStandings - inline hook for EML standings */
 
@@ -1288,22 +1288,7 @@ body::after{
   background:linear-gradient(to left,rgba(34,211,238,.055) 0%,rgba(34,211,238,.018) 45%,transparent 100%);
   pointer-events:none;z-index:0;
 }
-.side-canvas-wrap{
-  position:fixed;
-  top:0;bottom:0;
-  width:var(--side-rail);
-  pointer-events:none;
-  z-index:5;
-}
-.side-canvas-wrap--left{left:0}
-.side-canvas-wrap--right{right:0}
-.side-canvas{
-  position:absolute;top:0;left:0;
-  width:100%;height:100%;
-  display:block;
-}
 @media(max-width:1000px){
-  .side-canvas-wrap{display:none}
   body::before,body::after{display:none}
 }
 
@@ -1547,8 +1532,15 @@ body::after{
   padding-top:72px;
 }
 .hero-bg-base{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,#102141 0%,#07101f 44%,#030711 100%)}
+.hero::before{
+  content:'';
+  position:absolute;right:4.8%;top:50%;transform:translateY(-50%);width:min(46vw,560px);aspect-ratio:1;
+  background:url('/logo.png') center/contain no-repeat;
+  opacity:.032;filter:grayscale(1) brightness(1.8);
+  pointer-events:none;z-index:1;
+}
 .hero-bg-grid{
-  position:absolute;inset:0;opacity:.4;
+  position:absolute;inset:0;opacity:.34;
   background-image:
     linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
     linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
@@ -1559,8 +1551,8 @@ body::after{
 .hero-bg-glow{
   position:absolute;right:-10%;top:50%;transform:translateY(-50%);
   width:820px;height:820px;border-radius:50%;
-  background:radial-gradient(circle,rgba(34,211,238,.18) 0%,rgba(14,165,233,.06) 36%,transparent 67%);
-  filter:blur(40px);pointer-events:none;
+  background:radial-gradient(circle,rgba(34,211,238,.15) 0%,rgba(14,165,233,.055) 36%,transparent 68%);
+  filter:blur(46px);pointer-events:none;
 }
 .hero-bg-noise{
   position:absolute;inset:0;opacity:.35;mix-blend-mode:overlay;pointer-events:none;
@@ -1569,7 +1561,7 @@ body::after{
 
 /* Star layers */
 .hero-stars-sm{
-  position:absolute;inset:0;z-index:1;pointer-events:none;
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.42;
   background-image:
     radial-gradient(1px 1px at 7%  12%, rgba(255,255,255,.75) 0%, transparent 100%),
     radial-gradient(1px 1px at 18% 34%, rgba(255,255,255,.55) 0%, transparent 100%),
@@ -1597,10 +1589,9 @@ body::after{
     radial-gradient(1px 1px at 52% 31%, rgba(255,255,255,.65) 0%, transparent 100%),
     radial-gradient(1px 1px at 96% 82%, rgba(255,255,255,.40) 0%, transparent 100%);
   background-size:100% 100%;
-  animation:starsDrift 120s linear infinite;
 }
 .hero-stars-md{
-  position:absolute;inset:0;z-index:1;pointer-events:none;
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.22;
   background-image:
     radial-gradient(1.5px 1.5px at 15% 25%, rgba(255,255,255,.85) 0%, transparent 100%),
     radial-gradient(1.5px 1.5px at 32% 72%, rgba(255,255,255,.70) 0%, transparent 100%),
@@ -1615,10 +1606,9 @@ body::after{
     radial-gradient(1.5px 1.5px at 59% 83%, rgba(255,255,255,.55) 0%, transparent 100%),
     radial-gradient(1.5px 1.5px at 88% 44%, rgba(255,255,255,.70) 0%, transparent 100%);
   background-size:100% 100%;
-  animation:starsDrift 90s linear infinite reverse;
 }
 .hero-stars-cyan{
-  position:absolute;inset:0;z-index:1;pointer-events:none;
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.24;
   background-image:
     radial-gradient(2px 2px at 23% 18%, rgba(34,211,238,.75) 0%, transparent 100%),
     radial-gradient(2px 2px at 64%  7%, rgba(34,211,238,.60) 0%, transparent 100%),
@@ -1630,15 +1620,6 @@ body::after{
     radial-gradient(1.5px 1.5px at 72% 85%, rgba(103,232,249,.65) 0%, transparent 100%),
     radial-gradient(1.5px 1.5px at  5% 52%, rgba(103,232,249,.70) 0%, transparent 100%);
   background-size:100% 100%;
-  animation:starsDrift 150s linear infinite;
-  animation-delay:-40s;
-}
-@keyframes starsDrift{
-  0%  { transform:translateY(0)   }
-  100%{ transform:translateY(-18px) }
-}
-@media(prefers-reduced-motion:reduce){
-  .hero-stars-sm,.hero-stars-md,.hero-stars-cyan{animation:none}
 }
 
 .hero-fade-bottom{position:absolute;bottom:0;left:0;right:0;height:20%;background:linear-gradient(to top,var(--bg),transparent);z-index:3;pointer-events:none}
@@ -1714,11 +1695,21 @@ body::after{
   position:relative;width:min(500px,100%);aspect-ratio:1;
   display:flex;align-items:center;justify-content:center;
 }
-@keyframes spin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.hero-stage::before{
+  content:'';position:absolute;inset:8%;border-radius:50%;
+  background:
+    radial-gradient(circle,rgba(34,211,238,.18) 0%,rgba(34,211,238,.08) 34%,transparent 68%);
+  filter:blur(18px);opacity:.9;pointer-events:none;
+}
+.hero-stage::after{
+  content:'';position:absolute;inset:18%;border-radius:50%;
+  border:1px solid rgba(126,211,255,.12);
+  box-shadow:0 0 70px rgba(34,211,238,.14),inset 0 0 42px rgba(34,211,238,.05);
+  pointer-events:none;
+}
 
 .hero-logo-center{position:relative;width:72%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;z-index:4}
-.hero-logo-img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 60px rgba(34,211,238,.5)) drop-shadow(0 0 20px rgba(34,211,238,.35)) drop-shadow(0 0 6px rgba(34,211,238,.2));animation:heroFloat 6s ease-in-out infinite}
-@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero-logo-img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 14px 42px rgba(0,0,0,.42)) drop-shadow(0 0 28px rgba(34,211,238,.24))}
 
 
 .hero-mobile-logo{display:none}
@@ -1726,8 +1717,7 @@ body::after{
 /* Scroll indicator */
 .hero-scroll{position:absolute;bottom:28px;left:var(--pad-x);z-index:10;display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
 .hero-scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,transparent,var(--cyan));position:relative;overflow:hidden}
-.hero-scroll-line::after{content:'';position:absolute;top:0;left:0;right:0;height:10px;background:var(--cyan);animation:scrollDown 2s ease infinite}
-@keyframes scrollDown{0%{transform:translateY(-100%)}100%{transform:translateY(360%)}}
+.hero-scroll-line::after{content:'';position:absolute;top:0;left:0;right:0;height:10px;background:var(--cyan);opacity:.55}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    TICKER / STATUS STRIP
@@ -3346,193 +3336,6 @@ body::after{
    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 
-function StarCanvas({ side }) {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    let raf, W = 0, H = 0;
-
-    function resize() {
-      const wrap = canvas.parentElement;
-      W = wrap ? wrap.offsetWidth : 240;
-      H = window.innerHeight;
-      canvas.width  = W;
-      canvas.height = H;
-    }
-    resize();
-    window.addEventListener("resize", resize, { passive: true });
-
-    /* â”€â”€ Stars â”€â”€ */
-    const stars = Array.from({ length: 160 }, () => ({
-      x: Math.random(), y: Math.random(),
-      r: Math.random() < 0.1 ? Math.random() * 1.6 + 0.8 : Math.random() * 0.65 + 0.15,
-      cyan: Math.random() < 0.22,
-      a: Math.random() * 0.55 + 0.18,
-      vy: -(Math.random() * 0.00018 + 0.00004),
-      vx: (Math.random() - 0.5) * 0.00005,
-      tw: Math.random() * 0.03 + 0.008,
-      to: Math.random() * Math.PI * 2,
-    }));
-
-    /* â”€â”€ Shooting stars â”€â”€ */
-    const shoots = Array.from({ length: 4 }, (_, i) => ({
-      prog: Math.random(), speed: Math.random() * 0.004 + 0.002,
-      x: Math.random(), y: Math.random() * 0.6, delay: i * 0.25,
-    }));
-
-    /* â”€â”€ Geometric rings â”€â”€ */
-    const rings = [
-      { cx: 0.5, cy: 0.28, r: 0.28, rot: 0,   rotSpeed: 0.0003,   a: 0.12, dashes: [12, 8],  w: 0.6 },
-      { cx: 0.3, cy: 0.65, r: 0.18, rot: 1.2,  rotSpeed: -0.0005,  a: 0.09, dashes: [6, 14],  w: 0.5 },
-      { cx: 0.7, cy: 0.45, r: 0.14, rot: 0.5,  rotSpeed: 0.0007,   a: 0.08, dashes: [20, 6],  w: 0.4 },
-    ];
-
-    /* â”€â”€ Pulse circles â”€â”€ */
-    const pulses = [
-      { cx: 0.5,  cy: 0.28, phase: 0,   speed: 0.008, maxR: 0.22, a: 0.18 },
-      { cx: 0.25, cy: 0.72, phase: 2.1, speed: 0.006, maxR: 0.16, a: 0.14 },
-      { cx: 0.75, cy: 0.5,  phase: 4.2, speed: 0.009, maxR: 0.18, a: 0.12 },
-    ];
-
-    /* â”€â”€ Floating particles â”€â”€ */
-    const particles = Array.from({ length: 18 }, () => ({
-      x: Math.random(), y: Math.random(),
-      r: Math.random() * 2 + 1, a: Math.random() * 0.4 + 0.1,
-      vx: (Math.random() - 0.5) * 0.0004,
-      vy: -(Math.random() * 0.0006 + 0.0002),
-      life: Math.random(), lifeSpeed: Math.random() * 0.002 + 0.001,
-      cyan: Math.random() < 0.5,
-    }));
-
-    /* â”€â”€ Arc segments â”€â”€ */
-    const arcs = [
-      { cx: 0.5, cy: 0.28, r: 0.32, start: 0.2,  len: 0.8,  rot: 0,   rotSpeed: 0.0004,  a: 0.20, w: 1   },
-      { cx: 0.5, cy: 0.28, r: 0.38, start: 2.5,  len: 1.2,  rot: 0,   rotSpeed: -0.0003, a: 0.12, w: 0.6 },
-      { cx: 0.3, cy: 0.65, r: 0.22, start: 1.0,  len: 0.6,  rot: 1.2, rotSpeed: 0.0006,  a: 0.15, w: 0.8 },
-      { cx: 0.7, cy: 0.45, r: 0.17, start: 3.5,  len: 1.4,  rot: 0.5, rotSpeed: -0.0004, a: 0.14, w: 0.7 },
-    ];
-
-    /* â”€â”€ Diamond dots â”€â”€ */
-    const diamonds = Array.from({ length: 6 }, () => ({
-      x: Math.random(), y: Math.random(),
-      s: Math.random() * 3 + 1.5, a: Math.random() * 0.35 + 0.1,
-      rot: Math.random() * Math.PI, rotSpeed: (Math.random() - 0.5) * 0.004,
-      vy: -(Math.random() * 0.0003 + 0.0001),
-    }));
-
-    let t = 0;
-
-    function draw() {
-      if (!W || !H) { raf = requestAnimationFrame(draw); return; }
-      ctx.clearRect(0, 0, W, H);
-      t += 0.016;
-
-      /* Pulse circles */
-      pulses.forEach(p => {
-        const phase    = (t * p.speed + p.phase) % (Math.PI * 2);
-        const progress = (Math.sin(phase) + 1) / 2;
-        const r = p.maxR * W * progress;
-        const a = p.a * (1 - progress * 0.7);
-        ctx.beginPath(); ctx.arc(p.cx * W, p.cy * H, r, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(34,211,238,${a})`; ctx.lineWidth = 0.8; ctx.stroke();
-        if (progress > 0.2) {
-          ctx.beginPath(); ctx.arc(p.cx * W, p.cy * H, r * 0.6, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(34,211,238,${a * 0.5})`; ctx.lineWidth = 0.4; ctx.stroke();
-        }
-      });
-
-      /* Geometric rings */
-      rings.forEach(ring => {
-        ring.rot += ring.rotSpeed;
-        ctx.save(); ctx.translate(ring.cx * W, ring.cy * H); ctx.rotate(ring.rot);
-        ctx.setLineDash(ring.dashes);
-        ctx.beginPath(); ctx.arc(0, 0, ring.r * W, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(34,211,238,${ring.a})`; ctx.lineWidth = ring.w; ctx.stroke();
-        ctx.setLineDash([]); ctx.restore();
-      });
-
-      /* Arc segments */
-      arcs.forEach(arc => {
-        arc.rot += arc.rotSpeed;
-        ctx.save(); ctx.translate(arc.cx * W, arc.cy * H); ctx.rotate(arc.rot);
-        ctx.beginPath(); ctx.arc(0, 0, arc.r * W, arc.start, arc.start + arc.len);
-        ctx.strokeStyle = `rgba(34,211,238,${arc.a})`; ctx.lineWidth = arc.w; ctx.stroke();
-        ctx.restore();
-      });
-
-      /* Stars */
-      stars.forEach(s => {
-        const tw = 0.5 + 0.5 * Math.sin(t * s.tw * 60 + s.to);
-        const a  = s.a * (0.4 + 0.6 * tw);
-        const sx = s.x * W, sy = s.y * H;
-        s.y += s.vy; s.x += s.vx;
-        if (s.y < 0) { s.y = 1; s.x = Math.random(); }
-        if (s.x < 0) s.x = 1; if (s.x > 1) s.x = 0;
-        if (s.r > 0.9) {
-          const g = ctx.createRadialGradient(sx, sy, 0, sx, sy, s.r * 8);
-          const c = s.cyan ? "34,211,238" : "190,215,255";
-          g.addColorStop(0, `rgba(${c},${a * 0.5})`); g.addColorStop(1, `rgba(${c},0)`);
-          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, s.r * 8, 0, Math.PI * 2); ctx.fill();
-        }
-        ctx.fillStyle = `rgba(${s.cyan ? "34,211,238" : "210,228,255"},${a})`;
-        ctx.beginPath(); ctx.arc(sx, sy, s.r, 0, Math.PI * 2); ctx.fill();
-      });
-
-      /* Shooting stars */
-      shoots.forEach(s => {
-        s.prog += s.speed;
-        if (s.prog > 1) { s.prog = 0; s.x = Math.random(); s.y = Math.random() * 0.6; }
-        const dir = side === "right" ? -1 : 1;
-        const px = s.x * W + s.prog * 55 * dir, py = s.y * H + s.prog * 32;
-        const g  = ctx.createLinearGradient(px, py, px - 40 * dir, py - 24);
-        g.addColorStop(0, `rgba(34,211,238,${0.7 * Math.sin(s.prog * Math.PI)})`);
-        g.addColorStop(1, "rgba(34,211,238,0)");
-        ctx.strokeStyle = g; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - 40 * dir, py - 24); ctx.stroke();
-      });
-
-      /* Floating particles */
-      particles.forEach(p => {
-        p.x += p.vx; p.y += p.vy; p.life += p.lifeSpeed;
-        if (p.y < 0 || p.life > 1) { p.y = 1; p.x = Math.random(); p.life = 0; p.a = Math.random() * 0.4 + 0.1; }
-        const a = p.a * Math.sin(p.life * Math.PI);
-        const c = p.cyan ? "34,211,238" : "150,200,255";
-        const g = ctx.createRadialGradient(p.x * W, p.y * H, 0, p.x * W, p.y * H, p.r * 4);
-        g.addColorStop(0, `rgba(${c},${a})`); g.addColorStop(1, `rgba(${c},0)`);
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x * W, p.y * H, p.r * 4, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = `rgba(${c},${a})`;
-        ctx.beginPath(); ctx.arc(p.x * W, p.y * H, p.r * 0.4, 0, Math.PI * 2); ctx.fill();
-      });
-
-      /* Diamond dots */
-      diamonds.forEach(d => {
-        d.y += d.vy; d.rot += d.rotSpeed;
-        if (d.y < 0) { d.y = 1; d.x = Math.random(); }
-        ctx.save(); ctx.translate(d.x * W, d.y * H); ctx.rotate(d.rot);
-        ctx.strokeStyle = `rgba(34,211,238,${d.a})`; ctx.lineWidth = 0.7;
-        ctx.beginPath();
-        ctx.moveTo(0, -d.s); ctx.lineTo(d.s, 0); ctx.lineTo(0, d.s); ctx.lineTo(-d.s, 0);
-        ctx.closePath(); ctx.stroke(); ctx.restore();
-      });
-
-      raf = requestAnimationFrame(draw);
-    }
-
-    draw();
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
-  }, [side]);
-
-  return (
-    <div className={`side-canvas-wrap side-canvas-wrap--${side}`} aria-hidden>
-      <canvas ref={canvasRef} className="side-canvas"/>
-    </div>
-  );
-}
-
-
 function Navigation({ scrolled, activeLang, setActiveLang, copy }) {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const langMenuRef = useRef(null);
@@ -4365,8 +4168,6 @@ export default function AltairFC() {
   return (
     <>
       <style>{css}</style>
-      <StarCanvas side="left"/>
-      <StarCanvas side="right"/>
 
       <div className={`site site--${activeLang.toLowerCase()}`}>
         <Navigation scrolled={scrolled} activeLang={activeLang} setActiveLang={setActiveLang} copy={copy}/>
