@@ -904,10 +904,20 @@ const UI_COPY = {
       tagLeague:"FC 26 · eMajor League",
       tagSeason:"Division 1 · S26",
       lines:["WE PLAY", "AS ONE.", "WE WIN TOGETHER."],
-      sub:"Competing in the eMajor League FC 26 Pro Clubs Division 1 as an esports club. The club operates with a structure built on team play and discipline. Its aim is to produce consistent performances on the pitch and establish a lasting place in competition.",
+      sub:"is a Pro Clubs organization built around disciplined play, a strong team identity and competitive goals. The club competes to create sustainable success on the pitch and represent its community with a professional standard.",
       primary:"Watch Live",
       secondary:"Meet the Squad",
       scroll:"Scroll",
+    },
+    identity: {
+      eyebrow:"Club Identity",
+      title:["BUILT", "FOR COMPETITION"],
+      sub:"ALTAIR eSports develops a competitive structure based on team discipline, tactical responsibility and long-term progression in Pro Clubs competition.",
+      cards:[
+        { k:"01", title:"Team Discipline", text:"Every role is defined around match responsibility, communication and repeatable performance." },
+        { k:"02", title:"Competitive Vision", text:"The club targets stable league growth, stronger seasonal results and credible European ambitions." },
+        { k:"03", title:"Community Standard", text:"Broadcasts, roster updates and social content are presented with the consistency expected from a modern club." },
+      ],
     },
     ticker: {
       tag:"EML · DIVISION 1",
@@ -941,7 +951,7 @@ const UI_COPY = {
       eyebrow:"Matchday Report",
       title:["RECENT", "RESULTS"],
       subLoading:"Loading latest results…",
-      sub:"Results from ALTAIR eSports’ last 5 matches played in EML Division 1.",
+      sub:"A clean matchday archive showing ALTAIR eSports’ latest competitive results, scorelines and match context.",
       cached:"Cached",
       viewFixtures:"View Fixtures",
       labels:{ W:"Victory", L:"Defeat", D:"Draw" },
@@ -951,7 +961,7 @@ const UI_COPY = {
       eyebrow:"Upcoming Schedule",
       title:["NEXT", "FIXTURES"],
       subLoading:"Loading upcoming fixtures…",
-      sub:"Upcoming match schedule and broadcast program in EML Division 1.",
+      sub:"Upcoming ALTAIR eSports fixtures with opponent, matchday and broadcast details prepared for supporters and partners.",
       cached:"Cached",
       watch:"Watch on Twitch",
       venue:{ home:"Home", away:"Away" },
@@ -1006,7 +1016,7 @@ const UI_COPY = {
     social: {
       eyebrow:"Broadcasts & Community",
       title:["FOLLOW", "ALTAIR"],
-      sub:"All broadcasts and content from ALTAIR eSports are shared through its official channels. Follow every development instantly, from matches to exclusive content.",
+      sub:"Follow ALTAIR eSports for match announcements, roster updates, broadcast content and official club communication across every channel.",
       official:"Official",
       cards:{
         tw:{ desc:"Matches are broadcast live as part of the weekly fixture schedule. Follow every match in real time.", cta:"Watch Live" },
@@ -1017,7 +1027,7 @@ const UI_COPY = {
     },
     footer: {
       brandTag:"FC 26 Pro Clubs · eMajor League",
-      bio:"ALTAIR eSports is an FC 26 Pro Clubs organisation competing in EML Division 1. The club takes part in competition with a structure built on game discipline and team cohesion.",
+      bio:"ALTAIR eSports is a competitive Pro Clubs organization built on team discipline, game intelligence and a sustainable ambition for success.",
       titles:{ club:"Club", competition:"Competition", connect:"Connect" },
       clubLinks:["About ALTAIR","Season History","Honours","Press Kit","Careers"],
       compLinks:["Team Page","League Table","Fixtures","Statistics","Squad"],
@@ -1038,10 +1048,20 @@ const UI_COPY = {
       tagLeague:"FC 26 · eMajor League",
       tagSeason:"1. Lig · S26",
       lines:["BİRLİKTE", "OYNARIZ.", "BİRLİKTE KAZANIRIZ."],
-      sub:"eMajor League FC 26 Pro Clubs 1. Ligi’nde mücadele eden bir e-spor kulübüdür. Kulüp, takım oyunu ve düzen üzerine kurulu bir yapıyla faaliyet gösterir. Amaç, sahada istikrarlı sonuçlar üretmek ve rekabet içinde kalıcı bir yer edinmektir.",
+      sub:"disiplinli oyun yapısı, güçlü takım kimliği ve rekabetçi hedefleriyle Pro Clubs sahnesinde kalıcı başarı için mücadele eden bir e-spor organizasyonudur.",
       primary:"Canlı İzle",
       secondary:"Kadroyu İncele",
       scroll:"Kaydır",
+    },
+    identity: {
+      eyebrow:"Kulüp Kimliği",
+      title:["REKABET", "İÇİN KURULDU"],
+      sub:"ALTAIR eSports, Pro Clubs rekabetinde takım disiplini, taktik sorumluluk ve sürdürülebilir gelişim üzerine kurulu bir organizasyon yapısı geliştirir.",
+      cards:[
+        { k:"01", title:"Takım Disiplini", text:"Her rol; maç sorumluluğu, iletişim ve tekrar edilebilir performans ilkeleriyle tanımlanır." },
+        { k:"02", title:"Rekabetçi Vizyon", text:"Kulüp; ligde istikrarlı büyüme, daha güçlü sezon sonuçları ve Avrupa hedefleri için çalışır." },
+        { k:"03", title:"Kulüp Standardı", text:"Yayınlar, kadro duyuruları ve sosyal içerikler modern bir kulübe yakışan tutarlılıkla sunulur." },
+      ],
     },
     ticker: {
       tag:"EML · 1. LİG",
@@ -1075,7 +1095,7 @@ const UI_COPY = {
       eyebrow:"Maç Haftası Raporu",
       title:["SON", "SONUÇLAR"],
       subLoading:"Son sonuçlar yükleniyor…",
-      sub:"ALTAIR eSports’un EML 1. Lig kapsamında oynadığı son 5 karşılaşmanın sonuçları.",
+      sub:"ALTAIR eSports’un son rekabetçi maçlarını skor, maç haftası ve karşılaşma bağlamıyla net şekilde gösteren sonuç arşivi.",
       cached:"Önbellek",
       viewFixtures:"Fikstüre Git",
       labels:{ W:"Galibiyet", L:"Mağlubiyet", D:"Beraberlik" },
@@ -1085,7 +1105,7 @@ const UI_COPY = {
       eyebrow:"Yaklaşan Program",
       title:["SIRADAKİ", "FİKSTÜR"],
       subLoading:"Yaklaşan fikstür yükleniyor…",
-      sub:"EML 1. Lig’de yaklaşan maç takvimi ve yayın programı.",
+      sub:"ALTAIR eSports’un yaklaşan maçları; rakip, maç haftası, saat ve yayın bilgisiyle taraftarlar ve partnerler için hazırlanır.",
       cached:"Önbellek",
       watch:"Twitch'te İzle",
       venue:{ home:"İç Saha", away:"Deplasman" },
@@ -1140,7 +1160,7 @@ const UI_COPY = {
     social: {
       eyebrow:"Yayınlar ve Topluluk",
       title:["ALTAIR'I", "TAKİP ET"],
-      sub:"ALTAIR eSports’a ait tüm yayın ve içerikler resmi kanallar üzerinden paylaşılır. Maçlardan özel içeriklere kadar tüm gelişmeleri anında takip edin.",
+      sub:"Maç duyuruları, kadro gelişmeleri, turnuva içerikleri ve resmi kulüp iletişimi için ALTAIR eSports kanallarını takip edin.",
       official:"Resmi",
       cards:{
         tw:{ desc:"Maçlar, haftalık fikstür kapsamında canlı olarak yayınlanır. Tüm karşılaşmaları anlık takip edin.", cta:"Canlı İzle" },
@@ -1151,7 +1171,7 @@ const UI_COPY = {
     },
     footer: {
       brandTag:"FC 26 Pro Clubs · eMajor League",
-      bio:"ALTAIR eSports, EML 1. Lig’de mücadele eden bir FC 26 Pro Clubs organizasyonudur. Kulüp, oyun disiplini ve takım uyumu üzerine kurulu bir yapı ile rekabet içinde yer alır.",
+      bio:"ALTAIR eSports, rekabetçi Pro Clubs sahnesinde takım disiplini, oyun aklı ve sürdürülebilir başarı hedefiyle mücadele eden bir e-spor organizasyonudur.",
       titles:{ club:"Kulüp", competition:"Rekabet", connect:"Bağlantı" },
       clubLinks:["ALTAIR Hakkında","Sezon Geçmişi","Başarılar","Basın Kiti","Kariyer"],
       compLinks:["Takım Sayfası","Puan Durumu","Fikstür","İstatistikler","Kadro"],
@@ -1299,6 +1319,7 @@ body::after{
 .container{max-width:1360px;margin:0 auto;position:relative;z-index:2}
 
 .standings,
+#identity.section,
 #matches.section,
 #fixtures.section,
 #squad.section,
@@ -1309,6 +1330,7 @@ body::after{
   isolation:isolate;
 }
 .standings::after,
+#identity.section::after,
 #matches.section::after,
 #fixtures.section::after,
 #squad.section::after,
@@ -1322,6 +1344,26 @@ body::after{
   opacity:.68;
   pointer-events:none;
   z-index:1;
+}
+#identity.section{
+  background:
+    radial-gradient(circle at 12% 18%,rgba(34,211,238,.095),transparent 34%),
+    radial-gradient(circle at 78% 74%,rgba(56,189,248,.06),transparent 30%),
+    linear-gradient(135deg,rgba(7,14,26,.98),rgba(3,7,15,.995));
+}
+#identity.section::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.42;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(255,255,255,.022) 1px,transparent 1px),
+    radial-gradient(circle at 50% 50%,rgba(34,211,238,.08),transparent 42%);
+  background-size:88px 88px,88px 88px,100% 100%;
+  mask-image:linear-gradient(180deg,transparent,rgba(0,0,0,.72) 18%,rgba(0,0,0,.72) 76%,transparent);
+  -webkit-mask-image:linear-gradient(180deg,transparent,rgba(0,0,0,.72) 18%,rgba(0,0,0,.72) 76%,transparent);
 }
 #matches.section{
   background:
@@ -1365,6 +1407,79 @@ body::after{
 .sec-link:hover .sec-link-arrow{transform:translateX(4px)}
 .sec-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
 .refresh-btn{display:inline-flex;align-items:center;justify-content:center;min-height:36px;border-radius:999px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+
+/* Club identity */
+.identity-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.identity-card{
+  position:relative;
+  min-height:260px;
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.095);
+  border-radius:28px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+    rgba(7,13,24,.72);
+  box-shadow:0 24px 70px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(18px) saturate(135%);
+  -webkit-backdrop-filter:blur(18px) saturate(135%);
+}
+.identity-card::before{
+  content:'';
+  position:absolute;
+  inset:-1px;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 18% 0%,rgba(34,211,238,.18),transparent 34%),
+    linear-gradient(135deg,rgba(34,211,238,.09),transparent 36%,rgba(255,255,255,.035));
+  opacity:.78;
+}
+.identity-card::after{
+  content:'✦';
+  position:absolute;
+  right:22px;
+  bottom:-28px;
+  font-family:var(--f-display);
+  font-size:132px;
+  line-height:1;
+  color:rgba(255,255,255,.035);
+  transform:rotate(-8deg);
+  pointer-events:none;
+}
+.identity-k{
+  position:relative;
+  z-index:1;
+  width:max-content;
+  padding:7px 11px;
+  border:1px solid rgba(34,211,238,.22);
+  border-radius:999px;
+  color:var(--cyan);
+  background:rgba(34,211,238,.06);
+  font-family:var(--f-mono);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.16em;
+}
+.identity-copy{position:relative;z-index:1;margin-top:46px}
+.identity-title{
+  font-family:var(--f-display);
+  font-size:clamp(25px,2vw,34px);
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+  color:var(--text);
+}
+.identity-text{
+  margin-top:14px;
+  color:var(--text-2);
+  font-size:14px;
+  line-height:1.68;
+  max-width:34ch;
+}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    NAVIGATION
@@ -2043,7 +2158,7 @@ body::after{
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    RESULTS
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-.results-grid{display:flex;flex-direction:column;gap:6px}
+.results-grid{display:flex;flex-direction:column;gap:10px}
 .res-card{
   position:relative;
   background:
@@ -2135,7 +2250,7 @@ body::after{
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    FIXTURES
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-.fix-grid{display:flex;flex-direction:column;gap:4px}
+.fix-grid{display:flex;flex-direction:column;gap:10px}
 .fix-card{
   position:relative;
   display:grid;grid-template-columns:130px 1px 1fr 1px 170px;
@@ -2810,6 +2925,7 @@ body::after{
 @media (max-width:1100px){
   .hero{grid-template-columns:1.2fr .8fr}
   .hero-stage{width:min(420px,100%)}
+  .identity-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .st-hero{flex-wrap:wrap;gap:20px}
   .st-kpis{flex-wrap:wrap}
   .st-kpi{padding:0 16px;min-width:70px}
@@ -2823,6 +2939,7 @@ body::after{
   :root{--pad-x:18px;--sec-y:56px}
 
   .standings,
+  #identity.section,
   #matches.section,
   #fixtures.section,
   #squad.section,
@@ -2833,6 +2950,7 @@ body::after{
     isolation:isolate;
   }
   .standings::after,
+  #identity.section::after,
   #matches.section::after,
   #fixtures.section::after,
   #squad.section::after,
@@ -2947,6 +3065,11 @@ body::after{
   .sec-actions{width:100%;justify-content:space-between;align-items:center;gap:10px}
   .sec-actions > span{width:100%}
   .sec-link,.refresh-btn{flex:1 1 calc(50% - 5px);justify-content:center;font-size:10px;padding:10px 12px}
+  .identity-grid{grid-template-columns:1fr;gap:12px}
+  .identity-card{min-height:220px;padding:22px;border-radius:22px}
+  .identity-copy{margin-top:34px}
+  .identity-title{font-size:28px}
+  .identity-text{font-size:13px;max-width:none}
 
   /* Standings â€” mobilde */
   .st-hero{flex-direction:column;align-items:flex-start;gap:16px;padding:20px var(--pad-x) 16px}
@@ -3557,6 +3680,34 @@ function Ticker({ lang, copy, results = [], fixtures = [] }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function ClubIdentity({ copy }) {
+  return (
+    <section className="section identity" id="identity">
+      <div className="container">
+        <div className="sec-hdr">
+          <div className="sec-hdr-left">
+            <div className="sec-eyebrow">{copy.identity.eyebrow}</div>
+            <h2 className="sec-title">{copy.identity.title[0]} <span className="accent">{copy.identity.title[1]}</span></h2>
+            <p className="sec-sub">{copy.identity.sub}</p>
+          </div>
+        </div>
+
+        <div className="identity-grid">
+          {copy.identity.cards.map((card) => (
+            <article className="identity-card" key={card.k}>
+              <span className="identity-k">{card.k}</span>
+              <div className="identity-copy">
+                <h3 className="identity-title">{card.title}</h3>
+                <p className="identity-text">{card.text}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -4173,6 +4324,7 @@ export default function AltairFC() {
         <Navigation scrolled={scrolled} activeLang={activeLang} setActiveLang={setActiveLang} copy={copy}/>
         <Hero copy={copy} lang={activeLang}/>
         <Ticker lang={activeLang} copy={copy} results={fixtureData.results} fixtures={fixtureData.fixtures}/>
+        <ClubIdentity copy={copy}/>
         <Standings lang={activeLang} copy={copy}/>
         <Results {...fixtureData} lang={activeLang} copy={copy}/>
         <Fixtures {...fixtureData} lang={activeLang} copy={copy}/>
