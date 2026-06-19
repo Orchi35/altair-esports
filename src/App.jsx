@@ -24,9 +24,24 @@ const STANDING_SEASONS = {
 const DEFAULT_STANDING_SEASON = "summer";
 
 const STANDINGS_S2_LOCKED = [
-  { rank:5, abbr:"SOH", name:"Sons Of Hell",   pld:15, w:10, d:1, l:4, gf:43, ga:15, gd:"+28", pts:31, form:"LLD", me:false },
-  { rank:6, abbr:"ALT", name:"ALTAIR eSports", pld:15, w:9,  d:1, l:5, gf:32, ga:11, gd:"+21", pts:28, form:"WWW", me:true  },
-  { rank:7, abbr:"RED", name:"Redus EFC",       pld:14, w:8,  d:1, l:5, gf:35, ga:20, gd:"+15", pts:25, form:"LWL", me:false },
+  { rank:1, abbr:"SAM", name:"SAMURAI", pld:34, w:28, d:4, l:2, gf:91, ga:19, gd:"+72", pts:88, form:"WWW", me:false },
+  { rank:2, abbr:"GOL", name:"Golden Fellas", pld:34, w:28, d:4, l:2, gf:86, ga:21, gd:"+65", pts:88, form:"WWW", me:false },
+  { rank:3, abbr:"GLA", name:"Glarung FC", pld:34, w:27, d:1, l:6, gf:116, ga:26, gd:"+90", pts:82, form:"WLW", me:false },
+  { rank:4, abbr:"SON", name:"Sons Of Hell", pld:34, w:24, d:4, l:6, gf:101, ga:41, gd:"+60", pts:76, form:"LWD", me:false },
+  { rank:5, abbr:"JUV", name:"JUVEON", pld:34, w:24, d:4, l:6, gf:73, ga:35, gd:"+38", pts:76, form:"LWL", me:false },
+  { rank:6, abbr:"ALT", name:"ALTAIR eSports", pld:34, w:21, d:2, l:11, gf:77, ga:36, gd:"+41", pts:65, form:"WWL", me:true },
+  { rank:7, abbr:"BOL", name:"Bolton VFC", pld:34, w:20, d:3, l:11, gf:57, ga:47, gd:"+10", pts:63, form:"LWW", me:false },
+  { rank:8, abbr:"SEM", name:"Semt-i Müdafa", pld:34, w:20, d:1, l:13, gf:75, ga:50, gd:"+25", pts:61, form:"WWL", me:false },
+  { rank:9, abbr:"FCB", name:"FC BIG BANG", pld:34, w:19, d:1, l:14, gf:54, ga:40, gd:"+14", pts:58, form:"WLW", me:false },
+  { rank:10, abbr:"NOR", name:"Northturks", pld:34, w:15, d:6, l:13, gf:60, ga:80, gd:"-20", pts:51, form:"LLD", me:false },
+  { rank:11, abbr:"ABR", name:"Abrakadabra eSports", pld:34, w:12, d:4, l:18, gf:29, ga:44, gd:"-15", pts:40, form:"LLD", me:false },
+  { rank:12, abbr:"MAV", name:"Mavi City FC", pld:33, w:11, d:2, l:20, gf:40, ga:94, gd:"-54", pts:35, form:"LWW", me:false },
+  { rank:13, abbr:"BAS", name:"Baston Villa FC", pld:33, w:10, d:0, l:23, gf:37, ga:73, gd:"-36", pts:30, form:"WLL", me:false },
+  { rank:14, abbr:"ATM", name:"Atmaca eSpor", pld:34, w:7, d:2, l:25, gf:30, ga:67, gd:"-37", pts:23, form:"WWW", me:false },
+  { rank:15, abbr:"VOG", name:"VOGUE", pld:34, w:6, d:4, l:24, gf:21, ga:74, gd:"-53", pts:22, form:"DLL", me:false },
+  { rank:16, abbr:"TEA", name:"Team Derstar", pld:34, w:4, d:6, l:24, gf:17, ga:89, gd:"-72", pts:18, form:"LLL", me:false },
+  { rank:17, abbr:"BLA", name:"Blackburn FC", pld:34, w:0, d:6, l:28, gf:1, ga:60, gd:"-59", pts:6, form:"DLL", me:false },
+  { rank:18, abbr:"REV", name:"Revenge Esports", pld:34, w:0, d:6, l:28, gf:5, ga:69, gd:"-64", pts:6, form:"LLD", me:false },
 ];
 const STANDINGS_SUMMER_FALLBACK = [
   { rank:"-", abbr:"ALT", name:"ALTAIR eSports", pld:0, w:0, d:0, l:0, gf:0, ga:0, gd:"0", pts:0, form:"", me:true },
