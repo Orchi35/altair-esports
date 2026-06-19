@@ -1054,13 +1054,13 @@ const UI_COPY = {
       scroll:"Kaydır",
     },
     identity: {
-      eyebrow:"Kulüp Kimliği",
-      title:["REKABET", "İÇİN KURULDU"],
-      sub:"ALTAIR eSports, Pro Clubs rekabetinde takım disiplini, taktik sorumluluk ve sürdürülebilir gelişim üzerine kurulu bir organizasyon yapısı geliştirir.",
+      eyebrow:"KULÜP KİMLİĞİ",
+      title:["BİR TAKIMDAN", "DAHA FAZLASI"],
+      sub:"ALTAIR eSports, aynı hedefe inanan oyuncuların güven, aidiyet ve takım ruhu etrafında birleştiği rekabetçi bir kulüp yapısıdır.",
       cards:[
-        { k:"01", title:"Takım Disiplini", text:"Her rol; maç sorumluluğu, iletişim ve tekrar edilebilir performans ilkeleriyle tanımlanır." },
-        { k:"02", title:"Rekabetçi Vizyon", text:"Kulüp; ligde istikrarlı büyüme, daha güçlü sezon sonuçları ve Avrupa hedefleri için çalışır." },
-        { k:"03", title:"Kulüp Standardı", text:"Yayınlar, kadro duyuruları ve sosyal içerikler modern bir kulübe yakışan tutarlılıkla sunulur." },
+        { k:"01", title:"AİDİYET", text:"ALTAIR’de her oyuncu yalnızca kadronun bir parçası olmaz; ortak hedefe, emeğe ve kulüp kültürüne bağlı bir yapının içinde yer alır." },
+        { k:"02", title:"GÜVEN VE BAĞ", text:"Sahadaki uyum, birbirine güvenen oyuncularla kurulur. İletişim, fedakârlık ve birlikte hareket etme kültürü ALTAIR’in temelidir." },
+        { k:"03", title:"ORTAK HEDEF", text:"Her maç, her antrenman ve her başarı ortak emeğin sonucudur. ALTAIR’de hedef sadece kazanmak değil, birlikte gelişerek kalıcı bir kulüp kimliği oluşturmaktır." },
       ],
     },
     ticker: {
@@ -1476,9 +1476,9 @@ body::after{
 .identity-text{
   margin-top:14px;
   color:var(--text-2);
-  font-size:14px;
-  line-height:1.68;
-  max-width:34ch;
+  font-size:13.5px;
+  line-height:1.62;
+  max-width:38ch;
 }
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
