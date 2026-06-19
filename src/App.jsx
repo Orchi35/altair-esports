@@ -1647,13 +1647,6 @@ body::after{
   padding-top:72px;
 }
 .hero-bg-base{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,#102141 0%,#07101f 44%,#030711 100%)}
-.hero::before{
-  content:'';
-  position:absolute;right:4.8%;top:50%;transform:translateY(-50%);width:min(46vw,560px);aspect-ratio:1;
-  background:url('/logo.png') center/contain no-repeat;
-  opacity:.032;filter:grayscale(1) brightness(1.8);
-  pointer-events:none;z-index:1;
-}
 .hero-bg-grid{
   position:absolute;inset:0;opacity:.34;
   background-image:
@@ -1807,23 +1800,23 @@ body::after{
 /* Right column â€” logo composition */
 .hero-right{position:relative;z-index:3;height:100%;display:flex;align-items:center;justify-content:center;padding:60px 40px 60px 20px}
 .hero-stage{
-  position:relative;width:min(500px,100%);aspect-ratio:1;
+  position:relative;width:min(620px,100%);aspect-ratio:1;
   display:flex;align-items:center;justify-content:center;
 }
 .hero-stage::before{
-  content:'';position:absolute;inset:8%;border-radius:50%;
+  content:'';position:absolute;inset:2%;border-radius:50%;
   background:
     radial-gradient(circle,rgba(34,211,238,.18) 0%,rgba(34,211,238,.08) 34%,transparent 68%);
   filter:blur(18px);opacity:.9;pointer-events:none;
 }
 .hero-stage::after{
-  content:'';position:absolute;inset:18%;border-radius:50%;
+  content:'';position:absolute;inset:10%;border-radius:50%;
   border:1px solid rgba(126,211,255,.12);
   box-shadow:0 0 70px rgba(34,211,238,.14),inset 0 0 42px rgba(34,211,238,.05);
   pointer-events:none;
 }
 
-.hero-logo-center{position:relative;width:72%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;z-index:4}
+.hero-logo-center{position:relative;width:86%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;z-index:4}
 .hero-logo-img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 14px 42px rgba(0,0,0,.42)) drop-shadow(0 0 28px rgba(34,211,238,.24))}
 
 
@@ -2443,7 +2436,7 @@ body::after{
 
 .p-card{
   position:relative;display:flex;flex-direction:column;text-decoration:none;color:inherit;
-  min-height:492px;
+  height:520px;
   background:
     radial-gradient(circle at 82% 0%,rgba(34,211,238,.22),transparent 34%),
     radial-gradient(circle at 8% 100%,rgba(59,130,246,.16),transparent 35%),
@@ -2481,7 +2474,7 @@ body::after{
 .p-card:focus-visible::after{opacity:.78}
 
 .p-top{
-  position:relative;min-height:272px;
+  position:relative;height:282px;flex:0 0 282px;
   background:
     radial-gradient(circle at 50% 26%,rgba(34,211,238,.3) 0%,transparent 50%),
     radial-gradient(ellipse at 50% 104%,rgba(255,255,255,.08),transparent 44%),
@@ -2559,7 +2552,7 @@ body::after{
   filter:blur(2px);
 }
 .p-avatar-img{
-  width:190px;height:214px;object-fit:cover;object-position:center 20%;
+  width:198px;height:224px;object-fit:cover;object-position:center 18%;
   border:1px solid rgba(126,211,255,.28);border-radius:18px;
   box-shadow:0 0 42px rgba(34,211,238,.18),0 24px 48px rgba(0,0,0,.42);
   filter:saturate(1.04) contrast(1.03);
@@ -2924,7 +2917,7 @@ body::after{
 /* TABLET */
 @media (max-width:1100px){
   .hero{grid-template-columns:1.2fr .8fr}
-  .hero-stage{width:min(420px,100%)}
+  .hero-stage{width:min(520px,100%)}
   .identity-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .st-hero{flex-wrap:wrap;gap:20px}
   .st-kpis{flex-wrap:wrap}
@@ -3035,7 +3028,7 @@ body::after{
     opacity:.95;
   }
   .hero.hero--tr .hero-left{padding-right:20px}
-  .hero-mobile-logo{display:block;width:96px;height:96px;object-fit:contain;margin-bottom:22px;filter:drop-shadow(0 0 24px rgba(34,211,238,.42))}
+  .hero-mobile-logo{display:block;width:116px;height:116px;object-fit:contain;margin-bottom:22px;filter:drop-shadow(0 0 24px rgba(34,211,238,.42))}
   .hero-tag{font-size:8px;padding:7px 12px;margin-bottom:18px;letter-spacing:.16em;flex-wrap:wrap}
   .hero-h1{font-size:clamp(42px,12vw,66px);line-height:1}
   .hero-h1 .l{white-space:normal}
@@ -3279,11 +3272,11 @@ body::after{
   .pos-count{font-size:10px}
   .pos-section{margin-bottom:32px}
   .p-card{
-    min-height:0;
+    height:470px;
     border-radius:24px;
   }
   .p-top{
-    min-height:216px;
+    height:216px;flex-basis:216px;
   }
   .p-number{font-size:82px;bottom:-13px;right:9px}
   .p-avatar-img{width:152px;height:166px;border-radius:16px}
@@ -3424,8 +3417,9 @@ body::after{
   .res-mob-score{min-width:98px;padding:7px 12px;font-size:20px}
 
   .squad-filter{grid-template-columns:1fr}
-  .p-card{min-height:0}
-  .p-top{min-height:184px}
+  .hero-mobile-logo{width:104px;height:104px}
+  .p-card{height:420px}
+  .p-top{height:184px;flex-basis:184px}
   .p-avatar-img{width:130px;height:142px}
   .p-avatar{width:82px;height:82px;font-size:24px}
   .p-number{font-size:58px}
@@ -4007,7 +4001,6 @@ function Fixtures({ lang, copy, loading, fixtures=[], error, refetch }) {
 }
 
 function PlayerCard({ p, copy }) {
-  const roleLabel = copy.squad.roles[p.role] || p.role;
   const profileLabel = `${copy.squad.profile}: ${p.ign}`;
   const cardContent = (
     <>
@@ -4015,7 +4008,6 @@ function PlayerCard({ p, copy }) {
         <div className="p-pos">{p.pos}</div>
         <div className="p-tags">
           {p.captain && <span className="p-tag p-tag--captain" title={copy.squad.captain}>{copy.squad.captain}</span>}
-          <span className="p-tag">{roleLabel}</span>
         </div>
         <div className="p-flag" aria-hidden="true">{p.flag}</div>
         <div className="p-number" aria-hidden="true">{p.number}</div>
