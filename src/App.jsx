@@ -178,15 +178,15 @@ function useStandings(seasonKey = DEFAULT_STANDING_SEASON) {
 
 /* useFixtures - fetches EML matchdays, then splits ALTAIR results and fixtures */
 
-const FIX_CACHE_KEY  = "altair_fixtures_v6";
+const FIX_CACHE_KEY  = "altair_fixtures_v8";
 const FIX_CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
 const FIX_FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
-const TOTAL_MATCHDAYS = 34;
-const TOURNAMENT_ID   = 39;
-// ALTAIR'in oynadığı bilinen matchday'ler; gereksiz istekleri azaltır.
-const ALTAIR_MATCHDAYS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34];
+const TOTAL_MATCHDAYS = 13;
+const TOURNAMENT_ID   = 42;
+// ALTAIR'in oynadığı bilinen yeni sezon matchday'leri; gereksiz istekleri azaltır.
+const ALTAIR_MATCHDAYS = [1,2,3,4,5,6,7,8,9,10,11,12,13];
 const ALTAIR_NAME     = "altair esports";
-const COMPETITION     = "EML | Division 1";
+const COMPETITION     = "EML FC26 Summer League";
 
 // Month helpers
 const MONTHS = ["","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
@@ -338,7 +338,7 @@ function getEnglishDateParts(value) {
 }
 
 function localizeCompetition(lang = "EN") {
-  return lang === "TR" ? "EML | 1. Lig" : "EML | Division 1";
+  return lang === "TR" ? "EML FC26 Yaz Ligi" : "EML FC26 Summer League";
 }
 
 function localizeDisplayMatch(match, lang = "EN") {
@@ -361,6 +361,19 @@ function normalizeFixtureMatch(match) {
 
 function abbr3(name) {
   return (name || "").replace(/[^A-Za-z]/g,"").slice(0,3).toUpperCase() || "???";
+}
+
+function cleanFixtureTeamName(value) {
+  return String(value || "")
+    .replace(/\(\d+\.\)/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function getFixtureTeamName(td) {
+  if (!td) return "";
+  const linkName = cleanFixtureTeamName(td.querySelector("a")?.textContent);
+  return linkName || cleanFixtureTeamName(td.textContent);
 }
 
 function parseFixturePage(html, matchday) {
@@ -400,10 +413,8 @@ function parseFixturePage(html, matchday) {
     if (tds.length < 5) return;
 
     // home takÄ±m, skorlar, away takÄ±m
-    const homeEl   = tds[1]?.querySelector("a") || tds[1];
-    const awayEl   = tds[5]?.querySelector("a") || tds[5];
-    const homeName = homeEl?.textContent?.trim().replace(/\s+/g," ") || "";
-    const awayName = awayEl?.textContent?.trim().replace(/\s+/g," ") || "";
+    const homeName = getFixtureTeamName(tds[1]);
+    const awayName = getFixtureTeamName(tds[5]);
     if (!homeName || !awayName) return;
 
     const scoreH   = tds[2]?.textContent?.trim();
@@ -415,9 +426,10 @@ function parseFixturePage(html, matchday) {
     if (!isAltair) return;
 
     const parsedDate = getEnglishDateParts(date);
+    const rowNumber = matches.length + 1;
 
     matches.push({
-      id:          matchday,
+      id:          matchday + rowNumber / 10,
       matchday:    `GW ${matchday}`,
       competition: COMPETITION,
       date:        parsedDate.date,
@@ -454,7 +466,7 @@ function writeFixCache(data) {
 }
 
 async function getLatestPlayedCount() {
-  const cachedStandings = readCache();
+  const cachedStandings = readCache(DEFAULT_STANDING_SEASON);
   const cachedAltair = cachedStandings?.data?.find((team) => team.me);
   if (Number.isFinite(cachedAltair?.pld)) {
     return Math.max(0, cachedAltair.pld);
@@ -468,7 +480,7 @@ async function getLatestPlayedCount() {
   const parsed = parseEMLTable(html);
   if (!parsed) throw new Error("Standings parse hatasi");
 
-  writeCache(parsed);
+  writeCache(DEFAULT_STANDING_SEASON, parsed);
   const altair = parsed.find((team) => team.me);
   return Math.max(0, altair?.pld || 0);
 }
@@ -623,18 +635,15 @@ function ClubBadge({ className, isAltair, label }) {
    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const RESULTS_FALLBACK = [
-  { id:11, date:"10 Apr 2026", matchday:"GW 11", competition:"EML | Division 1", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Revenge Esports", awayAbbr:"REV", hs:2, as:0, result:"W", venue:"Home" },
-  { id:12, date:"10 Apr 2026", matchday:"GW 12", competition:"EML | Division 1", home:"VOGUE",          homeAbbr:"VOG", away:"ALTAIR eSports", awayAbbr:"ALT", hs:0, as:2, result:"W", venue:"Away" },
-  { id:13, date:"17 Apr 2026", matchday:"GW 13", competition:"EML | Division 1", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Blackburn FC",   awayAbbr:"BLA", hs:2, as:0, result:"W", venue:"Home" },
-  { id:14, date:"17 Apr 2026", matchday:"GW 14", competition:"EML | Division 1", home:"Anatomy FC",     homeAbbr:"ANA", away:"ALTAIR eSports", awayAbbr:"ALT", hs:0, as:5, result:"W", venue:"Away" },
-  { id:15, date:"17 Apr 2026", matchday:"GW 15", competition:"EML | Division 1", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Bolton VFC",     awayAbbr:"BOL", hs:3, as:0, result:"W", venue:"Home" },
+  { id:1.1, date:"03 July 2026", matchday:"GW 1", competition:"EML FC26 Summer League", home:"Sons Of Hell",  homeAbbr:"SON", away:"ALTAIR eSports", awayAbbr:"ALT", hs:1, as:1, result:"D", venue:"Away" },
+  { id:2.1, date:"03 July 2026", matchday:"GW 2", competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"B2B SK",         awayAbbr:"B2B", hs:2, as:4, result:"L", venue:"Home" },
 ];
 
 const FIXTURES_FALLBACK = [
-  { id:16, day:"24", month:"APR", time:"22:30", matchday:"GW 16", competition:"EML | Division 1", home:"Abrakadabra eSports", homeAbbr:"ABR", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
-  { id:17, day:"24", month:"APR", time:"23:00", matchday:"GW 17", competition:"EML | Division 1", home:"ALTAIR eSports",      homeAbbr:"ALT", away:"Pure Focus",      awayAbbr:"PUR", venue:"Home" },
-  { id:18, day:"24", month:"APR", time:"23:30", matchday:"GW 18", competition:"EML | Division 1", home:"Redus EFC",           homeAbbr:"RED", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
-  { id:19, day:"01", month:"MAY", time:"22:30", matchday:"GW 19", competition:"EML | Division 1", home:"SAMURAI",             homeAbbr:"SAM", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
+  { id:3.1, day:"10", month:"JUL", time:"23:00", matchday:"GW 3", competition:"EML FC26 Summer League", home:"VOGUE",          homeAbbr:"VOG", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
+  { id:4.1, day:"10", month:"JUL", time:"23:00", matchday:"GW 4", competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"In Flame",       awayAbbr:"INF", venue:"Home" },
+  { id:4.2, day:"10", month:"JUL", time:"23:00", matchday:"GW 4", competition:"EML FC26 Summer League", home:"invictus x",     homeAbbr:"INV", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
+  { id:5.1, day:"17", month:"JUL", time:"23:00", matchday:"GW 5", competition:"EML FC26 Summer League", home:"3 Silahşörler",  homeAbbr:"SIL", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
 ];
 
 const SQUAD_CACHE_KEY = "altair_squad_stats_v1";
@@ -851,26 +860,26 @@ function useSquadStats() {
 
 const SQUAD = [
   { group:"Goalkeepers", abbr:"GK", players:[
-    { number:"1",  name:"MEHMETCAN BABAT",   ign:"mcb06099",     pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"MB",  apps:18, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6666/", image:"public/players/mcb06099.png" },
+    { number:"1",  name:"MEHMETCAN BABAT",   ign:"mcb06099",     pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"MB",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6666/", image:"public/players/mcb06099.png" },
   ]},
   { group:"Defenders", abbr:"DEF", players:[
-    { number:"5",  name:"AYBERK ÖZTÜRK",      ign:"LethalGullit", pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"AÖ",  apps:25, goals:3, assists:1, captain:false, profileUrl:"https://emajorleague.com/players/profile/8829/", image:"public/players/LethalGullit.jpg" },
-    { number:"99", name:"EGE YILMAZ",         ign:"Zeppettoo",    pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"EY",  apps:19, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9059/", image:"public/players/Zeppettoo.png" },
-    { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",   ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:18, goals:4, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/creedxzenci.jpg" },
+    { number:"5",  name:"AYBERK ÖZTÜRK",      ign:"LethalGullit", pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"AÖ",  apps:2, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8829/", image:"public/players/LethalGullit.jpg" },
+    { number:"99", name:"EGE YILMAZ",         ign:"Zeppettoo",    pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"EY",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9059/", image:"public/players/Zeppettoo.png" },
+    { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",   ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:2, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/creedxzenci.jpg" },
     { number:"57", name:"SACİT KARACA",       ign:"Sparostago1",  pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"SK",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9224/" },
     { number:"21", name:"RÜŞTÜ ALPER GÜLER",  ign:"DreamArmyA",   pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"RAG", apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9054/" },
-    { number:"11", name:"HAZAR TARASHOHİ",    ign:"KingHzrq",     pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"HT",  apps:24, goals:5, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8814/", image:"public/players/KingHzrq.jpg" },
+    { number:"11", name:"HAZAR TARASHOHİ",    ign:"KingHzrq",     pos:"LWB", role:"Left Wing Back",   flag:"🇹🇷", init:"HT",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8814/", image:"public/players/KingHzrq.jpg" },
   ]},
   { group:"Midfielders", abbr:"MID", players:[
-    { number:"35", name:"KARAHAN ZEKİ TAŞKAN",   ign:"maniac_kara35", pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"KZT", apps:20, goals:0, assists:2,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/9020/", image:"public/players/maniac_kara35.jpg" },
+    { number:"35", name:"KARAHAN ZEKİ TAŞKAN",   ign:"maniac_kara35", pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"KZT", apps:2, goals:0, assists:0,  captain:true,  profileUrl:"https://emajorleague.com/players/profile/9020/", image:"public/players/maniac_kara35.jpg" },
     { number:"",   name:"YİĞİTHAN DALDAL",       ign:"Swindler3r",    pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"YD",  apps:11, goals:0, assists:3,  captain:false, profileUrl:"https://emajorleague.com/players/profile/2178/", image:"public/players/Swindler3r.jpg" },
     { number:"36", name:"SALİH ERAY AYTEKİN",    ign:"4SAAY",         pos:"CDM", role:"Defensive Midfielder", flag:"🇹🇷", init:"SEA", apps:0,  goals:0, assists:0,  captain:false, profileUrl:"https://emajorleague.com/players/profile/2808/" },
-    { number:"10", name:"ŞENER YİĞİT ÇOKYÜCEL",  ign:"yigitinski",    pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"ŞYÇ", apps:27, goals:1, assists:21, captain:true,  profileUrl:"https://emajorleague.com/yigitinski/", image:"public/players/yigitinski.jpg" },
+    { number:"10", name:"ŞENER YİĞİT ÇOKYÜCEL",  ign:"yigitinski",    pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"ŞYÇ", apps:2, goals:0, assists:0, captain:true,  profileUrl:"https://emajorleague.com/yigitinski/", image:"public/players/yigitinski.jpg" },
     { number:"14", name:"YİĞİTCAN ÖZBİRİNCİ",    ign:"LuckyS7even",   pos:"CM",  role:"Central Midfielder",   flag:"🇹🇷", init:"YÖ",  apps:1, goals:0, assists:0,  captain:false, profileUrl:"https://emajorleague.com/LuckyS7even/", image:"public/players/LuckyS7even.jpg" },
   ]},
   { group:"Forwards", abbr:"FWD", players:[
-    { number:"7", name:"DOĞUKAN TOMBUL",  ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:27, goals:28, assists:7, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Xwrdodo.jpg" },
-    { number:"77", name:"ORÇUN BEKTAŞ",   ign:"ORC-HI",  pos:"ST", role:"Striker", flag:"🇹🇷", init:"OB", apps:27, goals:5, assists:5, captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/ORC-HI.jpg" },
+    { number:"7", name:"DOĞUKAN TOMBUL",  ign:"Xwrdodo", pos:"ST", role:"Striker", flag:"🇹🇷", init:"DK", apps:2, goals:1, assists:0, captain:false, profileUrl:"https://emajorleague.com/Dooggyy/", image:"public/players/Xwrdodo.jpg" },
+    { number:"77", name:"ORÇUN BEKTAŞ",   ign:"ORC-HI",  pos:"ST", role:"Striker", flag:"🇹🇷", init:"OB", apps:2, goals:0, assists:0, captain:true,  profileUrl:"https://emajorleague.com/players/profile/1897/", image:"public/players/ORC-HI.jpg" },
     { number:"34", name:"MEHMET BERK ÜSTÜNDAĞ", ign:"MBU", pos:"ST", role:"Striker", flag:"🇹🇷", init:"MBÜ", apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/MBU/", image:"public/players/MBU.jpg" },
   ]},
 ];
@@ -920,9 +929,9 @@ const UI_COPY = {
       ],
     },
     ticker: {
-      tag:"EML · DIVISION 1",
+      tag:"EML FC26 · SUMMER",
       form:"CURRENT FORM · W · W · W · W · W",
-      next:"NEXT UP · ABRAKADABRA ESPORTS · 24 APR · 22:30 UTC+3",
+      next:"NEXT UP · VOGUE · 10 JUL · 23:00 UTC+3",
       live:"BROADCAST LIVE ON TWITCH · /ALTAIRESPOR",
       aria:"Latest results ticker",
     },
@@ -951,7 +960,7 @@ const UI_COPY = {
       eyebrow:"Matchday Report",
       title:["RECENT", "RESULTS"],
       subLoading:"Loading latest results…",
-      sub:"A clean matchday archive showing ALTAIR eSports’ latest competitive results, scorelines and match context.",
+      sub:"A clean matchday archive showing ALTAIR eSports’ latest EML FC26 Summer League results, scorelines and match context.",
       cached:"Cached",
       viewFixtures:"View Fixtures",
       labels:{ W:"Victory", L:"Defeat", D:"Draw" },
@@ -961,7 +970,7 @@ const UI_COPY = {
       eyebrow:"Upcoming Schedule",
       title:["NEXT", "FIXTURES"],
       subLoading:"Loading upcoming fixtures…",
-      sub:"Upcoming ALTAIR eSports fixtures with opponent, matchday and broadcast details prepared for supporters and partners.",
+      sub:"Upcoming ALTAIR eSports fixtures in EML FC26 Summer League with opponent, matchday and broadcast details.",
       cached:"Cached",
       watch:"Watch on Twitch",
       venue:{ home:"Home", away:"Away" },
@@ -1064,9 +1073,9 @@ const UI_COPY = {
       ],
     },
     ticker: {
-      tag:"EML · 1. LİG",
+      tag:"EML FC26 · YAZ LİGİ",
       form:"GÜNCEL FORM · G · G · G · G · G",
-      next:"SIRADAKİ MAÇ · ABRAKADABRA ESPORTS · 24 NİS · 22:30 UTC+3",
+      next:"SIRADAKİ MAÇ · VOGUE · 10 TEM · 23:00 UTC+3",
       live:"YAYIN TWITCH'TE CANLI · /ALTAIRESPOR",
       aria:"Sonuçlar kayan şeridi",
     },
@@ -1095,7 +1104,7 @@ const UI_COPY = {
       eyebrow:"Maç Haftası Raporu",
       title:["SON", "SONUÇLAR"],
       subLoading:"Son sonuçlar yükleniyor…",
-      sub:"ALTAIR eSports’un son rekabetçi maçlarını skor, maç haftası ve karşılaşma bağlamıyla net şekilde gösteren sonuç arşivi.",
+      sub:"ALTAIR eSports’un EML FC26 Yaz Ligi’ndeki son maçlarını skor, maç haftası ve karşılaşma bağlamıyla gösteren sonuç arşivi.",
       cached:"Önbellek",
       viewFixtures:"Fikstüre Git",
       labels:{ W:"Galibiyet", L:"Mağlubiyet", D:"Beraberlik" },
@@ -1105,7 +1114,7 @@ const UI_COPY = {
       eyebrow:"Yaklaşan Program",
       title:["SIRADAKİ", "FİKSTÜR"],
       subLoading:"Yaklaşan fikstür yükleniyor…",
-      sub:"ALTAIR eSports’un yaklaşan maçları; rakip, maç haftası, saat ve yayın bilgisiyle taraftarlar ve partnerler için hazırlanır.",
+      sub:"ALTAIR eSports’un EML FC26 Yaz Ligi fikstürü; rakip, maç haftası, saat ve yayın bilgisiyle güncel tutulur.",
       cached:"Önbellek",
       watch:"Twitch'te İzle",
       venue:{ home:"İç Saha", away:"Deplasman" },
