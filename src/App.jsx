@@ -178,7 +178,7 @@ function useStandings(seasonKey = DEFAULT_STANDING_SEASON) {
 
 /* useFixtures - fetches EML matchdays, then splits ALTAIR results and fixtures */
 
-const FIX_CACHE_KEY  = "altair_fixtures_v8";
+const FIX_CACHE_KEY  = "altair_fixtures_v9";
 const FIX_CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
 const FIX_FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
 const TOTAL_MATCHDAYS = 13;
@@ -359,6 +359,27 @@ function normalizeFixtureMatch(match) {
   };
 }
 
+function getMatchDateTimestamp(match) {
+  const raw = String(
+    match?.date || `${match?.day || ""} ${match?.month || ""} ${match?.year || "2026"}`,
+  ).trim();
+  const dateMatch = raw.match(/(\d{1,2})\s+([\p{L}]+)\s+(\d{4})/iu);
+  if (!dateMatch) return null;
+
+  const day = Number(dateMatch[1]);
+  const month = getMonthIndex(dateMatch[2]);
+  const year = Number(dateMatch[3]);
+  if (!day || !month || !year) return null;
+
+  return new Date(year, month - 1, day, 23, 59, 59, 999).getTime();
+}
+
+function isPastUnplayedFixture(match, now = Date.now()) {
+  if (match?.played) return false;
+  const timestamp = getMatchDateTimestamp(match);
+  return timestamp !== null && timestamp < now;
+}
+
 function abbr3(name) {
   return (name || "").replace(/[^A-Za-z]/g,"").slice(0,3).toUpperCase() || "???";
 }
@@ -465,26 +486,6 @@ function writeFixCache(data) {
   catch { /**/ }
 }
 
-async function getLatestPlayedCount() {
-  const cachedStandings = readCache(DEFAULT_STANDING_SEASON);
-  const cachedAltair = cachedStandings?.data?.find((team) => team.me);
-  if (Number.isFinite(cachedAltair?.pld)) {
-    return Math.max(0, cachedAltair.pld);
-  }
-
-  const url = `/api/eml-proxy?path=/tournaments/league_table/${TOURNAMENT_ID}/`;
-  const res = await fetch(url, { cache:"no-store", signal:AbortSignal.timeout(6000) });
-  if (!res.ok) throw new Error(`Standings HTTP ${res.status}`);
-
-  const html = await res.text();
-  const parsed = parseEMLTable(html);
-  if (!parsed) throw new Error("Standings parse hatasi");
-
-  writeCache(DEFAULT_STANDING_SEASON, parsed);
-  const altair = parsed.find((team) => team.me);
-  return Math.max(0, altair?.pld || 0);
-}
-
 function useFixtures() {
   const [allMatches,  setAllMatches]  = useState(null);
   const [fixturesLoading, setFixturesLoading] = useState(true);
@@ -539,22 +540,7 @@ function useFixtures() {
         // ALTAIR fikstÃ¼rÃ¼nÃ¼ de kapsayacak ÅŸekilde saÄŸ tarafa kaydÄ±r.
         // BÃ¶ylece refresh, Samurai gibi ileride gÃ¶rÃ¼nen maÃ§larÄ±n tarihini de
         // tekrar isteyebilir; toplam istek sayÄ±sÄ± yine en fazla 11 kalÄ±r.
-        const latestPlayedCount = await getLatestPlayedCount();
-        const latestPlayedIndex = Math.min(
-          TOTAL_MATCHDAYS - 1,
-          Math.max(-1, latestPlayedCount - 1),
-        );
-
-        const visibleMaxIndex = Array.isArray(allMatchesRef.current) && allMatchesRef.current.length
-          ? Math.max(...allMatchesRef.current.map((match) => Math.max(0, (match.id || 1) - 1)))
-          : -1;
-
-        const toIndex = Math.min(
-          TOTAL_MATCHDAYS - 1,
-          Math.max(latestPlayedIndex + 4, visibleMaxIndex, 3),
-        );
-        const fromIndex = Math.max(0, toIndex - 10);
-        const mds = ALTAIR_MATCHDAYS.slice(fromIndex, toIndex + 1);
+        const mds = ALTAIR_MATCHDAYS.slice(0, TOTAL_MATCHDAYS);
 
         // 3'erli gruplar halinde â€” site yoÄŸulmaz
         const results = [];
@@ -597,7 +583,9 @@ function useFixtures() {
   }, [tick]);
 
   const played   = (allMatches || []).filter(m => m.played);
-  const upcoming = (allMatches || []).filter(m => !m.played);
+  const upcoming = (allMatches || []).filter(
+    m => !m.played && !isPastUnplayedFixture(m),
+  );
 
   // result kodu: ev sahibiyse kendi skoru, deÄŸilse karÅŸÄ± skor
   const withResult = played.map(m => {
@@ -635,15 +623,18 @@ function ClubBadge({ className, isAltair, label }) {
    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const RESULTS_FALLBACK = [
-  { id:1.1, date:"03 July 2026", matchday:"GW 1", competition:"EML FC26 Summer League", home:"Sons Of Hell",  homeAbbr:"SON", away:"ALTAIR eSports", awayAbbr:"ALT", hs:1, as:1, result:"D", venue:"Away" },
-  { id:2.1, date:"03 July 2026", matchday:"GW 2", competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"B2B SK",         awayAbbr:"B2B", hs:2, as:4, result:"L", venue:"Home" },
+  { id:10.1, date:"31 July 2026", matchday:"GW 10", competition:"EML FC26 Summer League", home:"Liderpool FC", homeAbbr:"LID", away:"ALTAIR eSports", awayAbbr:"ALT", hs:0, as:2, result:"W", venue:"Away" },
+  { id:6.1,  date:"17 July 2026", matchday:"GW 6",  competition:"EML FC26 Summer League", home:"Glarung FC", homeAbbr:"GLA", away:"ALTAIR eSports", awayAbbr:"ALT", hs:2, as:0, result:"L", venue:"Away" },
+  { id:5.1,  date:"17 July 2026", matchday:"GW 5",  competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"B2B SK", awayAbbr:"B2B", hs:2, as:4, result:"L", venue:"Home" },
+  { id:4.1,  date:"10 July 2026", matchday:"GW 4",  competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"In Flame", awayAbbr:"INF", hs:2, as:3, result:"L", venue:"Home" },
+  { id:3.1,  date:"10 July 2026", matchday:"GW 3",  competition:"EML FC26 Summer League", home:"invictus x", homeAbbr:"INV", away:"ALTAIR eSports", awayAbbr:"ALT", hs:1, as:1, result:"D", venue:"Away" },
 ];
 
 const FIXTURES_FALLBACK = [
-  { id:3.1, day:"10", month:"JUL", time:"23:00", matchday:"GW 3", competition:"EML FC26 Summer League", home:"VOGUE",          homeAbbr:"VOG", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
-  { id:4.1, day:"10", month:"JUL", time:"23:00", matchday:"GW 4", competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"In Flame",       awayAbbr:"INF", venue:"Home" },
-  { id:4.2, day:"10", month:"JUL", time:"23:00", matchday:"GW 4", competition:"EML FC26 Summer League", home:"invictus x",     homeAbbr:"INV", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
-  { id:5.1, day:"17", month:"JUL", time:"23:00", matchday:"GW 5", competition:"EML FC26 Summer League", home:"3 Silahşörler",  homeAbbr:"SIL", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
+  { id:9.1,  date:"31 July 2026", day:"31", month:"JUL", time:"22:30", matchday:"GW 9",  competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"FC BIG BANG", awayAbbr:"FCB", venue:"Home" },
+  { id:11.1, date:"07 August 2026", day:"07", month:"AUG", time:"22:30", matchday:"GW 11", competition:"EML FC26 Summer League", home:"Saray Bahçe eSpor", homeAbbr:"SAR", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
+  { id:12.1, date:"07 August 2026", day:"07", month:"AUG", time:"23:00", matchday:"GW 12", competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Shelter FC", awayAbbr:"SHE", venue:"Home" },
+  { id:13.1, date:"14 August 2026", day:"14", month:"AUG", time:"22:30", matchday:"GW 13", competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Papatya SK", awayAbbr:"PAP", venue:"Home" },
 ];
 
 const SQUAD_CACHE_KEY = "altair_squad_stats_v1";
