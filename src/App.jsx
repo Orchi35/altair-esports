@@ -860,11 +860,11 @@ function useSquadStats() {
 
 const SQUAD = [
   { group:"Goalkeepers", abbr:"GK", players:[
-    { number:"1",  name:"MEHMETCAN BABAT",   ign:"mcb06099",     pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"MB",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6666/", image:"public/players/mcb06099.png" },
+    { number:"1",  name:"MEHMETCAN BABAT",   ign:"mcb06099",     pos:"GK",  role:"Goalkeeper",       flag:"🇹🇷", init:"MB",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/6666/", image:"public/players/mcb06099.webp" },
   ]},
   { group:"Defenders", abbr:"DEF", players:[
     { number:"5",  name:"AYBERK ÖZTÜRK",      ign:"LethalGullit", pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"AÖ",  apps:2, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8829/", image:"public/players/LethalGullit.jpg" },
-    { number:"99", name:"EGE YILMAZ",         ign:"Zeppettoo",    pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"EY",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9059/", image:"public/players/Zeppettoo.png" },
+    { number:"99", name:"EGE YILMAZ",         ign:"Zeppettoo",    pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"EY",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9059/", image:"public/players/Zeppettoo.webp" },
     { number:"3",  name:"ÖMÜR ÇORUMLUOĞLU",   ign:"creedxzenci",  pos:"CB",  role:"Centre-Back",      flag:"🇹🇷", init:"ÖÇ",  apps:2, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/8458/", image:"public/players/creedxzenci.jpg" },
     { number:"57", name:"SACİT KARACA",       ign:"Sparostago1",  pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"SK",  apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9224/" },
     { number:"21", name:"RÜŞTÜ ALPER GÜLER",  ign:"DreamArmyA",   pos:"RWB", role:"Right Wing Back",  flag:"🇹🇷", init:"RAG", apps:0, goals:0, assists:0, captain:false, profileUrl:"https://emajorleague.com/players/profile/9054/" },
@@ -884,22 +884,16 @@ const SQUAD = [
   ]},
 ];
 
-const SPONSORS = {
-  title:    ["NEXCORE"],
-  gold:     ["STEELWAVE", "HYPERTEK"],
-  partners: ["ARGON", "PIXELRIFT", "VAULTNET"],
-};
-
 const SOCIAL = [
-  { cls:"tw", icon:"TW", platform:"Twitch",    handle:"/altairespor",    desc:"Live match broadcasts every matchday with full commentary.",  cta:"Watch Live", url:"https://www.twitch.tv/altairespor" },
-  { cls:"yt", icon:"YT", platform:"YouTube",   handle:"@AltairESPOR",    desc:"Match replays, player breakdowns and season recaps.",         cta:"Subscribe",  url:"https://www.youtube.com/@AltairESPOR" },
-  { cls:"ig", icon:"IG", platform:"Instagram", handle:"@altairesports",  desc:"Behind the scenes, squad content and matchday graphics.",     cta:"Follow",     url:"https://www.instagram.com/altairesports/" },
-  { cls:"dc", icon:"DC", platform:"Discord",   handle:"Join our server", desc:"Join our community, connect with players and stay updated.",  cta:"Join",       url:"https://discord.gg/uMgQKQmr" },
+  { cls:"ig", icon:"IG", platform:"Instagram", handle:"@altairesports", featured:true, url:"https://www.instagram.com/altairesports/" },
+  { cls:"tw", icon:"TW", platform:"Twitch",    handle:"/altairespor",    url:"https://www.twitch.tv/altairespor" },
+  { cls:"yt", icon:"YT", platform:"YouTube",   handle:"@AltairESPOR",    url:"https://www.youtube.com/@AltairESPOR" },
+  { cls:"dc", icon:"DC", platform:"Discord",   handle:"Topluluğa katıl", url:"https://discord.gg/uMgQKQmr" },
 ];
 
 const LANG_OPTIONS = [
-  { code:"EN", label:"English", note:"Current site language" },
-  { code:"TR", label:"Türkçe",  note:"Türkçe sürüm" },
+  { code:"EN", label:"English", note:"English version" },
+  { code:"TR", label:"Türkçe",  note:"Varsayılan dil" },
 ];
 
 const UI_COPY = {
@@ -908,6 +902,8 @@ const UI_COPY = {
       links: { results:"Results", table:"Table", fixtures:"Fixtures", squad:"Squad", partners:"Partners", watch:"Watch" },
       cta:"Follow the Club",
       langHead:"Site Language",
+      menu:"Menu",
+      menuClose:"Close menu",
     },
     hero: {
       tagLeague:"FC 26 · eMajor League",
@@ -917,15 +913,39 @@ const UI_COPY = {
       primary:"Watch Live",
       secondary:"Meet the Squad",
       scroll:"Scroll",
+      pathways:[
+        { label:"Supporters", value:"Results & Matchdays", href:"#matches" },
+        { label:"Competition", value:"EML FC26 Summer League", href:"#standings" },
+        { label:"Partners", value:"Brand Collaborations", href:"#sponsors" },
+      ],
     },
     identity: {
       eyebrow:"Club Identity",
-      title:["BUILT", "FOR COMPETITION"],
-      sub:"ALTAIR eSports develops a competitive structure based on team discipline, tactical responsibility and long-term progression in Pro Clubs competition.",
+      title:["ONE TEAM", "ONE PURPOSE"],
+      sub:"Founded in 2025, ALTAIR eSports is a competitive club built around team discipline, shared responsibility and the ambition to progress together.",
+      founded:"Founded in 2025",
+      founders:"Competitive Pro Clubs team",
+      storyTitle:"The team always comes first",
+      storyText:"Every player contributes to the same structure, carries responsibility for the same badge and competes toward the same objective. ALTAIR's identity belongs to the whole team.",
+      mottoLabel:"Our motto",
+      motto:"We play together. We win together.",
       cards:[
         { k:"01", title:"Team Discipline", text:"Every role is defined around match responsibility, communication and repeatable performance." },
         { k:"02", title:"Competitive Vision", text:"The club targets stable league growth, stronger seasonal results and credible European ambitions." },
         { k:"03", title:"Community Standard", text:"Broadcasts, roster updates and social content are presented with the consistency expected from a modern club." },
+      ],
+    },
+    honours: {
+      eyebrow:"Club Honours",
+      title:["A SHORT HISTORY", "OF RESULTS"],
+      sub:"ALTAIR's early competitive record reflects a team that learned quickly, progressed through the leagues and consistently turned tournament runs into tangible results.",
+      view:"View Club Honours",
+      items:[
+        { mark:"02", season:"FC 26 · Season 1", competition:"EML Third Division", result:"Runner-up" },
+        { mark:"7×", season:"Tournament Record", competition:"BRFC Tournaments", result:"Champions" },
+        { mark:"5×", season:"Tournament Record", competition:"EML Night Tournaments", result:"Champions" },
+        { mark:"F", season:"FC 26 · Season 2", competition:"ProLeague European League", result:"Finalist" },
+        { mark:"06", season:"FC 26 · Season 2", competition:"EML First Division", result:"6th Place" },
       ],
     },
     ticker: {
@@ -987,7 +1007,7 @@ const UI_COPY = {
       stats:{ apps:"Apps", goals:"Goals", assists:"Assists" },
       captain:"Captain",
       profile:"View Profile",
-      cta:"Contact ALTAIR for team trials, scrims or competitive inquiries.",
+      cta:"Contact ALTAIR through our official channels for scrims, tournaments or competitive inquiries.",
       filters:{
         all:"All",
         Goalkeepers:"Goalkeepers",
@@ -1012,35 +1032,40 @@ const UI_COPY = {
       },
     },
     sponsors: {
-      eyebrow:"Partners & Sponsors",
-      title:["OUR", "PARTNERS"],
-      sub:"ALTAIR eSports aims to create mutual value with the brands it works with. These partnerships are built on a long-term structure, not just visibility. The goal is to establish a sustainable connection between the competitive scene and the brands involved.",
-      kpis:{ reach:"Combined Reach", ranking:"Club Ranking", titles:"Titles Won", active:"Active Players" },
-      tiers:{ title:"Title Partner", gold:"Gold Partners", official:"Official Partners" },
-      ctaTitle:"Become an ALTAIR Partner",
-      ctaSub:"ALTAIR eSports provides brands with direct access and visibility. With the content and broadcast placements offered through collaboration, target audiences are reached effectively.",
-      ctaPrimary:"Get in Touch",
-      ctaSecondary:"Partnership Deck",
+      eyebrow:"Partnership Opportunities",
+      title:["BUILD WITH", "ALTAIR"],
+      sub:"ALTAIR eSports is open to authentic brand collaborations built around competitive matchdays, original content and a growing Pro Clubs community.",
+      open:"Open for collaboration",
+      opportunities:[
+        { k:"01", title:"Matchday Visibility", text:"Place your brand within ALTAIR matchday communication, live broadcasts and competition-focused digital content." },
+        { k:"02", title:"Content Partnerships", text:"Create credible social media formats, player stories and campaign content shaped around the club identity." },
+        { k:"03", title:"Community Connection", text:"Reach an active gaming audience through consistent, transparent and community-led collaboration." },
+      ],
+      ctaTitle:"Start a Conversation with ALTAIR",
+      ctaSub:"Share your brand, campaign idea or partnership goal with us through our official Instagram account.",
+      ctaPrimary:"Message on Instagram",
+      ctaSecondary:"Explore Our Channels",
     },
     social: {
       eyebrow:"Broadcasts & Community",
       title:["FOLLOW", "ALTAIR"],
-      sub:"Follow ALTAIR eSports for match announcements, roster updates, broadcast content and official club communication across every channel.",
+      sub:"Instagram is ALTAIR's primary communication channel. Live matches are broadcast on Twitch, video content is archived on YouTube and the community remains connected through Discord.",
       official:"Official",
+      statuses:{ primary:"Primary Channel", live:"Live Broadcasts", archive:"Video Archive", community:"Open Community" },
       cards:{
-        tw:{ desc:"Matches are broadcast live as part of the weekly fixture schedule. Follow every match in real time.", cta:"Watch Live" },
-        yt:{ desc:"Match replays, player analysis and season content are shared regularly.", cta:"Subscribe" },
-        ig:{ desc:"Squads, behind-the-scenes content and matchday posts are featured here.", cta:"Follow" },
-        dc:{ desc:"Connect directly with the community. Announcements and events are shared through this channel.", cta:"Join" },
+        tw:{ desc:"Watch ALTAIR's scheduled matches live and follow every competitive matchday in real time.", cta:"Watch Live" },
+        yt:{ desc:"Revisit match replays, player-focused videos and selected club content.", cta:"View Channel" },
+        ig:{ desc:"The home of official announcements, matchday graphics, squad news and the latest stories from ALTAIR.", cta:"Follow the Main Channel" },
+        dc:{ desc:"Join the active ALTAIR community for announcements, matchday conversation and club updates.", cta:"Join the Community" },
       },
     },
     footer: {
       brandTag:"FC 26 Pro Clubs · eMajor League",
       bio:"ALTAIR eSports is a competitive Pro Clubs organization built on team discipline, game intelligence and a sustainable ambition for success.",
       titles:{ club:"Club", competition:"Competition", connect:"Connect" },
-      clubLinks:["About ALTAIR","Season History","Honours","Press Kit","Careers"],
+      clubLinks:["About ALTAIR","Club Honours","Season Results","Media & Press","Official Channels"],
       compLinks:["Team Page","League Table","Fixtures","Statistics","Squad"],
-      connectLinks:["Sponsorships","Media Enquiries","Fan Community","Merchandise","Contact Us"],
+      connectLinks:["Partnerships","Instagram","Twitch","YouTube","Discord"],
       rights:"© 2026 ALTAIR eSports · All rights reserved",
       competing:"Competing in",
       privacy:"Privacy",
@@ -1052,6 +1077,8 @@ const UI_COPY = {
       links: { results:"Sonuçlar", table:"Tablo", fixtures:"Fikstür", squad:"Kadro", partners:"Partnerler", watch:"İzle" },
       cta:"Kulübü Takip Et",
       langHead:"Site Dili",
+      menu:"Menü",
+      menuClose:"Menüyü kapat",
     },
     hero: {
       tagLeague:"FC 26 · eMajor League",
@@ -1061,15 +1088,39 @@ const UI_COPY = {
       primary:"Canlı İzle",
       secondary:"Kadroyu İncele",
       scroll:"Kaydır",
+      pathways:[
+        { label:"Taraftarlar", value:"Sonuçlar ve Maç Günleri", href:"#matches" },
+        { label:"Rekabet", value:"EML FC26 Yaz Ligi", href:"#standings" },
+        { label:"Partnerler", value:"Marka İş Birlikleri", href:"#sponsors" },
+      ],
     },
     identity: {
       eyebrow:"KULÜP KİMLİĞİ",
-      title:["BİR TAKIMDAN", "DAHA FAZLASI"],
-      sub:"ALTAIR eSports, aynı hedefe inanan oyuncuların güven, aidiyet ve takım ruhu etrafında birleştiği rekabetçi bir kulüp yapısıdır.",
+      title:["BİR TAKIM", "TEK HEDEF"],
+      sub:"2025 yılında kurulan ALTAIR eSports; takım disiplini, ortak sorumluluk ve birlikte ilerleme hedefi üzerine inşa edilmiş rekabetçi bir kulüptür.",
+      founded:"2025 yılında kuruldu",
+      founders:"Rekabetçi Pro Clubs takımı",
+      storyTitle:"Her zaman önce takım",
+      storyText:"Her oyuncu aynı yapıya katkı sağlar, aynı arma için sorumluluk alır ve aynı hedef doğrultusunda mücadele eder. ALTAIR'in kimliği bütün takıma aittir.",
+      mottoLabel:"Sloganımız",
+      motto:"Birlikte oynar, birlikte kazanırız.",
       cards:[
         { k:"01", title:"AİDİYET", text:"ALTAIR’de her oyuncu yalnızca kadronun bir parçası olmaz; ortak hedefe, emeğe ve kulüp kültürüne bağlı bir yapının içinde yer alır." },
         { k:"02", title:"GÜVEN VE BAĞ", text:"Sahadaki uyum, birbirine güvenen oyuncularla kurulur. İletişim, fedakârlık ve birlikte hareket etme kültürü ALTAIR’in temelidir." },
         { k:"03", title:"ORTAK HEDEF", text:"Her maç, her antrenman ve her başarı ortak emeğin sonucudur. ALTAIR’de hedef sadece kazanmak değil, birlikte gelişerek kalıcı bir kulüp kimliği oluşturmaktır." },
+      ],
+    },
+    honours: {
+      eyebrow:"Kulüp Başarıları",
+      title:["KISA TARİH", "BÜYÜK SONUÇLAR"],
+      sub:"ALTAIR'in genç rekabet geçmişi; liglerde hızla yükselen, turnuva serilerinde istikrar sağlayan ve önemli finallere ulaşan bir takımın gelişimini gösteriyor.",
+      view:"Başarıları Gör",
+      items:[
+        { mark:"02", season:"FC 26 · 1. Sezon", competition:"EML 3. Lig", result:"İkincilik" },
+        { mark:"7×", season:"Turnuva Başarısı", competition:"BRFC Turnuvaları", result:"Şampiyonluk" },
+        { mark:"5×", season:"Turnuva Başarısı", competition:"EML Gece Turnuvaları", result:"Şampiyonluk" },
+        { mark:"F", season:"FC 26 · 2. Sezon", competition:"ProLeague Avrupa Ligi", result:"Finalist" },
+        { mark:"06", season:"FC 26 · 2. Sezon", competition:"EML 1. Lig", result:"6.'lık" },
       ],
     },
     ticker: {
@@ -1131,7 +1182,7 @@ const UI_COPY = {
       stats:{ apps:"Maç", goals:"Gol", assists:"Asist" },
       captain:"Kaptan",
       profile:"Profili Gör",
-      cta:"Takıma katılmak, hazırlık maçı veya rekabetçi iletişim için bizimle iletişime geç.",
+      cta:"Hazırlık maçı, turnuva veya rekabetçi iletişim için resmi kanallarımız üzerinden bizimle iletişime geçin.",
       filters:{
         all:"Tüm Kadro",
         Goalkeepers:"Kaleciler",
@@ -1156,35 +1207,40 @@ const UI_COPY = {
       },
     },
     sponsors: {
-      eyebrow:"Partnerler ve Sponsorlar",
-      title:["İŞ", "ORTAKLARIMIZ"],
-      sub:"ALTAIR eSports, birlikte çalıştığı markalarla karşılıklı değer üretmeyi hedefler. İş ortaklıkları, görünürlükten öte uzun vadeli bir yapı üzerine kuruludur. Amaç, rekabetçi sahne ile markalar arasında sürdürülebilir bir bağ oluşturmaktır.",
-      kpis:{ reach:"Toplam Erişim", ranking:"Kulüp Sırası", titles:"Kazanılan Kupa", active:"Aktif Oyuncu" },
-      tiers:{ title:"Ana Partner", gold:"Altın Partnerler", official:"Resmi Partnerler" },
-      ctaTitle:"ALTAIR Partneri Olun",
-      ctaSub:"ALTAIR eSports, markalar için doğrudan erişim ve görünürlük sunar. İş birliği kapsamında sunulan içerik ve yayın alanlarıyla hedef kitleye etkili şekilde ulaşılır.",
-      ctaPrimary:"İletişime Geç",
-      ctaSecondary:"Partnerlik Dosyası",
+      eyebrow:"Partnerlik Fırsatları",
+      title:["ALTAIR İLE", "İŞ BİRLİĞİ"],
+      sub:"ALTAIR eSports; rekabetçi maç günleri, özgün içerikler ve büyüyen Pro Clubs topluluğu etrafında güvenilir marka iş birliklerine açıktır.",
+      open:"İş birliğine açık",
+      opportunities:[
+        { k:"01", title:"Maç Günü Görünürlüğü", text:"Markanızı ALTAIR maç iletişimi, canlı yayınlar ve rekabet odaklı dijital içeriklerle buluşturun." },
+        { k:"02", title:"İçerik Ortaklıkları", text:"Kulüp kimliğine uygun sosyal medya serileri, oyuncu hikâyeleri ve kampanya içerikleri üretin." },
+        { k:"03", title:"Topluluk Bağlantısı", text:"Tutarlı, şeffaf ve topluluk odaklı çalışmalarla aktif oyuncu ve e-spor kitlesine ulaşın." },
+      ],
+      ctaTitle:"ALTAIR ile İletişime Geçin",
+      ctaSub:"Markanızı, kampanya fikrinizi veya partnerlik hedefinizi resmi Instagram hesabımız üzerinden bizimle paylaşın.",
+      ctaPrimary:"Instagram'dan Mesaj Gönder",
+      ctaSecondary:"Kanallarımızı İncele",
     },
     social: {
       eyebrow:"Yayınlar ve Topluluk",
       title:["ALTAIR'I", "TAKİP ET"],
-      sub:"Maç duyuruları, kadro gelişmeleri, turnuva içerikleri ve resmi kulüp iletişimi için ALTAIR eSports kanallarını takip edin.",
+      sub:"Instagram, ALTAIR'in ana iletişim kanalıdır. Maçlar Twitch'te canlı yayınlanır, video içerikleri YouTube'da arşivlenir ve topluluk Discord üzerinden bir araya gelir.",
       official:"Resmi",
+      statuses:{ primary:"Ana Kanal", live:"Canlı Yayın", archive:"Video Arşivi", community:"Topluluk Açık" },
       cards:{
-        tw:{ desc:"Maçlar, haftalık fikstür kapsamında canlı olarak yayınlanır. Tüm karşılaşmaları anlık takip edin.", cta:"Canlı İzle" },
-        yt:{ desc:"Maç tekrarları, oyuncu analizleri ve sezon içerikleri düzenli olarak paylaşılır.", cta:"Abone Ol" },
-        ig:{ desc:"Kadrolar, sahne arkası içerikler ve maç günü paylaşımları burada yer alır.", cta:"Takip Et" },
-        dc:{ desc:"Topluluk ile doğrudan iletişim kurun. Duyurular ve etkinlikler bu kanal üzerinden paylaşılır.", cta:"Katıl" },
+        tw:{ desc:"ALTAIR'in programdaki maçlarını canlı izleyin ve tüm rekabetçi maç günlerini anlık takip edin.", cta:"Canlı İzle" },
+        yt:{ desc:"Maç tekrarlarını, oyuncu odaklı videoları ve seçili kulüp içeriklerini yeniden izleyin.", cta:"Kanalı İncele" },
+        ig:{ desc:"Resmi duyuruların, maç günü tasarımlarının, kadro haberlerinin ve ALTAIR'den son gelişmelerin ana adresi.", cta:"Ana Kanalı Takip Et" },
+        dc:{ desc:"Duyurular, maç günü sohbetleri ve kulüp gelişmeleri için aktif ALTAIR topluluğuna katılın.", cta:"Topluluğa Katıl" },
       },
     },
     footer: {
       brandTag:"FC 26 Pro Clubs · eMajor League",
       bio:"ALTAIR eSports, rekabetçi Pro Clubs sahnesinde takım disiplini, oyun aklı ve sürdürülebilir başarı hedefiyle mücadele eden bir e-spor organizasyonudur.",
       titles:{ club:"Kulüp", competition:"Rekabet", connect:"Bağlantı" },
-      clubLinks:["ALTAIR Hakkında","Sezon Geçmişi","Başarılar","Basın Kiti","Kariyer"],
+      clubLinks:["ALTAIR Hakkında","Kulüp Başarıları","Sezon Sonuçları","Medya ve Basın","Resmi Kanallar"],
       compLinks:["Takım Sayfası","Puan Durumu","Fikstür","İstatistikler","Kadro"],
-      connectLinks:["Sponsorluk","Medya İletişimi","Taraftar Topluluğu","Mağaza","Bize Ulaşın"],
+      connectLinks:["Partnerlik","Instagram","Twitch","YouTube","Discord"],
       rights:"© 2026 ALTAIR eSports · Tüm hakları saklıdır",
       competing:"Mücadele ettiği lig",
       privacy:"Gizlilik",
@@ -1220,6 +1276,25 @@ const css = `
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+.skip-link{
+  position:fixed;
+  top:10px;
+  left:10px;
+  z-index:1000;
+  padding:10px 14px;
+  color:var(--bg);
+  background:var(--cyan);
+  font-family:var(--f-mono);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  text-decoration:none;
+  transform:translateY(-150%);
+  transition:transform .18s ease;
+}
+.skip-link:focus{transform:translateY(0)}
 body{
   background:#030711;
   color:#e6ecf5;
@@ -1490,6 +1565,170 @@ body::after{
   max-width:38ch;
 }
 
+.identity-story{
+  display:grid;
+  grid-template-columns:minmax(220px,.7fr) minmax(0,1.3fr);
+  gap:18px;
+  margin-bottom:18px;
+}
+.identity-origin,
+.identity-manifesto{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(126,211,255,.14);
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 88% 0%,rgba(34,211,238,.13),transparent 38%),
+    linear-gradient(145deg,rgba(255,255,255,.06),rgba(7,13,24,.82));
+  box-shadow:0 24px 64px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.identity-origin{
+  min-height:280px;
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.identity-origin-year{
+  color:var(--cyan);
+  font-family:var(--f-display);
+  font-size:clamp(70px,7vw,112px);
+  font-weight:900;
+  line-height:.8;
+  letter-spacing:-.06em;
+  text-shadow:0 0 38px rgba(34,211,238,.2);
+}
+.identity-origin-meta{display:flex;flex-direction:column;gap:7px}
+.identity-origin-founded{
+  color:var(--text);
+  font-family:var(--f-narrow);
+  font-size:17px;
+  font-weight:800;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+.identity-origin-founders{
+  color:var(--text-2);
+  font-family:var(--f-mono);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.identity-manifesto{
+  min-height:280px;
+  padding:34px 38px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.identity-manifesto-title{
+  max-width:20ch;
+  color:var(--text);
+  font-family:var(--f-display);
+  font-size:clamp(30px,3.3vw,50px);
+  font-weight:800;
+  line-height:.95;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+.identity-manifesto-text{max-width:68ch;margin-top:18px;color:var(--text-2);font-size:14px;line-height:1.72}
+.identity-motto{
+  margin-top:28px;
+  padding:17px 20px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  border-left:2px solid var(--cyan);
+  background:linear-gradient(90deg,rgba(34,211,238,.09),transparent);
+}
+.identity-motto-label{
+  flex-shrink:0;
+  color:var(--cyan);
+  font-family:var(--f-mono);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.identity-motto-text{
+  color:var(--text);
+  font-family:var(--f-narrow);
+  font-size:clamp(18px,2vw,25px);
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.honours{
+  border-top:1px solid rgba(126,211,255,.11);
+  border-bottom:1px solid rgba(126,211,255,.08);
+  background:
+    radial-gradient(circle at 85% 8%,rgba(251,191,36,.1),transparent 28%),
+    radial-gradient(circle at 10% 72%,rgba(34,211,238,.08),transparent 30%),
+    linear-gradient(180deg,rgba(4,9,17,.99),rgba(8,14,25,.985));
+}
+.honours-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.honour-card{
+  position:relative;
+  min-height:270px;
+  padding:25px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 88% 4%,rgba(251,191,36,.11),transparent 34%),
+    linear-gradient(155deg,rgba(19,29,45,.88),rgba(6,11,20,.98));
+  box-shadow:0 20px 46px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.045);
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.honour-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(251,191,36,.3);
+  box-shadow:0 28px 58px rgba(0,0,0,.3),0 0 28px rgba(251,191,36,.055),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.honour-mark{
+  color:#fbbf24;
+  font-family:var(--f-display);
+  font-size:clamp(52px,5vw,76px);
+  font-weight:900;
+  line-height:.85;
+  letter-spacing:-.06em;
+  text-shadow:0 0 28px rgba(251,191,36,.16);
+}
+.honour-copy{margin-top:auto;padding-top:46px}
+.honour-season{
+  color:var(--cyan);
+  font-family:var(--f-mono);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.honour-competition{
+  margin-top:9px;
+  color:var(--text);
+  font-family:var(--f-display);
+  font-size:22px;
+  font-weight:800;
+  line-height:1.02;
+  letter-spacing:.025em;
+  text-transform:uppercase;
+}
+.honour-result{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.08);
+  color:var(--text-2);
+  font-family:var(--f-narrow);
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    NAVIGATION
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
@@ -1646,6 +1885,90 @@ body::after{
   box-shadow:0 0 0 6px rgba(34,211,238,.08);
 }
 
+.nav-menu{display:none;position:relative}
+.nav-menu-toggle{
+  width:38px;
+  height:38px;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  border:1px solid var(--line-2);
+  border-radius:50%;
+  color:var(--text);
+  background:linear-gradient(180deg,rgba(17,25,39,.95),rgba(10,16,27,.98));
+  cursor:pointer;
+  transition:border-color .2s ease,background .2s ease,box-shadow .2s ease;
+}
+.nav-menu-toggle span{
+  width:15px;
+  height:1px;
+  background:currentColor;
+  transition:transform .2s ease,opacity .2s ease;
+}
+.nav-menu-toggle:hover,
+.nav-menu-toggle.active{
+  border-color:var(--cyan-edge);
+  color:var(--cyan);
+  box-shadow:0 0 0 3px rgba(34,211,238,.08);
+}
+.nav-menu-toggle.active span:first-child{transform:translateY(3px) rotate(45deg)}
+.nav-menu-toggle.active span:last-child{transform:translateY(-3px) rotate(-45deg)}
+.nav-mobile-panel{
+  position:absolute;
+  top:calc(100% + 12px);
+  right:0;
+  width:min(290px,calc(100vw - 32px));
+  padding:12px;
+  border:1px solid var(--line-cyan);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at top right,rgba(34,211,238,.12),transparent 48%),
+    linear-gradient(180deg,rgba(12,19,31,.99),rgba(7,12,21,.99));
+  box-shadow:0 24px 70px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.04);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+}
+.nav-mobile-head{
+  padding:4px 4px 11px;
+  color:var(--cyan);
+  font-family:var(--f-mono);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.17em;
+  text-transform:uppercase;
+}
+.nav-mobile-links{display:flex;flex-direction:column;gap:6px;list-style:none}
+.nav-mobile-links a{
+  min-height:42px;
+  padding:0 13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:14px;
+  color:var(--text-2);
+  background:rgba(255,255,255,.025);
+  font-family:var(--f-narrow);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  text-decoration:none;
+  transition:color .2s ease,border-color .2s ease,background .2s ease;
+}
+.nav-mobile-links a::after{content:'→';color:var(--muted);font-family:var(--f-mono)}
+.nav-mobile-links a:hover{color:var(--cyan);border-color:var(--cyan-edge);background:var(--cyan-soft)}
+.nav-mobile-links .nav-mobile-primary{
+  margin-top:4px;
+  color:var(--bg);
+  border-color:transparent;
+  background:linear-gradient(135deg,var(--cyan),var(--cyan-2));
+}
+.nav-mobile-links .nav-mobile-primary::after{color:var(--bg)}
+
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    HERO
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
@@ -1801,6 +2124,67 @@ body::after{
 .hero-sub strong{color:var(--text);font-weight:600}
 
 .hero-ctas{display:flex;gap:12px;margin-top:40px;flex-wrap:wrap;animation:heroUp .9s .2s cubic-bezier(.16,1,.3,1) both}
+.hero-pathways{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  margin-top:30px;
+  border:1px solid rgba(126,211,255,.13);
+  background:
+    linear-gradient(90deg,rgba(34,211,238,.055),transparent 62%),
+    rgba(4,10,19,.48);
+  box-shadow:0 18px 42px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.035);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  animation:heroUp .9s .28s cubic-bezier(.16,1,.3,1) both;
+}
+.hero-pathway{
+  min-width:0;
+  padding:15px 16px 14px;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  position:relative;
+  color:var(--text);
+  text-decoration:none;
+  border-left:1px solid rgba(255,255,255,.075);
+  transition:background .2s ease,color .2s ease,transform .2s ease;
+}
+.hero-pathway:first-child{border-left:none}
+.hero-pathway::after{
+  content:'↗';
+  position:absolute;
+  right:13px;
+  top:12px;
+  color:var(--muted);
+  font-family:var(--f-mono);
+  font-size:11px;
+  transition:color .2s ease,transform .2s ease;
+}
+.hero-pathway:hover{
+  background:linear-gradient(180deg,rgba(34,211,238,.09),rgba(34,211,238,.025));
+  color:var(--cyan);
+  transform:translateY(-2px);
+}
+.hero-pathway:hover::after{color:var(--cyan);transform:translate(2px,-2px)}
+.hero-pathway-label{
+  padding-right:20px;
+  color:var(--cyan);
+  font-family:var(--f-mono);
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.17em;
+  text-transform:uppercase;
+}
+.hero-pathway-value{
+  max-width:18ch;
+  color:inherit;
+  font-family:var(--f-narrow);
+  font-size:12px;
+  font-weight:800;
+  line-height:1.2;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
 .btn{
   display:inline-flex;align-items:center;gap:10px;
   padding:15px 28px;
@@ -2664,8 +3048,8 @@ body::after{
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .sponsors{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--bg),var(--surface-0) 100%)}
 .sponsors .sec-hdr{margin-bottom:26px}
-.sp-top{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:start;margin-bottom:44px}
-.sp-top p{font-size:15px;line-height:1.75;color:var(--text-2);font-weight:400;max-width:540px;margin:0}
+.sp-top{margin-bottom:32px}
+.sp-top p{font-size:15px;line-height:1.75;color:var(--text-2);font-weight:400;max-width:760px;margin:0}
 .sp-kpis{
   position:relative;
   display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
@@ -2832,16 +3216,94 @@ body::after{
 .sp-cta-sub{font-size:14px;color:var(--text-2);line-height:1.6}
 .sp-cta-actions{position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
 
+.sp-opportunities{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;
+  margin:32px 0 44px;
+}
+.sp-opportunity{
+  position:relative;
+  min-height:270px;
+  padding:28px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  border:1px solid rgba(126,211,255,.14);
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 88% 0%,rgba(34,211,238,.12),transparent 38%),
+    linear-gradient(155deg,rgba(18,29,47,.9),rgba(6,12,22,.98));
+  box-shadow:0 20px 48px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.045);
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.sp-opportunity::after{
+  content:'';
+  position:absolute;
+  left:28px;
+  right:28px;
+  bottom:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--cyan),transparent);
+  opacity:.45;
+}
+.sp-opportunity:hover{
+  transform:translateY(-4px);
+  border-color:rgba(34,211,238,.34);
+  box-shadow:0 28px 62px rgba(0,0,0,.3),0 0 28px rgba(34,211,238,.07),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.sp-opportunity-top{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.sp-opportunity-k{
+  color:var(--cyan);
+  font-family:var(--f-display);
+  font-size:32px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:-.03em;
+}
+.sp-opportunity-status{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  color:var(--text-2);
+  font-family:var(--f-mono);
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.sp-opportunity-status::before{
+  content:'';
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 12px rgba(34,211,238,.65);
+}
+.sp-opportunity-title{
+  margin-top:auto;
+  padding-top:52px;
+  color:var(--text);
+  font-family:var(--f-display);
+  font-size:clamp(23px,2.2vw,32px);
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.025em;
+  text-transform:uppercase;
+}
+.sp-opportunity-text{margin-top:14px;color:var(--text-2);font-size:13.5px;line-height:1.65}
+
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SOCIAL
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-.social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.social-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
 .sc{
   position:relative;overflow:hidden;
   padding:28px 26px;
   background:var(--surface-1);border:1px solid var(--line);
   text-decoration:none;color:inherit;display:block;
   transition:all .28s ease;
+  grid-column:span 2;
 }
 .sc::before{
   content:'';position:absolute;inset:0;
@@ -2861,6 +3323,29 @@ body::after{
 .sc.yt{--sc-color:#ff0033;--sc-glow:rgba(255,0,51,.12)}
 .sc.ig{--sc-color:#e1306c;--sc-glow:rgba(225,48,108,.12)}
 .sc.dc{--sc-color:#5865f2;--sc-glow:rgba(88,101,242,.15)}
+.sc.featured{
+  grid-column:1 / -1;
+  min-height:300px;
+  padding:42px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  background:
+    radial-gradient(circle at 88% 12%,rgba(225,48,108,.16),transparent 30%),
+    radial-gradient(circle at 66% 82%,rgba(34,211,238,.1),transparent 34%),
+    linear-gradient(145deg,rgba(21,24,41,.96),rgba(7,12,22,.99));
+  border-color:rgba(225,48,108,.24);
+  border-radius:28px;
+  box-shadow:0 28px 70px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.sc.featured::after{transform:scaleX(1);height:3px}
+.sc.featured .sc-head{position:absolute;top:34px;left:42px;right:42px}
+.sc.featured .sc-icon{width:52px;height:52px;font-size:15px;border-color:rgba(225,48,108,.34);color:#f472b6}
+.sc.featured .sc-live{color:#f9a8d4}
+.sc.featured .sc-platform{font-size:clamp(34px,4vw,58px);line-height:.9}
+.sc.featured .sc-handle{font-size:12px;margin-top:10px}
+.sc.featured .sc-desc{max-width:660px;font-size:15px;margin-bottom:20px}
+.sc.featured .sc-cta{font-size:13px}
 
 .sc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
 .sc-icon{
@@ -2943,6 +3428,8 @@ body::after{
   .st-kpi{padding:0 16px;min-width:70px}
   .sp-top{grid-template-columns:1fr;gap:32px}
   .social-grid{grid-template-columns:repeat(2,1fr)}
+  .sc{grid-column:span 1}
+  .sc.featured{grid-column:1 / -1}
   .footer-top{grid-template-columns:1fr 1fr;gap:40px}
 }
 
@@ -3009,6 +3496,7 @@ body::after{
   .nav{height:64px;padding-top:8px;align-items:flex-start}
   .nav.scrolled{height:60px}
   .nav-links{display:none}
+  .nav-menu{display:block}
   .nav-left{flex:1;min-width:0}
   .nav-logo{gap:10px;min-width:0}
   .nav-wm{min-width:0}
@@ -3056,6 +3544,26 @@ body::after{
   .hero-h1 .l-3{font-size:.34em;line-height:1.04;letter-spacing:.12em}
   .hero-sub{font-size:14px;margin-top:18px;max-width:none}
   .hero-ctas{margin-top:24px;width:100%;display:grid;grid-template-columns:1fr;gap:10px}
+  .hero-pathways{
+    grid-template-columns:1fr;
+    margin-top:16px;
+    border-radius:18px;
+    overflow:hidden;
+  }
+  .hero-pathway{
+    min-height:52px;
+    padding:11px 14px;
+    display:grid;
+    grid-template-columns:minmax(86px,.7fr) 1.3fr;
+    align-items:center;
+    gap:12px;
+    border-left:none;
+    border-top:1px solid rgba(255,255,255,.075);
+  }
+  .hero-pathway:first-child{border-top:none}
+  .hero-pathway::after{top:50%;right:14px;transform:translateY(-50%)}
+  .hero-pathway:hover::after{transform:translate(2px,calc(-50% - 2px))}
+  .hero-pathway-value{padding-right:22px;max-width:none;font-size:11px}
   .btn{width:100%;justify-content:center;padding:13px 18px;font-size:11px;letter-spacing:.12em;border-radius:999px}
   .hero-scroll{display:none}
 
@@ -3079,10 +3587,20 @@ body::after{
   .sec-actions > span{width:100%}
   .sec-link,.refresh-btn{flex:1 1 calc(50% - 5px);justify-content:center;font-size:10px;padding:10px 12px}
   .identity-grid{grid-template-columns:1fr;gap:12px}
+  .identity-story{grid-template-columns:1fr;gap:12px}
+  .identity-origin{min-height:220px;padding:22px;border-radius:22px}
+  .identity-manifesto{min-height:auto;padding:24px 22px;border-radius:22px}
+  .identity-manifesto-title{font-size:31px}
+  .identity-manifesto-text{font-size:13px}
+  .identity-motto{margin-top:20px;padding:14px 15px;align-items:flex-start;flex-direction:column;gap:8px}
+  .identity-motto-text{font-size:18px}
   .identity-card{min-height:220px;padding:22px;border-radius:22px}
   .identity-copy{margin-top:34px}
   .identity-title{font-size:28px}
   .identity-text{font-size:13px;max-width:none}
+  .honours-grid{grid-template-columns:1fr;gap:12px}
+  .honour-card{min-height:220px;padding:22px;border-radius:22px}
+  .honour-copy{padding-top:36px}
 
   /* Standings â€” mobilde */
   .st-hero{flex-direction:column;align-items:flex-start;gap:16px;padding:20px var(--pad-x) 16px}
@@ -3329,6 +3847,10 @@ body::after{
   /* Sponsors */
   .sp-top{margin-bottom:36px;gap:28px}
   .sp-top p{font-size:13px}
+  .sp-opportunities{margin:24px 0 32px;gap:12px}
+  .sp-opportunity{min-height:230px;padding:22px;border-radius:22px}
+  .sp-opportunity-title{padding-top:38px;font-size:25px}
+  .sp-opportunity-text{font-size:13px}
   .p-card{border-radius:22px}
   .sp-kpis{
     grid-template-columns:1fr 1fr;gap:8px;margin-top:0;padding:10px;
@@ -3362,6 +3884,11 @@ body::after{
   /* Social */
   .social-grid{grid-template-columns:1fr;gap:10px}
   .sc{padding:20px 18px;border-radius:22px;box-shadow:0 16px 36px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.03)}
+  .sc,.sc.featured{grid-column:1}
+  .sc.featured{min-height:310px;padding:24px 20px}
+  .sc.featured .sc-head{top:20px;left:20px;right:20px}
+  .sc.featured .sc-platform{font-size:36px}
+  .sc.featured .sc-desc{font-size:13px}
   .sc-head{margin-bottom:16px}
   .sc-icon{width:36px;height:36px;font-size:11px}
   .sc-live{font-size:8px}
@@ -3396,7 +3923,7 @@ body::after{
   .nav-right{gap:6px}
   .nav-burger{min-width:64px;padding:0 10px}
   .nav-lang-trigger-main{display:none}
-  .nav-cta{max-width:122px;padding:0 12px}
+  .nav-cta{display:none}
 
   .hero-left{margin:12px var(--pad-x) 28px;padding:24px 18px 24px;border-radius:24px}
   .hero-h1{font-size:clamp(36px,12vw,54px)}
@@ -3475,17 +4002,25 @@ body::after{
 
 function Navigation({ scrolled, activeLang, setActiveLang, copy }) {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const langMenuRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     const onPointerDown = (event) => {
       if (!langMenuRef.current?.contains(event.target)) {
         setLangMenuOpen(false);
       }
+      if (!mobileMenuRef.current?.contains(event.target)) {
+        setMobileMenuOpen(false);
+      }
     };
 
     const onKeyDown = (event) => {
-      if (event.key === "Escape") setLangMenuOpen(false);
+      if (event.key === "Escape") {
+        setLangMenuOpen(false);
+        setMobileMenuOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", onPointerDown);
@@ -3522,13 +4057,47 @@ function Navigation({ scrolled, activeLang, setActiveLang, copy }) {
       </ul>
       <div className="nav-right">
         <a href="#broadcast" className="nav-cta">{copy.nav.cta}</a>
+        <div className="nav-menu" ref={mobileMenuRef}>
+          <button
+            type="button"
+            className={`nav-menu-toggle${mobileMenuOpen ? " active" : ""}`}
+            aria-label={mobileMenuOpen ? copy.nav.menuClose : copy.nav.menu}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => {
+              setMobileMenuOpen((open) => !open);
+              setLangMenuOpen(false);
+            }}
+          >
+            <span/>
+            <span/>
+          </button>
+          {mobileMenuOpen && (
+            <div className="nav-mobile-panel" id="mobile-navigation">
+              <div className="nav-mobile-head">{copy.nav.menu}</div>
+              <ul className="nav-mobile-links">
+                {links.map(([href, label]) => (
+                  <li key={href}>
+                    <a href={href} onClick={() => setMobileMenuOpen(false)}>{label}</a>
+                  </li>
+                ))}
+                <li>
+                  <a href="#broadcast" className="nav-mobile-primary" onClick={() => setMobileMenuOpen(false)}>{copy.nav.cta}</a>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
         <div className="nav-lang" ref={langMenuRef}>
           <button
             className={`nav-burger${langMenuOpen ? " active" : ""}`}
             aria-label={copy.nav.langHead}
             aria-expanded={langMenuOpen}
             aria-haspopup="menu"
-            onClick={() => setLangMenuOpen((open) => !open)}
+            onClick={() => {
+              setLangMenuOpen((open) => !open);
+              setMobileMenuOpen(false);
+            }}
           >
             <span className="nav-lang-trigger-main">
               <span className="nav-lang-trigger-label">Lang</span>
@@ -3613,6 +4182,15 @@ function Hero({ copy, lang }) {
           <a href="#squad" className="btn btn-secondary">
             {copy.hero.secondary}
           </a>
+        </div>
+
+        <div className="hero-pathways" aria-label={lang === "TR" ? "Site bölümleri" : "Explore ALTAIR"}>
+          {copy.hero.pathways.map((pathway) => (
+            <a key={pathway.href} href={pathway.href} className="hero-pathway">
+              <span className="hero-pathway-label">{pathway.label}</span>
+              <span className="hero-pathway-value">{pathway.value}</span>
+            </a>
+          ))}
         </div>
       </div>
 
@@ -3707,6 +4285,28 @@ function ClubIdentity({ copy }) {
             <h2 className="sec-title">{copy.identity.title[0]} <span className="accent">{copy.identity.title[1]}</span></h2>
             <p className="sec-sub">{copy.identity.sub}</p>
           </div>
+          <div className="sec-actions">
+            <a className="sec-link" href="#honours">{copy.honours.view} <span className="sec-link-arrow">→</span></a>
+          </div>
+        </div>
+
+        <div className="identity-story">
+          <article className="identity-origin">
+            <div className="identity-origin-year">2025</div>
+            <div className="identity-origin-meta">
+              <span className="identity-origin-founded">{copy.identity.founded}</span>
+              <span className="identity-origin-founders">{copy.identity.founders}</span>
+            </div>
+          </article>
+
+          <article className="identity-manifesto">
+            <h3 className="identity-manifesto-title">{copy.identity.storyTitle}</h3>
+            <p className="identity-manifesto-text">{copy.identity.storyText}</p>
+            <div className="identity-motto">
+              <span className="identity-motto-label">{copy.identity.mottoLabel}</span>
+              <span className="identity-motto-text">{copy.identity.motto}</span>
+            </div>
+          </article>
         </div>
 
         <div className="identity-grid">
@@ -3716,6 +4316,35 @@ function ClubIdentity({ copy }) {
               <div className="identity-copy">
                 <h3 className="identity-title">{card.title}</h3>
                 <p className="identity-text">{card.text}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Honours({ copy }) {
+  return (
+    <section className="section honours" id="honours">
+      <div className="container">
+        <div className="sec-hdr">
+          <div className="sec-hdr-left">
+            <div className="sec-eyebrow">{copy.honours.eyebrow}</div>
+            <h2 className="sec-title">{copy.honours.title[0]} <span className="accent">{copy.honours.title[1]}</span></h2>
+            <p className="sec-sub">{copy.honours.sub}</p>
+          </div>
+        </div>
+
+        <div className="honours-grid">
+          {copy.honours.items.map((honour) => (
+            <article key={`${honour.season}-${honour.competition}`} className="honour-card">
+              <div className="honour-mark">{honour.mark}</div>
+              <div className="honour-copy">
+                <div className="honour-season">{honour.season}</div>
+                <h3 className="honour-competition">{honour.competition}</h3>
+                <div className="honour-result">{honour.result}</div>
               </div>
             </article>
           ))}
@@ -4026,9 +4655,6 @@ function PlayerCard({ p, copy }) {
     <>
       <div className="p-top">
         <div className="p-pos">{p.pos}</div>
-        <div className="p-tags">
-          {p.captain && <span className="p-tag p-tag--captain" title={copy.squad.captain}>{copy.squad.captain}</span>}
-        </div>
         <div className="p-flag" aria-hidden="true">{p.flag}</div>
         <div className="p-number" aria-hidden="true">{p.number}</div>
         <div className="p-media">
@@ -4144,14 +4770,6 @@ function Squad({ lang, copy }) {
 }
 
 function Sponsors({ copy }) {
-  const totalPlayers = SQUAD.reduce((count, group) => count + group.players.length, 0);
-  const sponsorKpis = [
-    { val:"200K+", lbl:copy.sponsors.kpis.reach },
-    { val:"VPG", lbl:copy.sponsors.kpis.ranking },
-    { val:"1", lbl:copy.sponsors.kpis.titles },
-    { val:String(totalPlayers), lbl:copy.sponsors.kpis.active },
-  ];
-
   return (
     <section className="section sponsors" id="sponsors">
       <div className="container">
@@ -4164,53 +4782,19 @@ function Sponsors({ copy }) {
 
         <div className="sp-top">
           <p>{copy.sponsors.sub}</p>
-          <div className="sp-kpis">
-            {sponsorKpis.map((k, i) => (
-              <div key={i} className="sp-kpi">
-                <div className="sp-kpi-val">{k.val}</div>
-                <div className="sp-kpi-lbl">{k.lbl}</div>
+        </div>
+
+        <div className="sp-opportunities">
+          {copy.sponsors.opportunities.map((opportunity) => (
+            <article key={opportunity.k} className="sp-opportunity">
+              <div className="sp-opportunity-top">
+                <span className="sp-opportunity-k">{opportunity.k}</span>
+                <span className="sp-opportunity-status">{copy.sponsors.open}</span>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="sp-tier">
-          <div className="sp-tier-head">
-            <span className="sp-tier-label">{copy.sponsors.tiers.title}</span>
-            <div className="sp-tier-line"/>
-            <span className="sp-tier-count">01</span>
-          </div>
-          <div className="sp-row">
-            {SPONSORS.title.map((n) => (
-              <div key={n} className="sp-tile featured"><span className="sp-name title">{n}</span></div>
-            ))}
-          </div>
-        </div>
-
-        <div className="sp-tier">
-          <div className="sp-tier-head">
-            <span className="sp-tier-label">{copy.sponsors.tiers.gold}</span>
-            <div className="sp-tier-line"/>
-            <span className="sp-tier-count">0{SPONSORS.gold.length}</span>
-          </div>
-          <div className="sp-row">
-            {SPONSORS.gold.map((n) => (
-              <div key={n} className="sp-tile"><span className="sp-name gold">{n}</span></div>
-            ))}
-          </div>
-        </div>
-
-        <div className="sp-tier">
-          <div className="sp-tier-head">
-            <span className="sp-tier-label">{copy.sponsors.tiers.official}</span>
-            <div className="sp-tier-line"/>
-            <span className="sp-tier-count">0{SPONSORS.partners.length}</span>
-          </div>
-          <div className="sp-row">
-            {SPONSORS.partners.map((n) => (
-              <div key={n} className="sp-tile"><span className="sp-name partner">{n}</span></div>
-            ))}
-          </div>
+              <h3 className="sp-opportunity-title">{opportunity.title}</h3>
+              <p className="sp-opportunity-text">{opportunity.text}</p>
+            </article>
+          ))}
         </div>
 
         <div className="sp-cta">
@@ -4219,8 +4803,8 @@ function Sponsors({ copy }) {
             <div className="sp-cta-sub">{copy.sponsors.ctaSub}</div>
           </div>
           <div className="sp-cta-actions">
-            <a href="#" className="btn btn-primary">{copy.sponsors.ctaPrimary} <span className="btn-arrow">→</span></a>
-            <a href="#" className="btn btn-secondary">{copy.sponsors.ctaSecondary}</a>
+            <a href="https://www.instagram.com/altairesports/" target="_blank" rel="noopener noreferrer" className="btn btn-primary">{copy.sponsors.ctaPrimary} <span className="btn-arrow">→</span></a>
+            <a href="#broadcast" className="btn btn-secondary">{copy.sponsors.ctaSecondary}</a>
           </div>
         </div>
       </div>
@@ -4229,6 +4813,13 @@ function Sponsors({ copy }) {
 }
 
 function Social({ copy }) {
+  const statusByChannel = {
+    ig: copy.social.statuses.primary,
+    tw: copy.social.statuses.live,
+    yt: copy.social.statuses.archive,
+    dc: copy.social.statuses.community,
+  };
+
   return (
     <section className="section" id="broadcast">
       <div className="container">
@@ -4241,10 +4832,10 @@ function Social({ copy }) {
         </div>
         <div className="social-grid">
           {SOCIAL.map((s, i) => (
-            <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className={`sc ${s.cls}`}>
+            <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className={`sc ${s.cls}${s.featured ? " featured" : ""}`}>
               <div className="sc-head">
                 <div className="sc-icon">{s.icon}</div>
-                <span className="sc-live">{copy.social.official}</span>
+                <span className="sc-live">{statusByChannel[s.cls]}</span>
               </div>
               <div className="sc-platform">{s.platform}</div>
               <div className="sc-handle">{s.handle}</div>
@@ -4259,7 +4850,13 @@ function Social({ copy }) {
 }
 
 function Footer({ lang, copy }) {
-  const clubLinks = copy.footer.clubLinks;
+  const clubLinks = [
+    { label:copy.footer.clubLinks[0], url:"#identity" },
+    { label:copy.footer.clubLinks[1], url:"#honours" },
+    { label:copy.footer.clubLinks[2], url:"#matches" },
+    { label:copy.footer.clubLinks[3], url:"https://www.instagram.com/altairesports/", external:true },
+    { label:copy.footer.clubLinks[4], url:"#broadcast" },
+  ];
   const compLinks = [
     { url:"https://emajorleague.com/teams/team/337/", label:copy.footer.compLinks[0], external:true },
     { url:STANDING_SEASONS.summer.url, label:copy.footer.compLinks[1], external:true },
@@ -4267,7 +4864,13 @@ function Footer({ lang, copy }) {
     { url:"#matches",  label:copy.footer.compLinks[3] },
     { url:"#squad",    label:copy.footer.compLinks[4] },
   ];
-  const connectLinks = copy.footer.connectLinks;
+  const connectLinks = [
+    { label:copy.footer.connectLinks[0], url:"#sponsors" },
+    { label:copy.footer.connectLinks[1], url:"https://www.instagram.com/altairesports/", external:true },
+    { label:copy.footer.connectLinks[2], url:"https://www.twitch.tv/altairespor", external:true },
+    { label:copy.footer.connectLinks[3], url:"https://www.youtube.com/@AltairESPOR", external:true },
+    { label:copy.footer.connectLinks[4], url:"https://discord.gg/uMgQKQmr", external:true },
+  ];
 
   return (
     <footer className="footer">
@@ -4282,7 +4885,11 @@ function Footer({ lang, copy }) {
           <div>
             <div className="footer-col-title">{copy.footer.titles.club}</div>
             <ul className="footer-links">
-              {clubLinks.map((l) => <li key={l}><a href="#">{l}</a></li>)}
+              {clubLinks.map((l) => (
+                <li key={l.label}>
+                  <a href={l.url} target={l.external ? "_blank" : undefined} rel={l.external ? "noopener noreferrer" : undefined}>{l.label}</a>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
@@ -4298,7 +4905,11 @@ function Footer({ lang, copy }) {
           <div>
             <div className="footer-col-title">{copy.footer.titles.connect}</div>
             <ul className="footer-links">
-              {connectLinks.map((l) => <li key={l}><a href="#">{l}</a></li>)}
+              {connectLinks.map((l) => (
+                <li key={l.label}>
+                  <a href={l.url} target={l.external ? "_blank" : undefined} rel={l.external ? "noopener noreferrer" : undefined}>{l.label}</a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -4317,7 +4928,7 @@ function Footer({ lang, copy }) {
 
 export default function AltairFC() {
   const [scrolled, setScrolled] = useState(false);
-  const [activeLang, setActiveLang] = useState("EN");
+  const [activeLang, setActiveLang] = useState("TR");
   const fixtureData = useFixtures();
   const copy = UI_COPY[activeLang] || UI_COPY.EN;
 
@@ -4328,15 +4939,21 @@ export default function AltairFC() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = activeLang === "TR" ? "tr" : "en";
+  }, [activeLang]);
+
   return (
     <>
       <style>{css}</style>
 
+      <a className="skip-link" href="#top">{activeLang === "TR" ? "İçeriğe geç" : "Skip to content"}</a>
       <div className={`site site--${activeLang.toLowerCase()}`}>
         <Navigation scrolled={scrolled} activeLang={activeLang} setActiveLang={setActiveLang} copy={copy}/>
         <Hero copy={copy} lang={activeLang}/>
         <Ticker lang={activeLang} copy={copy} results={fixtureData.results} fixtures={fixtureData.fixtures}/>
         <ClubIdentity copy={copy}/>
+        <Honours copy={copy}/>
         <Standings lang={activeLang} copy={copy}/>
         <Results {...fixtureData} lang={activeLang} copy={copy}/>
         <Fixtures {...fixtureData} lang={activeLang} copy={copy}/>
