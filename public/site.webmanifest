@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "ALTAIR eSports",
+  "short_name": "ALTAIR",
+  "description": "ALTAIR eSports resmi sitesi.",
+  "lang": "tr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#030711",
+  "theme_color": "#030711",
+  "icons": [
+    {
+      "src": "/logo-ui.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

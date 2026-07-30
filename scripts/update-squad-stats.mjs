@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
-const appFile = path.join(rootDir, "src", "App.jsx");
+const squadFile = path.join(rootDir, "src", "data", "squad.js");
 
 const TEAM_PAGE_URL = "https://emajorleague.com/team/ALTAIReSports/";
 const SQUAD_ROUTE_RE = /href=["']([^"'#?]*\/teams\/team\/\d+\/\d+\/\d+\/squad[^"'#?]*)["']/gi;
@@ -138,12 +138,12 @@ function resolveSquadUrl(baseUrl, html) {
 }
 
 async function main() {
-  const source = await fs.readFile(appFile, "utf8");
+  const source = await fs.readFile(squadFile, "utf8");
   const players = extractPlayers(source);
   const playerKeys = new Set(players.map((player) => player.key).filter(Boolean));
 
   if (!playerKeys.size) {
-    throw new Error("No squad players with nicknames were found in src/App.jsx.");
+    throw new Error("No squad players with nicknames were found in src/data/squad.js.");
   }
 
   const teamHtml = await fetchHtml(TEAM_PAGE_URL);
@@ -186,12 +186,12 @@ async function main() {
   });
 
   if (updatedSource !== source) {
-    await fs.writeFile(appFile, updatedSource, "utf8");
+    await fs.writeFile(squadFile, updatedSource, "utf8");
   }
 
   const matched = players.filter((player) => statsByIgn.has(player.key)).length;
   console.log(`Matched ${matched} squad nicknames from eMajor League.`);
-  console.log(`Updated ${updatedCount} player stat line(s) in src/App.jsx.`);
+  console.log(`Updated ${updatedCount} player stat line(s) in src/data/squad.js.`);
 }
 
 main().catch((error) => {
