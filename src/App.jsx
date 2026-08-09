@@ -4,29 +4,44 @@ import "./App.css";
 import { PartnershipSection } from "./components/PartnershipSection";
 import { SocialHub } from "./components/SocialHub";
 import { SiteFooter } from "./components/SiteFooter";
+import {
+  ACTIVE_COMPETITION,
+  COMPETITION_SEASONS,
+  DEFAULT_COMPETITION_SEASON,
+  EML_SNAPSHOT_PATH,
+  EML_TEAM_PATH,
+} from "./config/competition";
 
 /* useStandings - inline hook for EML standings */
 
 const CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
 const FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
 
-const STANDING_SEASONS = {
-  s2: {
-    key: "s2",
-    tournamentId: 39,
-    locked: true,
-    url: "https://emajorleague.com/tournaments/league_table/39/",
-    label: { EN:"EML FC26 S2", TR:"EML FC26 S2" },
-  },
-  summer: {
-    key: "summer",
-    tournamentId: 42,
-    locked: false,
-    url: "https://emajorleague.com/tournaments/league_table/42/",
-    label: { EN:"EML FC26 Summer League", TR:"EML FC26 Yaz Ligi" },
-  },
-};
-const DEFAULT_STANDING_SEASON = "summer";
+const STANDING_SEASONS = COMPETITION_SEASONS;
+const DEFAULT_STANDING_SEASON = DEFAULT_COMPETITION_SEASON;
+
+let snapshotRequest = null;
+
+async function readSiteSnapshot() {
+  if (!snapshotRequest) {
+    snapshotRequest = fetch(EML_SNAPSHOT_PATH, { cache:"no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Snapshot HTTP ${response.status}`);
+        return response.json();
+      })
+      .catch((error) => {
+        snapshotRequest = null;
+        throw error;
+      });
+  }
+
+  return snapshotRequest;
+}
+
+function getSnapshotDate(snapshot) {
+  const timestamp = Date.parse(snapshot?.generatedAt || "");
+  return Number.isFinite(timestamp) ? new Date(timestamp) : null;
+}
 
 const STANDINGS_S2_LOCKED = [
   { rank:1, abbr:"SAM", name:"SAMURAI", pld:34, w:28, d:4, l:2, gf:91, ga:19, gd:"+72", pts:88, form:"WWW", me:false },
@@ -165,7 +180,20 @@ function useStandings(seasonKey = DEFAULT_STANDING_SEASON) {
         if (!cancelled) { setAllTeams(parsed); setLastUpdate(new Date()); }
       } catch (err) {
         console.warn("[useStandings]", err.message);
-        if (!cancelled) { setError(err.message); setAllTeams(fallback); }
+        let snapshotTeams = null;
+        let snapshotDate = null;
+
+        try {
+          const snapshot = await readSiteSnapshot();
+          snapshotTeams = snapshot?.standings?.[String(season.tournamentId)] || null;
+          snapshotDate = getSnapshotDate(snapshot);
+        } catch { /* static fallback remains available */ }
+
+        if (!cancelled) {
+          setError(err.message);
+          setAllTeams(Array.isArray(snapshotTeams) && snapshotTeams.length ? snapshotTeams : fallback);
+          if (snapshotDate) setLastUpdate(snapshotDate);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -183,15 +211,15 @@ function useStandings(seasonKey = DEFAULT_STANDING_SEASON) {
 
 /* useFixtures - fetches EML matchdays, then splits ALTAIR results and fixtures */
 
-const FIX_CACHE_KEY  = "altair_fixtures_v9";
+const FIX_CACHE_KEY  = "altair_fixtures_v10";
 const FIX_CACHE_MAX  = 24 * 60 * 60 * 1000;  // 24 saat
 const FIX_FRIDAY_TTL = 60 * 60 * 1000;       // Cuma günü 1 saat
-const TOTAL_MATCHDAYS = 13;
-const TOURNAMENT_ID   = 42;
-// ALTAIR'in oynadığı bilinen yeni sezon matchday'leri; gereksiz istekleri azaltır.
-const ALTAIR_MATCHDAYS = [1,2,3,4,5,6,7,8,9,10,11,12,13];
+const TOTAL_MATCHDAYS = ACTIVE_COMPETITION.totalMatchdays;
+const TOURNAMENT_ID   = ACTIVE_COMPETITION.tournamentId;
+// ALTAIR'in oynadığı bilinen aktif sezon maç haftaları; gereksiz istekleri azaltır.
+const ALTAIR_MATCHDAYS = ACTIVE_COMPETITION.matchdays;
 const ALTAIR_NAME     = "altair esports";
-const COMPETITION     = "EML FC26 Summer League";
+const COMPETITION     = ACTIVE_COMPETITION.competition;
 
 // Month helpers
 const MONTHS = ["","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
@@ -343,7 +371,7 @@ function getEnglishDateParts(value) {
 }
 
 function localizeCompetition(lang = "EN") {
-  return lang === "TR" ? "EML FC26 Yaz Ligi" : "EML FC26 Summer League";
+  return ACTIVE_COMPETITION.label[lang] || ACTIVE_COMPETITION.label.EN;
 }
 
 function localizeDisplayMatch(match, lang = "EN") {
@@ -491,6 +519,18 @@ function writeFixCache(data) {
   catch { /**/ }
 }
 
+async function readFixtureSnapshot() {
+  try {
+    const snapshot = await readSiteSnapshot();
+    const matches = Array.isArray(snapshot?.matches)
+      ? snapshot.matches.map(normalizeFixtureMatch)
+      : [];
+    return { matches, date:getSnapshotDate(snapshot) };
+  } catch {
+    return { matches:[], date:null };
+  }
+}
+
 function useFixtures() {
   const [allMatches,  setAllMatches]  = useState(null);
   const [fixturesLoading, setFixturesLoading] = useState(true);
@@ -562,23 +602,31 @@ function useFixtures() {
 
         results.sort((a, b) => a.id - b.id);
 
-        if (!cancelled) {
-          if (results.length) {
-            const normalizedResults = results.map(normalizeFixtureMatch);
-            writeFixCache(normalizedResults);
+        if (results.length) {
+          const normalizedResults = results.map(normalizeFixtureMatch);
+          writeFixCache(normalizedResults);
+          if (!cancelled) {
             setAllMatches(normalizedResults);
             setLastUpdate(new Date());
-          } else {
-            // HiÃ§ veri gelmediyse fallback
-            if (!hasExistingData) setAllMatches([]);
           }
+        } else {
+          const snapshot = await readFixtureSnapshot();
+          if (!cancelled) {
+            if (!hasExistingData) setAllMatches(snapshot.matches);
+            if (snapshot.date) setLastUpdate(snapshot.date);
+            setError("Live fixture data unavailable");
+          }
+        }
+        if (!cancelled) {
           setFixturesLoading(false);
         }
       } catch (err) {
         console.warn("[useFixtures]", err.message);
+        const snapshot = await readFixtureSnapshot();
         if (!cancelled) {
           setError(err.message);
-          if (!hasExistingData) setAllMatches([]);
+          if (!hasExistingData) setAllMatches(snapshot.matches);
+          if (snapshot.date) setLastUpdate(snapshot.date);
           setFixturesLoading(false);
         }
       }
@@ -632,24 +680,23 @@ function ClubBadge({ className, isAltair, label }) {
    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const RESULTS_FALLBACK = [
-  { id:10.1, date:"31 July 2026", matchday:"GW 10", competition:"EML FC26 Summer League", home:"Liderpool FC", homeAbbr:"LID", away:"ALTAIR eSports", awayAbbr:"ALT", hs:0, as:2, result:"W", venue:"Away" },
+  { id:10.1, date:"07 August 2026", matchday:"GW 10", competition:"EML FC26 Summer League", home:"Liderpool FC", homeAbbr:"LID", away:"ALTAIR eSports", awayAbbr:"ALT", hs:0, as:2, result:"W", venue:"Away" },
+  { id:9.1,  date:"07 August 2026", matchday:"GW 9",  competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"FC BIG BANG", awayAbbr:"FCB", hs:3, as:1, result:"W", venue:"Home" },
+  { id:8.1,  date:"31 July 2026", matchday:"GW 8",  competition:"EML FC26 Summer League", home:"Gunners", homeAbbr:"GUN", away:"ALTAIR eSports", awayAbbr:"ALT", hs:3, as:2, result:"L", venue:"Away" },
+  { id:7.1,  date:"31 July 2026", matchday:"GW 7",  competition:"EML FC26 Summer League", home:"3 Silahşörler", homeAbbr:"SIL", away:"ALTAIR eSports", awayAbbr:"ALT", hs:0, as:0, result:"D", venue:"Away" },
   { id:6.1,  date:"17 July 2026", matchday:"GW 6",  competition:"EML FC26 Summer League", home:"Glarung FC", homeAbbr:"GLA", away:"ALTAIR eSports", awayAbbr:"ALT", hs:2, as:0, result:"L", venue:"Away" },
-  { id:5.1,  date:"17 July 2026", matchday:"GW 5",  competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"B2B SK", awayAbbr:"B2B", hs:2, as:4, result:"L", venue:"Home" },
-  { id:4.1,  date:"10 July 2026", matchday:"GW 4",  competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"In Flame", awayAbbr:"INF", hs:2, as:3, result:"L", venue:"Home" },
-  { id:3.1,  date:"10 July 2026", matchday:"GW 3",  competition:"EML FC26 Summer League", home:"invictus x", homeAbbr:"INV", away:"ALTAIR eSports", awayAbbr:"ALT", hs:1, as:1, result:"D", venue:"Away" },
 ];
 
 const FIXTURES_FALLBACK = [
-  { id:9.1,  date:"31 July 2026", day:"31", month:"JUL", time:"22:30", matchday:"GW 9",  competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"FC BIG BANG", awayAbbr:"FCB", venue:"Home" },
-  { id:11.1, date:"07 August 2026", day:"07", month:"AUG", time:"22:30", matchday:"GW 11", competition:"EML FC26 Summer League", home:"Saray Bahçe eSpor", homeAbbr:"SAR", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
-  { id:12.1, date:"07 August 2026", day:"07", month:"AUG", time:"23:00", matchday:"GW 12", competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Shelter FC", awayAbbr:"SHE", venue:"Home" },
-  { id:13.1, date:"14 August 2026", day:"14", month:"AUG", time:"22:30", matchday:"GW 13", competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Papatya SK", awayAbbr:"PAP", venue:"Home" },
+  { id:11.1, date:"14 August 2026", day:"14", month:"AUG", time:"22:30", matchday:"GW 11", competition:"EML FC26 Summer League", home:"Saray Bahçe eSpor", homeAbbr:"SAR", away:"ALTAIR eSports", awayAbbr:"ALT", venue:"Away" },
+  { id:12.1, date:"14 August 2026", day:"14", month:"AUG", time:"23:00", matchday:"GW 12", competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Shelter FC", awayAbbr:"SHE", venue:"Home" },
+  { id:13.1, date:"21 August 2026", day:"21", month:"AUG", time:"22:30", matchday:"GW 13", competition:"EML FC26 Summer League", home:"ALTAIR eSports", homeAbbr:"ALT", away:"Papatya SK", awayAbbr:"PAP", venue:"Home" },
 ];
 
-const SQUAD_CACHE_KEY = "altair_squad_roster_v4";
+const SQUAD_CACHE_KEY = "altair_squad_roster_v6";
 const SQUAD_CACHE_MAX = 15 * 60 * 1000;
 const SQUAD_POLL_MS = 5 * 60 * 1000;
-const TEAM_PAGE_PATH = "/team/ALTAIReSports/";
+const TEAM_PAGE_PATH = EML_TEAM_PATH;
 const SQUAD_ROUTE_RE = /href=["']([^"'#?]*\/teams\/team\/\d+\/\d+\/\d+\/squad[^"'#?]*)["']/gi;
 const SQUAD_GROUP_ORDER = [
   { group:"Goalkeepers", abbr:"GK" },
@@ -816,16 +863,15 @@ function buildLiveSquad(baseSquad, roster) {
     const liveMeta = POSITION_META[livePlayer.pos] || POSITION_META.ST;
 
     if (known) {
-      const player = known.player.pending
-        ? { ...known.player, pos:livePlayer.pos, role:liveMeta.role }
-        : {
-            ...known.player,
-            pos:livePlayer.pos,
-            role:liveMeta.role,
-            apps:livePlayer.apps ?? known.player.apps,
-            goals:livePlayer.goals ?? known.player.goals,
-            assists:livePlayer.assists ?? known.player.assists,
-          };
+      const player = {
+        ...known.player,
+        pos:livePlayer.pos,
+        role:liveMeta.role,
+        apps:livePlayer.apps ?? known.player.apps,
+        goals:livePlayer.goals ?? known.player.goals,
+        assists:livePlayer.assists ?? known.player.assists,
+        profileUrl:normalizePlayerProfileUrl(livePlayer.profileUrl) || known.player.profileUrl,
+      };
       groups.get(liveMeta.group)?.players.push(player);
       continue;
     }
@@ -838,9 +884,9 @@ function buildLiveSquad(baseSquad, roster) {
       role:liveMeta.role,
       flag:"",
       init:makePlayerInitials(livePlayer.ign),
-      apps:null,
-      goals:null,
-      assists:null,
+      apps:livePlayer.apps,
+      goals:livePlayer.goals,
+      assists:livePlayer.assists,
       captain:false,
       profileUrl:normalizePlayerProfileUrl(livePlayer.profileUrl),
       pending:true,
@@ -928,11 +974,25 @@ function useSquadStats() {
         }
       } catch (err) {
         console.warn("[useSquadStats]", err.message);
+        const staleCache = readSquadCache(true);
+        let snapshotSquad = null;
+        let snapshotDate = null;
+
+        if (!staleCache?.data) {
+          try {
+            const snapshot = await readSiteSnapshot();
+            if (Array.isArray(snapshot?.roster) && snapshot.roster.length >= 5) {
+              snapshotSquad = buildLiveSquad(SQUAD, snapshot.roster);
+              snapshotDate = getSnapshotDate(snapshot);
+            }
+          } catch { /* local fallback remains available */ }
+        }
+
         if (!cancelled) {
-          const staleCache = readSquadCache(true);
           setError(err.message);
-          setSquad(staleCache?.data || SQUAD);
+          setSquad(staleCache?.data || snapshotSquad || SQUAD);
           if (staleCache?.ts) setLastUpdate(new Date(staleCache.ts));
+          else if (snapshotDate) setLastUpdate(snapshotDate);
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -1441,6 +1501,16 @@ function Navigation({ scrolled, activeLang, activeSection, setActiveLang, copy }
     };
   }, []);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileMenuOpen]);
+
   const links = [
     ["#matches",   copy.nav.links.results],
     ["#standings", copy.nav.links.table],
@@ -1693,13 +1763,12 @@ function Ticker({ lang, copy, results = [], fixtures = [] }) {
   );
 }
 
-function ClubUpdates({ lang, copy, fixtures = [] }) {
+function ClubUpdates({ lang, copy, fixtures = [], squadCount }) {
   const nextMatch = localizeDisplayMatch(
     (fixtures.length ? fixtures : FIXTURES_FALLBACK)[0],
     lang,
   );
   const opponent = getTickerOpponent(nextMatch);
-  const squadCount = SQUAD.reduce((total, group) => total + group.players.length, 0);
   const cards = [
     {
       key:"match",
@@ -2217,8 +2286,8 @@ function PlayerCard({ p, copy }) {
   );
 }
 
-function Squad({ lang, copy }) {
-  const { squad, loading, error, lastUpdate, refetch } = useSquadStats();
+function Squad({ lang, copy, squadData }) {
+  const { squad, loading, error, lastUpdate, refetch } = squadData;
   const [activeGroup, setActiveGroup] = useState("all");
   const filters = ["all", "Goalkeepers", "Defenders", "Midfielders", "Forwards"];
   const visibleSquad = activeGroup === "all" ? squad : squad.filter((group) => group.group === activeGroup);
@@ -2334,6 +2403,8 @@ export default function AltairFC() {
   const [activeSection, setActiveSection] = useState("");
   const [activeLang, setActiveLang] = useState("TR");
   const fixtureData = useFixtures();
+  const squadData = useSquadStats();
+  const squadCount = squadData.squad.reduce((total, group) => total + group.players.length, 0);
   const copy = UI_COPY[activeLang] || UI_COPY.EN;
 
   useEffect(() => {
@@ -2384,11 +2455,11 @@ export default function AltairFC() {
           <Ticker lang={activeLang} copy={copy} results={fixtureData.results} fixtures={fixtureData.fixtures}/>
           <ClubIdentity copy={copy}/>
           <Honours copy={copy}/>
-          <ClubUpdates lang={activeLang} copy={copy} fixtures={fixtureData.fixtures}/>
+          <ClubUpdates lang={activeLang} copy={copy} fixtures={fixtureData.fixtures} squadCount={squadCount}/>
           <Standings lang={activeLang} copy={copy}/>
           <Results {...fixtureData} lang={activeLang} copy={copy}/>
           <Fixtures {...fixtureData} lang={activeLang} copy={copy}/>
-          <Squad lang={activeLang} copy={copy}/>
+          <Squad lang={activeLang} copy={copy} squadData={squadData}/>
           <PartnershipSection copy={copy}/>
           <SocialHub copy={copy}/>
         </main>

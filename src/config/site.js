@@ -3,7 +3,7 @@ export const SITE_LINKS = {
   twitch:"https://www.twitch.tv/altairespor",
   youtube:"https://www.youtube.com/@AltairESPOR",
   discord:"https://discord.gg/uMgQKQmr",
-  emlTeam:"https://emajorleague.com/teams/team/337/",
+  emlTeam:"https://emajorleague.com/team/ALTAIReSports/",
   mediaKit:"/media-kit.html",
   privacy:"/privacy.html",
   terms:"/terms.html",

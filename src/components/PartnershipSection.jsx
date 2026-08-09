@@ -56,9 +56,14 @@ export function PartnershipSection({ copy }) {
             <strong>{copy.sponsors.mediaKit.title}</strong>
             <p>{copy.sponsors.mediaKit.text}</p>
           </div>
-          <a href={SITE_LINKS.mediaKit} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-            {copy.sponsors.mediaKit.cta} <span className="btn-arrow">↗</span>
-          </a>
+          <div className="sponsor-resource-actions">
+            <a href={SITE_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+              {copy.sponsors.ctaPrimary} <span className="btn-arrow">↗</span>
+            </a>
+            <a href={SITE_LINKS.mediaKit} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+              {copy.sponsors.mediaKit.cta} <span className="btn-arrow">↗</span>
+            </a>
+          </div>
         </div>
 
         <div className="sponsor-opportunity-list">
