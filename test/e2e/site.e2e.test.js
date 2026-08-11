@@ -96,7 +96,7 @@ test("unknown player slug presents a noindex 404 document", async () => {
   await page.navigate(`${baseUrl}/tr/oyuncular/bilinmeyen-oyuncu`);
   await page.waitFor("Boolean(document.querySelector('h1'))", { message:"unknown player 404 heading" });
   const result = await page.evaluate("({ h1:document.querySelector('h1')?.textContent || '', robots:document.querySelector('meta[name=robots]')?.content || '' })");
-  assert.match(result.h1.toLocaleLowerCase("tr-TR"), /bulunamad|kullanılabilir bir sayfaya/);
+  assert.match(result.h1.toLocaleLowerCase("tr-TR"), /bulunamad|kullanÄ±labilir bir sayfaya/);
   assert.match(result.robots, /noindex/);
 });
 
@@ -123,10 +123,10 @@ test("upstream 503 keeps the site and canonical squad usable without expired mat
   const home = await page.evaluate(`({
     message:document.querySelector('.mc-unavailable h3')?.textContent || '',
     oldMatch:Boolean(document.querySelector('.mc-next-teams')),
-    live:[...document.querySelectorAll('a,button')].some((node) => node.textContent.includes('Canlı İzle')),
+    live:[...document.querySelectorAll('a,button')].some((node) => node.textContent.includes('CanlÄ± Ä°zle')),
     nav:Boolean(document.querySelector('.nav')),
   })`);
-  assert.match(home.message, /geçici olarak kullanılamıyor/i);
+  assert.match(home.message, /geÃ§ici olarak kullanÄ±lamÄ±yor/i);
   assert.equal(home.oldMatch, false);
   assert.equal(home.live, false);
   assert.equal(home.nav, true);
@@ -147,6 +147,17 @@ test("320 px viewport has no horizontal document overflow", async () => {
   await page.waitFor("Boolean(document.querySelector('.mc-next, .mc-unavailable'))", { message:"mobile Match Center" });
   const dimensions = await page.evaluate("({ viewport:document.documentElement.clientWidth, scroll:Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) })");
   assert.ok(dimensions.scroll <= dimensions.viewport + 1, `Horizontal overflow: ${JSON.stringify(dimensions)}`);
+});
+
+test("loading deferred homepage sections does not reset the scroll position", async () => {
+  await page.setViewport(1280, 900);
+  await page.navigate(`${baseUrl}/tr`);
+  await page.waitFor("Boolean(document.querySelector('.hero'))", { message:"homepage before deferred scroll" });
+  await page.evaluate("window.scrollTo({ top:3800, behavior:'instant' }); true");
+  await page.waitFor("window.scrollY > 3000", { message:"deep homepage scroll" });
+  await page.waitFor("Boolean(document.querySelector('#identity:not(.deferred-section-placeholder)'))", { timeoutMs:8_000, message:"deferred identity section" });
+  const scrollState = await page.evaluate("({ y:window.scrollY, hash:location.hash, height:document.documentElement.scrollHeight })");
+  assert.ok(scrollState.y > 2500, `Deferred content reset scroll position: ${JSON.stringify(scrollState)}`);
 });
 
 test("200% zoom preserves primary navigation and page heading", async () => {
@@ -192,3 +203,4 @@ test("valid player deep link survives a hard refresh", { skip:!firstPlayer && "N
   await page.waitFor("Boolean(document.querySelector('.player-profile-layout'))", { message:"player deep link refresh" });
   assert.equal(await page.evaluate("location.pathname"), pathname);
 });
+
