@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-10T08:01:40.938Z",
+  "generatedAt": "2026-08-11T07:33:18.296Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -341,9 +341,9 @@
       "id": 6.1,
       "matchday": "GW 6",
       "competition": "EML FC26 Summer League",
-      "date": "17 July 2026",
+      "date": "17 Temmuz 2026",
       "day": "17",
-      "month": "July",
+      "month": "Temmuz",
       "time": "23:00",
       "home": "Glarung FC",
       "homeAbbr": "GLA",
@@ -492,12 +492,12 @@
       "profileUrl": "https://emajorleague.com/players/profile/9054/"
     },
     {
-      "ign": "ek341907",
+      "ign": "TRU-egehanski",
       "pos": "CB",
-      "apps": 2,
-      "goals": 0,
+      "apps": 6,
+      "goals": 1,
       "assists": 0,
-      "profileUrl": "https://emajorleague.com/players/profile/7979/"
+      "profileUrl": "https://emajorleague.com/players/profile/7652/"
     },
     {
       "ign": "Zeppettoo",
@@ -516,12 +516,12 @@
       "profileUrl": "https://emajorleague.com/players/profile/8829/"
     },
     {
-      "ign": "TRU-egehanski",
+      "ign": "ek341907",
       "pos": "CB",
-      "apps": 6,
-      "goals": 1,
+      "apps": 2,
+      "goals": 0,
       "assists": 0,
-      "profileUrl": "https://emajorleague.com/players/profile/7652/"
+      "profileUrl": "https://emajorleague.com/players/profile/7979/"
     },
     {
       "ign": "yasko434",
@@ -530,6 +530,14 @@
       "goals": 0,
       "assists": 0,
       "profileUrl": "https://emajorleague.com/YSN43I/"
+    },
+    {
+      "ign": "Swindler3r",
+      "pos": "CDM",
+      "apps": 0,
+      "goals": 0,
+      "assists": 0,
+      "profileUrl": "https://emajorleague.com/players/profile/2178/"
     },
     {
       "ign": "yigitinski",
