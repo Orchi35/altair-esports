@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { matchCenterDevApi } from './server/match-center/vitePlugin.js'
+import { partnershipInquiryDevApi } from './server/partnership/vitePlugin.js'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), matchCenterDevApi(), partnershipInquiryDevApi()],
   server: {
     proxy: {
       // Dev'de /api/eml-proxy?path=... → emajorleague.com/...

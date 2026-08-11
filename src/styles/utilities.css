@@ -1,0 +1,81 @@
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+.deferred-section-placeholder{
+  width:100%;
+  contain:layout style paint;
+  content-visibility:auto;
+  contain-intrinsic-size:auto 720px;
+}
+.skip-link{
+  position:fixed;
+  top:10px;
+  left:10px;
+  z-index:1000;
+  padding:10px 14px;
+  color:var(--bg);
+  background:var(--cyan);
+  font-family:var(--f-mono);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  text-decoration:none;
+  transform:translateY(-150%);
+  transition:transform .18s ease;
+}
+.skip-link:focus{transform:translateY(0)}
+
+.sw-update-notice{
+  position:fixed;
+  right:clamp(12px,3vw,28px);
+  bottom:clamp(12px,3vw,28px);
+  z-index:900;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:18px;
+  width:min(calc(100vw - 24px),590px);
+  padding:16px;
+  border:1px solid var(--cyan-edge);
+  border-radius:var(--radius-md);
+  color:var(--text);
+  background:rgba(7,13,24,.96);
+  box-shadow:var(--shadow-lg);
+  backdrop-filter:blur(18px);
+}
+.sw-update-notice strong,
+.sw-update-notice span{display:block}
+.sw-update-notice strong{
+  margin-bottom:4px;
+  font-family:var(--f-narrow);
+  font-size:16px;
+  letter-spacing:.035em;
+}
+.sw-update-notice span{color:var(--text-2);font-size:13px;line-height:1.45}
+.sw-update-actions{display:flex;align-items:center;gap:8px}
+.sw-update-actions button{
+  min-height:44px;
+  padding:0 14px;
+  border:1px solid var(--line-2);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  background:transparent;
+  font-family:var(--f-mono);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.sw-update-actions button:first-child{border-color:var(--cyan);color:var(--bg);background:var(--cyan)}
+.sw-update-actions button:focus-visible{outline:3px solid var(--text);outline-offset:2px}
+.sw-update-actions button:disabled{cursor:wait;opacity:.58}
+
+@media (max-width:560px){
+  .sw-update-notice{grid-template-columns:1fr;gap:13px}
+  .sw-update-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sw-update-actions button{width:100%}
+}
+.route-loading{display:grid;place-items:center;min-height:72vh;padding:130px 24px 80px;background:var(--bg);color:var(--text-2);font:700 13px var(--f-mono);letter-spacing:.12em;text-transform:uppercase}

@@ -1,0 +1,63 @@
+name: Diagnose eMajor League upstream
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: diagnose-eml-upstream
+  cancel-in-progress: true
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Produce redacted upstream diagnosis
+        id: diagnose
+        run: npm run data:diagnose
+
+      - name: Attempt verified snapshot refresh
+        id: refresh
+        continue-on-error: true
+        run: npm run update:eml-snapshot
+
+      - name: Ensure failed refresh did not mutate the snapshot
+        if: steps.refresh.outcome == 'failure'
+        run: git diff --exit-code -- public/data/eml-snapshot.json
+
+      - name: Check snapshot freshness
+        id: freshness
+        continue-on-error: true
+        run: npm run data:freshness
+
+      - name: Upload redacted diagnosis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eml-upstream-diagnosis
+          path: artifacts/data-diagnosis.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Write diagnostic summary
+        if: always()
+        run: |
+          echo "### EML diagnostic" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Refresh: ${{ steps.refresh.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Freshness: ${{ steps.freshness.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "No snapshot commit is created by this workflow." >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,48 @@
+name: Update eMajor League snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 6 * * *"
+    - cron: "15 * * * 5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-eml-snapshot
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Fetch and validate the real eMajor League source
+        run: npm run update:eml-snapshot
+      - name: Verify generated snapshot schema and validity
+        run: npm run data:verify
+      - name: Verify generated snapshot freshness
+        run: npm run data:freshness
+      - name: Run deterministic unit and component tests
+        run: npm test
+      - name: Commit changed snapshot
+        run: |
+          if git diff --quiet -- public/data/eml-snapshot.json; then
+            echo "Snapshot is already current."
+            exit 0
+          fi
+          git config user.name "altair-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/data/eml-snapshot.json
+          git commit -m "chore: update eMajor League snapshot"
+          git push

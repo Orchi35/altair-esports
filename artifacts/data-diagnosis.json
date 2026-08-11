@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-08-11T04:00:05.148Z",
+  "sourceHostname": "emajorleague.com",
+  "errorClass": "NETWORK_EGRESS_BLOCKED",
+  "httpStatus": null,
+  "redirectCount": 0,
+  "contentType": null,
+  "responseBytes": null,
+  "timeoutMs": 12000,
+  "robots": {
+    "result": "unavailable",
+    "httpStatus": null
+  },
+  "parser": {
+    "result": "not-run"
+  },
+  "requestCount": 0
+}
