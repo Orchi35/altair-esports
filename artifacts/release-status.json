@@ -1,0 +1,25 @@
+{
+  "status": "READY_WITH_KNOWN_LIMITATIONS",
+  "checkedAt": "2026-08-11T04:05:26.887Z",
+  "checks": {
+    "verify": "pass",
+    "e2e": "pass",
+    "accessibility": "pass",
+    "seo": "pass",
+    "links": "pass",
+    "dataFreshness": "fail",
+    "environment": "limitation",
+    "assets": "pass",
+    "code": "pass",
+    "build": "pass",
+    "tests": "pass",
+    "dataIntegrity": "pass",
+    "matchCenterMode": "unavailable",
+    "partnershipMailConfigured": false
+  },
+  "limitations": [
+    "PARTNERSHIP_MAIL_NOT_CONFIGURED",
+    "EML_UPSTREAM_UNAVAILABLE"
+  ],
+  "missingAssets": []
+}

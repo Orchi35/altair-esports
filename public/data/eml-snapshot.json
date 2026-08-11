@@ -1,11 +1,15 @@
 {
   "schemaVersion": 1,
   "generatedAt": "2026-08-11T07:33:18.296Z",
+  "validFrom": "2026-08-11T07:33:18.296Z",
+  "validUntil": "2026-08-12T07:33:18.296Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
     "tournamentId": 42,
-    "name": "EML FC26 Summer League"
+    "name": "EML FC26 Summer League",
+    "status": "active",
+    "verifiedEndAt": null
   },
   "standings": {
     "42": [

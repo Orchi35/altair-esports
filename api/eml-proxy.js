@@ -1,10 +1,10 @@
-// eMajor League'den yalnızca ALTAIR sitesinin kullandığı herkese açık verileri alır.
-// URL: /api/eml-proxy?path=/tournaments/league_table/39/
+import { fetchAllowedHtml, UpstreamError } from "../server/match-center/upstream.js";
+
+// Kadro ekranının ihtiyaç duyduğu izinli eMajor League HTML sayfalarını alır.
+// Maç, fikstür ve puan durumu verileri yalnızca /api/match-center üzerinden sunulur.
 
 const UPSTREAM_ORIGIN = "https://emajorleague.com";
 const ALLOWED_PATHS = [
-  /^\/tournaments\/league_table\/\d+\/?$/i,
-  /^\/tournaments\/league_fixture\/\d+\/\d+\/?$/i,
   /^\/team\/ALTAIReSports\/?$/i,
   /^\/teams\/team\/\d+\/\d+\/\d+\/squad\/?$/i,
 ];
@@ -58,21 +58,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(targetUrl.toString(), {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
-        "Referer": "https://emajorleague.com/",
-      },
-      signal: AbortSignal.timeout(8000),
-    });
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: `EML returned ${response.status}` });
-    }
-
-    const html = await response.text();
+    const html = await fetchAllowedHtml(targetUrl.pathname);
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.setHeader(
       "Cache-Control",
@@ -81,7 +67,7 @@ export default async function handler(req, res) {
     return res.status(200).send(html);
 
   } catch (error) {
-    console.error("[eml-proxy]", error);
-    return res.status(502).json({ error: "Upstream data could not be loaded" });
+    const code = error instanceof UpstreamError ? error.code : "UPSTREAM_UNAVAILABLE";
+    return res.status(502).json({ error: "Upstream data could not be loaded", code });
   }
 }

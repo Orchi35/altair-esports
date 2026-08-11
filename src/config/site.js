@@ -5,6 +5,7 @@ export const SITE_LINKS = {
   discord:"https://discord.gg/uMgQKQmr",
   emlTeam:"https://emajorleague.com/team/ALTAIReSports/",
   mediaKit:"/media-kit.html",
+  mediaKitPdf:"/media/altair-esports-media-kit.pdf",
   privacy:"/privacy.html",
   terms:"/terms.html",
 };

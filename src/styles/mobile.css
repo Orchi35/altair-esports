@@ -1,0 +1,280 @@
+/* ─────────────────────────────────────────────────────────────
+   MOBILE INTEGRATION — PHONE-FIRST LAYOUT
+   Final overrides live here so later desktop refinements cannot
+   reintroduce wide-screen grids at mobile breakpoints.
+   ───────────────────────────────────────────────────────────── */
+@media (max-width:768px){
+  :root{
+    --pad-x:16px;
+    --sec-y:64px;
+  }
+
+  html{-webkit-text-size-adjust:100%}
+  body{overscroll-behavior-y:none}
+  .section{padding-inline:16px}
+  .container{width:100%;max-width:none}
+
+  .nav,
+  .nav.scrolled{
+    height:calc(62px + env(safe-area-inset-top));
+    padding-top:env(safe-area-inset-top);
+    padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right));
+  }
+  .nav-mobile-panel,
+  .nav-lang-panel{
+    max-height:calc(100svh - 82px - env(safe-area-inset-top));
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+  .nav-mobile-panel{
+    position:fixed;
+    top:calc(72px + env(safe-area-inset-top));
+    right:max(16px,env(safe-area-inset-right));
+    left:max(16px,env(safe-area-inset-left));
+    width:auto;
+  }
+  .nav-burger,
+  .nav-menu-toggle,
+  .nav-mobile-links a,
+  .nav-lang-option,
+  .match-refresh-btn,
+  .mc-verification button,
+  .mc-panel-state button,
+  .mc-next--state button,
+  .squad-filter-btn,
+  .squad-refresh,
+  .squad-cta a,
+  .sec-link{min-height:44px}
+
+  .hero,
+  .hero-left{min-height:1080px}
+  .hero-left{
+    width:100%;
+    padding:390px 16px 42px;
+  }
+  .hero-h1--motto{
+    max-width:100%;
+    font-size:clamp(34px,9.3vw,48px);
+  }
+  .hero-h1--motto .motto-line{white-space:normal;text-wrap:balance}
+  .hero-ctas{max-width:520px}
+
+  .sec-hdr{margin-bottom:30px}
+  .sec-title{text-wrap:balance}
+  .sec-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .sec-actions .match-data-update,
+  .sec-actions .match-data-status{grid-column:1 / -1}
+  .match-refresh-btn,
+  #matches .sec-link,
+  #fixtures .sec-link{
+    width:100%;
+    min-width:0;
+    justify-content:center;
+  }
+
+  .identity-editorial{width:100%}
+  .identity-statement{min-width:0}
+  .identity-statement-title{text-wrap:balance}
+  .identity-statement-text{max-width:100%}
+
+  .st-kpis{
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    overflow:visible;
+  }
+  .st-kpi{
+    min-height:88px;
+    grid-column:span 2;
+    padding:14px 12px 12px;
+    border-bottom:1px solid rgba(126,211,255,.09);
+  }
+  .st-kpi:nth-child(n+4){grid-column:span 3}
+  .st-kpi-val{font-size:28px}
+  .st-table-scroll{overflow-x:hidden}
+  .st-hdr,
+  .st-row{
+    min-width:0;
+    grid-template-columns:36px minmax(0,1fr) 40px 52px 48px;
+    column-gap:6px;
+    padding-inline:10px;
+  }
+  .st-hdr > :nth-child(4),
+  .st-hdr > :nth-child(5),
+  .st-hdr > :nth-child(6),
+  .st-hdr > :nth-child(8),
+  .st-row > :nth-child(4),
+  .st-row > :nth-child(5),
+  .st-row > :nth-child(6),
+  .st-row > :nth-child(8){display:none}
+  .st-row{min-height:62px}
+  .st-row.me{min-height:68px}
+  .st-club{gap:8px;min-width:0}
+  .st-badge{width:32px;height:32px;flex:0 0 32px}
+  .st-badge.me{width:34px;height:34px;flex-basis:34px}
+  .st-club-name{
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    font-size:11px;
+  }
+  .st-row.me .st-club-name{font-size:12px}
+  .st-cell{font-size:13px}
+  .st-pts,.st-row.me .st-pts{font-size:19px}
+
+  .results-grid,
+  .fix-grid{width:100%}
+  .res-mob-name{overflow-wrap:anywhere}
+
+  .fix-card{
+    width:100%;
+    min-height:0;
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto 1px auto 1px auto;
+    border-radius:0;
+    background:transparent;
+  }
+  .fix-date{
+    grid-column:1;
+    grid-row:1;
+    min-width:0;
+    padding:13px 15px 12px;
+    flex-direction:row;
+    align-items:center;
+    justify-content:flex-start;
+    gap:11px;
+    background:rgba(34,211,238,.025);
+  }
+  .fix-day{font-size:30px}
+  .fix-month{padding-left:11px;border-left:1px solid rgba(126,211,255,.1)}
+  .fix-gw{margin:0 0 0 auto}
+  .fix-card > :nth-child(2).fix-divider{
+    grid-column:1;
+    grid-row:2;
+    width:auto;
+    height:1px;
+  }
+  .fix-match{
+    grid-column:1;
+    grid-row:3;
+    width:100%;
+    min-width:0;
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:9px;
+    padding:13px 15px;
+  }
+  .fix-team,
+  .fix-team.home,
+  .fix-team.away{
+    width:100%;
+    min-width:0;
+    min-height:58px;
+    padding:10px 12px;
+    justify-content:space-between;
+    gap:10px;
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:7px;
+    background:rgba(255,255,255,.014) !important;
+    box-shadow:none;
+  }
+  .fix-team-name{
+    min-width:0;
+    flex:1 1 auto;
+    overflow-wrap:break-word;
+    word-break:normal;
+    font-size:13px;
+    line-height:1.2;
+  }
+  .fix-team.home .fix-team-name{padding-right:6px;text-align:left}
+  .fix-team.away .fix-team-name{padding-left:6px;text-align:left}
+  .fix-badge{width:40px;height:40px;flex:0 0 40px}
+  .fix-vs{width:100%;min-height:22px}
+  .fix-vs-line{width:min(96px,38%)}
+  .fix-card > :nth-child(4).fix-divider{
+    grid-column:1;
+    grid-row:4;
+    width:auto;
+    height:1px;
+  }
+  .fix-meta{
+    grid-column:1;
+    grid-row:5;
+    min-width:0;
+    padding:12px 15px 14px;
+    flex-direction:row;
+    align-items:center;
+    justify-content:flex-start;
+    gap:9px;
+    flex-wrap:wrap;
+    background:rgba(0,0,0,.1);
+  }
+  .fix-venue{margin:0 0 0 auto}
+
+  .squad-toolbar{padding-inline:10px}
+  .squad-filter{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .squad-filter-btn:first-child{grid-column:1 / -1}
+  .p-card{width:100%}
+
+  .sponsor-editorial,
+  .sponsor-resource-bar,
+  .broadcast-hub-layout{width:100%}
+  .sponsor-visual-title strong,
+  .sponsor-visual-title span{text-wrap:balance}
+  .broadcast-feature-body{max-width:100%}
+  .broadcast-channel{width:100%}
+
+  .footer-top{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:30px 20px;
+  }
+  .footer-brand{grid-column:1 / -1}
+  .footer-bio{max-width:100%}
+}
+
+@media (max-width:480px){
+  .hero,
+  .hero-left{min-height:1060px}
+  .hero-left{padding-top:350px;padding-bottom:36px}
+  .hero-crest{top:80px}
+  .hero-logo-3d{top:200px}
+
+  .fixture-spotlight{grid-template-columns:minmax(0,1fr) 66px}
+  .fixture-spotlight-copy{padding:20px 18px}
+  .fixture-spotlight-copy h3{font-size:clamp(23px,7.3vw,28px)}
+  .fixture-spotlight-date strong{font-size:36px}
+
+  .res-mob-team{min-height:56px}
+  .res-mob-score{min-width:96px}
+  .fix-team-name{font-size:12px}
+
+  .sponsor-editorial-copy{padding-top:38px}
+  .sponsor-visual{min-height:370px}
+  .sponsor-resource-actions{grid-template-columns:1fr}
+  .broadcast-feature{min-height:490px;padding:20px}
+  .broadcast-feature-body{padding-top:142px}
+
+  .footer-top{gap:26px 16px}
+  .footer-col-title{margin-bottom:11px}
+  .footer-links{gap:5px}
+}
+
+@media (max-width:350px){
+  :root{--pad-x:13px}
+  .section{padding-inline:13px}
+  .nav,.nav.scrolled{padding-inline:12px}
+  .nav-wm-top{font-size:11px}
+  .nav-burger{min-width:44px;padding-inline:7px}
+  .hero-left{padding-inline:13px}
+  .hero-h1--motto{font-size:30px}
+  .sec-title{font-size:29px}
+  .st-hdr,.st-row{grid-template-columns:30px minmax(0,1fr) 34px 44px 42px;padding-inline:7px}
+  .st-club-name,.st-row.me .st-club-name{font-size:10px}
+  .footer-top{grid-template-columns:1fr}
+  .footer-brand{grid-column:auto}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+}

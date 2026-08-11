@@ -1,0 +1,236 @@
+/* Club identity */
+.identity-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.identity-card{
+  position:relative;
+  min-height:260px;
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.095);
+  border-radius:28px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.022)),
+    rgba(7,13,24,.72);
+  box-shadow:0 24px 70px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(18px) saturate(135%);
+  -webkit-backdrop-filter:blur(18px) saturate(135%);
+}
+.identity-card::before{
+  content:'';
+  position:absolute;
+  inset:-1px;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 18% 0%,rgba(34,211,238,.18),transparent 34%),
+    linear-gradient(135deg,rgba(34,211,238,.09),transparent 36%,rgba(255,255,255,.035));
+  opacity:.78;
+}
+.identity-card::after{
+  content:'✦';
+  position:absolute;
+  right:22px;
+  bottom:-28px;
+  font-family:var(--f-display);
+  font-size:132px;
+  line-height:1;
+  color:rgba(255,255,255,.035);
+  transform:rotate(-8deg);
+  pointer-events:none;
+}
+.identity-k{
+  position:relative;
+  z-index:1;
+  width:max-content;
+  padding:7px 11px;
+  border:1px solid rgba(34,211,238,.22);
+  border-radius:999px;
+  color:var(--cyan);
+  background:rgba(34,211,238,.06);
+  font-family:var(--f-mono);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.16em;
+}
+.identity-copy{position:relative;z-index:1;margin-top:46px}
+.identity-title{
+  font-family:var(--f-display);
+  font-size:clamp(25px,2vw,34px);
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+  color:var(--text);
+}
+.identity-text{
+  margin-top:14px;
+  color:var(--text-2);
+  font-size:13.5px;
+  line-height:1.62;
+  max-width:38ch;
+}
+
+.identity-story{
+  display:grid;
+  grid-template-columns:minmax(220px,.7fr) minmax(0,1.3fr);
+  gap:18px;
+  margin-bottom:18px;
+}
+.identity-origin,
+.identity-manifesto{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(126,211,255,.14);
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 88% 0%,rgba(34,211,238,.13),transparent 38%),
+    linear-gradient(145deg,rgba(255,255,255,.06),rgba(7,13,24,.82));
+  box-shadow:0 24px 64px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.identity-origin{
+  min-height:280px;
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.identity-origin-year{
+  color:var(--cyan);
+  font-family:var(--f-display);
+  font-size:clamp(70px,7vw,112px);
+  font-weight:900;
+  line-height:.8;
+  letter-spacing:-.06em;
+  text-shadow:0 0 38px rgba(34,211,238,.2);
+}
+.identity-origin-meta{display:flex;flex-direction:column;gap:7px}
+.identity-origin-founded{
+  color:var(--text);
+  font-family:var(--f-narrow);
+  font-size:17px;
+  font-weight:800;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+.identity-origin-founders{
+  color:var(--text-2);
+  font-family:var(--f-mono);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.identity-manifesto{
+  min-height:280px;
+  padding:34px 38px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.identity-manifesto-title{
+  max-width:20ch;
+  color:var(--text);
+  font-family:var(--f-display);
+  font-size:clamp(30px,3.3vw,50px);
+  font-weight:800;
+  line-height:.95;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+.identity-manifesto-text{max-width:68ch;margin-top:18px;color:var(--text-2);font-size:14px;line-height:1.72}
+.identity-motto{
+  margin-top:28px;
+  padding:17px 20px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  border-left:2px solid var(--cyan);
+  background:linear-gradient(90deg,rgba(34,211,238,.09),transparent);
+}
+.identity-motto-label{
+  flex-shrink:0;
+  color:var(--cyan);
+  font-family:var(--f-mono);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.identity-motto-text{
+  color:var(--text);
+  font-family:var(--f-narrow);
+  font-size:clamp(18px,2vw,25px);
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.honours{
+  border-top:1px solid rgba(126,211,255,.11);
+  border-bottom:1px solid rgba(126,211,255,.08);
+  background:
+    radial-gradient(circle at 85% 8%,rgba(251,191,36,.1),transparent 28%),
+    radial-gradient(circle at 10% 72%,rgba(34,211,238,.08),transparent 30%),
+    linear-gradient(180deg,rgba(4,9,17,.99),rgba(8,14,25,.985));
+}
+.honours-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.honour-card{
+  position:relative;
+  min-height:270px;
+  padding:25px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 88% 4%,rgba(251,191,36,.11),transparent 34%),
+    linear-gradient(155deg,rgba(19,29,45,.88),rgba(6,11,20,.98));
+  box-shadow:0 20px 46px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.045);
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.honour-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(251,191,36,.3);
+  box-shadow:0 28px 58px rgba(0,0,0,.3),0 0 28px rgba(251,191,36,.055),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.honour-mark{
+  color:#fbbf24;
+  font-family:var(--f-display);
+  font-size:clamp(52px,5vw,76px);
+  font-weight:900;
+  line-height:.85;
+  letter-spacing:-.06em;
+  text-shadow:0 0 28px rgba(251,191,36,.16);
+}
+.honour-copy{margin-top:auto;padding-top:46px}
+.honour-season{
+  color:var(--cyan);
+  font-family:var(--f-mono);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.honour-competition{
+  margin-top:9px;
+  color:var(--text);
+  font-family:var(--f-display);
+  font-size:22px;
+  font-weight:800;
+  line-height:1.02;
+  letter-spacing:.025em;
+  text-transform:uppercase;
+}
+.honour-result{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.08);
+  color:var(--text-2);
+  font-family:var(--f-narrow);
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}

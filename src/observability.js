@@ -14,8 +14,16 @@ const createQueue = (queueName) => (...args) => {
   window[queueName].push(args)
 }
 
+export function isVercelObservabilityHost(hostname) {
+  const normalizedHostname = String(hostname || '').toLowerCase()
+  return normalizedHostname === 'altairesports.com'
+    || normalizedHostname === 'www.altairesports.com'
+    || normalizedHostname.endsWith('.vercel.app')
+}
+
 export function registerVercelObservability() {
   if (!import.meta.env.PROD) return
+  if (!isVercelObservabilityHost(window.location.hostname)) return
 
   window.va = window.va || createQueue('vaq')
   window.si = window.si || createQueue('siq')

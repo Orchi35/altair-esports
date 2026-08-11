@@ -1,0 +1,86 @@
+.featured-players{
+  padding-block:clamp(68px,8vw,104px);
+  background:
+    radial-gradient(circle at 12% 8%,rgba(34,211,238,.1),transparent 29%),
+    linear-gradient(180deg,#07111d,#040a12);
+}
+.featured-players::after{content:"04";opacity:.62}
+.featured-players .container{z-index:2}
+.featured-players-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:34px}
+.featured-players-heading>div:first-child{max-width:760px}
+.featured-players-status{
+  display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;
+  color:var(--muted);font-family:var(--f-mono);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+}
+.featured-players-status>span::before{
+  content:"";display:inline-block;width:6px;height:6px;margin-right:8px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 10px rgba(34,211,238,.55);
+}
+.featured-players-status time{color:var(--text-2)}
+.featured-players-status button{
+  min-height:38px;padding:0 12px;border:1px solid var(--cyan-edge);color:var(--cyan);background:var(--cyan-soft);
+  font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;
+}
+.featured-player-grid,.featured-player-skeletons{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.featured-player-card{
+  min-width:0;overflow:hidden;border-top:2px solid rgba(34,211,238,.75);border-bottom:1px solid rgba(126,211,255,.13);
+  background:#081522;box-shadow:0 22px 52px rgba(0,0,0,.2);
+}
+.featured-player-media{position:relative;aspect-ratio:4/5;overflow:hidden;background:linear-gradient(145deg,#102d45,#06101b)}
+.featured-player-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 48%,rgba(3,9,17,.92) 100%);pointer-events:none}
+.featured-player-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 18%;filter:saturate(.9) contrast(1.04);transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.featured-player-card:hover .featured-player-media img,.featured-player-card:focus-within .featured-player-media img{transform:scale(1.025)}
+.featured-player-initials{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.featured-player-initials span{color:#c7f6ff;font-family:var(--f-display);font-size:72px;font-weight:800;text-shadow:0 0 28px rgba(34,211,238,.18)}
+.featured-player-initials small{margin-top:8px;color:#73909e;font-family:var(--f-mono);font-size:8px;font-weight:800;letter-spacing:.24em}
+.featured-player-number{position:absolute;z-index:2;top:17px;right:17px;color:rgba(236,249,253,.66);font-family:var(--f-display);font-size:25px;font-weight:800}
+.featured-player-reason{
+  position:absolute;z-index:2;left:16px;right:16px;bottom:14px;width:fit-content;max-width:calc(100% - 32px);
+  padding:7px 10px;border-left:2px solid #fbbf24;color:#f8fbfd;background:rgba(2,9,17,.84);
+  font-family:var(--f-mono);font-size:7px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+}
+.featured-player-body{padding:20px 18px 18px}
+.featured-player-role{color:var(--cyan);font-family:var(--f-mono);font-size:7px;font-weight:800;letter-spacing:.17em;text-transform:uppercase}
+.featured-player-body :is(h3,h4){margin-top:9px;color:#f2f8fa;font-family:var(--f-narrow);font-size:clamp(25px,2.1vw,32px);font-weight:800;line-height:1;overflow-wrap:anywhere}
+.featured-player-body p{min-height:17px;margin-top:7px;color:#768e9b;font-family:var(--f-mono);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.featured-player-body>a,.featured-player-profile-unavailable{
+  min-height:44px;margin-top:18px;padding-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border-top:1px solid rgba(126,211,255,.1);color:#c7dce4;font-family:var(--f-narrow);font-size:10px;font-weight:800;
+  letter-spacing:.13em;text-decoration:none;text-transform:uppercase;
+}
+.featured-player-body>a span{color:var(--cyan)}
+.featured-player-body>a:focus-visible{outline:3px solid var(--text);outline-offset:4px}
+.featured-player-profile-unavailable{color:#6f8794}
+.featured-player-skeletons span{
+  min-height:470px;border-top:2px solid rgba(126,211,255,.15);background:linear-gradient(105deg,#081522 36%,#102b3c 48%,#081522 60%);
+  background-size:220% 100%;animation:featuredSkeleton 1.3s ease-in-out infinite;
+}
+@keyframes featuredSkeleton{to{background-position:-220% 0}}
+.featured-players-empty{padding:42px 20px;border-top:1px solid rgba(126,211,255,.16);border-bottom:1px solid rgba(126,211,255,.1);color:var(--text-2);text-align:center}
+.featured-players-footer{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:18px;padding:16px 0;
+  border-top:1px solid rgba(126,211,255,.12);color:var(--text-2);font-size:13px;
+}
+.featured-players-footer a{
+  display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 15px;border:1px solid var(--cyan-edge);
+  color:var(--cyan);font-family:var(--f-narrow);font-size:11px;font-weight:800;letter-spacing:.12em;text-decoration:none;text-transform:uppercase;
+}
+.featured-players-footer a:focus-visible{outline:3px solid var(--text);outline-offset:3px}
+@media (max-width:900px){.featured-player-grid,.featured-player-skeletons{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:680px){
+  .featured-players{padding-inline:16px}
+  .featured-players-heading{align-items:flex-start;flex-direction:column;gap:18px}
+  .featured-players-status{justify-content:flex-start}
+  .featured-player-grid,.featured-player-skeletons{
+    width:calc(100% + 16px);display:flex;gap:12px;overflow-x:auto;padding:0 16px 12px 0;
+    scroll-padding-inline:0 16px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:rgba(34,211,238,.45) transparent;
+  }
+  .featured-player-card,.featured-player-skeletons span{flex:0 0 min(82vw,310px);scroll-snap-align:start}
+  .featured-player-skeletons span{min-height:470px}
+  .featured-players-footer{align-items:flex-start;flex-direction:column}
+  .featured-players-footer a{width:100%;justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .featured-player-skeletons span{animation:none}
+  .featured-player-media img{transition:none}
+}

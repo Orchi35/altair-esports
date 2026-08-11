@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /server/
+Disallow: /scripts/
 
 Sitemap: https://www.altairesports.com/sitemap.xml
