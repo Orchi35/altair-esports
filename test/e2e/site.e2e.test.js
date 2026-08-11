@@ -96,7 +96,7 @@ test("unknown player slug presents a noindex 404 document", async () => {
   await page.navigate(`${baseUrl}/tr/oyuncular/bilinmeyen-oyuncu`);
   await page.waitFor("Boolean(document.querySelector('h1'))", { message:"unknown player 404 heading" });
   const result = await page.evaluate("({ h1:document.querySelector('h1')?.textContent || '', robots:document.querySelector('meta[name=robots]')?.content || '' })");
-  assert.match(result.h1.toLocaleLowerCase("tr-TR"), /bulunamad|kullanÄ±labilir bir sayfaya/);
+  assert.match(result.h1.toLocaleLowerCase("tr-TR"), /bulunamad|kullanılabilir bir sayfaya/);
   assert.match(result.robots, /noindex/);
 });
 
@@ -123,10 +123,10 @@ test("upstream 503 keeps the site and canonical squad usable without expired mat
   const home = await page.evaluate(`({
     message:document.querySelector('.mc-unavailable h3')?.textContent || '',
     oldMatch:Boolean(document.querySelector('.mc-next-teams')),
-    live:[...document.querySelectorAll('a,button')].some((node) => node.textContent.includes('CanlÄ± Ä°zle')),
+    live:[...document.querySelectorAll('a,button')].some((node) => node.textContent.includes('Canlı İzle')),
     nav:Boolean(document.querySelector('.nav')),
   })`);
-  assert.match(home.message, /geÃ§ici olarak kullanÄ±lamÄ±yor/i);
+  assert.match(home.message, /geçici olarak kullanılamıyor/i);
   assert.equal(home.oldMatch, false);
   assert.equal(home.live, false);
   assert.equal(home.nav, true);
