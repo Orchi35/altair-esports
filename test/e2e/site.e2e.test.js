@@ -152,6 +152,7 @@ test("200% zoom preserves primary navigation and page heading", async () => {
   await page.setViewport(1280, 900);
   await page.setPageScale(2);
   await page.navigate(`${baseUrl}/tr/maclar`);
+  await page.waitFor("Boolean(document.querySelector('h1'))", { message:"matches page heading at 200% zoom" });
   const result = await page.evaluate("({ h1:Boolean(document.querySelector('h1')), menu:Boolean(document.querySelector('.nav-menu-toggle')), main:Boolean(document.querySelector('#main-content')) })");
   assert.deepEqual(result, { h1:true, menu:true, main:true });
   await page.setPageScale(1);
