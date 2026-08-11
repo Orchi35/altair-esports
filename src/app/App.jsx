@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DeferredSection } from "../components/ui/DeferredSection.jsx";
 import { COMPETITION_SEASONS } from "../config/competition.js";
 import { Hero } from "../features/hero/Hero.jsx";
@@ -40,6 +40,7 @@ export default function AltairFC() {
   const [activeSection, setActiveSection] = useState("");
   const [sectionRevision, setSectionRevision] = useState(0);
   const { route, switchLocale } = useLocaleRoute();
+  const previousRouteKeyRef = useRef(route.key);
   const {
     data:matchCenter,
     refetch:refetchMatchCenter,
@@ -48,9 +49,9 @@ export default function AltairFC() {
   } = useMatchCenterData();
   const activeLang = route.langCode;
   const copy = getMessages(activeLang);
-  const scrollTargetId = getRouteScrollTarget(route, route.hash);
   const showNotFound = route.isNotFound;
   const isHomepage = route.name === "home";
+  const scrollTargetId = isHomepage && !route.hash ? null : getRouteScrollTarget(route, route.hash);
   const matchDetailIsLoading = route.name === "match-detail" && matchCenter?.meta?.status === "loading";
   const routeSeo = useMemo(
     () => (matchDetailIsLoading ? null : getRouteSeo(route, { matchCenter })),
@@ -107,9 +108,11 @@ export default function AltairFC() {
   }, [isHomepage, route.key, scrollTargetId, sectionRevision, showNotFound]);
 
   useEffect(() => {
-    if (route.hash) return;
+    const routeChanged = previousRouteKeyRef.current !== route.key;
+    previousRouteKeyRef.current = route.key;
+    if (!routeChanged || route.hash) return;
     window.scrollTo({ top:0, behavior:"auto" });
-  }, [isHomepage, route.key, route.hash]);
+  }, [route.key, route.hash]);
 
   useEffect(() => {
     if (showNotFound || isHomepage || !route.hash) return undefined;
@@ -169,3 +172,4 @@ export default function AltairFC() {
     </AppShell>
   );
 }
+
