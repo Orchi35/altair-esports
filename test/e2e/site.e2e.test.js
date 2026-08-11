@@ -94,6 +94,7 @@ test("verified news detail route opens", { skip:!firstNews && "No verified publi
 
 test("unknown player slug presents a noindex 404 document", async () => {
   await page.navigate(`${baseUrl}/tr/oyuncular/bilinmeyen-oyuncu`);
+  await page.waitFor("Boolean(document.querySelector('h1'))", { message:"unknown player 404 heading" });
   const result = await page.evaluate("({ h1:document.querySelector('h1')?.textContent || '', robots:document.querySelector('meta[name=robots]')?.content || '' })");
   assert.match(result.h1.toLocaleLowerCase("tr-TR"), /bulunamad|kullanılabilir bir sayfaya/);
   assert.match(result.robots, /noindex/);
