@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-11T07:33:18.296Z",
-  "validFrom": "2026-08-11T07:33:18.296Z",
-  "validUntil": "2026-08-12T07:33:18.296Z",
+  "generatedAt": "2026-08-13T17:39:32.604Z",
+  "validFrom": "2026-08-13T17:39:32.604Z",
+  "validUntil": "2026-08-15T17:39:32.604Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -23,10 +23,9 @@
         "l": 2,
         "gf": 30,
         "ga": 8,
-        "gd": "+22",
+        "gd": 22,
         "pts": 24,
-        "form": "WLW",
-        "me": false
+        "form": "WLW"
       },
       {
         "rank": 2,
@@ -38,10 +37,9 @@
         "l": 1,
         "gf": 28,
         "ga": 12,
-        "gd": "+16",
+        "gd": 16,
         "pts": 24,
-        "form": "WWW",
-        "me": false
+        "form": "WWW"
       },
       {
         "rank": 3,
@@ -53,10 +51,9 @@
         "l": 0,
         "gf": 32,
         "ga": 6,
-        "gd": "+26",
+        "gd": 26,
         "pts": 23,
-        "form": "WWW",
-        "me": false
+        "form": "WWW"
       },
       {
         "rank": 4,
@@ -68,10 +65,9 @@
         "l": 2,
         "gf": 21,
         "ga": 11,
-        "gd": "+10",
+        "gd": 10,
         "pts": 21,
-        "form": "WWW",
-        "me": false
+        "form": "WWW"
       },
       {
         "rank": 5,
@@ -83,14 +79,13 @@
         "l": 1,
         "gf": 25,
         "ga": 7,
-        "gd": "+18",
+        "gd": 18,
         "pts": 19,
-        "form": "LWW",
-        "me": false
+        "form": "LWW"
       },
       {
         "rank": 6,
-        "abbr": "SIL",
+        "abbr": "3Sİ",
         "name": "3 Silahşörler",
         "pld": 10,
         "w": 6,
@@ -98,10 +93,9 @@
         "l": 3,
         "gf": 25,
         "ga": 9,
-        "gd": "+16",
+        "gd": 16,
         "pts": 19,
-        "form": "LWW",
-        "me": false
+        "form": "LWW"
       },
       {
         "rank": 7,
@@ -113,14 +107,13 @@
         "l": 2,
         "gf": 22,
         "ga": 6,
-        "gd": "+16",
+        "gd": 16,
         "pts": 19,
-        "form": "WWL",
-        "me": false
+        "form": "WWL"
       },
       {
         "rank": 8,
-        "abbr": "BBS",
+        "abbr": "B2B",
         "name": "B2B SK",
         "pld": 7,
         "w": 4,
@@ -128,10 +121,9 @@
         "l": 1,
         "gf": 17,
         "ga": 7,
-        "gd": "+10",
+        "gd": 10,
         "pts": 14,
-        "form": "WWL",
-        "me": false
+        "form": "WWL"
       },
       {
         "rank": 9,
@@ -143,10 +135,9 @@
         "l": 4,
         "gf": 19,
         "ga": 16,
-        "gd": "+3",
+        "gd": 3,
         "pts": 12,
-        "form": "LWW",
-        "me": true
+        "form": "LWW"
       },
       {
         "rank": 10,
@@ -158,10 +149,9 @@
         "l": 4,
         "gf": 21,
         "ga": 14,
-        "gd": "+7",
+        "gd": 7,
         "pts": 11,
-        "form": "WLL",
-        "me": false
+        "form": "WLL"
       },
       {
         "rank": 11,
@@ -173,10 +163,9 @@
         "l": 6,
         "gf": 16,
         "ga": 29,
-        "gd": "-13",
+        "gd": -13,
         "pts": 10,
-        "form": "LLL",
-        "me": false
+        "form": "LLL"
       },
       {
         "rank": 12,
@@ -188,10 +177,9 @@
         "l": 7,
         "gf": 8,
         "ga": 43,
-        "gd": "-35",
+        "gd": -35,
         "pts": 9,
-        "form": "WLL",
-        "me": false
+        "form": "WLL"
       },
       {
         "rank": 13,
@@ -203,14 +191,13 @@
         "l": 8,
         "gf": 13,
         "ga": 45,
-        "gd": "-32",
+        "gd": -32,
         "pts": 6,
-        "form": "WWL",
-        "me": false
+        "form": "WWL"
       },
       {
         "rank": 14,
-        "abbr": "INV",
+        "abbr": "İNV",
         "name": "invictus x",
         "pld": 10,
         "w": 1,
@@ -218,10 +205,9 @@
         "l": 7,
         "gf": 4,
         "ga": 16,
-        "gd": "-12",
+        "gd": -12,
         "pts": 5,
-        "form": "LLL",
-        "me": false
+        "form": "LLL"
       },
       {
         "rank": 15,
@@ -233,14 +219,13 @@
         "l": 9,
         "gf": 10,
         "ga": 42,
-        "gd": "-32",
+        "gd": -32,
         "pts": 3,
-        "form": "LLW",
-        "me": false
+        "form": "LLW"
       },
       {
         "rank": 16,
-        "abbr": "LID",
+        "abbr": "LİD",
         "name": "Liderpool FC",
         "pld": 10,
         "w": 0,
@@ -248,22 +233,20 @@
         "l": 10,
         "gf": 0,
         "ga": 20,
-        "gd": "-20",
+        "gd": -20,
         "pts": 0,
-        "form": "LLL",
-        "me": false
+        "form": "LLL"
       }
     ]
   },
   "matches": [
     {
-      "id": 1.1,
-      "matchday": "GW 1",
+      "id": "42-1-1",
+      "round": "GW 1",
       "competition": "EML FC26 Summer League",
       "date": "03 Temmuz 2026",
-      "day": "03",
-      "month": "Temmuz",
       "time": "22:30",
+      "timezone": "Europe/Istanbul",
       "home": "AUDAX",
       "homeAbbr": "AUD",
       "away": "ALTAIR eSports",
@@ -271,16 +254,16 @@
       "hs": 1,
       "as": 1,
       "played": true,
-      "venue": "Away"
+      "status": "finished",
+      "streamStatus": "unknown"
     },
     {
-      "id": 2.1,
-      "matchday": "GW 2",
+      "id": "42-2-1",
+      "round": "GW 2",
       "competition": "EML FC26 Summer League",
       "date": "03 Temmuz 2026",
-      "day": "03",
-      "month": "Temmuz",
       "time": "23:00",
+      "timezone": "Europe/Istanbul",
       "home": "Anatolian Lions",
       "homeAbbr": "ANA",
       "away": "ALTAIR eSports",
@@ -288,33 +271,33 @@
       "hs": 1,
       "as": 6,
       "played": true,
-      "venue": "Away"
+      "status": "finished",
+      "streamStatus": "unknown"
     },
     {
-      "id": 3.1,
-      "matchday": "GW 3",
+      "id": "42-3-1",
+      "round": "GW 3",
       "competition": "EML FC26 Summer League",
       "date": "10 Temmuz 2026",
-      "day": "10",
-      "month": "Temmuz",
       "time": "22:30",
+      "timezone": "Europe/Istanbul",
       "home": "invictus x",
-      "homeAbbr": "INV",
+      "homeAbbr": "İNV",
       "away": "ALTAIR eSports",
       "awayAbbr": "ALT",
       "hs": 1,
       "as": 1,
       "played": true,
-      "venue": "Away"
+      "status": "finished",
+      "streamStatus": "unknown"
     },
     {
-      "id": 4.1,
-      "matchday": "GW 4",
+      "id": "42-4-1",
+      "round": "GW 4",
       "competition": "EML FC26 Summer League",
       "date": "10 Temmuz 2026",
-      "day": "10",
-      "month": "Temmuz",
       "time": "23:00",
+      "timezone": "Europe/Istanbul",
       "home": "ALTAIR eSports",
       "homeAbbr": "ALT",
       "away": "In Flame",
@@ -322,33 +305,33 @@
       "hs": 2,
       "as": 3,
       "played": true,
-      "venue": "Home"
+      "status": "finished",
+      "streamStatus": "unknown"
     },
     {
-      "id": 5.1,
-      "matchday": "GW 5",
+      "id": "42-5-1",
+      "round": "GW 5",
       "competition": "EML FC26 Summer League",
       "date": "17 Temmuz 2026",
-      "day": "17",
-      "month": "Temmuz",
       "time": "22:30",
+      "timezone": "Europe/Istanbul",
       "home": "ALTAIR eSports",
       "homeAbbr": "ALT",
       "away": "B2B SK",
-      "awayAbbr": "BBS",
+      "awayAbbr": "B2B",
       "hs": 2,
       "as": 4,
       "played": true,
-      "venue": "Home"
+      "status": "finished",
+      "streamStatus": "unknown"
     },
     {
-      "id": 6.1,
-      "matchday": "GW 6",
+      "id": "42-6-1",
+      "round": "GW 6",
       "competition": "EML FC26 Summer League",
       "date": "17 Temmuz 2026",
-      "day": "17",
-      "month": "Temmuz",
       "time": "23:00",
+      "timezone": "Europe/Istanbul",
       "home": "Glarung FC",
       "homeAbbr": "GLA",
       "away": "ALTAIR eSports",
@@ -356,33 +339,33 @@
       "hs": 2,
       "as": 0,
       "played": true,
-      "venue": "Away"
+      "status": "finished",
+      "streamStatus": "unknown"
     },
     {
-      "id": 7.1,
-      "matchday": "GW 7",
+      "id": "42-7-1",
+      "round": "GW 7",
       "competition": "EML FC26 Summer League",
       "date": "31 Temmuz 2026",
-      "day": "31",
-      "month": "Temmuz",
       "time": "22:30",
+      "timezone": "Europe/Istanbul",
       "home": "3 Silahşörler",
-      "homeAbbr": "SIL",
+      "homeAbbr": "3Sİ",
       "away": "ALTAIR eSports",
       "awayAbbr": "ALT",
       "hs": 0,
       "as": 0,
       "played": true,
-      "venue": "Away"
+      "status": "finished",
+      "streamStatus": "unknown"
     },
     {
-      "id": 8.1,
-      "matchday": "GW 8",
+      "id": "42-8-1",
+      "round": "GW 8",
       "competition": "EML FC26 Summer League",
       "date": "31 Temmuz 2026",
-      "day": "31",
-      "month": "Temmuz",
       "time": "23:00",
+      "timezone": "Europe/Istanbul",
       "home": "Gunners",
       "homeAbbr": "GUN",
       "away": "ALTAIR eSports",
@@ -390,16 +373,16 @@
       "hs": 3,
       "as": 2,
       "played": true,
-      "venue": "Away"
+      "status": "finished",
+      "streamStatus": "unknown"
     },
     {
-      "id": 9.1,
-      "matchday": "GW 9",
+      "id": "42-9-1",
+      "round": "GW 9",
       "competition": "EML FC26 Summer League",
       "date": "07 Ağustos 2026",
-      "day": "07",
-      "month": "Ağustos",
       "time": "22:30",
+      "timezone": "Europe/Istanbul",
       "home": "ALTAIR eSports",
       "homeAbbr": "ALT",
       "away": "FC BIG BANG",
@@ -407,33 +390,33 @@
       "hs": 3,
       "as": 1,
       "played": true,
-      "venue": "Home"
+      "status": "finished",
+      "streamStatus": "unknown"
     },
     {
-      "id": 10.1,
-      "matchday": "GW 10",
+      "id": "42-10-1",
+      "round": "GW 10",
       "competition": "EML FC26 Summer League",
       "date": "07 Ağustos 2026",
-      "day": "07",
-      "month": "Ağustos",
       "time": "23:00",
+      "timezone": "Europe/Istanbul",
       "home": "Liderpool FC",
-      "homeAbbr": "LID",
+      "homeAbbr": "LİD",
       "away": "ALTAIR eSports",
       "awayAbbr": "ALT",
       "hs": 0,
       "as": 2,
       "played": true,
-      "venue": "Away"
+      "status": "finished",
+      "streamStatus": "unknown"
     },
     {
-      "id": 11.1,
-      "matchday": "GW 11",
+      "id": "42-11-1",
+      "round": "GW 11",
       "competition": "EML FC26 Summer League",
       "date": "14 Ağustos 2026",
-      "day": "14",
-      "month": "Ağustos",
       "time": "22:30",
+      "timezone": "Europe/Istanbul",
       "home": "Saray Bahçe eSpor",
       "homeAbbr": "SAR",
       "away": "ALTAIR eSports",
@@ -441,16 +424,16 @@
       "hs": null,
       "as": null,
       "played": false,
-      "venue": "Away"
+      "status": "scheduled",
+      "streamStatus": "unknown"
     },
     {
-      "id": 12.1,
-      "matchday": "GW 12",
+      "id": "42-12-1",
+      "round": "GW 12",
       "competition": "EML FC26 Summer League",
       "date": "14 Ağustos 2026",
-      "day": "14",
-      "month": "Ağustos",
       "time": "23:00",
+      "timezone": "Europe/Istanbul",
       "home": "ALTAIR eSports",
       "homeAbbr": "ALT",
       "away": "Shelter FC",
@@ -458,16 +441,16 @@
       "hs": null,
       "as": null,
       "played": false,
-      "venue": "Home"
+      "status": "scheduled",
+      "streamStatus": "unknown"
     },
     {
-      "id": 13.1,
-      "matchday": "GW 13",
+      "id": "42-13-1",
+      "round": "GW 13",
       "competition": "EML FC26 Summer League",
       "date": "21 Ağustos 2026",
-      "day": "21",
-      "month": "Ağustos",
       "time": "22:30",
+      "timezone": "Europe/Istanbul",
       "home": "ALTAIR eSports",
       "homeAbbr": "ALT",
       "away": "Papatya SK",
@@ -475,7 +458,8 @@
       "hs": null,
       "as": null,
       "played": false,
-      "venue": "Home"
+      "status": "scheduled",
+      "streamStatus": "unknown"
     }
   ],
   "roster": [
@@ -544,14 +528,6 @@
       "profileUrl": "https://emajorleague.com/players/profile/2178/"
     },
     {
-      "ign": "yigitinski",
-      "pos": "CDM",
-      "apps": 9,
-      "goals": 7,
-      "assists": 1,
-      "profileUrl": "https://emajorleague.com/yigitinski/"
-    },
-    {
       "ign": "creedxzenci",
       "pos": "CDM",
       "apps": 9,
@@ -609,11 +585,19 @@
     },
     {
       "ign": "PunisherrrX17",
-      "pos": "CF",
+      "pos": "ST",
       "apps": 3,
       "goals": 3,
       "assists": 1,
       "profileUrl": "https://emajorleague.com/players/profile/6368/"
+    },
+    {
+      "ign": "yigitinski",
+      "pos": "ST",
+      "apps": 9,
+      "goals": 7,
+      "assists": 1,
+      "profileUrl": "https://emajorleague.com/yigitinski/"
     },
     {
       "ign": "Xwrdodo",
