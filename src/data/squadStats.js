@@ -28,15 +28,19 @@ export function createLiveSquadStatsSnapshot(canonicalSquad, roster, {
   const normalizedValidUntil = toIsoString(validUntil);
   if (!lastVerifiedAt || !normalizedValidUntil || Date.parse(lastVerifiedAt) >= Date.parse(normalizedValidUntil)) return null;
 
-  const playerIdBySourceKey = new Map(
-    (Array.isArray(canonicalSquad) ? canonicalSquad : [])
-      .map((player) => [canonicalizeGamerTag(player.gamerTag || player.ign), player.playerId])
-      .filter(([key, playerId]) => key && playerId),
-  );
+  const sourcePlayers = Array.isArray(canonicalSquad) ? canonicalSquad : [];
+  const playerIdBySourceKey = new Map(sourcePlayers
+    .map((player) => [canonicalizeGamerTag(player.gamerTag || player.ign), player.playerId])
+    .filter(([key, playerId]) => key && playerId));
+  const playerIdByProfileId = new Map(sourcePlayers
+    .map((player) => [String(player.profileUrl || "").match(/\/players\/profile\/(\d+)\/?/i)?.[1], player.playerId])
+    .filter(([profileId, playerId]) => profileId && playerId));
   const seen = new Set();
   const stats = [];
   for (const raw of Array.isArray(roster) ? roster : []) {
-    const playerId = playerIdBySourceKey.get(canonicalizeGamerTag(raw?.gamerTag || raw?.ign));
+    const profileId = String(raw?.profileUrl || "").match(/\/players\/profile\/(\d+)\/?/i)?.[1];
+    const playerId = playerIdByProfileId.get(profileId)
+      || playerIdBySourceKey.get(canonicalizeGamerTag(raw?.gamerTag || raw?.ign));
     if (!playerId || seen.has(playerId)) continue;
     seen.add(playerId);
     stats.push(Object.freeze({

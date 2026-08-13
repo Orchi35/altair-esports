@@ -33,7 +33,7 @@ jobs:
       - name: Verify generated snapshot schema and validity
         run: npm run data:verify
       - name: Verify generated snapshot freshness
-        if: steps.refresh.outputs.status != 'rate_limited'
+        if: steps.refresh.outputs.status == 'updated'
         run: npm run data:freshness
       - name: Run deterministic unit and component tests
         run: npm test
@@ -50,9 +50,12 @@ jobs:
           git commit -m "chore: update eMajor League snapshot"
           git push
       - name: Report upstream rate limit
-        if: steps.refresh.outputs.status == 'rate_limited'
+        if: contains(steps.refresh.outputs.status, 'rate_limited')
         run: |
           echo "### eMajor League snapshot" >> "$GITHUB_STEP_SUMMARY"
           echo "- Status: upstream rate limited (HTTP 429)" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Action: existing verified snapshot preserved; no commit created" >> "$GITHUB_STEP_SUMMARY"
-
+          if [ "${{ steps.refresh.outputs.status }}" = "roster_updated_rate_limited" ]; then
+            echo "- Action: verified roster updated; existing match data and validity dates preserved" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- Action: existing verified snapshot preserved; no commit created" >> "$GITHUB_STEP_SUMMARY"
+          fi
