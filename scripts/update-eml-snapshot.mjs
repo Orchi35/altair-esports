@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { EML_TEAM_PATH } from "../src/config/competition.js";
 import { parseRosterHtml } from "../server/match-center/emlParser.js";
 import { fetchAllowedHtml } from "../server/match-center/upstream.js";
+import { createRateLimitedHtmlLoader } from "./lib/eml-rate-limit.mjs";
 import {
   createSnapshotFromSource,
   fetchLiveSource,
@@ -25,13 +26,14 @@ function withoutValidityDates(snapshot) {
 
 async function main() {
   const now = new Date().toISOString();
-  const [{ source }, teamHtml] = await Promise.all([
-    fetchLiveSource({
-      now,
-      fetchHtml:(pathname) => fetchAllowedHtml(pathname, { timeoutMs:12_000 }),
-    }),
-    fetchAllowedHtml(EML_TEAM_PATH, { timeoutMs:12_000 }),
-  ]);
+  const loadHtml = createRateLimitedHtmlLoader({
+    fetchHtml:(pathname) => fetchAllowedHtml(pathname, { timeoutMs:12_000 }),
+    onRetry:({ attempt, delayMs, pathname }) => {
+      console.warn(`EML rate limit: ${pathname} retry ${attempt} in ${delayMs}ms.`);
+    },
+  });
+  const { source } = await fetchLiveSource({ now, fetchHtml:loadHtml });
+  const teamHtml = await loadHtml(EML_TEAM_PATH);
   const roster = parseRosterHtml(teamHtml);
   const snapshot = createSnapshotFromSource(source, { roster });
   inspectSnapshot(snapshot, { now, requireCurrent:true });
@@ -54,10 +56,17 @@ async function main() {
   await fs.mkdir(path.dirname(outputFile), { recursive:true });
   await fs.writeFile(outputFile, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
   console.log(`Snapshot updated: ${snapshot.matches.length} matches, ${snapshot.roster.length} players.`);
+  if (process.env.GITHUB_OUTPUT) await fs.appendFile(process.env.GITHUB_OUTPUT, "status=updated\n", "utf8");
 }
 
-main().catch((error) => {
+main().catch(async (error) => {
   const code = typeof error?.code === "string" ? `${error.code}: ` : "";
+  if (error?.code === "HTTP_429" && process.env.GITHUB_OUTPUT) {
+    await fs.appendFile(process.env.GITHUB_OUTPUT, "status=rate_limited\n", "utf8");
+    console.warn("HTTP_429: eMajor League rate limit continued after bounded retries; the verified snapshot was left unchanged.");
+    return;
+  }
   console.error(`${code}${error instanceof Error ? error.message : String(error)}`);
   process.exitCode = 1;
 });
+
