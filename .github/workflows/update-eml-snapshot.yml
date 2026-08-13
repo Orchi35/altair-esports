@@ -28,14 +28,17 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
       - name: Fetch and validate the real eMajor League source
+        id: refresh
         run: npm run update:eml-snapshot
       - name: Verify generated snapshot schema and validity
         run: npm run data:verify
       - name: Verify generated snapshot freshness
+        if: steps.refresh.outputs.status != 'rate_limited'
         run: npm run data:freshness
       - name: Run deterministic unit and component tests
         run: npm test
       - name: Commit changed snapshot
+        if: steps.refresh.outputs.status != 'rate_limited'
         run: |
           if git diff --quiet -- public/data/eml-snapshot.json; then
             echo "Snapshot is already current."
@@ -46,3 +49,10 @@ jobs:
           git add public/data/eml-snapshot.json
           git commit -m "chore: update eMajor League snapshot"
           git push
+      - name: Report upstream rate limit
+        if: steps.refresh.outputs.status == 'rate_limited'
+        run: |
+          echo "### eMajor League snapshot" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Status: upstream rate limited (HTTP 429)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Action: existing verified snapshot preserved; no commit created" >> "$GITHUB_STEP_SUMMARY"
+

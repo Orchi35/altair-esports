@@ -27,6 +27,7 @@ export class UpstreamError extends Error {
       contentType:typeof details.contentType === "string" ? details.contentType.slice(0, 120) : null,
       responseBytes:Number.isInteger(details.responseBytes) ? details.responseBytes : null,
       timeoutMs:Number.isInteger(details.timeoutMs) ? details.timeoutMs : null,
+      retryAfterSeconds:Number.isInteger(details.retryAfterSeconds) ? details.retryAfterSeconds : null,
     });
   }
 }
@@ -119,7 +120,14 @@ async function fetchAllowedText(pathname, {
   while (true) {
     const response = await fetchWithTimeout(fetchImpl, target, timeoutMs, accept);
     const contentType = String(response.headers.get("content-type") || "").toLowerCase();
-    const details = { httpStatus:response.status, redirectCount:redirects, contentType, timeoutMs };
+    const retryAfter = Number(response.headers.get("retry-after"));
+    const details = {
+      httpStatus:response.status,
+      redirectCount:redirects,
+      contentType,
+      timeoutMs,
+      retryAfterSeconds:Number.isInteger(retryAfter) && retryAfter >= 0 ? retryAfter : null,
+    };
     if (response.status >= 300 && response.status < 400) {
       if (redirects >= maxRedirects) throw new UpstreamError("TOO_MANY_REDIRECTS", "Upstream redirect limit exceeded", details);
       const location = response.headers.get("location");
@@ -175,3 +183,4 @@ export async function fetchRobotsText({
   onDiagnostic?.({ ...details, responseBytes:result.bytes });
   return result.text;
 }
+
