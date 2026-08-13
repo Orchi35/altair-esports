@@ -111,3 +111,18 @@ test("safe upstream fetch classifies important HTTP statuses", async () => {
     );
   }
 });
+
+test("safe upstream fetch preserves numeric Retry-After metadata for HTTP 429", async () => {
+  await assert.rejects(
+    fetchAllowedHtml(ALLOWED_PATH, {
+      fetchImpl:async () => new Response("rate limited", {
+        status:429,
+        headers:{ "content-type":"text/html", "retry-after":"12" },
+      }),
+    }),
+    (error) => error instanceof UpstreamError
+      && error.code === "HTTP_429"
+      && error.details.retryAfterSeconds === 12,
+  );
+});
+
