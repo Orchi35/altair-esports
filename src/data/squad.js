@@ -44,7 +44,7 @@ export const CANONICAL_SQUAD = Object.freeze([
   { playerId:"player-xwrdodo", slug:"dogukan-tombul", firstName:"DOĞUKAN", lastName:"TOMBUL", gamerTag:"Xwrdodo", shirtNumber:"7", position:"ST", positionGroup:"Forwards", image:"/players/Xwrdodo-720.webp", status:"active", joinedAt:null, displayOrder:17, profileUrl:"https://emajorleague.com/Dooggyy/", captain:false, initials:"DK" },
 ].map((player) => Object.freeze(player)));
 
-function toSquadPlayer(player) {
+export function toSquadPlayer(player) {
   const name = [player.firstName, player.lastName].filter(Boolean).join(" ");
   return Object.freeze({
     playerId:player.playerId,
@@ -73,15 +73,19 @@ function toSquadPlayer(player) {
   });
 }
 
-export const SQUAD = Object.freeze(GROUP_META.map((group) => Object.freeze({
-  ...group,
-  players:Object.freeze(
-    CANONICAL_SQUAD
-      .filter((player) => player.positionGroup === group.group)
-      .sort((left, right) => left.displayOrder - right.displayOrder)
-      .map(toSquadPlayer),
-  ),
-})));
+export function groupSquadPlayers(players) {
+  return Object.freeze(GROUP_META.map((group) => Object.freeze({
+    ...group,
+    players:Object.freeze(
+      (Array.isArray(players) ? players : [])
+        .filter((player) => player.positionGroup === group.group)
+        .sort((left, right) => left.displayOrder - right.displayOrder)
+        .map(toSquadPlayer),
+    ),
+  })));
+}
+
+export const SQUAD = groupSquadPlayers(CANONICAL_SQUAD);
 
 export function validateCanonicalSquad(players = CANONICAL_SQUAD) {
   if (!Array.isArray(players) || players.length === 0) return { valid:false, errors:["CANONICAL_SQUAD_EMPTY"] };

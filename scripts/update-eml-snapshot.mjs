@@ -24,26 +24,52 @@ function withoutValidityDates(snapshot) {
   return comparable;
 }
 
+async function setWorkflowStatus(status) {
+  if (process.env.GITHUB_OUTPUT) await fs.appendFile(process.env.GITHUB_OUTPUT, `status=${status}\n`, "utf8");
+}
+
+async function readExistingSnapshot() {
+  try {
+    return JSON.parse(await fs.readFile(outputFile, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+async function preserveMatchesAndUpdateRoster(existing, roster, now) {
+  if (!existing) return false;
+  inspectSnapshot(existing, { now, requireCurrent:false });
+  if (JSON.stringify(existing.roster || []) === JSON.stringify(roster)) return false;
+  await fs.writeFile(outputFile, `${JSON.stringify({ ...existing, roster }, null, 2)}\n`, "utf8");
+  return true;
+}
+
 async function main() {
   const now = new Date().toISOString();
+  const existing = await readExistingSnapshot();
   const loadHtml = createRateLimitedHtmlLoader({
     fetchHtml:(pathname) => fetchAllowedHtml(pathname, { timeoutMs:12_000 }),
     onRetry:({ attempt, delayMs, pathname }) => {
       console.warn(`EML rate limit: ${pathname} retry ${attempt} in ${delayMs}ms.`);
     },
   });
-  const { source } = await fetchLiveSource({ now, fetchHtml:loadHtml });
   const teamHtml = await loadHtml(EML_TEAM_PATH);
   const roster = parseRosterHtml(teamHtml);
+  let source;
+  try {
+    ({ source } = await fetchLiveSource({ now, fetchHtml:loadHtml }));
+  } catch (error) {
+    if (error?.code !== "HTTP_429") throw error;
+    const rosterUpdated = await preserveMatchesAndUpdateRoster(existing, roster, now);
+    await setWorkflowStatus(rosterUpdated ? "roster_updated_rate_limited" : "rate_limited");
+    console.warn(rosterUpdated
+      ? `HTTP_429: Match data stayed unchanged; verified roster updated to ${roster.length} players.`
+      : "HTTP_429: Match data and verified roster stayed unchanged.");
+    return;
+  }
   const snapshot = createSnapshotFromSource(source, { roster });
   inspectSnapshot(snapshot, { now, requireCurrent:true });
 
-  let existing = null;
-  try {
-    existing = JSON.parse(await fs.readFile(outputFile, "utf8"));
-  } catch {
-    existing = null;
-  }
   const dataChanged = !existing
     || JSON.stringify(withoutValidityDates(existing)) !== JSON.stringify(withoutValidityDates(snapshot));
   const renewalRequired = !existing?.validUntil
@@ -56,7 +82,7 @@ async function main() {
   await fs.mkdir(path.dirname(outputFile), { recursive:true });
   await fs.writeFile(outputFile, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
   console.log(`Snapshot updated: ${snapshot.matches.length} matches, ${snapshot.roster.length} players.`);
-  if (process.env.GITHUB_OUTPUT) await fs.appendFile(process.env.GITHUB_OUTPUT, "status=updated\n", "utf8");
+  await setWorkflowStatus("updated");
 }
 
 main().catch(async (error) => {
@@ -69,4 +95,3 @@ main().catch(async (error) => {
   console.error(`${code}${error instanceof Error ? error.message : String(error)}`);
   process.exitCode = 1;
 });
-

@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { EML_TEAM_PATH } from "../config/competition.js";
 import { CANONICAL_SQUAD, SQUAD } from "../data/squad.js";
 import { createLiveSquadStatsSnapshot, mergeSquadWithStats } from "../data/squadStats.js";
+import { createSquadFromLiveRoster, reconcileSquadRoster } from "../data/squadRosterSync.js";
 import { getSnapshotDate, isSiteSnapshotValid, readSiteSnapshot } from "../data/siteSnapshot.js";
 
-const SQUAD_CACHE_KEY = "altair_squad_stats_v7";
+const SQUAD_CACHE_KEY = "altair_squad_stats_v8";
 const SQUAD_CACHE_MAX = 15 * 60 * 1000;
 const SQUAD_CACHE_VALIDITY = 24 * 60 * 60 * 1000;
 const SQUAD_POLL_MS = 5 * 60 * 1000;
@@ -139,12 +140,22 @@ function resolveSquadStatsPath(html) {
 }
 
 export function buildLiveStatsSnapshot(roster, options = {}) {
-  return createLiveSquadStatsSnapshot(CANONICAL_SQUAD, roster, options);
+  const synchronized = reconcileSquadRoster(CANONICAL_SQUAD, roster);
+  return createLiveSquadStatsSnapshot(synchronized, roster, options);
 }
 
 export function buildLiveSquad(baseSquad, roster, options = {}) {
-  const statsSnapshot = buildLiveStatsSnapshot(roster, options);
-  return mergeSquadWithStats(baseSquad, statsSnapshot, options.now).squad;
+  const synchronized = reconcileSquadRoster(CANONICAL_SQUAD, roster);
+  const liveSquad = createSquadFromLiveRoster(CANONICAL_SQUAD, roster) || baseSquad;
+  const statsSnapshot = createLiveSquadStatsSnapshot(synchronized, roster, options);
+  return mergeSquadWithStats(liveSquad, statsSnapshot, options.now).squad;
+}
+
+function mergeLiveRoster(roster, options = {}) {
+  const baseSquad = createSquadFromLiveRoster(CANONICAL_SQUAD, roster) || SQUAD;
+  const synchronized = reconcileSquadRoster(CANONICAL_SQUAD, roster);
+  const statsSnapshot = createLiveSquadStatsSnapshot(synchronized, roster, options);
+  return { baseSquad, statsSnapshot, merged:mergeSquadWithStats(baseSquad, statsSnapshot, options.now) };
 }
 
 function readSquadCache(allowStale = false) {
@@ -173,6 +184,14 @@ function writeSquadCache(data) {
   } catch { /**/ }
 }
 
+function mergeRosterRecord(record, now) {
+  if (Array.isArray(record?.roster)) {
+    const baseSquad = createSquadFromLiveRoster(CANONICAL_SQUAD, record.roster) || SQUAD;
+    return mergeSquadWithStats(baseSquad, record.stats, now);
+  }
+  return mergeSquadWithStats(SQUAD, record, now);
+}
+
 export function useSquadStats() {
   const [squad, setSquad] = useState(SQUAD);
   const [loading, setLoading] = useState(true);
@@ -195,7 +214,7 @@ export function useSquadStats() {
       const cached = readSquadCache();
       if (cached) {
         if (!cancelled) {
-          const merged = mergeSquadWithStats(SQUAD, cached.data);
+          const merged = mergeRosterRecord(cached.data);
           setSquad(merged.squad);
           setLastUpdate(merged.lastVerifiedAt ? new Date(merged.lastVerifiedAt) : null);
           setLoading(false);
@@ -226,16 +245,16 @@ export function useSquadStats() {
         if (roster.length < 5 || roster.length > 40) throw new Error("Squad roster validation failed");
 
         const verifiedAt = new Date().toISOString();
-        const statsSnapshot = buildLiveStatsSnapshot(roster, {
+        const liveRoster = mergeLiveRoster(roster, {
           verifiedAt,
           validUntil:new Date(Date.parse(verifiedAt) + SQUAD_CACHE_VALIDITY).toISOString(),
         });
-        const live = mergeSquadWithStats(SQUAD, statsSnapshot);
-        writeSquadCache(statsSnapshot);
+        const cacheRecord = { roster, stats:liveRoster.statsSnapshot };
+        writeSquadCache(cacheRecord);
 
         if (!cancelled) {
-          setSquad(live.squad);
-          setLastUpdate(live.lastVerifiedAt ? new Date(live.lastVerifiedAt) : null);
+          setSquad(liveRoster.merged.squad);
+          setLastUpdate(liveRoster.merged.lastVerifiedAt ? new Date(liveRoster.merged.lastVerifiedAt) : null);
         }
       } catch (err) {
         const staleCache = readSquadCache(true);
@@ -247,13 +266,15 @@ export function useSquadStats() {
             const snapshot = await readSiteSnapshot();
             if (isSiteSnapshotValid(snapshot) && Array.isArray(snapshot?.roster) && snapshot.roster.length >= 5) {
               const verifiedAt = getSnapshotDate(snapshot)?.toISOString();
-              const statsSnapshot = buildLiveStatsSnapshot(snapshot.roster, {
+              const synchronized = reconcileSquadRoster(CANONICAL_SQUAD, snapshot.roster);
+              const statsSnapshot = createLiveSquadStatsSnapshot(synchronized, snapshot.roster, {
                 verifiedAt,
                 validUntil:snapshot.validUntil,
                 source:String(snapshot.source || "eMajor League snapshot"),
                 status:"stale",
               });
-              const merged = mergeSquadWithStats(SQUAD, statsSnapshot);
+              const baseSquad = createSquadFromLiveRoster(CANONICAL_SQUAD, snapshot.roster) || SQUAD;
+              const merged = mergeSquadWithStats(baseSquad, statsSnapshot);
               snapshotSquad = merged.squad;
               snapshotDate = merged.lastVerifiedAt ? new Date(merged.lastVerifiedAt) : null;
             }
@@ -262,7 +283,7 @@ export function useSquadStats() {
 
         if (!cancelled) {
           setError(err.message);
-          const cached = staleCache?.data ? mergeSquadWithStats(SQUAD, staleCache.data) : null;
+          const cached = staleCache?.data ? mergeRosterRecord(staleCache.data) : null;
           setSquad(cached?.squad || snapshotSquad || SQUAD);
           if (cached?.lastVerifiedAt) setLastUpdate(new Date(cached.lastVerifiedAt));
           else if (snapshotDate) setLastUpdate(snapshotDate);
