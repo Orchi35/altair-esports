@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-14T18:10:03.658Z",
-  "validFrom": "2026-08-14T18:10:03.658Z",
-  "validUntil": "2026-08-16T18:10:03.658Z",
+  "generatedAt": "2026-08-14T20:47:52.978Z",
+  "validFrom": "2026-08-14T20:47:52.978Z",
+  "validUntil": "2026-08-16T20:47:52.978Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -57,6 +57,34 @@
       },
       {
         "rank": 4,
+        "abbr": "3Sİ",
+        "name": "3 Silahşörler",
+        "pld": 11,
+        "w": 7,
+        "d": 1,
+        "l": 3,
+        "gf": 27,
+        "ga": 9,
+        "gd": 18,
+        "pts": 22,
+        "form": "WWW"
+      },
+      {
+        "rank": 5,
+        "abbr": "GLA",
+        "name": "Glarung FC",
+        "pld": 10,
+        "w": 7,
+        "d": 1,
+        "l": 2,
+        "gf": 24,
+        "ga": 6,
+        "gd": 18,
+        "pts": 22,
+        "form": "WWL"
+      },
+      {
+        "rank": 6,
         "abbr": "INF",
         "name": "In Flame",
         "pld": 9,
@@ -70,7 +98,7 @@
         "form": "WWW"
       },
       {
-        "rank": 5,
+        "rank": 7,
         "abbr": "AUD",
         "name": "AUDAX",
         "pld": 10,
@@ -82,34 +110,6 @@
         "gd": 18,
         "pts": 19,
         "form": "LWW"
-      },
-      {
-        "rank": 6,
-        "abbr": "3Sİ",
-        "name": "3 Silahşörler",
-        "pld": 10,
-        "w": 6,
-        "d": 1,
-        "l": 3,
-        "gf": 25,
-        "ga": 9,
-        "gd": 16,
-        "pts": 19,
-        "form": "LWW"
-      },
-      {
-        "rank": 7,
-        "abbr": "GLA",
-        "name": "Glarung FC",
-        "pld": 9,
-        "w": 6,
-        "d": 1,
-        "l": 2,
-        "gf": 22,
-        "ga": 6,
-        "gd": 16,
-        "pts": 19,
-        "form": "WWL"
       },
       {
         "rank": 8,
@@ -199,13 +199,13 @@
         "rank": 14,
         "abbr": "İNV",
         "name": "invictus x",
-        "pld": 10,
+        "pld": 11,
         "w": 1,
         "d": 2,
-        "l": 7,
+        "l": 8,
         "gf": 4,
-        "ga": 16,
-        "gd": -12,
+        "ga": 18,
+        "gd": -14,
         "pts": 5,
         "form": "LLL"
       },
@@ -504,6 +504,14 @@
       "profileUrl": "https://emajorleague.com/players/profile/8829/"
     },
     {
+      "ign": "creedxzenci",
+      "pos": "CB",
+      "apps": 9,
+      "goals": 0,
+      "assists": 1,
+      "profileUrl": "https://emajorleague.com/players/profile/8458/"
+    },
+    {
       "ign": "ek341907",
       "pos": "CB",
       "apps": 2,
@@ -526,14 +534,6 @@
       "goals": 0,
       "assists": 0,
       "profileUrl": "https://emajorleague.com/players/profile/2178/"
-    },
-    {
-      "ign": "creedxzenci",
-      "pos": "CDM",
-      "apps": 9,
-      "goals": 0,
-      "assists": 1,
-      "profileUrl": "https://emajorleague.com/players/profile/8458/"
     },
     {
       "ign": "maniac_kara35",
@@ -560,6 +560,14 @@
       "profileUrl": "https://emajorleague.com/players/profile/8627/"
     },
     {
+      "ign": "PunisherrrX17",
+      "pos": "RW",
+      "apps": 3,
+      "goals": 3,
+      "assists": 1,
+      "profileUrl": "https://emajorleague.com/players/profile/6368/"
+    },
+    {
       "ign": "KingHzrq",
       "pos": "RW",
       "apps": 5,
@@ -582,14 +590,6 @@
       "goals": 0,
       "assists": 0,
       "profileUrl": "https://emajorleague.com/players/profile/9224/"
-    },
-    {
-      "ign": "PunisherrrX17",
-      "pos": "ST",
-      "apps": 3,
-      "goals": 3,
-      "assists": 1,
-      "profileUrl": "https://emajorleague.com/players/profile/6368/"
     },
     {
       "ign": "yigitinski",
