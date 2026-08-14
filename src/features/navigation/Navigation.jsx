@@ -122,7 +122,7 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
 
   const links = [
     [getLocalizedSectionHref(locale, "match-center"), copy.nav.links.matchCenter, "match-center"],
-    [getLocalizedSectionHref(locale, "updates"),      copy.nav.links.updates, "updates"],
+    [getLocalizedSectionHref(locale, "jersey"),       copy.nav.links.jersey, "jersey"],
     [getLocalizedSectionHref(locale, "squad"),        copy.nav.links.players, "squad"],
     [getLocalizedSectionHref(locale, "identity"),     copy.nav.links.club, "identity"],
     [getLocalizedSectionHref(locale, "sponsors"),     copy.nav.links.partners, "sponsors"],

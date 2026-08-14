@@ -1,6 +1,6 @@
 export const EN_MESSAGES = {
     nav: {
-      links: { matchCenter:"Match Center", updates:"Updates", players:"Squad", club:"Club", partners:"Partners", watch:"Watch" },
+      links: { matchCenter:"Match Center", jersey:"Jersey", updates:"Updates", players:"Squad", club:"Club", partners:"Partners", watch:"Watch" },
       cta:"Follow the Club",
       langHead:"Site Language",
       selected:"Selected language",
@@ -69,7 +69,7 @@ export const EN_MESSAGES = {
       view:"View Club Honours",
       items:[
         { mark:"02", season:"FC 26 · Season 1", competition:"EML Third Division", result:"Runner-up" },
-        { mark:"7×", season:"Tournament Record", competition:"BRFC Tournaments", result:"Champions" },
+        { mark:"8×", season:"Tournament Record", competition:"BRFC Tournaments", result:"Champions" },
         { mark:"5×", season:"Tournament Record", competition:"EML Night Tournaments", result:"Champions" },
         { mark:"F", season:"FC 26 · Season 2", competition:"ProLeague European League", result:"Finalist" },
         { mark:"06", season:"FC 26 · Season 2", competition:"EML First Division", result:"6th Place" },
@@ -293,6 +293,22 @@ export const EN_MESSAGES = {
         ig:{ desc:"The home of official announcements, matchday graphics, squad news and the latest stories from ALTAIR.", cta:"Follow the Main Channel" },
         dc:{ desc:"Join the active ALTAIR community for announcements, matchday conversation and club updates.", cta:"Join the Community" },
       },
+    },
+    jersey: {
+      eyebrow:"ALTAIR Team Jersey",
+      title:["WEAR THE", "BADGE"],
+      edition:"2026 / Team Jersey",
+      sub:"Clean white, ALTAIR blue and refined gold details bring the club's on-pitch identity together across the front and back.",
+      galleryLabel:"Front and back views of the ALTAIR team jersey",
+      frontLabel:"Front View",
+      backLabel:"Back View",
+      frontAlt:"Model wearing the front of the ALTAIR team jersey",
+      backAlt:"Back of the ALTAIR team jersey featuring Doğukan and number 7",
+      details:[
+        { label:"Colours", value:"White · ALTAIR Blue" },
+        { label:"Design", value:"Vertical Stripes" },
+        { label:"Detail", value:"Gold Accents" },
+      ],
     },
     updates: {
       eyebrow:"Club Updates",

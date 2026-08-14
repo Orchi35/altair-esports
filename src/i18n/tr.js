@@ -1,6 +1,6 @@
 export const TR_MESSAGES = {
     nav: {
-      links: { matchCenter:"Maç Merkezi", updates:"Gelişmeler", players:"Kadro", club:"Kulüp", partners:"Partnerler", watch:"İzle" },
+      links: { matchCenter:"Maç Merkezi", jersey:"Forma", updates:"Gelişmeler", players:"Kadro", club:"Kulüp", partners:"Partnerler", watch:"İzle" },
       cta:"Kulübü Takip Et",
       langHead:"Site Dili",
       selected:"Seçili dil",
@@ -69,7 +69,7 @@ export const TR_MESSAGES = {
       view:"Başarıları Gör",
       items:[
         { mark:"02", season:"FC 26 · 1. Sezon", competition:"EML 3. Lig", result:"İkincilik" },
-        { mark:"7×", season:"Turnuva Başarısı", competition:"BRFC Turnuvaları", result:"Şampiyonluk" },
+        { mark:"8×", season:"Turnuva Başarısı", competition:"BRFC Turnuvaları", result:"Şampiyonluk" },
         { mark:"5×", season:"Turnuva Başarısı", competition:"EML Gece Turnuvaları", result:"Şampiyonluk" },
         { mark:"F", season:"FC 26 · 2. Sezon", competition:"ProLeague Avrupa Ligi", result:"Finalist" },
         { mark:"06", season:"FC 26 · 2. Sezon", competition:"EML 1. Lig", result:"6.'lık" },
@@ -293,6 +293,22 @@ export const TR_MESSAGES = {
         ig:{ desc:"Resmi duyuruların, maç günü tasarımlarının, kadro haberlerinin ve ALTAIR'den son gelişmelerin ana adresi.", cta:"Ana Kanalı Takip Et" },
         dc:{ desc:"Duyurular, maç günü sohbetleri ve kulüp gelişmeleri için aktif ALTAIR topluluğuna katılın.", cta:"Topluluğa Katıl" },
       },
+    },
+    jersey: {
+      eyebrow:"ALTAIR Takım Forması",
+      title:["ARMAYI", "TAŞI"],
+      edition:"2026 / Takım Forması",
+      sub:"Beyazın sadeliği, ALTAIR mavisi ve altın detaylar. Kulübün sahadaki kimliği, ön ve arka yüzüyle tek bir tasarımda buluşuyor.",
+      galleryLabel:"ALTAIR takım formasının ön ve arka görünüşleri",
+      frontLabel:"Ön Görünüş",
+      backLabel:"Arka Görünüş",
+      frontAlt:"ALTAIR takım formasının ön görünüşünü taşıyan model",
+      backAlt:"Doğukan adı ve 7 numara bulunan ALTAIR takım formasının arka görünüşü",
+      details:[
+        { label:"Renkler", value:"Beyaz · ALTAIR Mavisi" },
+        { label:"Tasarım", value:"Dikey Çizgiler" },
+        { label:"Detay", value:"Altın Dokunuşlar" },
+      ],
     },
     updates: {
       eyebrow:"Kulüp Gündemi",

@@ -16,7 +16,7 @@ export const ROUTE_DEFINITIONS = Object.freeze([
 
 const ROUTE_BY_NAME = new Map(ROUTE_DEFINITIONS.map((route) => [route.name, route]));
 const TAB_HASHES = new Set(["#results", "#fixtures", "#standings"]);
-const HOME_HASHES = new Set(["#identity", "#broadcast", "#main-content", "#hero-countdown"]);
+const HOME_HASHES = new Set(["#jersey", "#identity", "#broadcast", "#main-content", "#hero-countdown"]);
 
 const LEGACY_HASH_TARGETS = Object.freeze({
   "#top":{ routeName:"home", hash:"" },
@@ -25,6 +25,7 @@ const LEGACY_HASH_TARGETS = Object.freeze({
   "#results":{ routeName:"matches", hash:"#results" },
   "#fixtures":{ routeName:"matches", hash:"#fixtures" },
   "#standings":{ routeName:"matches", hash:"#standings" },
+  "#jersey":{ routeName:"home", hash:"#jersey" },
   "#updates":{ routeName:"news", hash:"" },
   "#squad":{ routeName:"squad", hash:"" },
   "#identity":{ routeName:"home", hash:"#identity" },

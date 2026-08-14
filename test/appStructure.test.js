@@ -10,7 +10,7 @@ test("home page follows the unified information architecture", () => {
     "<Hero",
     "<QuickTeamStatus",
     "<MatchCenter",
-    'id="updates"',
+    'id="jersey"',
     'id="squad"',
     'id="identity"',
     'id="honours"',
@@ -29,7 +29,7 @@ test("existing navigation section ids remain registered", async () => {
 
   assert.deepEqual(OBSERVED_SECTION_IDS, [
     "match-center",
-    "updates",
+    "jersey",
     "squad",
     "identity",
     "honours",

@@ -15,7 +15,7 @@ import { AppShell } from "./AppShell.jsx";
 import { getRouteScrollTarget } from "./routes.js";
 import { OBSERVED_SECTION_IDS } from "./sectionRegistry.js";
 
-const ClubUpdates = lazy(() => import("../features/club-updates/ClubUpdates.jsx").then((module) => ({ default:module.ClubUpdates })));
+const JerseyShowcase = lazy(() => import("../features/jersey-showcase/JerseyShowcase.jsx").then((module) => ({ default:module.JerseyShowcase })));
 const Squad = lazy(() => import("../features/squad/Squad.jsx").then((module) => ({ default:module.Squad })));
 const ClubIdentity = lazy(() => import("../features/club-identity/ClubIdentity.jsx").then((module) => ({ default:module.ClubIdentity })));
 const Honours = lazy(() => import("../features/honours/Honours.jsx").then((module) => ({ default:module.Honours })));
@@ -157,7 +157,7 @@ export default function AltairFC() {
           <Hero copy={copy} lang={activeLang} locale={route.locale} matchCenter={matchCenter}/>
           <QuickTeamStatus lang={activeLang} copy={copy} matchCenter={matchCenter}/>
           <MatchCenter lang={activeLang} copy={copy} locale={route.locale} matchCenter={matchCenter} refetch={refetchMatchCenter} retryWaitSeconds={retryWaitSeconds} isRetryCoolingDown={isRetryCoolingDown}/>
-          <DeferredSection active={scrollTargetId === "updates"} Component={ClubUpdates} componentProps={{ lang:activeLang, copy, locale:route.locale }} id="updates" minHeight="520px" onReveal={handleDeferredReveal}/>
+          <DeferredSection active={scrollTargetId === "jersey"} Component={JerseyShowcase} componentProps={{ copy }} id="jersey" minHeight="1180px" onReveal={handleDeferredReveal}/>
           <DeferredSection active={scrollTargetId === "squad"} Component={Squad} componentProps={{ lang:activeLang, copy, locale:route.locale, compact:true }} id="squad" minHeight="760px" onReveal={handleDeferredReveal}/>
           <DeferredSection active={scrollTargetId === "identity"} Component={ClubIdentity} componentProps={{ copy, locale:route.locale }} id="identity" minHeight="760px" onReveal={handleDeferredReveal}/>
           <DeferredSection active={scrollTargetId === "honours"} Component={Honours} componentProps={{ copy, locale:route.locale }} id="honours" minHeight="680px" onReveal={handleDeferredReveal}/>
@@ -172,4 +172,3 @@ export default function AltairFC() {
     </AppShell>
   );
 }
-
