@@ -77,6 +77,7 @@ test("legacy homepage hashes redirect to localized routes and tabs", () => {
   assert.equal(getStartupRedirect({ pathname:"/", hash:"#squad" }), "/tr/kadro");
   assert.equal(getStartupRedirect({ pathname:"/en", hash:"#standings" }), "/en/matches#standings");
   assert.equal(getLocalizedSectionHref("tr", "honours"), "/tr/basarilar");
+  assert.equal(getLocalizedSectionHref("tr", "jersey"), "/tr#jersey");
   assert.equal(getLocalizedSectionHref("en", "broadcast"), "/en#broadcast");
 });
 

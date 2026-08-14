@@ -1,6 +1,6 @@
 export const OBSERVED_SECTION_IDS = Object.freeze([
   "match-center",
-  "updates",
+  "jersey",
   "squad",
   "identity",
   "honours",

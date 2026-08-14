@@ -7,11 +7,11 @@ const HONOURS = [
     en:{ competition:"EML Third Division", result:"Runner-up", description:null },
   },
   {
-    id:"seven-brfc-tournament-wins",
-    mark:"7×",
+    id:"eight-brfc-tournament-wins",
+    mark:"8×",
     season:"Tournament Record",
-    tr:{ competition:"BRFC Turnuvaları", result:"7 Şampiyonluk", description:null },
-    en:{ competition:"BRFC Tournaments", result:"7 Championships", description:null },
+    tr:{ competition:"BRFC Turnuvaları", result:"8 Şampiyonluk", description:null },
+    en:{ competition:"BRFC Tournaments", result:"8 Championships", description:null },
   },
   {
     id:"five-eml-night-tournament-wins",

@@ -23,7 +23,7 @@ body::after{
 
 #identity.section,
 #match-center.section,
-#updates.section,
+#jersey.section,
 #honours.section,
 #squad.section,
 #sponsors.section,
@@ -34,7 +34,7 @@ body::after{
 }
 #identity.section::after,
 #match-center.section::after,
-#updates.section::after,
+#jersey.section::after,
 #honours.section::after,
 #squad.section::after,
 #sponsors.section::after,
@@ -72,11 +72,6 @@ body::after{
   background:
     radial-gradient(circle at 12% 0%,rgba(34,211,238,.08),transparent 34%),
     linear-gradient(180deg,rgba(10,18,31,.92),rgba(7,12,22,.985));
-}
-#updates.section{
-  background:
-    radial-gradient(circle at 88% 0%,rgba(125,143,163,.08),transparent 32%),
-    linear-gradient(180deg,rgba(6,12,22,.94),rgba(9,16,28,.985));
 }
 #squad.section{
   background:
