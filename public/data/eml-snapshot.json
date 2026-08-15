@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-15T03:07:27.568Z",
-  "validFrom": "2026-08-15T03:07:27.568Z",
-  "validUntil": "2026-08-17T03:07:27.568Z",
+  "generatedAt": "2026-08-15T03:57:14.221Z",
+  "validFrom": "2026-08-15T03:57:14.221Z",
+  "validUntil": "2026-08-17T03:57:14.221Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -15,6 +15,20 @@
     "42": [
       {
         "rank": 1,
+        "abbr": "SHE",
+        "name": "Shelter FC",
+        "pld": 13,
+        "w": 9,
+        "d": 3,
+        "l": 1,
+        "gf": 39,
+        "ga": 11,
+        "gd": 28,
+        "pts": 30,
+        "form": "DLW"
+      },
+      {
+        "rank": 2,
         "abbr": "GLA",
         "name": "Glarung FC",
         "pld": 12,
@@ -26,20 +40,6 @@
         "gd": 21,
         "pts": 28,
         "form": "WWL"
-      },
-      {
-        "rank": 2,
-        "abbr": "SHE",
-        "name": "Shelter FC",
-        "pld": 12,
-        "w": 8,
-        "d": 3,
-        "l": 1,
-        "gf": 37,
-        "ga": 11,
-        "gd": 26,
-        "pts": 27,
-        "form": "WDL"
       },
       {
         "rank": 3,
@@ -157,15 +157,15 @@
         "rank": 11,
         "abbr": "FCB",
         "name": "FC BIG BANG",
-        "pld": 12,
-        "w": 3,
+        "pld": 13,
+        "w": 4,
         "d": 2,
         "l": 7,
-        "gf": 19,
+        "gf": 21,
         "ga": 38,
-        "gd": -19,
-        "pts": 11,
-        "form": "LLD"
+        "gd": -17,
+        "pts": 14,
+        "form": "LDW"
       },
       {
         "rank": 12,
@@ -199,15 +199,15 @@
         "rank": 14,
         "abbr": "İNV",
         "name": "invictus x",
-        "pld": 12,
+        "pld": 15,
         "w": 1,
-        "d": 1,
-        "l": 10,
+        "d": 2,
+        "l": 12,
         "gf": 4,
-        "ga": 22,
-        "gd": -18,
-        "pts": 4,
-        "form": "LLL"
+        "ga": 26,
+        "gd": -22,
+        "pts": 5,
+        "form": "DLL"
       },
       {
         "rank": 15,
@@ -227,15 +227,15 @@
         "rank": 16,
         "abbr": "LİD",
         "name": "Liderpool FC",
-        "pld": 12,
+        "pld": 13,
         "w": 0,
-        "d": 1,
+        "d": 2,
         "l": 11,
         "gf": 0,
         "ga": 22,
         "gd": -22,
-        "pts": 1,
-        "form": "LDL"
+        "pts": 2,
+        "form": "DLD"
       }
     ]
   },
