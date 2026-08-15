@@ -70,6 +70,7 @@ function matchCenter(status, overrides = {}) {
     },
     team:altair,
     nextMatch,
+    seasonMatches:nextMatch ? [nextMatch] : [],
     recentResults:status === "season-ended" ? [match({ id:"last", status:"finished", score:{ home:2, away:1 }, startsAt:"2026-08-10T18:00:00.000Z" })] : [],
     upcomingFixtures:nextMatch ? [nextMatch] : [],
     standings:status === "loading" || status === "error" ? [] : standings(),

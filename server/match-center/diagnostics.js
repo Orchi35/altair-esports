@@ -114,7 +114,7 @@ export async function diagnoseEmlUpstream({ fetchImpl = fetch, now = new Date().
     report.timeoutMs = 12_000;
     report.parser = {
       result:"pass",
-      matches:live.data.recentResults.length + live.data.upcomingFixtures.length,
+      matches:live.data.seasonMatches.length,
       standingsRows:live.data.standings.length,
     };
     return report;

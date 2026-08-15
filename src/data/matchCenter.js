@@ -32,7 +32,7 @@ const ALTAIR_ALIASES = new Set([
  * @typedef {{id:string,competition:string,round:string,homeTeam:NormalizedTeam,awayTeam:NormalizedTeam,startsAt:string,timezone:string,status:string,streamUrl:string|null,streamStatus:string,score:MatchScore|null}} NormalizedMatch
  * @typedef {{position:number,team:NormalizedTeam,played:number,won:number,drawn:number,lost:number,goalsFor:number,goalsAgainst:number,goalDifference:number,points:number,form:string[]}} StandingRow
  * @typedef {{status:MatchCenterStatus,generatedAt:string|null,fetchedAt:string|null,lastSuccessfulAt:string|null,validUntil:string|null,sourceName:string,sourceType:string,seasonId:string,seasonName:string,seasonStatus:string,isStale:boolean,warningCode:string|null,reason:string|null,checkedAt:string|null,retryAfterSeconds:number|null}} MatchCenterMeta
- * @typedef {{meta:MatchCenterMeta,team:NormalizedTeam,nextMatch:NormalizedMatch|null,recentResults:NormalizedMatch[],upcomingFixtures:NormalizedMatch[],standings:StandingRow[]}} MatchCenterData
+ * @typedef {{meta:MatchCenterMeta,team:NormalizedTeam,nextMatch:NormalizedMatch|null,seasonMatches:NormalizedMatch[],recentResults:NormalizedMatch[],upcomingFixtures:NormalizedMatch[],standings:StandingRow[]}} MatchCenterData
  */
 
 function canonicalizeTeamName(value) {
@@ -165,16 +165,18 @@ export function normalizeMatchCenterSource(source, { now = new Date().toISOStrin
   const nowIso = toIsoString(now);
   if (!nowIso) return null;
 
-  const matches = source.matches.map(normalizeMatch).filter(Boolean);
+  const seasonMatches = source.matches
+    .map(normalizeMatch)
+    .filter(Boolean)
+    .sort((left, right) => Date.parse(left.startsAt) - Date.parse(right.startsAt));
   const nowTimestamp = Date.parse(nowIso);
-  const recentResults = matches
+  const recentResults = seasonMatches
     .filter((match) => match.status === "finished")
     .sort((left, right) => Date.parse(right.startsAt) - Date.parse(left.startsAt))
     .slice(0, 5);
-  const upcomingFixtures = matches
+  const upcomingFixtures = seasonMatches
     .filter((match) => match.status !== "finished" && match.status !== "cancelled" && Date.parse(match.startsAt) >= nowTimestamp)
-    .sort((left, right) => Date.parse(left.startsAt) - Date.parse(right.startsAt))
-    .slice(0, 4);
+    .sort((left, right) => Date.parse(left.startsAt) - Date.parse(right.startsAt));
   const seasonEnded = hasVerifiedSeasonEnded(source.season, nowIso);
   const fetchedAt = normalizeDateOrNull(source.fetchedAt) || nowIso;
   const generatedAt = normalizeDateOrNull(source.generatedAt) || fetchedAt;
@@ -201,6 +203,7 @@ export function normalizeMatchCenterSource(source, { now = new Date().toISOStrin
     },
     team:normalizeTeam(source.team || ALTAIR_TEAM) || { ...ALTAIR_TEAM },
     nextMatch:upcomingFixtures[0] || null,
+    seasonMatches,
     recentResults,
     upcomingFixtures,
     standings:normalizeStandings(source.standings),
@@ -228,6 +231,7 @@ export function createLoadingMatchCenterData(season = {}) {
     },
     team:{ ...ALTAIR_TEAM },
     nextMatch:null,
+    seasonMatches:[],
     recentResults:[],
     upcomingFixtures:[],
     standings:[],
@@ -271,7 +275,7 @@ export function createUnavailableMatchCenterData({
 
 export function isMatchCenterData(value) {
   if (!value || typeof value !== "object" || !value.meta || !MATCH_CENTER_STATUSES.includes(value.meta.status)) return false;
-  if (!value.team || !Array.isArray(value.recentResults) || !Array.isArray(value.upcomingFixtures) || !Array.isArray(value.standings)) return false;
+  if (!value.team || !Array.isArray(value.seasonMatches) || !Array.isArray(value.recentResults) || !Array.isArray(value.upcomingFixtures) || !Array.isArray(value.standings)) return false;
   const dateFields = ["generatedAt", "fetchedAt", "lastSuccessfulAt", "validUntil"];
   if (dateFields.some((field) => value.meta[field] !== null && !toIsoString(value.meta[field]))) return false;
   const requiredMetaStrings = ["sourceName", "sourceType", "seasonId", "seasonName", "seasonStatus"];
@@ -280,7 +284,7 @@ export function isMatchCenterData(value) {
   if (value.meta.retryAfterSeconds !== null && value.meta.retryAfterSeconds !== undefined
     && (!Number.isInteger(value.meta.retryAfterSeconds) || value.meta.retryAfterSeconds <= 0)) return false;
   if (!normalizeTeam(value.team) || (value.nextMatch !== null && !normalizeMatch(value.nextMatch))) return false;
-  const matchesAreValid = [...value.recentResults, ...value.upcomingFixtures]
+  const matchesAreValid = [...value.seasonMatches, ...value.recentResults, ...value.upcomingFixtures]
     .every((match) => Boolean(normalizeMatch(match)));
   const standingsAreValid = value.standings.every((row) => (
     row

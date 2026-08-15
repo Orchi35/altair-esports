@@ -16,10 +16,13 @@ export default function MatchesPage({ copy, lang, locale, matchCenter, refetch, 
   const [competition, setCompetition] = useState("all");
   const [visibleResults, setVisibleResults] = useState(PAGE_SIZE);
   const [visibleUpcoming, setVisibleUpcoming] = useState(PAGE_SIZE);
-  const allMatches = useMemo(() => [...matchCenter.upcomingFixtures, ...matchCenter.recentResults], [matchCenter]);
+  const allMatches = useMemo(() => matchCenter.seasonMatches, [matchCenter.seasonMatches]);
   const competitions = useMemo(() => uniqueValues(allMatches.map((match) => match.competition)), [allMatches]);
   const upcoming = matchCenter.upcomingFixtures.filter((match) => competition === "all" || match.competition === competition);
-  const results = matchCenter.recentResults.filter((match) => competition === "all" || match.competition === competition);
+  const results = allMatches
+    .filter((match) => match.status === "finished")
+    .sort((left, right) => Date.parse(right.startsAt) - Date.parse(left.startsAt))
+    .filter((match) => competition === "all" || match.competition === competition);
   const breadcrumbs = [
     { label:copy.pages.common.home, href:getRoutePath("home", locale) },
     { label:copy.pages.common.matches },

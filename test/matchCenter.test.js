@@ -101,6 +101,21 @@ test("the earliest valid future match is selected as nextMatch", () => {
   assert.deepEqual(result.upcomingFixtures.map((match) => match.id), ["earlier", "future"]);
 });
 
+test("the complete verified season fixture is preserved without truncation", () => {
+  const matches = Array.from({ length:15 }, (_, index) => ({
+    id:`gw-${index + 1}`,
+    home:index % 2 === 0 ? "ALTAIR eSports" : `Opponent ${index + 1}`,
+    away:index % 2 === 0 ? `Opponent ${index + 1}` : "ALTAIR eSports",
+    startsAt:`2026-08-${String(index + 11).padStart(2, "0")}T20:00:00+03:00`,
+    status:"scheduled",
+    round:`GW ${index + 1}`,
+  }));
+  const result = resolveMatchCenterData({ primary:source({ matches }), now:NOW, season:ACTIVE_SEASON });
+  assert.equal(result.seasonMatches.length, 15);
+  assert.equal(result.upcomingFixtures.length, 15);
+  assert.deepEqual(result.seasonMatches.map((match) => match.round), Array.from({ length:15 }, (_, index) => `GW ${index + 1}`));
+});
+
 test("a verified finished score is normalized without confusing zero and missing data", () => {
   const finished = normalizeMatch({
     id:"finished",
