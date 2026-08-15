@@ -154,12 +154,16 @@ function ResultsPanel({ lang, copy, matchCenter, refetch }) {
 
 function FixturesPanel({ lang, copy, matchCenter, refetch }) {
   if (matchCenter.meta.status === "loading") return <MatchPanelSkeleton/>;
-  if (!matchCenter.upcomingFixtures.length) {
+  if (!matchCenter.seasonMatches.length) {
     return <EmptyPanel kind="fixtures" lang={lang} status={matchCenter.meta.status} refetch={refetch}/>;
   }
   return (
     <div className="fix-grid mc-fixtures-list">
-      {matchCenter.upcomingFixtures.map((match) => <FixtureCard key={match.id} match={match} lang={lang} copy={copy}/>) }
+      {matchCenter.seasonMatches.map((match) => (
+        match.status === "finished" && match.score
+          ? <ResultCard key={match.id} match={match} lang={lang} copy={copy}/>
+          : <FixtureCard key={match.id} match={match} lang={lang} copy={copy}/>
+      ))}
     </div>
   );
 }

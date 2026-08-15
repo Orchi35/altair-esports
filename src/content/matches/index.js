@@ -29,13 +29,13 @@ export function createMatchSlug(match) {
 }
 
 export function getAllMatches(matchCenter) {
-  const matches = [
+  const matches = matchCenter?.seasonMatches?.length ? matchCenter.seasonMatches : [
     matchCenter?.nextMatch,
     ...(matchCenter?.recentResults || []),
     ...(matchCenter?.upcomingFixtures || []),
-  ].filter(Boolean);
+  ];
   const byId = new Map();
-  matches.forEach((match) => byId.set(String(match.id), match));
+  matches.filter(Boolean).forEach((match) => byId.set(String(match.id), match));
   return [...byId.values()].sort((left, right) => Date.parse(left.startsAt) - Date.parse(right.startsAt));
 }
 

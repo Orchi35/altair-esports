@@ -94,6 +94,7 @@ function matchCenterEnvelope(mode = "fresh") {
     data:{
       team:altair,
       nextMatch,
+      seasonMatches:[recent, nextMatch],
       recentResults:[recent],
       upcomingFixtures:[nextMatch],
       standings:[
