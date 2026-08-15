@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-15T11:36:37.986Z",
-  "validFrom": "2026-08-15T11:36:37.986Z",
-  "validUntil": "2026-08-17T11:36:37.986Z",
+  "generatedAt": "2026-08-15T13:01:46.632Z",
+  "validFrom": "2026-08-15T13:01:46.632Z",
+  "validUntil": "2026-08-17T13:01:46.632Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -39,7 +39,7 @@
         "ga": 6,
         "gd": 21,
         "pts": 28,
-        "form": "WWL"
+        "form": "WLW"
       },
       {
         "rank": 3,
@@ -73,15 +73,15 @@
         "rank": 5,
         "abbr": "ANA",
         "name": "Anatolian Lions",
-        "pld": 10,
+        "pld": 11,
         "w": 8,
         "d": 1,
-        "l": 1,
+        "l": 2,
         "gf": 31,
-        "ga": 15,
-        "gd": 16,
+        "ga": 17,
+        "gd": 14,
         "pts": 25,
-        "form": "WWD"
+        "form": "WDL"
       },
       {
         "rank": 6,
@@ -329,7 +329,7 @@
       "id": "42-6-1",
       "round": "GW 6",
       "competition": "EML FC26 Summer League",
-      "date": "17 July 2026",
+      "date": "17 Temmuz 2026",
       "time": "23:00",
       "timezone": "Europe/Istanbul",
       "home": "Glarung FC",
@@ -514,14 +514,6 @@
       "profileUrl": "https://emajorleague.com/players/profile/9054/"
     },
     {
-      "ign": "TRU-egehanski",
-      "pos": "CB",
-      "apps": 6,
-      "goals": 1,
-      "assists": 0,
-      "profileUrl": "https://emajorleague.com/players/profile/7652/"
-    },
-    {
       "ign": "Zeppettoo",
       "pos": "CB",
       "apps": 5,
@@ -552,6 +544,14 @@
       "goals": 0,
       "assists": 0,
       "profileUrl": "https://emajorleague.com/players/profile/7979/"
+    },
+    {
+      "ign": "TRU-egehanski",
+      "pos": "CB",
+      "apps": 6,
+      "goals": 1,
+      "assists": 0,
+      "profileUrl": "https://emajorleague.com/players/profile/7652/"
     },
     {
       "ign": "yasko434",
@@ -594,20 +594,12 @@
       "profileUrl": "https://emajorleague.com/players/profile/8627/"
     },
     {
-      "ign": "PunisherrrX17",
+      "ign": "Sparostago1",
       "pos": "RW",
-      "apps": 4,
-      "goals": 4,
-      "assists": 5,
-      "profileUrl": "https://emajorleague.com/players/profile/6368/"
-    },
-    {
-      "ign": "KingHzrq",
-      "pos": "RW",
-      "apps": 6,
-      "goals": 2,
+      "apps": 0,
+      "goals": 0,
       "assists": 0,
-      "profileUrl": "https://emajorleague.com/players/profile/8814/"
+      "profileUrl": "https://emajorleague.com/players/profile/9224/"
     },
     {
       "ign": "KinaciYusuf",
@@ -618,12 +610,20 @@
       "profileUrl": "https://emajorleague.com/YusufKinaci/"
     },
     {
-      "ign": "Sparostago1",
+      "ign": "KingHzrq",
       "pos": "RW",
-      "apps": 0,
-      "goals": 0,
+      "apps": 6,
+      "goals": 2,
       "assists": 0,
-      "profileUrl": "https://emajorleague.com/players/profile/9224/"
+      "profileUrl": "https://emajorleague.com/players/profile/8814/"
+    },
+    {
+      "ign": "PunisherrrX17",
+      "pos": "ST",
+      "apps": 4,
+      "goals": 4,
+      "assists": 5,
+      "profileUrl": "https://emajorleague.com/players/profile/6368/"
     },
     {
       "ign": "yigitinski",
@@ -632,14 +632,6 @@
       "goals": 11,
       "assists": 2,
       "profileUrl": "https://emajorleague.com/yigitinski/"
-    },
-    {
-      "ign": "Xwrdodo",
-      "pos": "ST",
-      "apps": 10,
-      "goals": 2,
-      "assists": 7,
-      "profileUrl": "https://emajorleague.com/Dooggyy/"
     }
   ]
 }
