@@ -5,11 +5,15 @@ import {
   createLoadingMatchCenterData,
   createUnavailableMatchCenterData,
   isMatchCenterData,
+  resolveMatchCenterData,
 } from "../data/matchCenter.js";
+import {
+  MATCH_CENTER_REFRESH_INTERVAL_MS,
+  shouldRefreshMatchCenter,
+} from "./matchCenterRefresh.js";
 
 const ENDPOINT = "/api/match-center";
 const REQUEST_TIMEOUT_MS = 8_000;
-const REFRESH_INTERVAL_MS = 15 * 60 * 1000;
 export const RETRY_COOLDOWN_MS = 10_000;
 const ACTIVE_SEASON = Object.freeze({
   id:String(ACTIVE_COMPETITION.tournamentId),
@@ -43,9 +47,16 @@ class MatchCenterResponseError extends Error {
   }
 }
 
-async function requestMatchCenter() {
+async function requestMatchCenter(externalSignal) {
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  let timedOut = false;
+  const abortFromExternalSignal = () => controller.abort();
+  if (externalSignal?.aborted) controller.abort();
+  else externalSignal?.addEventListener("abort", abortFromExternalSignal, { once:true });
+  const timeout = window.setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, REQUEST_TIMEOUT_MS);
   try {
     const response = await fetch(ENDPOINT, {
       cache:"no-store",
@@ -59,9 +70,33 @@ async function requestMatchCenter() {
     const matchCenter = fromEnvelope(await response.json());
     if (!matchCenter) throw new MatchCenterResponseError("INVALID_RESPONSE", "Match Center response failed validation");
     return matchCenter;
+  } catch (error) {
+    if (timedOut && error?.name === "AbortError") {
+      throw new MatchCenterResponseError("REQUEST_TIMEOUT", "Match Center request timed out");
+    }
+    throw error;
   } finally {
     window.clearTimeout(timeout);
+    externalSignal?.removeEventListener("abort", abortFromExternalSignal);
   }
+}
+
+function backgroundFailureData(current, error) {
+  if (!["fresh", "stale", "empty", "season-ended"].includes(current?.meta?.status)) return null;
+  const resolved = resolveMatchCenterData({
+    error,
+    fallback:current,
+    now:new Date().toISOString(),
+    season:ACTIVE_SEASON,
+  });
+  if (resolved.meta.status !== "stale") return resolved;
+  return {
+    ...resolved,
+    meta:{
+      ...resolved.meta,
+      warningCode:error instanceof MatchCenterResponseError ? error.code : "CLIENT_NETWORK_UNAVAILABLE",
+    },
+  };
 }
 
 export function useMatchCenterData() {
@@ -69,12 +104,14 @@ export function useMatchCenterData() {
   const [refreshNonce, setRefreshNonce] = useState(0);
   const [retryWaitSeconds, setRetryWaitSeconds] = useState(0);
   const retryAvailableAtRef = useRef(0);
+  const lastRequestedAtRef = useRef(0);
   const refetch = useCallback(() => {
     const now = Date.now();
     if (now < retryAvailableAtRef.current) return false;
     retryAvailableAtRef.current = now + RETRY_COOLDOWN_MS;
+    lastRequestedAtRef.current = now;
     setRetryWaitSeconds(Math.ceil(RETRY_COOLDOWN_MS / 1000));
-    setRefreshNonce(now);
+    setRefreshNonce((value) => value + 1);
     return true;
   }, []);
 
@@ -89,28 +126,60 @@ export function useMatchCenterData() {
 
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
+    const isBackgroundRefresh = refreshNonce > 0;
     async function load() {
-      setData(createLoadingMatchCenterData(ACTIVE_SEASON));
+      lastRequestedAtRef.current = Date.now();
+      if (!isBackgroundRefresh) setData(createLoadingMatchCenterData(ACTIVE_SEASON));
       try {
-        const nextData = await requestMatchCenter();
+        const nextData = await requestMatchCenter(controller.signal);
         if (!cancelled) setData(nextData);
       } catch (error) {
-        const nextData = error instanceof MatchCenterResponseError
+        if (cancelled || error?.name === "AbortError") return;
+        const nextData = error instanceof MatchCenterResponseError && error.code !== "REQUEST_TIMEOUT"
           ? createErrorMatchCenterData(ACTIVE_SEASON, error.code)
           : createUnavailableMatchCenterData({
             season:ACTIVE_SEASON,
-            warningCode:error?.name === "AbortError" ? "REQUEST_TIMEOUT" : "CLIENT_NETWORK_UNAVAILABLE",
+            warningCode:error instanceof MatchCenterResponseError ? error.code : "CLIENT_NETWORK_UNAVAILABLE",
           });
-        if (!cancelled) setData(nextData);
+        setData((current) => (
+          isBackgroundRefresh ? backgroundFailureData(current, error) || nextData : nextData
+        ));
       }
     }
     load();
-    const interval = window.setInterval(() => setRefreshNonce(Date.now()), REFRESH_INTERVAL_MS);
     return () => {
       cancelled = true;
-      window.clearInterval(interval);
+      controller.abort();
     };
   }, [refreshNonce]);
 
+  useEffect(() => {
+    const refreshIfDue = () => {
+      const now = Date.now();
+      if (!shouldRefreshMatchCenter({
+        lastRequestedAt:lastRequestedAtRef.current,
+        now,
+        visibilityState:document.visibilityState,
+      })) return;
+      lastRequestedAtRef.current = now;
+      setRefreshNonce((value) => value + 1);
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") refreshIfDue();
+    };
+    const interval = window.setInterval(refreshIfDue, MATCH_CENTER_REFRESH_INTERVAL_MS);
+    window.addEventListener("focus", refreshIfDue);
+    window.addEventListener("online", refreshIfDue);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refreshIfDue);
+      window.removeEventListener("online", refreshIfDue);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   return { data, refetch, retryWaitSeconds, isRetryCoolingDown:retryWaitSeconds > 0 };
 }
+

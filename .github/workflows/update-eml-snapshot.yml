@@ -3,8 +3,8 @@ name: Update eMajor League snapshot
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 6 * * *"
-    - cron: "15 * * * 5"
+    # Keep fixtures, results, standings and roster current throughout the week.
+    - cron: "17 * * * *"
 
 permissions:
   contents: write
@@ -59,3 +59,4 @@ jobs:
           else
             echo "- Action: existing verified snapshot preserved; no commit created" >> "$GITHUB_STEP_SUMMARY"
           fi
+
