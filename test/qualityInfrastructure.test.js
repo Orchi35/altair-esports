@@ -33,8 +33,10 @@ test("PR quality workflow runs every deterministic quality gate without external
 
 test("real source smoke and snapshot update stay in the separate scheduled workflow", () => {
   assert.match(sourceWorkflow, /schedule:/);
+  assert.match(sourceWorkflow, /cron:\s*["']17 \* \* \* \*["']/);
   assert.match(sourceWorkflow, /npm run update:eml-snapshot/);
   assert.match(sourceWorkflow, /npm run data:verify/);
   assert.match(sourceWorkflow, /npm run data:freshness/);
   assert.match(sourceWorkflow, /git diff --quiet -- public\/data\/eml-snapshot\.json/);
 });
+
