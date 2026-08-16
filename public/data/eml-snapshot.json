@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-16T20:41:17.388Z",
-  "validFrom": "2026-08-16T20:41:17.388Z",
-  "validUntil": "2026-08-18T20:41:17.388Z",
+  "generatedAt": "2026-08-16T22:40:07.640Z",
+  "validFrom": "2026-08-16T22:40:07.640Z",
+  "validUntil": "2026-08-18T22:40:07.640Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -514,6 +514,14 @@
       "profileUrl": "https://emajorleague.com/players/profile/9054/"
     },
     {
+      "ign": "ek341907",
+      "pos": "CB",
+      "apps": 3,
+      "goals": 0,
+      "assists": 0,
+      "profileUrl": "https://emajorleague.com/players/profile/7979/"
+    },
+    {
       "ign": "Zeppettoo",
       "pos": "CB",
       "apps": 5,
@@ -536,14 +544,6 @@
       "goals": 0,
       "assists": 1,
       "profileUrl": "https://emajorleague.com/players/profile/8458/"
-    },
-    {
-      "ign": "ek341907",
-      "pos": "CB",
-      "apps": 3,
-      "goals": 0,
-      "assists": 0,
-      "profileUrl": "https://emajorleague.com/players/profile/7979/"
     },
     {
       "ign": "TRU-egehanski",
@@ -594,12 +594,12 @@
       "profileUrl": "https://emajorleague.com/players/profile/8627/"
     },
     {
-      "ign": "Sparostago1",
+      "ign": "KingHzrq",
       "pos": "RW",
-      "apps": 0,
-      "goals": 0,
+      "apps": 6,
+      "goals": 2,
       "assists": 0,
-      "profileUrl": "https://emajorleague.com/players/profile/9224/"
+      "profileUrl": "https://emajorleague.com/players/profile/8814/"
     },
     {
       "ign": "KinaciYusuf",
@@ -610,12 +610,12 @@
       "profileUrl": "https://emajorleague.com/YusufKinaci/"
     },
     {
-      "ign": "KingHzrq",
+      "ign": "Sparostago1",
       "pos": "RW",
-      "apps": 6,
-      "goals": 2,
+      "apps": 0,
+      "goals": 0,
       "assists": 0,
-      "profileUrl": "https://emajorleague.com/players/profile/8814/"
+      "profileUrl": "https://emajorleague.com/players/profile/9224/"
     },
     {
       "ign": "PunisherrrX17",
