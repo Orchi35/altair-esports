@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-17T20:46:34.448Z",
-  "validFrom": "2026-08-17T20:46:34.448Z",
-  "validUntil": "2026-08-19T20:46:34.448Z",
+  "generatedAt": "2026-08-17T22:44:17.746Z",
+  "validFrom": "2026-08-17T22:44:17.746Z",
+  "validUntil": "2026-08-19T22:44:17.746Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -78,8 +78,8 @@
         "d": 1,
         "l": 2,
         "gf": 31,
-        "ga": 17,
-        "gd": 14,
+        "ga": 16,
+        "gd": 15,
         "pts": 25,
         "form": "WDL"
       },
@@ -203,9 +203,9 @@
         "w": 1,
         "d": 1,
         "l": 13,
-        "gf": 3,
+        "gf": 2,
         "ga": 27,
-        "gd": -24,
+        "gd": -25,
         "pts": 4,
         "form": "DLL"
       },
