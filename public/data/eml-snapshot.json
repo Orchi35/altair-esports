@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-17T19:00:33.894Z",
-  "validFrom": "2026-08-17T19:00:33.894Z",
-  "validUntil": "2026-08-19T19:00:33.894Z",
+  "generatedAt": "2026-08-17T20:46:34.448Z",
+  "validFrom": "2026-08-17T20:46:34.448Z",
+  "validUntil": "2026-08-19T20:46:34.448Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -532,7 +532,7 @@
     {
       "ign": "LethalGullit",
       "pos": "CB",
-      "apps": 9,
+      "apps": 8,
       "goals": 1,
       "assists": 0,
       "profileUrl": "https://emajorleague.com/players/profile/8829/"
@@ -540,7 +540,7 @@
     {
       "ign": "creedxzenci",
       "pos": "CB",
-      "apps": 10,
+      "apps": 9,
       "goals": 0,
       "assists": 1,
       "profileUrl": "https://emajorleague.com/players/profile/8458/"
@@ -548,7 +548,7 @@
     {
       "ign": "TRU-egehanski",
       "pos": "CB",
-      "apps": 6,
+      "apps": 5,
       "goals": 1,
       "assists": 0,
       "profileUrl": "https://emajorleague.com/players/profile/7652/"
@@ -572,7 +572,7 @@
     {
       "ign": "maniac_kara35",
       "pos": "CDM",
-      "apps": 7,
+      "apps": 6,
       "goals": 0,
       "assists": 0,
       "profileUrl": "https://emajorleague.com/players/profile/9020/"
@@ -580,7 +580,7 @@
     {
       "ign": "ORC-HI",
       "pos": "CM",
-      "apps": 10,
+      "apps": 9,
       "goals": 0,
       "assists": 3,
       "profileUrl": "https://emajorleague.com/Orchi/"
@@ -596,7 +596,7 @@
     {
       "ign": "KingHzrq",
       "pos": "RW",
-      "apps": 6,
+      "apps": 5,
       "goals": 2,
       "assists": 0,
       "profileUrl": "https://emajorleague.com/players/profile/8814/"
@@ -628,7 +628,7 @@
     {
       "ign": "yigitinski",
       "pos": "ST",
-      "apps": 10,
+      "apps": 9,
       "goals": 11,
       "assists": 2,
       "profileUrl": "https://emajorleague.com/yigitinski/"
