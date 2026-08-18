@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-18T03:11:05.706Z",
-  "validFrom": "2026-08-18T03:11:05.706Z",
-  "validUntil": "2026-08-20T03:11:05.706Z",
+  "generatedAt": "2026-08-18T07:07:32.603Z",
+  "validFrom": "2026-08-18T07:07:32.603Z",
+  "validUntil": "2026-08-20T07:07:32.603Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -414,7 +414,7 @@
       "id": "42-11-1",
       "round": "GW 11",
       "competition": "EML FC26 Summer League",
-      "date": "14 Ağustos 2026",
+      "date": "14 August 2026",
       "time": "22:30",
       "timezone": "Europe/Istanbul",
       "home": "Saray Bahçe eSpor",
