@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-19T22:44:36.800Z",
-  "validFrom": "2026-08-19T22:44:36.800Z",
-  "validUntil": "2026-08-21T22:44:36.800Z",
+  "generatedAt": "2026-08-19T23:40:59.612Z",
+  "validFrom": "2026-08-19T23:40:59.612Z",
+  "validUntil": "2026-08-21T23:40:59.612Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -278,7 +278,7 @@
       "id": "42-3-1",
       "round": "GW 3",
       "competition": "EML FC26 Summer League",
-      "date": "10 Temmuz 2026",
+      "date": "10 July 2026",
       "time": "22:30",
       "timezone": "Europe/Istanbul",
       "home": "invictus x",
