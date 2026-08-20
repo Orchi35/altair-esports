@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-20T03:12:11.428Z",
-  "validFrom": "2026-08-20T03:12:11.428Z",
-  "validUntil": "2026-08-22T03:12:11.428Z",
+  "generatedAt": "2026-08-20T04:02:05.237Z",
+  "validFrom": "2026-08-20T04:02:05.237Z",
+  "validUntil": "2026-08-22T04:02:05.237Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -261,7 +261,7 @@
       "id": "42-2-1",
       "round": "GW 2",
       "competition": "EML FC26 Summer League",
-      "date": "03 July 2026",
+      "date": "03 Temmuz 2026",
       "time": "23:00",
       "timezone": "Europe/Istanbul",
       "home": "Anatolian Lions",
