@@ -12,6 +12,24 @@ import { UpstreamError } from "../server/match-center/upstream.js";
 
 const NOW = "2026-08-10T09:00:00.000Z";
 
+const DETERMINISTIC_FUTURE_MATCH = Object.freeze({
+  id:"test-future-match",
+  matchday:"GW TEST",
+  competition:"EML FC26 Summer League",
+  date:"12 August 2026",
+  day:"12",
+  month:"August",
+  time:"20:00",
+  home:"ALTAIR eSports",
+  homeAbbr:"ALT",
+  away:"Test Fixture FC",
+  awayAbbr:"TST",
+  hs:null,
+  as:null,
+  played:false,
+  venue:"Home",
+});
+
 async function baseSnapshot() {
   return JSON.parse(await fs.readFile(SNAPSHOT_FILE, "utf8"));
 }
@@ -27,6 +45,7 @@ async function makeSnapshot({
   snapshot.validFrom = validFrom;
   snapshot.validUntil = validUntil;
   snapshot.competition.status = seasonStatus;
+  snapshot.matches = [DETERMINISTIC_FUTURE_MATCH];
   return snapshot;
 }
 
