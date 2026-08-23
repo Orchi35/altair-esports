@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-21T21:42:39.051Z",
-  "validFrom": "2026-08-21T21:42:39.051Z",
-  "validUntil": "2026-08-23T21:42:39.051Z",
+  "generatedAt": "2026-08-23T13:47:48.902Z",
+  "validFrom": "2026-08-23T13:47:48.902Z",
+  "validUntil": "2026-08-25T13:47:48.902Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -465,7 +465,7 @@
       "id": "42-14-1",
       "round": "GW 14",
       "competition": "EML FC26 Summer League",
-      "date": "21 August 2026",
+      "date": "21 Ağustos 2026",
       "time": "23:00",
       "timezone": "Europe/Istanbul",
       "home": "CROWN CITY",
@@ -489,10 +489,10 @@
       "homeAbbr": "ALT",
       "away": "CatBird eSports",
       "awayAbbr": "CAT",
-      "hs": null,
-      "as": null,
-      "played": false,
-      "status": "scheduled",
+      "hs": 12,
+      "as": 0,
+      "played": true,
+      "status": "finished",
       "streamStatus": "unknown"
     }
   ],
