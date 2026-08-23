@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-23T19:38:52.548Z",
-  "validFrom": "2026-08-23T19:38:52.548Z",
-  "validUntil": "2026-08-25T19:38:52.548Z",
+  "generatedAt": "2026-08-23T23:38:13.071Z",
+  "validFrom": "2026-08-23T23:38:13.071Z",
+  "validUntil": "2026-08-25T23:38:13.071Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -514,12 +514,12 @@
       "profileUrl": "https://emajorleague.com/players/profile/9054/"
     },
     {
-      "ign": "ek341907",
+      "ign": "TRU-egehanski",
       "pos": "CB",
-      "apps": 5,
-      "goals": 1,
+      "apps": 7,
+      "goals": 2,
       "assists": 0,
-      "profileUrl": "https://emajorleague.com/players/profile/7979/"
+      "profileUrl": "https://emajorleague.com/players/profile/7652/"
     },
     {
       "ign": "Zeppettoo",
@@ -546,12 +546,12 @@
       "profileUrl": "https://emajorleague.com/players/profile/8458/"
     },
     {
-      "ign": "TRU-egehanski",
+      "ign": "ek341907",
       "pos": "CB",
-      "apps": 7,
-      "goals": 2,
+      "apps": 5,
+      "goals": 1,
       "assists": 0,
-      "profileUrl": "https://emajorleague.com/players/profile/7652/"
+      "profileUrl": "https://emajorleague.com/players/profile/7979/"
     },
     {
       "ign": "yasko434",
@@ -576,6 +576,14 @@
       "goals": 0,
       "assists": 0,
       "profileUrl": "https://emajorleague.com/players/profile/9020/"
+    },
+    {
+      "ign": "Hoaraxe",
+      "pos": "CM",
+      "apps": 0,
+      "goals": 0,
+      "assists": 0,
+      "profileUrl": "https://emajorleague.com/Hoaraxe/"
     },
     {
       "ign": "Esquua",
