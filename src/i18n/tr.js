@@ -69,7 +69,7 @@ export const TR_MESSAGES = {
       view:"Başarıları Gör",
       items:[
         { mark:"02", season:"FC 26 · 1. Sezon", competition:"EML 3. Lig", result:"İkincilik" },
-        { mark:"8×", season:"Turnuva Başarısı", competition:"BRFC Turnuvaları", result:"Şampiyonluk" },
+        { mark:"9×", season:"Turnuva Başarısı", competition:"BRFC Turnuvaları", result:"Şampiyonluk" },
         { mark:"5×", season:"Turnuva Başarısı", competition:"EML Gece Turnuvaları", result:"Şampiyonluk" },
         { mark:"F", season:"FC 26 · 2. Sezon", competition:"ProLeague Avrupa Ligi", result:"Finalist" },
         { mark:"06", season:"FC 26 · 2. Sezon", competition:"EML 1. Lig", result:"6.'lık" },

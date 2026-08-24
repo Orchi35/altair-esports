@@ -69,7 +69,7 @@ export const EN_MESSAGES = {
       view:"View Club Honours",
       items:[
         { mark:"02", season:"FC 26 · Season 1", competition:"EML Third Division", result:"Runner-up" },
-        { mark:"8×", season:"Tournament Record", competition:"BRFC Tournaments", result:"Champions" },
+        { mark:"9×", season:"Tournament Record", competition:"BRFC Tournaments", result:"Champions" },
         { mark:"5×", season:"Tournament Record", competition:"EML Night Tournaments", result:"Champions" },
         { mark:"F", season:"FC 26 · Season 2", competition:"ProLeague European League", result:"Finalist" },
         { mark:"06", season:"FC 26 · Season 2", competition:"EML First Division", result:"6th Place" },
