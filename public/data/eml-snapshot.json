@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-26T13:19:27.047Z",
-  "validFrom": "2026-08-26T13:19:27.047Z",
-  "validUntil": "2026-08-28T13:19:27.047Z",
+  "generatedAt": "2026-08-26T15:54:45.835Z",
+  "validFrom": "2026-08-26T15:54:45.835Z",
+  "validUntil": "2026-08-28T15:54:45.835Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -244,7 +244,7 @@
       "id": "42-1-1",
       "round": "GW 1",
       "competition": "EML FC26 Summer League",
-      "date": "03 Temmuz 2026",
+      "date": "03 July 2026",
       "time": "22:30",
       "timezone": "Europe/Istanbul",
       "home": "AUDAX",
@@ -578,6 +578,14 @@
       "profileUrl": "https://emajorleague.com/players/profile/9020/"
     },
     {
+      "ign": "ORC-HI",
+      "pos": "CM",
+      "apps": 11,
+      "goals": 3,
+      "assists": 5,
+      "profileUrl": "https://emajorleague.com/Orchi/"
+    },
+    {
       "ign": "Hoaraxe",
       "pos": "CM",
       "apps": 0,
@@ -632,14 +640,6 @@
       "goals": 20,
       "assists": 6,
       "profileUrl": "https://emajorleague.com/yigitinski/"
-    },
-    {
-      "ign": "ORC-HI",
-      "pos": "ST",
-      "apps": 11,
-      "goals": 3,
-      "assists": 5,
-      "profileUrl": "https://emajorleague.com/Orchi/"
     }
   ]
 }
