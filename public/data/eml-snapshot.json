@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-25T21:46:20.259Z",
-  "validFrom": "2026-08-25T21:46:20.259Z",
-  "validUntil": "2026-08-27T21:46:20.259Z",
+  "generatedAt": "2026-08-26T05:52:29.144Z",
+  "validFrom": "2026-08-26T05:52:29.144Z",
+  "validUntil": "2026-08-28T05:52:29.144Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -482,7 +482,7 @@
       "id": "42-15-1",
       "round": "GW 15",
       "competition": "EML FC26 Summer League",
-      "date": "21 Ağustos 2026",
+      "date": "21 August 2026",
       "time": "23:30",
       "timezone": "Europe/Istanbul",
       "home": "ALTAIR eSports",
