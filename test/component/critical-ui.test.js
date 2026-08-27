@@ -74,6 +74,7 @@ function matchCenter(status, overrides = {}) {
     recentResults:status === "season-ended" ? [match({ id:"last", status:"finished", score:{ home:2, away:1 }, startsAt:"2026-08-10T18:00:00.000Z" })] : [],
     upcomingFixtures:nextMatch ? [nextMatch] : [],
     standings:status === "loading" || status === "error" ? [] : standings(),
+    playoffs:{ status:status === "loading" ? "loading" : "empty", currentStage:"quarterfinal", format:"two-legged", rounds:[{ id:"quarterfinal", status:"empty", ties:[] }] },
     ...overrides,
   };
 }
@@ -145,6 +146,52 @@ test("Match Center renders loading, fresh, stale, empty, ended, unavailable and 
     }));
     assert.match(html, new RegExp(expected), `Missing ${status} component state`);
   }
+});
+
+test("Match Center renders the verified two-legged playoff bracket without inventing later ties", () => {
+  const firstLeg = match({
+    id:"qf-leg-1",
+    round:"Quarterfinal · Leg 1",
+    homeTeam:altair,
+    awayTeam:{ id:"glarung-fc", name:"Glarung FC", shortName:"GLA", logo:null },
+    startsAt:"2026-08-28T19:30:00.000Z",
+    stage:"quarterfinal",
+    leg:1,
+    tieId:"qf-1-8",
+    homeSeed:8,
+    awaySeed:1,
+  });
+  const html = renderToStaticMarkup(React.createElement(MatchCenter, {
+    lang:"TR",
+    copy,
+    locale:"tr",
+    matchCenter:matchCenter("fresh", {
+      playoffs:{
+        status:"active",
+        currentStage:"quarterfinal",
+        format:"two-legged",
+        rounds:[{
+          id:"quarterfinal",
+          status:"active",
+          ties:[{
+            id:"qf-1-8",
+            firstSeed:1,
+            secondSeed:8,
+            firstTeam:firstLeg.awayTeam,
+            secondTeam:altair,
+            legs:[firstLeg],
+            aggregate:null,
+            winner:null,
+          }],
+        }],
+      },
+    }),
+    refetch:() => {},
+  }));
+  assert.match(html, /Şampiyonluk Yolu/);
+  assert.match(html, /Glarung FC/);
+  assert.match(html, /ALTAIR eSports/);
+  assert.match(html, /Eşleşmeler EML tarafından doğrulandığında/);
 });
 
 test("unavailable Match Center hides old match details and exposes a cooled-down retry", () => {

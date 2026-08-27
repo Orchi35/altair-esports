@@ -9,11 +9,12 @@ import {
   isMatchCenterData,
   normalizeMatch,
   normalizeMatchCenterSource,
+  normalizePlayoffs,
   normalizeStandings,
   resolveMatchCenterData,
 } from "../../src/data/matchCenter.js";
 import { toIsoString } from "../../src/utils/dateTime.js";
-import { ParserError, parseFixtureHtml, parseStandingsHtml } from "./emlParser.js";
+import { ParserError, parseFixtureHtml, parsePlayoffFixtureHtml, parseStandingsHtml } from "./emlParser.js";
 import { UpstreamError, fetchAllowedHtml } from "./upstream.js";
 
 const serverDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -54,6 +55,7 @@ function snapshotToSource(snapshot) {
     },
     team:ALTAIR_TEAM,
     matches:snapshot.matches,
+    playoffMatches:Array.isArray(snapshot.playoffMatches) ? snapshot.playoffMatches : [],
     standings:snapshot.standings[String(snapshot.competition.tournamentId)],
   };
 }
@@ -85,6 +87,19 @@ export function inspectSnapshot(snapshot, { now = new Date().toISOString(), requ
   }
   if (snapshot.matches.some((match, index) => !normalizeMatch(match, index))) {
     throw new SnapshotError("SNAPSHOT_MATCH_INVALID", "Snapshot contains an invalid match record");
+  }
+  if (snapshot.playoffMatches !== undefined && (
+    !Array.isArray(snapshot.playoffMatches)
+    || snapshot.playoffMatches.some((match, index) => !normalizeMatch(match, index))
+  )) {
+    throw new SnapshotError("SNAPSHOT_PLAYOFF_INVALID", "Snapshot contains an invalid playoff match record");
+  }
+  if (snapshot.playoffMatches?.length) {
+    const playoffRound = normalizePlayoffs(snapshot.playoffMatches).rounds[0];
+    const playoffLegCount = playoffRound?.ties.reduce((total, tie) => total + tie.legs.length, 0) || 0;
+    if (playoffRound?.ties.length !== 4 || playoffLegCount !== 8) {
+      throw new SnapshotError("SNAPSHOT_PLAYOFF_INCOMPLETE", "Snapshot quarterfinal bracket is incomplete");
+    }
   }
   if (normalizeStandings(standings).length !== standings.length || standings.length < 5) {
     throw new SnapshotError("SNAPSHOT_STANDINGS_INVALID", "Snapshot standings failed validation");
@@ -126,8 +141,14 @@ export async function fetchLiveSource({
   ]);
   const standings = parseStandingsHtml(standingsHtml);
   const matches = fixturePages.flatMap(({ matchday, html }) => parseFixtureHtml(html, matchday));
+  const playoffMatches = fixturePages
+    .filter(({ matchday }) => ACTIVE_COMPETITION.playoffMatchdays.includes(matchday))
+    .flatMap(({ matchday, html }) => parsePlayoffFixtureHtml(html, matchday));
   if (matches.length < Math.min(5, ACTIVE_COMPETITION.matchdays.length)) {
     throw new ParserError("FIXTURE_SET_TOO_SHORT", "Live fixture set contains too few ALTAIR matches");
+  }
+  if (playoffMatches.length && playoffMatches.length !== ACTIVE_COMPETITION.playoffMatchdays.length * 4) {
+    throw new ParserError("PLAYOFF_SET_INCOMPLETE", "Live playoff fixture set is incomplete");
   }
 
   const source = {
@@ -141,6 +162,7 @@ export async function fetchLiveSource({
     season:ACTIVE_SEASON,
     team:ALTAIR_TEAM,
     matches,
+    playoffMatches,
     standings,
   };
   const normalized = normalizeMatchCenterSource(source, { now:nowIso });
@@ -245,6 +267,7 @@ export function createSnapshotFromSource(source, { roster = [], validityMs = ACT
     },
     standings:{ [String(ACTIVE_COMPETITION.tournamentId)]:source.standings },
     matches:source.matches,
+    playoffMatches:Array.isArray(source.playoffMatches) ? source.playoffMatches : [],
     roster,
   };
 }

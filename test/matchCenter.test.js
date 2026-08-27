@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   createLoadingMatchCenterData,
   normalizeMatch,
+  normalizePlayoffs,
   normalizeStandings,
   normalizeTeam,
   resolveMatchCenterData,
@@ -114,6 +115,38 @@ test("the complete verified season fixture is preserved without truncation", () 
   assert.equal(result.seasonMatches.length, 15);
   assert.equal(result.upcomingFixtures.length, 15);
   assert.deepEqual(result.seasonMatches.map((match) => match.round), Array.from({ length:15 }, (_, index) => `GW ${index + 1}`));
+});
+
+test("two playoff legs normalize into one seeded quarterfinal tie", () => {
+  const base = {
+    competition:"EML FC26 Summer League",
+    stage:"quarterfinal",
+    tieId:"qf-1-8",
+    homeSeed:8,
+    awaySeed:1,
+    home:"ALTAIR eSports",
+    away:"Glarung FC",
+    startsAt:"2026-08-28T22:30:00+03:00",
+    status:"scheduled",
+  };
+  const playoffs = normalizePlayoffs([
+    { ...base, id:"leg-1", leg:1 },
+    {
+      ...base,
+      id:"leg-2",
+      leg:2,
+      homeSeed:1,
+      awaySeed:8,
+      home:"Glarung FC",
+      away:"ALTAIR eSports",
+      startsAt:"2026-08-28T23:00:00+03:00",
+    },
+  ]);
+  assert.equal(playoffs.status, "active");
+  assert.equal(playoffs.rounds[0].ties.length, 1);
+  assert.equal(playoffs.rounds[0].ties[0].firstSeed, 1);
+  assert.equal(playoffs.rounds[0].ties[0].secondTeam.id, "altair-esports");
+  assert.deepEqual(playoffs.rounds[0].ties[0].legs.map((match) => match.leg), [1, 2]);
 });
 
 test("a verified finished score is normalized without confusing zero and missing data", () => {

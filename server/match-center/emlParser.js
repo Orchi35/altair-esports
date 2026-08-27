@@ -110,6 +110,40 @@ function parseFixtureDate(tableText) {
   return numericDate ? `${numericDate[1].padStart(2, "0")} ${numericDate[2]} ${numericDate[3]}` : "";
 }
 
+function getSeed(value) {
+  const seed = String(value || "").match(/\((\d+)\.\)/)?.[1];
+  return seed ? Number.parseInt(seed, 10) : null;
+}
+
+function parseFixtureRow({ cellsHtml, cells }, matchday, date, time, index) {
+  if (cells.length < 6) throw new ParserError("FIXTURE_FIELDS_MISSING", `Matchday ${matchday} row is missing required fields`);
+  const home = getLinkedText(cellsHtml[1]);
+  const away = getLinkedText(cellsHtml[5]);
+  if (!home || !away) throw new ParserError("FIXTURE_TEAM_MISSING", `Matchday ${matchday} has an incomplete team field`);
+  if (!date || !time) throw new ParserError("FIXTURE_DATETIME_MISSING", `Matchday ${matchday} has no verified date or time`);
+
+  const homeScore = String(cells[2] || "").trim();
+  const awayScore = String(cells[4] || "").trim();
+  const played = /^\d+$/.test(homeScore) && /^\d+$/.test(awayScore);
+  return {
+    id:`${ACTIVE_COMPETITION.tournamentId}-${matchday}-${index + 1}`,
+    round:`GW ${matchday}`,
+    competition:ACTIVE_COMPETITION.competition,
+    date,
+    time,
+    timezone:"Europe/Istanbul",
+    home,
+    homeAbbr:abbreviation(home),
+    away,
+    awayAbbr:abbreviation(away),
+    hs:played ? Number(homeScore) : null,
+    as:played ? Number(awayScore) : null,
+    played,
+    status:played ? "finished" : "scheduled",
+    streamStatus:"unknown",
+  };
+}
+
 export function parseFixtureHtml(html, matchday) {
   const candidate = getTables(html).find((table) => canonicalize(stripTags(table)).includes(ALTAIR_KEY));
   if (!candidate) return [];
@@ -121,32 +155,39 @@ export function parseFixtureHtml(html, matchday) {
 
   for (const { html:cellsHtml, text:cells, raw } of getRows(candidate)) {
     if (!canonicalize(stripTags(raw)).includes(ALTAIR_KEY)) continue;
-    if (cells.length < 6) throw new ParserError("FIXTURE_FIELDS_MISSING", `Matchday ${matchday} row is missing required fields`);
-    const home = getLinkedText(cellsHtml[1]);
-    const away = getLinkedText(cellsHtml[5]);
-    if (!home || !away) throw new ParserError("FIXTURE_TEAM_MISSING", `Matchday ${matchday} has an incomplete team field`);
-    if (!date || !time) throw new ParserError("FIXTURE_DATETIME_MISSING", `Matchday ${matchday} has no verified date or time`);
+    matches.push(parseFixtureRow({ cellsHtml, cells }, matchday, date, time, matches.length));
+  }
+  return matches;
+}
 
-    const homeScore = String(cells[2] || "").trim();
-    const awayScore = String(cells[4] || "").trim();
-    const played = /^\d+$/.test(homeScore) && /^\d+$/.test(awayScore);
-    matches.push({
-      id:`${ACTIVE_COMPETITION.tournamentId}-${matchday}-${matches.length + 1}`,
-      round:`GW ${matchday}`,
-      competition:ACTIVE_COMPETITION.competition,
-      date,
-      time,
-      timezone:"Europe/Istanbul",
-      home,
-      homeAbbr:abbreviation(home),
-      away,
-      awayAbbr:abbreviation(away),
-      hs:played ? Number(homeScore) : null,
-      as:played ? Number(awayScore) : null,
-      played,
-      status:played ? "finished" : "scheduled",
-      streamStatus:"unknown",
-    });
+export function parsePlayoffFixtureHtml(html, matchday) {
+  const quarterfinalMatchdays = ACTIVE_COMPETITION.playoffs?.quarterfinalMatchdays || [];
+  const leg = quarterfinalMatchdays.indexOf(matchday) + 1;
+  if (!leg) return [];
+
+  const matches = [];
+  for (const table of getTables(html)) {
+    const tableText = stripTags(table);
+    const date = parseFixtureDate(tableText);
+    const time = tableText.match(/(\d{1,2}:\d{2})\s*(?:UTC|TSİ|TRT)?/i)?.[1] || "";
+    for (const { html:cellsHtml, text:cells } of getRows(table)) {
+      const homeSeed = getSeed(cells[1]);
+      const awaySeed = getSeed(cells[5]);
+      if (!homeSeed || !awaySeed) continue;
+      const match = parseFixtureRow({ cellsHtml, cells }, matchday, date, time, matches.length);
+      const firstSeed = Math.min(homeSeed, awaySeed);
+      const secondSeed = Math.max(homeSeed, awaySeed);
+      matches.push({
+        ...match,
+        id:`${ACTIVE_COMPETITION.tournamentId}-qf-${firstSeed}-${secondSeed}-leg-${leg}`,
+        round:`Quarterfinal · Leg ${leg}`,
+        stage:"quarterfinal",
+        leg,
+        tieId:`qf-${firstSeed}-${secondSeed}`,
+        homeSeed,
+        awaySeed,
+      });
+    }
   }
   return matches;
 }

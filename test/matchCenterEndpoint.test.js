@@ -72,6 +72,15 @@ test("service returns a recent verified snapshot without external network", asyn
   assert.equal(externalCalled, false);
 });
 
+test("snapshot verification rejects an incomplete playoff bracket", async () => {
+  const snapshot = await makeSnapshot();
+  snapshot.playoffMatches = snapshot.playoffMatches.slice(0, 7);
+  assert.throws(
+    () => inspectSnapshot(snapshot, { now:NOW, requireCurrent:true }),
+    (error) => error?.code === "SNAPSHOT_PLAYOFF_INCOMPLETE",
+  );
+});
+
 test("external failure + valid snapshot returns stale", async () => {
   const result = await getMatchCenter({
     now:NOW,

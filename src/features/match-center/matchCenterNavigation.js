@@ -1,10 +1,11 @@
-export const MATCH_CENTER_TABS = Object.freeze(["results", "fixtures", "standings"]);
+export const MATCH_CENTER_TABS = Object.freeze(["playoffs", "results", "fixtures", "standings"]);
 
 const HASH_TO_TAB = Object.freeze({
   "#matches":"results",
   "#results":"results",
   "#fixtures":"fixtures",
   "#standings":"standings",
+  "#playoffs":"playoffs",
 });
 
 export function getMatchCenterTabFromHash(hash) {

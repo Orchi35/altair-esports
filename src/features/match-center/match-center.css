@@ -547,7 +547,7 @@
 .mc-next--loading span:first-child{grid-row:span 2;height:112px}
 .mc-tabs{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:repeat(4,minmax(0,1fr));
   border:1px solid rgba(126,211,255,.14);
   border-bottom:0;
   border-radius:14px 14px 0 0;
@@ -585,6 +585,49 @@
 }
 .mc-tab-panel[hidden]{display:none}
 .mc-tab-panel:focus-visible{outline:2px solid rgba(34,211,238,.5);outline-offset:4px}
+.mc-playoff{overflow:hidden;border:1px solid rgba(126,211,255,.1);border-radius:10px;background:linear-gradient(145deg,rgba(8,23,38,.98),rgba(3,10,18,.96))}
+.mc-playoff-header{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.8fr);gap:32px;align-items:end;padding:28px 30px;border-bottom:1px solid rgba(126,211,255,.1);background:radial-gradient(circle at 12% 0%,rgba(34,211,238,.12),transparent 42%)}
+.mc-playoff-header > div{display:grid;gap:8px}
+.mc-playoff-header span,.mc-playoff-round-heading span{color:var(--cyan);font-family:var(--f-mono);font-size:8px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.mc-playoff-header h3{margin:0;color:var(--text);font-family:var(--f-display);font-size:clamp(28px,4vw,48px);line-height:.95;text-transform:uppercase}
+.mc-playoff-header p{max-width:590px;margin:0;color:var(--text-2);font-size:13px;line-height:1.7}
+.mc-playoff-scroll{width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-color:var(--cyan) rgba(255,255,255,.05);scrollbar-width:thin}
+.mc-playoff-scroll:focus-visible{outline:3px solid var(--cyan);outline-offset:-3px}
+.mc-playoff-tree{display:grid;grid-template-columns:minmax(400px,1.5fr) minmax(260px,1fr) minmax(260px,1fr);gap:34px;min-width:1020px;padding:30px}
+.mc-playoff-round{position:relative;display:grid;align-content:center;gap:16px;min-width:0}
+.mc-playoff-round:not(:last-child)::after{content:"";position:absolute;top:50%;right:-34px;width:34px;height:1px;background:linear-gradient(90deg,rgba(34,211,238,.5),rgba(216,184,95,.3))}
+.mc-playoff-round-heading{display:flex;gap:10px;align-items:center;padding-bottom:10px;border-bottom:1px solid rgba(126,211,255,.12)}
+.mc-playoff-round-heading h3{margin:0;color:var(--text);font-family:var(--f-narrow);font-size:16px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.mc-playoff-ties{display:grid;gap:12px;margin:0;padding:0;list-style:none}
+.mc-playoff-tie{position:relative;overflow:hidden;border:1px solid rgba(126,211,255,.13);border-radius:9px;background:rgba(3,10,18,.78)}
+.mc-playoff-tie.is-altair{border-color:rgba(34,211,238,.48);box-shadow:0 0 0 1px rgba(34,211,238,.08),0 12px 34px rgba(0,0,0,.24)}
+.mc-playoff-tie.is-altair::before{content:"";position:absolute;top:0;bottom:0;left:0;width:3px;background:linear-gradient(180deg,var(--cyan),#d8b85f)}
+.mc-playoff-teams{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(126,211,255,.09)}
+.mc-playoff-team{display:grid;grid-template-columns:22px 30px minmax(0,1fr);gap:8px;align-items:center;min-height:52px;padding:8px 10px}
+.mc-playoff-team + .mc-playoff-team{border-left:1px solid rgba(126,211,255,.08)}
+.mc-playoff-team.is-altair{background:rgba(34,211,238,.07)}
+.mc-playoff-team strong{overflow:hidden;color:var(--text-2);font-family:var(--f-narrow);font-size:12px;text-overflow:ellipsis;white-space:nowrap}
+.mc-playoff-team.is-altair strong{color:var(--text)}
+.mc-playoff-seed{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:1px solid rgba(216,184,95,.26);border-radius:50%;color:#d8b85f;font-family:var(--f-mono);font-size:7px;font-weight:800}
+.mc-playoff-badge{width:30px;height:30px;border-radius:50%;font-size:7px}
+.mc-playoff-badge .club-badge-logo{width:82%;height:82%;object-fit:contain}
+.mc-playoff-legs{display:grid;margin:0;padding:0;list-style:none}
+.mc-playoff-legs li{display:flex;gap:12px;align-items:center;justify-content:space-between;min-height:46px;padding:7px 12px;border-bottom:1px solid rgba(126,211,255,.06)}
+.mc-playoff-legs li:last-child{border-bottom:0}
+.mc-playoff-legs li > div{display:grid;gap:3px;min-width:0}
+.mc-playoff-legs li span{color:var(--cyan);font-family:var(--f-mono);font-size:7px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.mc-playoff-legs time{overflow:hidden;color:var(--muted);font-family:var(--f-body);font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+.mc-playoff-legs li > strong{flex:0 0 auto;color:var(--text);font-family:var(--f-display);font-size:16px;text-transform:uppercase}
+.mc-playoff-aggregate{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-top:1px solid rgba(216,184,95,.18);background:rgba(216,184,95,.045)}
+.mc-playoff-aggregate span{color:#cbbd95;font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase}
+.mc-playoff-aggregate strong{color:#f0d98d;font-family:var(--f-display);font-size:18px}
+.mc-playoff-pending{display:grid;justify-items:center;gap:14px;min-height:190px;align-content:center;padding:24px;border:1px dashed rgba(126,211,255,.18);border-radius:9px;background:rgba(255,255,255,.012);text-align:center}
+.mc-playoff-pending img{width:58px;height:58px;object-fit:contain;opacity:.2;filter:grayscale(.4)}
+.mc-playoff-pending p{max-width:200px;margin:0;color:var(--muted);font-size:11px;line-height:1.6}
+.mc-playoff-empty{display:grid;justify-items:center;gap:14px;padding:54px 20px;text-align:center}
+.mc-playoff-empty p{margin:0;color:var(--text-2)}
+.mc-playoff-empty button{min-height:44px;padding:0 18px;border:1px solid var(--cyan);background:transparent;color:var(--cyan);font-family:var(--f-display);font-weight:800;text-transform:uppercase;cursor:pointer}
+.mc-playoff-empty button:focus-visible{outline:3px solid var(--text);outline-offset:3px}
 .mc-results-list,.mc-fixtures-list{border:0;border-radius:8px;background:rgba(7,17,29,.7);box-shadow:none}
 .mc-panel-skeleton{display:grid;gap:1px;overflow:hidden;border-radius:8px;background:rgba(126,211,255,.07)}
 .mc-panel-skeleton span{display:block;min-height:92px;background:linear-gradient(100deg,#07111d 35%,#102538 48%,#07111d 61%);background-size:220% 100%;animation:mcSkeleton 1.2s ease-in-out infinite}
@@ -637,6 +680,7 @@
   .mc-next{grid-template-columns:1fr}
   .mc-next-matchup{border-right:0;border-bottom:1px solid rgba(126,211,255,.1)}
   .mc-next-meta{padding-bottom:82px}
+  .mc-playoff-header{grid-template-columns:1fr;gap:14px}
 }
 @media (max-width:680px){
   .mc-unavailable{grid-template-columns:1fr;padding:22px}
@@ -662,6 +706,11 @@
   .mc-next--loading span:first-child{grid-row:auto;height:92px}
   .mc-tabs button{min-height:54px;padding-inline:7px;font-size:10px;letter-spacing:.08em}
   .mc-tab-panel{padding:10px}
+  .mc-playoff-header{padding:22px 18px}
+  .mc-playoff-tree{grid-template-columns:310px 245px 245px;gap:26px;min-width:860px;padding:20px 16px}
+  .mc-playoff-round:not(:last-child)::after{right:-26px;width:26px}
+  .mc-playoff-team{grid-template-columns:20px 26px minmax(0,1fr);gap:6px;padding-inline:8px}
+  .mc-playoff-badge{width:26px;height:26px}
   .mc-standings-table{min-width:620px}
   .mc-standings-table th,.mc-standings-table td{height:50px;padding:7px 6px;font-size:11px}
   .mc-standings-table th:nth-child(1){width:62px}

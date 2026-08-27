@@ -15,6 +15,7 @@ import {
 import { FixtureCard } from "../fixtures/FixtureCard.jsx";
 import { ResultCard } from "../results/ResultCard.jsx";
 import { MatchDataState } from "./MatchDataState.jsx";
+import { PlayoffBracket } from "./PlayoffBracket.jsx";
 import {
   getMatchOpponent,
   localizeMatchCompetition,
@@ -221,7 +222,8 @@ function StandingsPanel({ lang, copy, matchCenter, refetch }) {
 }
 
 export function MatchCenter({ lang, copy, locale, matchCenter, refetch, retryWaitSeconds = 0, isRetryCoolingDown = false }) {
-  const initialTab = typeof window === "undefined" ? "results" : getMatchCenterTabFromHash(window.location.hash) || "results";
+  const defaultTab = ACTIVE_COMPETITION.phase === "playoffs" ? "playoffs" : "results";
+  const initialTab = typeof window === "undefined" ? defaultTab : getMatchCenterTabFromHash(window.location.hash) || defaultTab;
   const [activeTab, setActiveTab] = useState(initialTab);
   const tabRefs = useRef({});
   const status = matchCenter.meta.status;
@@ -269,6 +271,7 @@ export function MatchCenter({ lang, copy, locale, matchCenter, refetch, retryWai
   };
 
   const panels = {
+    playoffs:<PlayoffBracket lang={lang} copy={copy.matchCenter} playoffs={matchCenter.playoffs} status={matchCenter.meta.status} refetch={handleRetry}/>,
     results:<ResultsPanel lang={lang} copy={copy} matchCenter={matchCenter} refetch={handleRetry}/>,
     fixtures:<FixturesPanel lang={lang} copy={copy} matchCenter={matchCenter} refetch={handleRetry}/>,
     standings:<StandingsPanel lang={lang} copy={copy} matchCenter={matchCenter} refetch={handleRetry}/>,
@@ -280,6 +283,7 @@ export function MatchCenter({ lang, copy, locale, matchCenter, refetch, retryWai
       <span className="legacy-hash-anchor" id="results" aria-hidden="true"/>
       <span className="legacy-hash-anchor" id="fixtures" aria-hidden="true"/>
       <span className="legacy-hash-anchor" id="standings" aria-hidden="true"/>
+      <span className="legacy-hash-anchor" id="playoffs" aria-hidden="true"/>
       <div className="container">
         <div className="mc-heading">
           <div>

@@ -29,10 +29,10 @@ const ALTAIR_ALIASES = new Set([
  * @typedef {"loading"|"fresh"|"stale"|"empty"|"season-ended"|"unavailable"|"error"} MatchCenterStatus
  * @typedef {{id:string,name:string,shortName:string,logo:string|null}} NormalizedTeam
  * @typedef {{home:number,away:number}} MatchScore
- * @typedef {{id:string,competition:string,round:string,homeTeam:NormalizedTeam,awayTeam:NormalizedTeam,startsAt:string,timezone:string,status:string,streamUrl:string|null,streamStatus:string,score:MatchScore|null}} NormalizedMatch
+ * @typedef {{id:string,competition:string,round:string,homeTeam:NormalizedTeam,awayTeam:NormalizedTeam,startsAt:string,timezone:string,status:string,streamUrl:string|null,streamStatus:string,score:MatchScore|null,stage:string|null,leg:number|null,tieId:string|null,homeSeed:number|null,awaySeed:number|null}} NormalizedMatch
  * @typedef {{position:number,team:NormalizedTeam,played:number,won:number,drawn:number,lost:number,goalsFor:number,goalsAgainst:number,goalDifference:number,points:number,form:string[]}} StandingRow
  * @typedef {{status:MatchCenterStatus,generatedAt:string|null,fetchedAt:string|null,lastSuccessfulAt:string|null,validUntil:string|null,sourceName:string,sourceType:string,seasonId:string,seasonName:string,seasonStatus:string,isStale:boolean,warningCode:string|null,reason:string|null,checkedAt:string|null,retryAfterSeconds:number|null}} MatchCenterMeta
- * @typedef {{meta:MatchCenterMeta,team:NormalizedTeam,nextMatch:NormalizedMatch|null,seasonMatches:NormalizedMatch[],recentResults:NormalizedMatch[],upcomingFixtures:NormalizedMatch[],standings:StandingRow[]}} MatchCenterData
+ * @typedef {{meta:MatchCenterMeta,team:NormalizedTeam,nextMatch:NormalizedMatch|null,seasonMatches:NormalizedMatch[],recentResults:NormalizedMatch[],upcomingFixtures:NormalizedMatch[],standings:StandingRow[],playoffs:object}} MatchCenterData
  */
 
 function canonicalizeTeamName(value) {
@@ -120,6 +120,92 @@ export function normalizeMatch(raw, index = 0) {
     streamUrl:typeof raw.streamUrl === "string" && /^https:\/\//i.test(raw.streamUrl) ? raw.streamUrl : null,
     streamStatus,
     score,
+    stage:typeof raw.stage === "string" && raw.stage.trim() ? raw.stage.trim() : null,
+    leg:Number.isInteger(Number(raw.leg)) && Number(raw.leg) > 0 ? Number(raw.leg) : null,
+    tieId:typeof raw.tieId === "string" && raw.tieId.trim() ? raw.tieId.trim() : null,
+    homeSeed:Number.isInteger(Number(raw.homeSeed)) && Number(raw.homeSeed) > 0 ? Number(raw.homeSeed) : null,
+    awaySeed:Number.isInteger(Number(raw.awaySeed)) && Number(raw.awaySeed) > 0 ? Number(raw.awaySeed) : null,
+  };
+}
+
+function emptyPlayoffs(status = "empty") {
+  return {
+    status,
+    currentStage:"quarterfinal",
+    format:"two-legged",
+    rounds:[{ id:"quarterfinal", status, ties:[] }],
+  };
+}
+
+export function normalizePlayoffs(rows) {
+  if (!Array.isArray(rows) || !rows.length) return emptyPlayoffs();
+  const matches = rows.map(normalizeMatch).filter((match) => (
+    match
+    && match.stage === "quarterfinal"
+    && match.tieId
+    && match.leg
+    && match.homeSeed
+    && match.awaySeed
+  ));
+  if (!matches.length) return emptyPlayoffs();
+
+  const groups = new Map();
+  for (const match of matches) {
+    const existing = groups.get(match.tieId) || [];
+    existing.push(match);
+    groups.set(match.tieId, existing);
+  }
+
+  const ties = [...groups.entries()].map(([id, legs]) => {
+    const orderedLegs = legs.sort((left, right) => left.leg - right.leg);
+    const seeds = [...new Set(orderedLegs.flatMap((match) => [match.homeSeed, match.awaySeed]))].sort((left, right) => left - right);
+    if (seeds.length !== 2) return null;
+    const [firstSeed, secondSeed] = seeds;
+    const teamForSeed = (seed) => {
+      for (const match of orderedLegs) {
+        if (match.homeSeed === seed) return match.homeTeam;
+        if (match.awaySeed === seed) return match.awayTeam;
+      }
+      return null;
+    };
+    const firstTeam = teamForSeed(firstSeed);
+    const secondTeam = teamForSeed(secondSeed);
+    if (!firstTeam || !secondTeam) return null;
+
+    const completedLegs = orderedLegs.filter((match) => match.status === "finished" && match.score);
+    const aggregate = completedLegs.length ? completedLegs.reduce((totals, match) => ({
+      first:totals.first + (match.homeSeed === firstSeed ? match.score.home : match.score.away),
+      second:totals.second + (match.homeSeed === secondSeed ? match.score.home : match.score.away),
+    }), { first:0, second:0 }) : null;
+    const complete = orderedLegs.length === 2 && completedLegs.length === 2;
+    const winner = complete && aggregate?.first !== aggregate?.second
+      ? aggregate.first > aggregate.second ? firstTeam : secondTeam
+      : null;
+
+    return {
+      id,
+      order:firstSeed,
+      stage:"quarterfinal",
+      status:complete ? "finished" : completedLegs.length ? "in-progress" : "scheduled",
+      firstSeed,
+      secondSeed,
+      firstTeam,
+      secondTeam,
+      legs:orderedLegs,
+      aggregate,
+      winner,
+    };
+  }).filter(Boolean).sort((left, right) => left.order - right.order);
+
+  return {
+    status:ties.some((tie) => tie.status !== "finished") ? "active" : "completed",
+    currentStage:"quarterfinal",
+    format:"two-legged",
+    rounds:[{
+      id:"quarterfinal",
+      status:ties.some((tie) => tie.status !== "finished") ? "active" : "completed",
+      ties,
+    }],
   };
 }
 
@@ -207,6 +293,7 @@ export function normalizeMatchCenterSource(source, { now = new Date().toISOStrin
     recentResults,
     upcomingFixtures,
     standings:normalizeStandings(source.standings),
+    playoffs:normalizePlayoffs(source.playoffMatches),
   };
 }
 
@@ -235,6 +322,7 @@ export function createLoadingMatchCenterData(season = {}) {
     recentResults:[],
     upcomingFixtures:[],
     standings:[],
+    playoffs:emptyPlayoffs("loading"),
   };
 }
 
@@ -276,6 +364,27 @@ export function createUnavailableMatchCenterData({
 export function isMatchCenterData(value) {
   if (!value || typeof value !== "object" || !value.meta || !MATCH_CENTER_STATUSES.includes(value.meta.status)) return false;
   if (!value.team || !Array.isArray(value.seasonMatches) || !Array.isArray(value.recentResults) || !Array.isArray(value.upcomingFixtures) || !Array.isArray(value.standings)) return false;
+  if (value.playoffs !== undefined) {
+    if (
+      !value.playoffs
+      || !["loading", "empty", "active", "completed"].includes(value.playoffs.status)
+      || !Array.isArray(value.playoffs.rounds)
+    ) return false;
+    const playoffTiesAreValid = value.playoffs.rounds.every((round) => (
+      round
+      && typeof round.id === "string"
+      && Array.isArray(round.ties)
+      && round.ties.every((tie) => (
+        tie
+        && typeof tie.id === "string"
+        && Boolean(normalizeTeam(tie.firstTeam))
+        && Boolean(normalizeTeam(tie.secondTeam))
+        && Array.isArray(tie.legs)
+        && tie.legs.every((leg) => Boolean(normalizeMatch(leg)))
+      ))
+    ));
+    if (!playoffTiesAreValid) return false;
+  }
   const dateFields = ["generatedAt", "fetchedAt", "lastSuccessfulAt", "validUntil"];
   if (dateFields.some((field) => value.meta[field] !== null && !toIsoString(value.meta[field]))) return false;
   const requiredMetaStrings = ["sourceName", "sourceType", "seasonId", "seasonName", "seasonStatus"];

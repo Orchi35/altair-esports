@@ -3,7 +3,7 @@ import path from "node:path";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
-import { ParserError, parseFixtureHtml, parseStandingsHtml } from "../server/match-center/emlParser.js";
+import { ParserError, parseFixtureHtml, parsePlayoffFixtureHtml, parseStandingsHtml } from "../server/match-center/emlParser.js";
 
 const fixtureDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "fixtures");
 
@@ -22,6 +22,17 @@ test("fixture HTML fixture is parsed without executing scripts", async () => {
   assert.equal(matches[0].away, "ALTAIR eSports");
   assert.equal(matches[0].time, "22:30");
   assert.equal(matches[0].played, false);
+});
+
+test("playoff fixture parser returns all four seeded quarterfinal ties", async () => {
+  const html = await fs.readFile(path.join(fixtureDir, "eml-playoff-quarterfinals.html"), "utf8");
+  const matches = parsePlayoffFixtureHtml(html, 16);
+  assert.equal(matches.length, 4);
+  assert.deepEqual(matches.map((match) => match.tieId), ["qf-1-8", "qf-2-7", "qf-3-6", "qf-4-5"]);
+  assert.equal(matches[0].leg, 1);
+  assert.equal(matches[0].homeSeed, 8);
+  assert.equal(matches[0].awaySeed, 1);
+  assert.equal(matches[0].home, "ALTAIR eSports");
 });
 
 test("fixture parser rejects an ALTAIR row with missing date/time", async () => {

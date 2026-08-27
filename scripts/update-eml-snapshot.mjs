@@ -81,7 +81,7 @@ async function main() {
 
   await fs.mkdir(path.dirname(outputFile), { recursive:true });
   await fs.writeFile(outputFile, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
-  console.log(`Snapshot updated: ${snapshot.matches.length} matches, ${snapshot.roster.length} players.`);
+  console.log(`Snapshot updated: ${snapshot.matches.length} ALTAIR matches, ${snapshot.playoffMatches.length} playoff matches, ${snapshot.roster.length} players.`);
   await setWorkflowStatus("updated");
 }
 

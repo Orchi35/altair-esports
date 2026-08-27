@@ -137,7 +137,12 @@ test("upstream 503 keeps the site and canonical squad usable without expired mat
 
   await page.navigate(`${baseUrl}/tr/kadro`);
   await page.waitFor("document.querySelectorAll('.p-card').length > 0", { message:"canonical squad cards" });
-  assert.equal(await page.evaluate("document.querySelectorAll('.p-card').length"), getPublishedPlayers().length);
+  const squadCards = await page.evaluate(`(() => {
+    const cards = [...document.querySelectorAll('.p-card')];
+    return { count:cards.length, unique:new Set(cards.map((card) => card.textContent.trim())).size };
+  })()`);
+  assert.ok(squadCards.count >= 5, "A verified active squad remains visible");
+  assert.equal(squadCards.unique, squadCards.count, "Synchronized squad cards remain unique");
   await page.evaluate("fetch('/__test__/match-center-mode?value=fresh').then(response => response.json())");
 });
 

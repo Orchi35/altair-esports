@@ -8,10 +8,10 @@ const HONOURS = [
   },
   {
     id:"eight-brfc-tournament-wins",
-    mark:"9×",
+    mark:"10×",
     season:"Tournament Record",
-    tr:{ competition:"BRFC Turnuvaları", result:"9 Şampiyonluk", description:null },
-    en:{ competition:"BRFC Tournaments", result:"9 Championships", description:null },
+    tr:{ competition:"BRFC Turnuvaları", result:"10 Şampiyonluk", description:null },
+    en:{ competition:"BRFC Tournaments", result:"10 Championships", description:null },
   },
   {
     id:"five-eml-night-tournament-wins",
