@@ -96,12 +96,12 @@ export function Hero({ copy, lang, locale, matchCenter, clock = systemClock }) {
   return (
     <section className={`hero${lang === "TR" ? " hero--tr" : ""}`} id="top">
       <picture className="hero-scene-picture" aria-hidden="true">
-        <source media="(max-width: 768px)" type="image/avif" srcSet="/hero-summer-mobile.avif"/>
-        <source media="(max-width: 768px)" type="image/webp" srcSet="/hero-summer-mobile.webp"/>
-        <source type="image/avif" srcSet="/hero-summer-1280.avif 1280w, /hero-summer-1672.avif 1672w" sizes="100vw"/>
-        <source type="image/webp" srcSet="/hero-summer-1280.webp 1280w, /hero-summer-1672.webp 1672w" sizes="100vw"/>
+        <source media="(max-width: 768px)" type="image/avif" srcSet="/hero-space-mobile.avif"/>
+        <source media="(max-width: 768px)" type="image/webp" srcSet="/hero-space-mobile.webp"/>
+        <source type="image/avif" srcSet="/hero-space-1280.avif 1280w, /hero-space-1672.avif 1672w" sizes="100vw"/>
+        <source type="image/webp" srcSet="/hero-space-1280.webp 1280w, /hero-space-1672.webp 1672w" sizes="100vw"/>
         <img
-          src="/hero-summer-1280.webp"
+          src="/hero-space-1280.webp"
           alt=""
           className="hero-scene-image"
           width="1672"

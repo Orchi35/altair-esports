@@ -1,4 +1,4 @@
-/* HERO — SUMMER CAMPAIGN */
+/* HERO — ALTAIR SPACE CAMPAIGN */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
   min-height:48px;padding:15px 28px;
@@ -22,13 +22,13 @@
   overflow:hidden;
   isolation:isolate;
   padding:0;
-  background:#04101c;
+  background:#020914;
 }
 .hero-scene-image{
   position:absolute;inset:0;z-index:0;
   width:100%;height:100%;
   object-fit:cover;object-position:center;
-  filter:saturate(.98) contrast(1.06) brightness(.84);
+  filter:saturate(.92) contrast(1.02) brightness(.88);
   transform:scale(1.012);
 }
 .hero-scene-picture{position:absolute;inset:0;z-index:0;display:block}
@@ -36,15 +36,13 @@
 .hero-scene-overlay{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
-    linear-gradient(90deg,rgba(2,9,18,.98) 0%,rgba(3,13,25,.92) 24%,rgba(4,16,30,.7) 42%,rgba(3,11,21,.2) 61%,rgba(2,7,14,.12) 100%),
-    linear-gradient(180deg,rgba(2,8,16,.56) 0%,transparent 28%,transparent 65%,rgba(2,7,14,.84) 100%);
+    linear-gradient(90deg,rgba(1,7,16,.99) 0%,rgba(2,11,24,.94) 25%,rgba(3,17,34,.72) 43%,rgba(2,10,23,.2) 62%,rgba(1,6,15,.1) 100%),
+    linear-gradient(180deg,rgba(1,7,16,.62) 0%,transparent 26%,transparent 64%,rgba(1,6,15,.9) 100%);
 }
 .hero-scene-overlay::after{
   content:'';position:absolute;inset:0;
   background:
-    radial-gradient(circle at 76% 49%,rgba(2,9,18,.5) 0%,rgba(2,9,18,.3) 18%,transparent 37%),
-    radial-gradient(circle at 82% 43%,rgba(251,191,36,.14),transparent 28%),
-    linear-gradient(110deg,transparent 0 54%,rgba(34,211,238,.045) 72%,transparent 100%);
+    radial-gradient(circle at 75% 49%,rgba(34,211,238,.055) 0%,transparent 36%);
   mix-blend-mode:normal;
 }
 .hero-left{
@@ -67,7 +65,7 @@
 }
 .hero-context span{min-width:0;color:#f3f8fd;font-family:var(--f-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .hero-context small{display:block;margin-bottom:4px;color:var(--cyan);font-size:7px;letter-spacing:.18em}
-.hero-context i{display:block;width:1px;height:28px;background:linear-gradient(transparent,rgba(34,211,238,.62),rgba(251,191,36,.55),transparent)}
+.hero-context i{display:block;width:1px;height:28px;background:linear-gradient(transparent,rgba(34,211,238,.72),rgba(186,246,255,.62),transparent)}
 .hero-tag{
   display:inline-flex;align-items:center;gap:10px;
   width:fit-content;margin:0 0 24px;padding:8px 12px;
@@ -156,7 +154,7 @@
   border:1px solid rgba(186,246,255,.17);
   border-left:2px solid var(--cyan);
   background:
-    linear-gradient(110deg,rgba(10,32,52,.82),rgba(3,12,23,.75) 60%,rgba(41,32,11,.34)),
+    linear-gradient(110deg,rgba(8,35,59,.86),rgba(2,11,24,.8) 60%,rgba(5,25,45,.54)),
     rgba(2,10,19,.74);
   box-shadow:0 20px 54px rgba(0,0,0,.27),inset 0 1px 0 rgba(255,255,255,.035);
   backdrop-filter:blur(14px) saturate(120%);
@@ -210,14 +208,14 @@
   content:'';position:absolute;z-index:-1;
   inset:7%;border-radius:50%;
   background:
-    radial-gradient(circle,rgba(3,12,24,.66) 0%,rgba(3,12,24,.38) 44%,transparent 70%),
-    radial-gradient(circle at 60% 38%,rgba(251,191,36,.16),transparent 44%);
-  filter:blur(14px);
+    radial-gradient(circle,rgba(2,11,25,.68) 0%,rgba(3,20,37,.34) 46%,transparent 70%),
+    radial-gradient(circle at 52% 46%,rgba(34,211,238,.1),transparent 50%);
+  filter:blur(15px);
 }
 .hero-logo-3d-image{
   display:block;width:100%;height:auto;object-fit:contain;
   filter:drop-shadow(0 30px 46px rgba(0,0,0,.48)) drop-shadow(0 0 24px rgba(34,211,238,.22));
-  animation:heroLogoFloat 7s ease-in-out 1.1s infinite;
+  animation:heroLogoFloat 10s ease-in-out 1.1s infinite;
 }
 .hero-logo-3d picture{display:block;width:100%}
 @keyframes heroLogoReveal{
@@ -226,7 +224,7 @@
 }
 @keyframes heroLogoFloat{
   0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
+  50%{transform:translateY(-4px)}
 }
 .hero-crest{
   position:absolute;z-index:4;
@@ -282,13 +280,13 @@
 @media (max-width:768px){
   .hero{min-height:1080px}
   .hero-scene-image{
-    object-position:70% center;
-    filter:saturate(.98) contrast(1.06) brightness(.78);
+    object-position:center top;
+    filter:saturate(.92) contrast(1.02) brightness(.84);
   }
   .hero-scene-overlay{
     background:
-      linear-gradient(180deg,rgba(2,8,16,.46) 0%,rgba(2,8,16,.08) 28%,rgba(2,9,18,.76) 50%,#030a14 72%,#030811 100%),
-      linear-gradient(90deg,rgba(2,9,18,.36),transparent 50%,rgba(2,9,18,.2));
+      linear-gradient(180deg,rgba(1,7,16,.34) 0%,rgba(1,8,19,.08) 25%,rgba(2,10,23,.72) 47%,#020a17 69%,#020813 100%),
+      linear-gradient(90deg,rgba(2,9,18,.22),transparent 50%,rgba(2,9,18,.18));
   }
   .hero-left{
     width:auto;min-height:1080px;margin:0;
