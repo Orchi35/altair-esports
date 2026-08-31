@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-31T05:42:50.851Z",
-  "validFrom": "2026-08-31T05:42:50.851Z",
-  "validUntil": "2026-09-02T05:42:50.851Z",
+  "generatedAt": "2026-08-31T13:59:11.123Z",
+  "validFrom": "2026-08-31T13:59:11.123Z",
+  "validUntil": "2026-09-02T13:59:11.123Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -244,7 +244,7 @@
       "id": "42-1-1",
       "round": "GW 1",
       "competition": "EML FC26 Summer League",
-      "date": "03 July 2026",
+      "date": "03 Temmuz 2026",
       "time": "22:30",
       "timezone": "Europe/Istanbul",
       "home": "AUDAX",
