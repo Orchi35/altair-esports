@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T22:23:23.697Z",
-  "validFrom": "2026-09-04T22:23:23.697Z",
-  "validUntil": "2026-09-06T22:23:23.697Z",
+  "generatedAt": "2026-09-05T01:02:07.230Z",
+  "validFrom": "2026-09-05T01:02:07.230Z",
+  "validUntil": "2026-09-07T01:02:07.230Z",
   "source": "eMajor League",
   "competition": {
     "key": "summer",
@@ -17,14 +17,14 @@
         "rank": 1,
         "abbr": "GLA",
         "name": "Glarung FC",
-        "pld": 17,
-        "w": 13,
+        "pld": 18,
+        "w": 14,
         "d": 2,
         "l": 2,
-        "gf": 42,
-        "ga": 11,
-        "gd": 31,
-        "pts": 41,
+        "gf": 45,
+        "ga": 13,
+        "gd": 32,
+        "pts": 44,
         "form": "WWW"
       },
       {
@@ -57,20 +57,6 @@
       },
       {
         "rank": 4,
-        "abbr": "ANA",
-        "name": "Anatolian Lions",
-        "pld": 17,
-        "w": 11,
-        "d": 2,
-        "l": 4,
-        "gf": 43,
-        "ga": 29,
-        "gd": 14,
-        "pts": 35,
-        "form": "WLW"
-      },
-      {
-        "rank": 5,
         "abbr": "INF",
         "name": "In Flame",
         "pld": 17,
@@ -82,6 +68,20 @@
         "gd": 14,
         "pts": 35,
         "form": "WWL"
+      },
+      {
+        "rank": 5,
+        "abbr": "ANA",
+        "name": "Anatolian Lions",
+        "pld": 18,
+        "w": 11,
+        "d": 2,
+        "l": 5,
+        "gf": 45,
+        "ga": 32,
+        "gd": 13,
+        "pts": 35,
+        "form": "LWL"
       },
       {
         "rank": 6,
@@ -346,7 +346,7 @@
       "id": "42-7-1",
       "round": "GW 7",
       "competition": "EML FC26 Summer League",
-      "date": "31 July 2026",
+      "date": "31 Temmuz 2026",
       "time": "22:30",
       "timezone": "Europe/Istanbul",
       "home": "3 Silahşörler",
@@ -616,8 +616,8 @@
       "stage": "quarterfinal",
       "leg": 1,
       "tieId": "qf-4-5",
-      "homeSeed": 5,
-      "awaySeed": 4
+      "homeSeed": 4,
+      "awaySeed": 5
     },
     {
       "id": "42-qf-1-8-leg-2",
@@ -704,8 +704,8 @@
       "stage": "quarterfinal",
       "leg": 2,
       "tieId": "qf-4-5",
-      "homeSeed": 4,
-      "awaySeed": 5
+      "homeSeed": 5,
+      "awaySeed": 4
     }
   ],
   "roster": [
