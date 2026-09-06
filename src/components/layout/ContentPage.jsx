@@ -1,9 +1,9 @@
 import { Breadcrumbs } from "../navigation/Breadcrumbs.jsx";
 import "../../styles/content-pages.css";
 
-export function ContentPage({ breadcrumbLabel, breadcrumbs, children, eyebrow, intro, title, titleId = "content-page-title" }) {
+export function ContentPage({ breadcrumbLabel, breadcrumbs, children, eyebrow, intro, title, titleId = "content-page-title", className = "" }) {
   return (
-    <article className="content-page" aria-labelledby={titleId}>
+    <article className={`content-page ${className}`} aria-labelledby={titleId}>
       <div className="container content-page-container">
         <Breadcrumbs items={breadcrumbs} label={breadcrumbLabel}/>
         <header className="content-page-header">

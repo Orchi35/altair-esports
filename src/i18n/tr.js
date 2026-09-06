@@ -68,11 +68,9 @@ export const TR_MESSAGES = {
       sub:"ALTAIR'in genç rekabet geçmişi; liglerde hızla yükselen, turnuva serilerinde istikrar sağlayan ve önemli finallere ulaşan bir takımın gelişimini gösteriyor.",
       view:"Başarıları Gör",
       items:[
-        { mark:"02", season:"FC 26 · 1. Sezon", competition:"EML 3. Lig", result:"İkincilik" },
         { mark:"10×", season:"Turnuva Başarısı", competition:"BRFC Turnuvaları", result:"Şampiyonluk" },
         { mark:"5×", season:"Turnuva Başarısı", competition:"EML Gece Turnuvaları", result:"Şampiyonluk" },
         { mark:"F", season:"FC 26 · 2. Sezon", competition:"ProLeague Avrupa Ligi", result:"Finalist" },
-        { mark:"06", season:"FC 26 · 2. Sezon", competition:"EML 1. Lig", result:"6.'lık" },
       ],
     },
     quickStatus: {
@@ -349,7 +347,7 @@ export const TR_MESSAGES = {
       clubLinks:["ALTAIR Hakkında","Kulüp Başarıları","Sezon Sonuçları","Medya ve Basın","Resmi Kanallar"],
       compLinks:["Takım Sayfası","Puan Durumu","Fikstür","İstatistikler","Kadro"],
       connectLinks:["Partnerlik","Instagram","Twitch","YouTube","Discord"],
-      rights:"© 2026 ALTAIR eSports · Tüm hakları saklıdır",
+      rights:"© 2025 ALTAIR eSports · Tüm hakları saklıdır",
       competing:"Mücadele ettiği lig",
       privacy:"Gizlilik",
       terms:"Koşullar",
@@ -387,3 +385,4 @@ export const TR_MESSAGES = {
       matchCenter:"Maç Merkezini aç",
     },
   };
+

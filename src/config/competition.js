@@ -11,11 +11,12 @@ export const COMPETITION_SEASONS = {
   summer: {
     key: "summer",
     tournamentId: 42,
-    locked: false,
-    status: "active",
+    locked: true,
+    status: "ended",
     verifiedEndAt: null,
     snapshotValidityMs: 48 * 60 * 60 * 1000,
     phase: "playoffs",
+    archivePlayoffScope: "quarterfinal",
     regularSeasonMatchdays: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
     playoffMatchdays: [16,17],
     totalMatchdays: 17,
@@ -35,4 +36,4 @@ export const COMPETITION_SEASONS = {
 export const DEFAULT_COMPETITION_SEASON = "summer";
 export const ACTIVE_COMPETITION = COMPETITION_SEASONS[DEFAULT_COMPETITION_SEASON];
 export const EML_TEAM_PATH = "/team/ALTAIReSports/";
-export const EML_SNAPSHOT_PATH = "/data/eml-snapshot.json";
+export const EML_SNAPSHOT_PATH = "/data/seasons/eml-fc26-summer/snapshot.json";

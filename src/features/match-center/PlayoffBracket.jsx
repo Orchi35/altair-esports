@@ -1,5 +1,6 @@
 import { ClubBadge } from "../../components/ui/ClubBadge.jsx";
 import { ALTAIR_TEAM } from "../../data/matchCenter.js";
+import { ACTIVE_COMPETITION } from "../../config/competition.js";
 import { formatMatchDate, formatMatchTime, formatTimezoneLabel } from "../../utils/dateTime.js";
 
 function TeamRow({ seed, team }) {
@@ -23,7 +24,7 @@ function LegRow({ leg, lang, copy }) {
           {formatMatchDate(leg.startsAt, lang, leg.timezone)} · {formatMatchTime(leg.startsAt, lang, leg.timezone)} {formatTimezoneLabel(leg.timezone, lang)}
         </time>
       </div>
-      <strong>{score}</strong>
+      <strong className={leg.score ? "mc-leg-score" : "mc-leg-scheduled"}>{score}</strong>
     </li>
   );
 }
@@ -69,6 +70,7 @@ function PendingRound({ title, copy, isFinal = false }) {
 }
 
 export function PlayoffBracket({ lang, copy, playoffs, status, refetch }) {
+  const quarterfinalArchive = ACTIVE_COMPETITION.locked && ACTIVE_COMPETITION.archivePlayoffScope === "quarterfinal";
   if (status === "loading") {
     return <div className="mc-panel-skeleton" aria-hidden="true"><span/><span/><span/></div>;
   }
@@ -83,13 +85,13 @@ export function PlayoffBracket({ lang, copy, playoffs, status, refetch }) {
   }
 
   return (
-    <div className="mc-playoff">
+    <div className={`mc-playoff${quarterfinalArchive ? " mc-playoff--archived-quarterfinal" : ""}`}>
       <header className="mc-playoff-header">
         <div>
           <span>{copy.playoff.eyebrow}</span>
           <h3>{copy.playoff.title}</h3>
         </div>
-        <p>{copy.playoff.description}</p>
+        <p>{quarterfinalArchive ? (lang === "TR" ? "ALTAIR eSports’un çeyrek finalde tamamlanan playoff yolculuğu. Bu arşiv çeyrek final eşleşmelerini ve sonuçlarını içerir." : "ALTAIR eSports’ playoff run ended in the quarterfinals. This archive contains quarterfinal ties and results.") : copy.playoff.description}</p>
       </header>
       <div className="mc-playoff-scroll" role="region" aria-label={copy.playoff.scrollLabel} tabIndex="0">
         <div className="mc-playoff-tree">
@@ -102,8 +104,8 @@ export function PlayoffBracket({ lang, copy, playoffs, status, refetch }) {
               {quarterfinals.map((tie) => <QuarterfinalTie key={tie.id} tie={tie} lang={lang} copy={copy}/>) }
             </ol>
           </section>
-          <PendingRound title={copy.playoff.semifinals} copy={copy}/>
-          <PendingRound title={copy.playoff.final} copy={copy} isFinal/>
+          {!quarterfinalArchive && <PendingRound title={copy.playoff.semifinals} copy={copy}/>}
+          {!quarterfinalArchive && <PendingRound title={copy.playoff.final} copy={copy} isFinal/>}
         </div>
       </div>
     </div>

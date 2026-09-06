@@ -94,12 +94,12 @@ test("home squad markup keeps the localized route, full groups and keyboard acce
   assert.match(squadComponent, /id="squad"/);
   assert.match(squadComponent, /activeRoster\.groups\.filter/);
   assert.match(squadComponent, /activeRoster\.count/);
-  assert.match(navigation, /getLocalizedSectionHref\(locale, "squad"\)/);
+  assert.match(navigation, /getRoutePath\("squad", locale\)/);
   assert.match(playerCard, /aria-label=\{profileLabel\}/);
-  assert.match(playerCard, /tabIndex="0" aria-label=\{cardLabel\}/);
-  assert.match(playerCard, /loading="lazy"/);
-  assert.match(playerCard, /width="720"/);
-  assert.match(playerCard, /height="900"/);
+  assert.match(playerCard, /<article[^>]*aria-label=\{cardLabel\}/);
+  assert.match(read("../src/features/squad/PlayerPortrait.jsx"), /loading="lazy"/);
+  assert.match(read("../src/features/squad/PlayerPortrait.jsx"), /width="720"/);
+  assert.match(read("../src/features/squad/PlayerPortrait.jsx"), /height="900"/);
 });
 
 test("Turkish and English roster headings are explicit", () => {
@@ -108,3 +108,5 @@ test("Turkish and English roster headings are explicit", () => {
   assert.equal(UI_COPY.EN.squad.eyebrow, "TEAM");
   assert.deepEqual(UI_COPY.EN.squad.title, ["ALTAIR", "ROSTER"]);
 });
+
+

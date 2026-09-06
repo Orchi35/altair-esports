@@ -1,0 +1,37 @@
+.site #sponsors.partner-studio .container { max-width:1280px; }
+.partner-intro { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr); gap:64px; align-items:center; }
+.partner-intro h2 { margin:0; color:#f2f6ff; font:800 clamp(34px,4.4vw,58px)/1.1 var(--f-body); letter-spacing:-.035em; }
+.partner-intro h2 span { color:#a9ceff; }
+.partner-intro > div > p { max-width:52ch; margin:24px 0; color:#c0cede; font:400 16px/1.8 var(--f-body); }
+.partner-actions { display:flex; align-items:center; flex-wrap:wrap; gap:18px; margin-top:28px; }
+.partner-primary { display:inline-flex; align-items:center; justify-content:space-between; gap:24px; min-height:50px; padding:14px 20px; border:1px solid #cbe3ff; border-radius:6px; background:#bbd9ff; color:#0a1a2e; font:700 13px/1.5 var(--f-body); text-decoration:none; }
+.partner-primary:hover { background:#d6e9ff; }
+.partner-secondary { color:#c7ddf8; text-decoration:underline; text-underline-offset:5px; font:600 13px var(--f-body); padding:12px 0; }
+.partner-primary:focus-visible,.partner-secondary:focus-visible { outline:3px solid #e5f2ff; outline-offset:4px; }
+.partner-fit { padding:32px; border:1px solid #8aaed440; border-radius:14px; background:linear-gradient(135deg,#203a56,#112137); box-shadow:inset 0 1px 0 #dbecff14,0 18px 40px #0003; }
+.partner-fit > span,.partner-next > div > span { color:#a4c7f0; font:700 10px var(--f-body); letter-spacing:.13em; }
+.partner-fit h3 { margin:18px 0 14px; color:#edf4ff; font:700 25px/1.2 var(--f-body); }
+.partner-fit p { color:#c0cede; font:400 14px/1.75 var(--f-body); }
+.partner-fit dl { margin:24px 0 0; }
+.partner-fit dl > div { padding:14px 0; border-top:1px solid #8aaed426; }
+.partner-fit dt { font:600 10px var(--f-body); color:#9db7d5; margin-bottom:7px; }
+.partner-fit dd { margin:0; color:#dbe9fa; font:600 13px/1.6 var(--f-body); }
+.partner-section-heading { display:flex; gap:32px; justify-content:space-between; align-items:center; margin:60px 0 24px; }
+.partner-section-heading h3 { margin:0; color:#e7f0ff; font:700 24px/1.3 var(--f-body); }
+.partner-section-heading p { max-width:40ch; color:#aabed6; font:400 13px/1.6 var(--f-body); }
+.partner-offers { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+.partner-offers article { display:flex; flex-direction:column; padding:28px; border:1px solid #8aaed433; border-radius:10px; background:#142136; }
+.partner-offer-tag { display:flex; justify-content:space-between; gap:12px; color:#abcdf5; font:700 10px var(--f-body); letter-spacing:.12em; }
+.partner-offers h3 { margin:24px 0 16px; color:#edf4ff; font:700 22px/1.35 var(--f-body); letter-spacing:-.02em; }
+.partner-offers p { margin:0 0 24px; color:#b9cbe1; font:400 14px/1.75 var(--f-body); }
+.partner-offers ul { list-style:none; margin:auto 0 0; padding:18px 0 0; border-top:1px solid #8aaed42b; }
+.partner-offers li { position:relative; padding:7px 0 7px 16px; color:#d4e4f7; font:500 12px/1.5 var(--f-body); }
+.partner-offers li::before { content:''; width:4px; height:4px; background:#9bc6ff; position:absolute; left:0; top:14px; }
+.partner-next { display:grid; grid-template-columns:1.2fr 1fr; gap:40px; margin-top:28px; padding:32px; border:1px solid #8aaed43b; border-radius:12px; background:#0e1c2e; }
+.partner-next ol { margin:18px 0 0; padding-left:20px; color:#d8e7fa; font:600 14px/1.8 var(--f-body); }
+.partner-next li { padding:5px 0 5px 8px; }
+.partner-next li::marker { color:#8eb9ed; }
+.partner-invitation { border-left:1px solid #8aaed42b; padding-left:32px; }
+.partner-invitation p { margin:0 0 18px; color:#b9cbe1; font:400 14px/1.7 var(--f-body); }
+@media(max-width:850px) { .partner-intro { grid-template-columns:1fr; gap:28px; } .partner-offers { grid-template-columns:1fr; gap:14px; } .partner-section-heading { align-items:flex-start; flex-direction:column; gap:12px; margin-top:40px; } .partner-section-heading p { margin:0; } }
+@media(max-width:600px) { .partner-next { grid-template-columns:1fr; padding:24px; gap:24px; } .partner-invitation { border-left:0; border-top:1px solid #8aaed42b; padding:24px 0 0; } .partner-fit { padding:24px; } .partner-primary { width:100%; } }

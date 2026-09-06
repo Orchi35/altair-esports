@@ -1,3 +1,4 @@
+import "./match-detail-studio.css";
 import { getRoutePath } from "../../app/routes.js";
 import { ContentPage, ContentState } from "../../components/layout/ContentPage.jsx";
 import { findMatchBySlug, getAllMatches, getMatchEditorial, createMatchSlug } from "../../content/matches/index.js";
@@ -33,10 +34,10 @@ export default function MatchDetailPage({ copy, lang, locale, matchCenter, refet
   };
 
   if (matchCenter.meta.status === "loading") {
-    return <ContentPage breadcrumbLabel={copy.pages.common.matches} breadcrumbs={[{ label:copy.pages.common.home, href:getRoutePath("home", locale) }, { label:copy.pages.common.matches, href:getRoutePath("matches", locale) }, { label:copy.pages.matchDetail.title }]} eyebrow={copy.pages.matchDetail.eyebrow} title={copy.pages.matchDetail.title}><ContentState>{copy.pages.common.loading}</ContentState></ContentPage>;
+    return <ContentPage className="match-detail-studio" breadcrumbLabel={copy.pages.common.matches} breadcrumbs={[{ label:copy.pages.common.home, href:getRoutePath("home", locale) }, { label:copy.pages.common.matches, href:getRoutePath("matches", locale) }, { label:copy.pages.matchDetail.title }]} eyebrow={copy.pages.matchDetail.eyebrow} title={copy.pages.matchDetail.title}><ContentState>{copy.pages.common.loading}</ContentState></ContentPage>;
   }
   if (matchCenter.meta.status === "error" && !match) {
-    return <ContentPage breadcrumbLabel={copy.pages.common.matches} breadcrumbs={[{ label:copy.pages.common.home, href:getRoutePath("home", locale) }, { label:copy.pages.common.matches, href:getRoutePath("matches", locale) }, { label:copy.pages.matchDetail.title }]} eyebrow={copy.pages.matchDetail.eyebrow} title={copy.pages.matchDetail.title}><ContentState tone="error" action={<button type="button" onClick={handleRetry}>{copy.pages.common.retry}</button>}>{copy.pages.common.unavailable}</ContentState></ContentPage>;
+    return <ContentPage className="match-detail-studio" breadcrumbLabel={copy.pages.common.matches} breadcrumbs={[{ label:copy.pages.common.home, href:getRoutePath("home", locale) }, { label:copy.pages.common.matches, href:getRoutePath("matches", locale) }, { label:copy.pages.matchDetail.title }]} eyebrow={copy.pages.matchDetail.eyebrow} title={copy.pages.matchDetail.title}><ContentState tone="error" action={<button type="button" onClick={handleRetry}>{copy.pages.common.retry}</button>}>{copy.pages.common.unavailable}</ContentState></ContentPage>;
   }
   if (!match) return <NotFoundPage copy={copy} locale={locale}/>;
 
@@ -48,7 +49,7 @@ export default function MatchDetailPage({ copy, lang, locale, matchCenter, refet
   ];
 
   return (
-    <ContentPage breadcrumbLabel={copy.pages.common.matches} breadcrumbs={breadcrumbs} eyebrow={copy.pages.matchDetail.eyebrow} title={`${match.homeTeam.name} · ${match.awayTeam.name}`}>
+    <ContentPage className="match-detail-studio" breadcrumbLabel={copy.pages.common.matches} breadcrumbs={breadcrumbs} eyebrow={copy.pages.matchDetail.eyebrow} title={`${match.homeTeam.name} · ${match.awayTeam.name}`}>
       {matchCenter.meta.status === "stale" && <p className="content-verification">{copy.pages.common.stale}</p>}
       {matchCenter.meta.status === "error" && <ContentState tone="error" action={<button type="button" onClick={handleRetry}>{copy.pages.common.retry}</button>}>{copy.pages.common.unavailable}</ContentState>}
       <section className="detail-scoreboard" aria-label={pageTitle}>
@@ -78,3 +79,4 @@ export default function MatchDetailPage({ copy, lang, locale, matchCenter, refet
     </ContentPage>
   );
 }
+

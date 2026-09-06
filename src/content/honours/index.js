@@ -1,12 +1,5 @@
 const HONOURS = [
   {
-    id:"fc26-season-1-eml-third-division-runner-up",
-    mark:"02",
-    season:"FC 26 · Season 1",
-    tr:{ competition:"EML 3. Lig", result:"İkincilik", description:null },
-    en:{ competition:"EML Third Division", result:"Runner-up", description:null },
-  },
-  {
     id:"eight-brfc-tournament-wins",
     mark:"10×",
     season:"Tournament Record",
@@ -26,13 +19,6 @@ const HONOURS = [
     season:"FC 26 · Season 2",
     tr:{ competition:"ProLeague Avrupa Ligi", result:"Finalist", description:null },
     en:{ competition:"ProLeague European League", result:"Finalist", description:null },
-  },
-  {
-    id:"fc26-season-2-eml-first-division-sixth",
-    mark:"06",
-    season:"FC 26 · Season 2",
-    tr:{ competition:"EML 1. Lig", result:"6. sıra", description:null },
-    en:{ competition:"EML First Division", result:"6th place", description:null },
   },
 ];
 

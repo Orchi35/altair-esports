@@ -1,3 +1,5 @@
+import { StandingsPanel } from "../../features/match-center/MatchCenter.jsx";
+import "./matches-studio.css";
 import { useMemo, useState } from "react";
 import { getRoutePath } from "../../app/routes.js";
 import { ContentPage, ContentState } from "../../components/layout/ContentPage.jsx";
@@ -45,7 +47,7 @@ export default function MatchesPage({ copy, lang, locale, matchCenter, refetch, 
   };
 
   return (
-    <ContentPage breadcrumbLabel={copy.pages.common.matches} breadcrumbs={breadcrumbs} eyebrow={copy.pages.matches.eyebrow} title={copy.pages.matches.title} intro={copy.pages.matches.intro}>
+    <ContentPage className="matches-studio" breadcrumbLabel={copy.pages.common.matches} breadcrumbs={breadcrumbs} eyebrow={copy.pages.matches.eyebrow} title={copy.pages.matches.title} intro={copy.pages.matches.intro}>
       {status === "loading" && <ContentState>{copy.pages.common.loading}</ContentState>}
       {(status === "error" || status === "unavailable") && (
         <ContentState tone={status === "error" ? "error" : "warning"} action={<button type="button" onClick={handleRetry} disabled={isRetryCoolingDown}>{isRetryCoolingDown ? copy.matchCenter.retryCooldown(retryWaitSeconds) : copy.pages.common.retry}</button>}>
@@ -79,7 +81,7 @@ export default function MatchesPage({ copy, lang, locale, matchCenter, refetch, 
               <>
                 <div className="content-grid">{upcoming.slice(0, visibleUpcoming).map((match) => <MatchSummaryCard key={match.id} copy={copy} lang={lang} locale={locale} match={match}/>)}</div>
                 {visibleUpcoming < upcoming.length && <button className="content-more" type="button" onClick={() => setVisibleUpcoming((value) => value + PAGE_SIZE)}>{copy.pages.common.showMore}</button>}
-              </>
+        </>
             ) : <ContentState>{status === "season-ended" ? copy.pages.matches.seasonEnded : copy.pages.matches.noUpcoming}</ContentState>}
           </section>
 
@@ -89,11 +91,20 @@ export default function MatchesPage({ copy, lang, locale, matchCenter, refetch, 
               <>
                 <div className="content-grid">{results.slice(0, visibleResults).map((match) => <MatchSummaryCard key={match.id} copy={copy} lang={lang} locale={locale} match={match}/>)}</div>
                 {visibleResults < results.length && <button className="content-more" type="button" onClick={() => setVisibleResults((value) => value + PAGE_SIZE)}>{copy.pages.common.showMore}</button>}
-              </>
+        </>
             ) : <ContentState>{copy.pages.matches.noResults}</ContentState>}
+          </section>
+
+                <section className="content-section matches-standings" id="standings" aria-labelledby="matches-standings-title">
+            <div className="content-section-heading"><h2 id="matches-standings-title">{locale === "tr" ? "Puan Durumu" : "Standings"}</h2></div>
+            {status === "season-ended" && <p className="matches-archive-note">{locale === "tr" ? "Geçmiş sezon · Sezon sonu puan tablosu" : "Season archive · Final league standings"}</p>}
+            <StandingsPanel lang={lang} copy={copy} matchCenter={matchCenter} refetch={handleRetry}/>
           </section>
         </>
       )}
     </ContentPage>
   );
 }
+
+
+

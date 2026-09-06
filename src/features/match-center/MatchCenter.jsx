@@ -16,6 +16,7 @@ import { FixtureCard } from "../fixtures/FixtureCard.jsx";
 import { ResultCard } from "../results/ResultCard.jsx";
 import { MatchDataState } from "./MatchDataState.jsx";
 import { PlayoffBracket } from "./PlayoffBracket.jsx";
+import { UpcomingSeason } from "./UpcomingSeason.jsx";
 import {
   getMatchOpponent,
   localizeMatchCompetition,
@@ -76,7 +77,9 @@ function EmptyPanel({ kind, lang, status, refetch }) {
 
 function NextMatchCard({ lang, copy, locale, matchCenter, refetch }) {
   const dataStatus = matchCenter.meta.status;
-  const match = matchCenter.nextMatch;
+  const upcoming = matchCenter.nextMatch;
+  const match = upcoming || matchCenter.recentResults.find((result) => result.status === "finished" && result.score);
+  const showsResult = match?.status === "finished" && Boolean(match.score);
   if (dataStatus === "loading") {
     return <div className="mc-next mc-next--loading" aria-label={copy.matchCenter.loading}><span/><span/><span/></div>;
   }
@@ -102,19 +105,21 @@ function NextMatchCard({ lang, copy, locale, matchCenter, refetch }) {
   const homeIsAltair = match.homeTeam.id === ALTAIR_TEAM.id;
   const awayIsAltair = match.awayTeam.id === ALTAIR_TEAM.id;
   const streamAvailable = Boolean(match.streamUrl);
-  const streamLive = streamAvailable && match.streamStatus === "live";
+  const streamLive = !showsResult && streamAvailable && match.streamStatus === "live";
   const matchStatus = copy.matchCenter.matchStatuses[match.status] || match.status;
 
   return (
-    <article className="mc-next">
+    <article className="mc-next mc-next--featured">
       <div className="mc-next-matchup">
-        <span className="mc-next-kicker">{copy.matchCenter.nextMatch}</span>
+        <span className="mc-next-kicker">{showsResult ? copy.hero.lastMatch : copy.matchCenter.nextMatch}</span>
         <div className="mc-next-teams">
           <div className="mc-next-team">
             <ClubBadge className={`mc-next-badge${homeIsAltair ? " is-altair" : ""}`} isAltair={homeIsAltair} label={match.homeTeam.shortName} ariaHidden/>
             <strong>{match.homeTeam.name}</strong>
           </div>
-          <span className="mc-next-versus">VS</span>
+          <span className="mc-next-versus" aria-label={showsResult ? `${match.homeTeam.name} ${match.score.home}, ${match.awayTeam.name} ${match.score.away}` : undefined}>
+            {showsResult ? `${match.score.home} – ${match.score.away}` : "VS"}
+          </span>
           <div className="mc-next-team">
             <ClubBadge className={`mc-next-badge${awayIsAltair ? " is-altair" : ""}`} isAltair={awayIsAltair} label={match.awayTeam.shortName} ariaHidden/>
             <strong>{match.awayTeam.name}</strong>
@@ -169,7 +174,7 @@ function FixturesPanel({ lang, copy, matchCenter, refetch }) {
   );
 }
 
-function StandingsPanel({ lang, copy, matchCenter, refetch }) {
+export function StandingsPanel({ lang, copy, matchCenter, refetch }) {
   if (matchCenter.meta.status === "loading") return <MatchPanelSkeleton/>;
   if (!matchCenter.standings.length) {
     return <EmptyPanel kind="standings" lang={lang} status={matchCenter.meta.status} refetch={refetch}/>;
@@ -225,6 +230,7 @@ export function MatchCenter({ lang, copy, locale, matchCenter, refetch, retryWai
   const defaultTab = ACTIVE_COMPETITION.phase === "playoffs" ? "playoffs" : "results";
   const initialTab = typeof window === "undefined" ? defaultTab : getMatchCenterTabFromHash(window.location.hash) || defaultTab;
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [seasonView, setSeasonView] = useState(typeof window !== "undefined" && getMatchCenterTabFromHash(window.location.hash) ? "archive" : "upcoming");
   const tabRefs = useRef({});
   const status = matchCenter.meta.status;
   const updated = formatLastUpdated(matchCenter.meta.lastSuccessfulAt, lang);
@@ -243,6 +249,7 @@ export function MatchCenter({ lang, copy, locale, matchCenter, refetch, retryWai
     const applyHash = () => {
       const tab = getMatchCenterTabFromHash(window.location.hash);
       if (!tab) return;
+      setSeasonView("archive");
       setActiveTab(tab);
       window.requestAnimationFrame(() => document.getElementById("match-center")?.scrollIntoView({ block:"start" }));
     };
@@ -278,13 +285,20 @@ export function MatchCenter({ lang, copy, locale, matchCenter, refetch, retryWai
   };
 
   return (
-    <section className="section match-center" id="match-center" aria-labelledby="match-center-title" aria-busy={status === "loading"}>
+    <section className="section match-center" id="match-center" aria-label={copy.matchCenter.title.join(" ")} aria-busy={seasonView === "archive" && status === "loading"}>
       <span className="legacy-hash-anchor" id="matches" aria-hidden="true"/>
       <span className="legacy-hash-anchor" id="results" aria-hidden="true"/>
       <span className="legacy-hash-anchor" id="fixtures" aria-hidden="true"/>
       <span className="legacy-hash-anchor" id="standings" aria-hidden="true"/>
       <span className="legacy-hash-anchor" id="playoffs" aria-hidden="true"/>
       <div className="container">
+        <div className="mc-season-picker" aria-label={lang === "TR" ? "Sezon seçimi" : "Season selection"}>
+          <button type="button" aria-pressed={seasonView === "upcoming"} onClick={() => setSeasonView("upcoming")}>{lang === "TR" ? "Yeni Sezon" : "New Season"}</button>
+          <button type="button" aria-pressed={seasonView === "archive"} onClick={() => setSeasonView("archive")}>{lang === "TR" ? "Geçmiş Sezon · EML Yaz Ligi" : "Archive · EML Summer League"}</button>
+        </div>
+        {seasonView === "upcoming" && <UpcomingSeason lang={lang}/>}
+        <div hidden={seasonView !== "archive"}>
+        {ACTIVE_COMPETITION.locked && <p className="mc-archive-label">{lang === "TR" ? "GEÇMİŞ SEZON · EML FC26 YAZ LİGİ — ALTAIR eSports sezonu çeyrek finalde tamamladı. Sezon kayıtları sabitlendi." : "SEASON ARCHIVE · EML FC26 SUMMER LEAGUE — ALTAIR eSports finished the season in the quarterfinals. Season records are frozen."}</p>}
         <div className="mc-heading">
           <div>
             <div className="sec-eyebrow">{copy.matchCenter.eyebrow}</div>
@@ -344,7 +358,9 @@ export function MatchCenter({ lang, copy, locale, matchCenter, refetch, retryWai
             {panels[tab]}
           </div>
         ))}
+        </div>
       </div>
     </section>
   );
 }
+

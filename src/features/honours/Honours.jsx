@@ -15,16 +15,15 @@ export function Honours({ copy, locale = "tr" }) {
         </div>
 
         <div className="honours-grid">
-          {copy.honours.items.map((honour, index) => (
+          {copy.honours.items.map((honour) => (
             <article key={`${honour.season}-${honour.competition}`} className="honour-card">
               <div className="honour-card-head">
-                <span className="honour-card-index">{String(index + 1).padStart(2, "0")}</span>
-                <div className="honour-mark">{honour.mark}</div>
+                <span className="honour-season">{honour.season}</span>
+                <div className={`honour-mark${honour.mark === "F" ? " honour-mark--text" : ""}`}>{honour.mark === "F" ? honour.result : honour.mark.replace("×", "")}</div>
+                {honour.mark !== "F" && <div className="honour-result">{honour.result}</div>}
               </div>
               <div className="honour-copy">
-                <div className="honour-season">{honour.season}</div>
                 <h3 className="honour-competition">{honour.competition}</h3>
-                <div className="honour-result">{honour.result}</div>
               </div>
             </article>
           ))}

@@ -2,8 +2,41 @@ import { useEffect, useRef, useState } from "react";
 import { getLocalizedSectionHref, getRoutePath } from "../../app/routes.js";
 import { LANG_OPTIONS } from "../../i18n/messages.js";
 import { trackLanguageSwitch } from "../../services/analytics/actions.js";
+import { SITE_LINKS } from "../../config/site.js";
+
+function ClubMenu({ label, links, activeSection, onNavigate }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const close = (event) => {
+      if (!ref.current?.contains(event.target)) ref.current?.removeAttribute("open");
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, []);
+  return (
+    <details className="nav-club" ref={ref} onBlur={(event) => {
+      if (!event.currentTarget.contains(event.relatedTarget)) event.currentTarget.removeAttribute("open");
+    }} onKeyDown={(event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        ref.current.removeAttribute("open");
+        ref.current.querySelector("summary").focus();
+      }
+    }}>
+      <summary className={links.some((link) => link[2] === activeSection) ? "active" : undefined}>{label}<span aria-hidden="true">⌄</span></summary>
+      <ul className="nav-club-panel">
+        {links.map(([href, text, section]) => <li key={href}><a href={href} aria-current={activeSection === section ? "location" : undefined} onClick={() => {
+          ref.current.removeAttribute("open");
+          onNavigate?.();
+        }}>{text}</a></li>)}
+      </ul>
+    </details>
+  );
+}
 
 const FOCUSABLE_SELECTOR = [
+  "summary",
   "a[href]",
   "button:not([disabled])",
   "select:not([disabled])",
@@ -57,7 +90,7 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
       }
       if (event.key !== "Tab") return;
 
-      const focusableItems = [...(mobilePanelRef.current?.querySelectorAll(FOCUSABLE_SELECTOR) || [])];
+      const focusableItems = [...(mobilePanelRef.current?.querySelectorAll(FOCUSABLE_SELECTOR) || [])].filter((item) => item.getClientRects().length > 0);
       if (!focusableItems.length) return;
       const firstItem = focusableItems[0];
       const lastItem = focusableItems.at(-1);
@@ -120,13 +153,18 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
     options[nextIndex].focus();
   };
 
+  const isTurkish = activeLang === "TR";
+  const joinLabel = isTurkish ? "Bize Katıl" : "Join Us";
+  const clubLinks = [
+    [getLocalizedSectionHref(locale, "identity"), isTurkish ? "Hikâyemiz" : "Our Story", "identity"],
+    [getRoutePath("honours", locale), isTurkish ? "Başarılar" : "Honours", "honours"],
+    [getLocalizedSectionHref(locale, "jersey"), copy.nav.links.jersey, "jersey"],
+  ];
   const links = [
+    [getRoutePath("squad", locale), isTurkish ? "Takım" : "Team", "squad"],
     [getLocalizedSectionHref(locale, "match-center"), copy.nav.links.matchCenter, "match-center"],
-    [getLocalizedSectionHref(locale, "jersey"),       copy.nav.links.jersey, "jersey"],
-    [getLocalizedSectionHref(locale, "squad"),        copy.nav.links.players, "squad"],
-    [getLocalizedSectionHref(locale, "identity"),     copy.nav.links.club, "identity"],
-    [getLocalizedSectionHref(locale, "sponsors"),     copy.nav.links.partners, "sponsors"],
-    [getLocalizedSectionHref(locale, "broadcast"),    copy.nav.links.watch, "broadcast"],
+    [getRoutePath("news", locale), isTurkish ? "Haberler" : "News", "updates"],
+    [getRoutePath("partnerships", locale), isTurkish ? "İş Birlikleri" : "Partnerships", "sponsors"],
   ];
   return (
     <nav className={`nav${scrolled ? " scrolled" : ""}`} aria-label={activeLang === "TR" ? "Ana menü" : "Main navigation"}>
@@ -134,12 +172,13 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
         <a href={getRoutePath("home", locale)} className="nav-logo" aria-label="ALTAIR eSports">
           <img src="/logo-ui.png" alt="" aria-hidden="true" className="nav-logo-img" width="256" height="256" decoding="async" />
           <div className="nav-wm">
-            <span className="nav-wm-top">ALTAIR</span>
-            <span className="nav-wm-sub">FC 26 · Pro Clubs</span>
+            <img className="nav-altair-wordmark" src="/altair-wordmark.svg" alt="ALTAIR" width="138" height="24"/>
+            
           </div>
         </a>
       </div>
       <ul className="nav-links">
+        <li><ClubMenu label={isTurkish ? "Kulüp" : "Club"} links={clubLinks} activeSection={activeSection}/></li>
         {links.map(([href, label, sectionId]) => (
           <li key={href}>
             <a
@@ -153,7 +192,7 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
         ))}
       </ul>
       <div className="nav-right">
-        <a href={getLocalizedSectionHref(locale, "broadcast")} className="nav-cta">{copy.nav.cta}</a>
+        <a href={SITE_LINKS.discord} target="_blank" rel="noopener noreferrer" className="nav-cta">{joinLabel}</a>
         <div className="nav-menu" ref={mobileMenuRef}>
           <button
             type="button"
@@ -189,6 +228,7 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
               >
                 <div className="nav-mobile-head" id="mobile-navigation-title">{copy.nav.menu}</div>
                 <ul className="nav-mobile-links">
+                  <li><ClubMenu label={isTurkish ? "Kulüp" : "Club"} links={clubLinks} activeSection={activeSection} onNavigate={closeMobileMenu}/></li>
                   {links.map(([href, label, sectionId]) => (
                     <li key={href}>
                       <a
@@ -202,7 +242,7 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
                     </li>
                   ))}
                   <li>
-                    <a href={getLocalizedSectionHref(locale, "broadcast")} className="nav-mobile-primary" onClick={closeMobileMenu}>{copy.nav.cta}</a>
+                    <a href={SITE_LINKS.discord} target="_blank" rel="noopener noreferrer" className="nav-mobile-primary" onClick={closeMobileMenu}>{joinLabel}</a>
                   </li>
                 </ul>
               </div>
@@ -231,13 +271,13 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
             }}
           >
             <span className="nav-lang-trigger-main">
-              <span className="nav-lang-trigger-label">Lang</span>
+              <span className="nav-lang-trigger-label">{activeLang === "TR" ? "Dil" : "Language"}</span>
               <span className="nav-lang-trigger-value">{activeLang === "TR" ? "Türkçe" : "English"}</span>
             </span>
             <span className="nav-lang-trigger-icon" aria-hidden="true">
-              <span className="nav-lang-trigger-dot"/>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>
               <span>{activeLang}</span>
-              <span className="nav-lang-trigger-caret">v</span>
+              <span className="nav-lang-trigger-caret">⌄</span>
             </span>
           </button>
           {langMenuOpen && (
@@ -267,7 +307,7 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
                       <span className="nav-lang-note">{option.note}</span>
                       {activeLang === option.code && <span className="sr-only">{copy.nav.selected}</span>}
                     </span>
-                    <span className="nav-lang-check" aria-hidden="true"/>
+                    <span className="nav-lang-check" aria-hidden="true">{activeLang === option.code ? "✓" : ""}</span>
                   </button>
                 ))}
               </div>
@@ -278,3 +318,5 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
     </nav>
   );
 }
+
+

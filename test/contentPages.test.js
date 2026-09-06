@@ -23,8 +23,8 @@ test("news stays empty until a dated and verified editorial item exists", () => 
   assert.deepEqual(getPublishedNews({ locale:"tr", now:"2026-08-11T12:00:00.000Z" }), []);
 });
 
-test("honours contain only the five user-verified records and do not invent dates", () => {
-  assert.equal(getVerifiedHonours().length, 5);
+test("honours contain only the three user-verified records and do not invent dates", () => {
+  assert.equal(getVerifiedHonours().length, 3);
   assert.equal(HONOURS_CONTENT.every((honour) => honour.verified && honour.achievedAt === null), true);
 });
 
@@ -79,3 +79,4 @@ test("all eight content pages are route-level lazy chunks", () => {
     "PartnershipsPage",
   ].forEach((page) => assert.match(source, new RegExp(`const ${page} = lazy`)));
 });
+

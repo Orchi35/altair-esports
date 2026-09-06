@@ -23,25 +23,13 @@ test("production observability does not create failed localhost requests", () =>
   assert.match(observability, /normalizedHostname\.endsWith\('\.vercel\.app'\)/);
 });
 
-test("hero and crest provide eager AVIF and WebP responsive sources", () => {
+test("hero uses the supplied crest with explicit dimensions and high priority", () => {
   const hero = read("../src/features/hero/Hero.jsx");
-  const heroAssets = [
-    "../public/hero-space-1280.avif",
-    "../public/hero-space-1280.webp",
-    "../public/hero-space-1672.avif",
-    "../public/hero-space-1672.webp",
-    "../public/hero-space-mobile.avif",
-    "../public/hero-space-mobile.webp",
-  ];
-
-  assert.match(hero, /<picture className="hero-scene-picture"/);
-  assert.match(hero, /hero-space-mobile\.avif/);
-  assert.match(hero, /hero-space-1672\.webp 1672w/);
-  assert.match(hero, /logo-3d-1120\.avif 1120w/);
-  assert.match(hero, /fetchPriority="high"/);
-  assert.doesNotMatch(hero, /hero-scene-image[\s\S]{0,300}loading="lazy"/);
-  assert.ok(heroAssets.every(exists));
-  assert.ok(heroAssets.reduce((total, filename) => total + fs.statSync(new URL(filename, import.meta.url)).size, 0) < 300_000);
+  assert.match(hero, /src="\/altair-brand-logo.png"/);
+  assert.match(hero, /width="500" height="500" fetchPriority="high"/);
+  assert.doesNotMatch(hero, /hero-scene-picture/);
+  assert.ok(exists("../public/altair-brand-logo.png"));
+  assert.ok(fs.statSync(new URL("../public/altair-brand-logo.png", import.meta.url)).size < 350_000);
 });
 
 test("social preview uses the optimized JPEG asset", () => {
@@ -82,3 +70,4 @@ test("Match Center uses one internal client endpoint", () => {
   assert.equal((hook.match(/fetch\(/g) || []).length, 1);
   assert.doesNotMatch(hook, /emajorleague\.com|\/tournaments\//);
 });
+

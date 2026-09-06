@@ -1,0 +1,74 @@
+/* Shared canvas and surface palette, including lazy-loaded sections. */
+:root {
+  --altair-canvas:#080f1c;
+  --altair-panel:#142136;
+  --altair-raised:#1b2d45;
+  --altair-edge:#8caacf33;
+  --bg:var(--altair-canvas);
+  --surface-0:#0d1829;
+  --surface-1:var(--altair-panel);
+  --surface-2:var(--altair-raised);
+  --surface-3:#243b57;
+  --cyan:#91c2ff; --cyan-2:#c2ddff; --cyan-deep:#4b8edb;
+  --cyan-soft:#91c2ff0d; --cyan-edge:#91c2ff40;
+  --line:#8caacf1a; --line-2:var(--altair-edge);
+  --gradient-accent-line:linear-gradient(90deg,#91c2ff,#c2ddff55,transparent);
+}
+body, .site, .site #main-content { background:var(--altair-canvas); }
+body::before, body::after { display:none; }
+.site .brand-hero {
+  background:radial-gradient(ellipse at 78% 32%,#204b794a,transparent 62%),linear-gradient(180deg,#0e1d33,var(--altair-canvas));
+}
+.site #team-status.quick-status,
+.site #match-center.match-center,
+.site #identity.section,
+.site #honours.section,
+.site #jersey.section,
+.site #squad.section,
+.site #sponsors.section,
+.site #broadcast.section,
+.site .content-page {
+  --text:#f3f6fc; --text-2:#c0cadb; --muted:#9bacbf; --cyan:#91c2ff;
+  background:var(--altair-canvas);
+  border-top-color:#8caacf1a; border-bottom-color:#8caacf1a;
+}
+.site #identity.section::before,
+.site #honours.section::before,
+.site #jersey.section::before,
+.site #squad.section::before,
+.site #sponsors.section::before,
+.site #broadcast.section::before,
+.site #match-center.match-center::before { background:none; border:0; box-shadow:none; }
+.site #identity.section::after,
+.site #honours.section::after,
+.site #jersey.section::after,
+.site #squad.section::after,
+.site #sponsors.section::after,
+.site #broadcast.section::after {
+  background:linear-gradient(90deg,transparent,#8caacf26,transparent);
+}
+.site #team-status .quick-status-grid {
+  background:transparent; border:0; box-shadow:none;
+}
+.site #identity .identity-editorial,
+.site #identity .identity-card,
+.site #identity .identity-origin,
+.site #identity .identity-manifesto,
+.site #honours .honour-card,
+.site #sponsors .sponsor-visual,
+.site #sponsors .sponsor-resource-bar,
+.site #broadcast .broadcast-feature,
+.site #broadcast .broadcast-channel {
+  background:linear-gradient(130deg,#1b2d45,#142136);
+  border-color:var(--altair-edge);
+  box-shadow:inset 0 1px 0 #dceaff08,0 12px 30px #0002;
+}
+.site #identity .identity-motto { background:#0d1829; border-color:#91c2ff66; }
+.site #identity .identity-motto-text { color:#dae9fb; }
+.site .footer { background:#070e19; border-top:1px solid var(--altair-edge); }
+.site .footer::before { background:none; }
+.site .nav, .site .nav.scrolled {
+  background:linear-gradient(115deg,#142136ed,#0d1829ed);
+  border-bottom-color:var(--altair-edge);
+}
+

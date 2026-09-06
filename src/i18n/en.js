@@ -68,11 +68,9 @@ export const EN_MESSAGES = {
       sub:"ALTAIR's early competitive record reflects a team that learned quickly, progressed through the leagues and consistently turned tournament runs into tangible results.",
       view:"View Club Honours",
       items:[
-        { mark:"02", season:"FC 26 · Season 1", competition:"EML Third Division", result:"Runner-up" },
         { mark:"10×", season:"Tournament Record", competition:"BRFC Tournaments", result:"Champions" },
         { mark:"5×", season:"Tournament Record", competition:"EML Night Tournaments", result:"Champions" },
         { mark:"F", season:"FC 26 · Season 2", competition:"ProLeague European League", result:"Finalist" },
-        { mark:"06", season:"FC 26 · Season 2", competition:"EML First Division", result:"6th Place" },
       ],
     },
     quickStatus: {
@@ -349,7 +347,7 @@ export const EN_MESSAGES = {
       clubLinks:["About ALTAIR","Club Honours","Season Results","Media & Press","Official Channels"],
       compLinks:["Team Page","League Table","Fixtures","Statistics","Squad"],
       connectLinks:["Partnerships","Instagram","Twitch","YouTube","Discord"],
-      rights:"© 2026 ALTAIR eSports · All rights reserved",
+      rights:"© 2025 ALTAIR eSports · All rights reserved",
       competing:"Competing in",
       privacy:"Privacy",
       terms:"Terms",
@@ -387,3 +385,4 @@ export const EN_MESSAGES = {
       matchCenter:"Open Match Center",
     },
   };
+

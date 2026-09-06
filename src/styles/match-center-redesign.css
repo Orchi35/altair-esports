@@ -1,0 +1,151 @@
+/* Match center: restrained stadium lighting and an editorial scoreboard. */
+#match-center .mc-playoff--archived-quarterfinal .mc-playoff-tree { grid-template-columns:minmax(0,1fr); min-width:0; }
+#match-center .mc-playoff--archived-quarterfinal .mc-playoff-ties { grid-template-columns:repeat(2,minmax(0,1fr)); }
+@media(max-width:680px) { #match-center .mc-playoff--archived-quarterfinal .mc-playoff-ties { grid-template-columns:1fr; } }
+#match-center .mc-archive-label { margin:0 0 24px; padding:14px 18px; border-left:3px solid #9dbfe9; background:#17283e; color:#d8e6f8; font:600 13px/1.6 var(--f-body); }
+#match-center.match-center {
+  --text:#f3f6fc; --text-2:#c0cadb; --muted:#95a5bc; --cyan:#83baff;
+  padding-block:88px;
+  background:radial-gradient(ellipse at 50% 0,#182d4b66,transparent 58%),#080f1c;
+  border-block:1px solid #b3ceef14;
+}
+#match-center::before { inset:0; border:0; opacity:.5; transform:none; mask-image:none; background:linear-gradient(115deg,transparent 65%,#9bbfff05 65.1%,transparent 65.4%); }
+#match-center .container { max-width:1280px; }
+#match-center .mc-heading { align-items:center; gap:32px; margin-bottom:40px; }
+#match-center .sec-eyebrow { font:700 11px var(--f-body); letter-spacing:.2em; color:#8bbdff; }
+#match-center .sec-title { font-size:clamp(38px,4.5vw,64px); letter-spacing:-.025em; line-height:1.05; text-shadow:none; }
+#match-center .sec-title .accent { color:#9dbfe9; }
+#match-center .sec-sub { max-width:58ch; font-size:15px; color:#aebdd0; }
+#match-center .mc-verification { max-width:320px; padding:0 0 0 22px; background:none; border:0; border-left:1px solid #7e99bb40; border-radius:0; color:#aebdd0; box-shadow:none; }
+#match-center .mc-verification button { align-self:flex-end; padding:0 15px; min-height:36px; background:#17273d; color:#e5eefb; border:1px solid #476080; border-radius:5px; }
+#match-center .mc-next { position:relative; margin-bottom:34px; border:1px solid #6e8eb442; border-radius:12px; background:radial-gradient(ellipse at 15% 50%,#27446544,transparent 65%),#101d2e; box-shadow:0 20px 50px #0003; backdrop-filter:none; }
+#match-center .mc-next::before { left:32px; right:32px; height:1px; background:linear-gradient(90deg,#abcfff80,transparent); }
+#match-center .mc-next--featured { min-height:300px; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); }
+#match-center .mc-next-matchup { padding:32px; border-color:#a1bad51c; }
+#match-center .mc-next-kicker { color:#b3c8e3; font-size:11px; letter-spacing:.18em; }
+#match-center .mc-next-teams { margin-top:28px; gap:20px; }
+#match-center .mc-next-team strong { font-family:var(--f-body); font-size:16px; letter-spacing:0; color:#f2f5fb; }
+#match-center .mc-next-badge { background:#192c44; border-color:#6b8aaf55; border-radius:12px; width:88px; height:88px; }
+#match-center .mc-next-badge.is-altair { background:none; border:0; }
+#match-center .mc-next-versus { font-size:clamp(32px,4vw,56px); letter-spacing:-.04em; color:#fff; }
+#match-center .mc-next-meta { padding:24px 28px 76px; gap:4px; }
+#match-center .mc-next-meta > div { padding:12px; border-color:#a1bad51c; }
+#match-center .mc-next-meta dt { font:600 10px var(--f-body); letter-spacing:.08em; color:#9caec6; }
+#match-center .mc-next-meta dd { font:600 14px/1.5 var(--f-body); color:#eef3fb; }
+#match-center .mc-stream-link { background:#bad8ff; color:#0a1a2c; border:0; border-radius:5px; }
+#match-center .mc-tabs { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin:0 0 24px; padding:0; gap:0; border:0; border-bottom:1px solid #7893b340; border-radius:0; background:none; overflow:visible; }
+#match-center .mc-tabs button { min-height:60px; background:none; color:#a8b8ce; border:0; border-radius:0; box-shadow:none; font:600 14px var(--f-body); letter-spacing:0; }
+#match-center .mc-tabs button:hover { color:#fff; background:#ffffff04; }
+#match-center .mc-tabs button.is-active { color:#edf5ff; background:linear-gradient(0deg,#87baff12,transparent); border:0; box-shadow:none; font-weight:800; }
+#match-center .mc-tabs button::after { left:20%; right:20%; height:3px; border-radius:3px 3px 0 0; background:#92c2ff; }
+#match-center .mc-tabs button.is-active::after { background:#92c2ff; }
+#match-center .mc-tab-panel { padding:0; border:0; border-radius:0; background:none; box-shadow:none; backdrop-filter:none; }
+#match-center .mc-playoff { background:none; border:0; border-radius:0; }
+#match-center .mc-playoff-header { padding:8px 0 28px; background:none; border-bottom:1px solid #7893b326; gap:32px; }
+#match-center .mc-playoff-header h3 { font-size:clamp(28px,3vw,40px); line-height:1.1; }
+#match-center .mc-playoff-header p { font-size:14px; color:#aabbd0; }
+#match-center .mc-playoff-tree { padding:28px 2px 20px; gap:28px; grid-template-columns:minmax(360px,1.35fr) minmax(240px,1fr) minmax(240px,1fr); min-width:960px; }
+#match-center .mc-playoff-round-heading { gap:12px; padding-bottom:14px; border-color:#7188a633; }
+#match-center .mc-playoff-round-heading span { color:#9eb8da; font-size:11px; }
+#match-center .mc-playoff-round-heading h3 { font:700 14px var(--f-body); letter-spacing:0; text-transform:none; }
+#match-center .mc-playoff-ties { gap:16px; }
+#match-center .mc-playoff-tie { border:1px solid #7089a638; border-radius:9px; background:#142136; box-shadow:0 8px 20px #0002; }
+#match-center .mc-playoff-tie.is-altair { border-color:#80b7fb8c; background:#192b44; box-shadow:0 8px 24px #0003; }
+#match-center .mc-playoff-tie.is-altair::before { width:3px; background:#9bc8ff; }
+#match-center .mc-playoff-team { padding:12px; gap:10px; }
+#match-center .mc-playoff-team strong { font:700 14px var(--f-body); color:#f0f4fc; }
+#match-center .mc-playoff-seed { color:#8ea5c2; }
+#match-center .mc-playoff-legs { background:#0b17284d; }
+#match-center .mc-playoff-legs li { padding:12px; border-color:#7893b31f; }
+#match-center .mc-playoff-legs time { font-size:11px; color:#b0bfd2; }
+#match-center .mc-playoff-legs li > strong { font-size:26px; color:#f2f6ff; }
+#match-center .mc-playoff-aggregate { background:#0c182a; padding:12px; border-color:#7893b32b; }
+#match-center .mc-playoff-aggregate span { font:600 10px var(--f-body); letter-spacing:.06em; color:#aebfd6; }
+#match-center .mc-playoff-aggregate strong { font-size:28px; color:#d7e8ff; }
+#match-center .mc-playoff-pending { min-height:210px; border:1px dashed #8199b54d; border-radius:9px; background:#111e302e; }
+#match-center .mc-playoff-pending p { color:#9dafc6; font-size:13px; }
+#match-center .mc-playoff-round:not(:last-child)::after { right:-28px; width:28px; background:#739ac35e; }
+#match-center .mc-results-list, #match-center .mc-fixtures-list, #match-center .mc-standings-wrap { border:1px solid #8199b533; border-radius:10px; background:#101c2c; }
+#match-center .res-card, #match-center .fix-card { background:#142136; border-bottom-color:#8199b526; }
+#match-center .res-card:nth-child(even), #match-center .fix-card:nth-child(even) { background:#101d30; }
+#match-center .res-card:hover, #match-center .fix-card:hover { background:#1b2c43; }
+#match-center .res-score, #match-center .res-meta { background:#0c182a; }
+#match-center .res-name { color:#edf3fc; font-size:15px; }
+#match-center .res-score-val { color:#f4f7ff; }
+#match-center .mc-standings-table thead th { background:#1b2b41; color:#bacbe0; height:48px; }
+#match-center .mc-standings-table td, #match-center .mc-standings-table tbody th { color:#d7e1ef; border-color:#8199b51f; }
+#match-center .mc-standings-table tbody tr.is-altair { background:#203650; }
+#match-center .mc-standings-table tbody tr:hover { background:#23364f; }
+#match-center :focus-visible { outline:2px solid #b6d7ff; outline-offset:3px; }
+@media(max-width:900px) { #match-center .mc-next--featured { grid-template-columns:1fr; } #match-center .mc-next-matchup { border-right:0; border-bottom:1px solid #a1bad51c; } }
+@media(max-width:680px) {
+  #match-center.match-center { padding:52px 16px; }
+  #match-center .mc-heading { gap:22px; }
+  #match-center .mc-verification { max-width:none; width:100%; padding:12px 0; border-left:0; border-top:1px solid #7893b32b; }
+  #match-center .mc-next-matchup { padding:24px 18px; }
+  #match-center .mc-next-badge { width:68px; height:68px; }
+  #match-center .mc-next-team strong { font-size:13px; }
+  #match-center .mc-next-meta { padding:16px 12px 76px; }
+  #match-center .mc-tabs button { min-height:54px; font-size:12px; padding-inline:3px; }
+  #match-center .mc-playoff-header { grid-template-columns:1fr; gap:14px; }
+  #match-center .mc-playoff-tree { grid-template-columns:290px 240px 240px; min-width:830px; }
+}
+
+/* Consistent type scale and alignment across every match panel. */
+#match-center { font-family:var(--f-body); }
+#match-center .sec-title { font-family:var(--f-body); font-size:clamp(32px,3.6vw,48px); font-weight:800; line-height:1.15; letter-spacing:-.025em; }
+#match-center .sec-sub { margin-top:12px; font-size:14px; line-height:1.65; }
+#match-center .mc-heading { align-items:flex-start; margin-bottom:32px; }
+#match-center .mc-verification { font:500 12px/1.6 var(--f-body); letter-spacing:0; text-transform:none; }
+#match-center .mc-verification button { font:700 12px var(--f-body); letter-spacing:0; }
+#match-center .mc-playoff-header { align-items:start; }
+#match-center .mc-playoff-header h3 { font:800 clamp(24px,2.5vw,32px)/1.2 var(--f-body); letter-spacing:-.02em; }
+#match-center .mc-playoff-header p { margin:0; font-size:14px; line-height:1.65; }
+#match-center .mc-playoff-header > div { gap:10px; }
+#match-center .mc-playoff-header span, #match-center .mc-next-kicker { font:700 11px/1.4 var(--f-body); letter-spacing:.1em; }
+#match-center .mc-playoff-round { align-content:start; grid-template-rows:48px auto; gap:16px; }
+#match-center .mc-playoff-round-heading { min-height:48px; padding:0 0 12px; align-items:center; margin:0; }
+#match-center .mc-playoff-round-heading h3 { font:700 15px/1.35 var(--f-body); }
+#match-center .mc-playoff-round:not(:last-child)::after { top:154px; }
+#match-center .mc-playoff-team { min-height:60px; grid-template-columns:24px 34px minmax(0,1fr); padding:12px 16px; align-items:center; }
+#match-center .mc-playoff-team strong { font:700 14px/1.4 var(--f-body); white-space:normal; overflow-wrap:anywhere; }
+#match-center .mc-playoff-seed { font:600 12px var(--f-body); text-align:center; }
+#match-center .mc-playoff-legs li { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:16px; padding:12px 16px; min-height:68px; }
+#match-center .mc-playoff-legs li > div { gap:5px; }
+#match-center .mc-playoff-legs li span { font:700 10px/1.4 var(--f-body); letter-spacing:.06em; }
+#match-center .mc-playoff-legs time { font:500 12px/1.5 var(--f-body); white-space:normal; overflow:visible; }
+#match-center .mc-playoff-legs li > .mc-leg-score { font:800 26px/1 var(--f-body); letter-spacing:-.02em; font-variant-numeric:tabular-nums; text-align:right; }
+#match-center .mc-playoff-legs li > .mc-leg-scheduled { font:700 11px/1.4 var(--f-body); max-width:80px; text-align:right; }
+#match-center .mc-playoff-aggregate { min-height:56px; padding:12px 16px; }
+#match-center .mc-playoff-aggregate strong { font:800 26px/1 var(--f-body); font-variant-numeric:tabular-nums; }
+#match-center .mc-playoff-pending { min-height:244px; padding:24px; }
+#match-center .mc-playoff-pending p { font:500 14px/1.6 var(--f-body); }
+#match-center .mc-next-team strong { min-height:44px; font:700 16px/1.4 var(--f-body); }
+#match-center .mc-next-meta { align-content:center; }
+#match-center .mc-next-meta > div { min-height:78px; }
+#match-center .mc-next-meta dt { margin-bottom:6px; }
+#match-center .mc-match-status { font:700 10px/1.4 var(--f-body); padding:4px 7px; }
+#match-center .res-name, #match-center .fix-team-name { font:700 14px/1.4 var(--f-body); letter-spacing:0; }
+#match-center .res-gw, #match-center .res-date, #match-center .res-comp { font:500 11px/1.5 var(--f-body); letter-spacing:0; }
+#match-center .res-score-val { font:800 36px/1 var(--f-body); font-variant-numeric:tabular-nums; }
+#match-center .mc-standings-table th, #match-center .mc-standings-table td { font-family:var(--f-body); font-size:13px; line-height:1.4; height:56px; font-variant-numeric:tabular-nums; }
+#match-center .mc-standings-table thead th { font-size:11px; font-weight:700; }
+#match-center .mc-standings-table tbody th { align-items:center; }
+@media(max-width:680px) {
+  #match-center .mc-heading { gap:20px; }
+  #match-center .mc-next-team strong { font-size:14px; min-height:40px; }
+  #match-center .mc-playoff-team { padding-inline:12px; }
+  #match-center .mc-playoff-legs li { padding-inline:12px; gap:12px; }
+  #match-center .mc-standings-table th, #match-center .mc-standings-table td { font-size:12px; }
+}
+#match-center .mc-season-picker, #match-center .mc-league-picker, #match-center .mc-upcoming-views { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:28px; }
+#match-center .mc-season-picker button, #match-center .mc-league-picker button, #match-center .mc-upcoming-views button { min-height:44px; padding:12px 18px; border:1px solid #607fa455; border-radius:6px; background:#132238; color:#bccde3; font:700 13px var(--f-body); cursor:pointer; }
+#match-center button[aria-pressed="true"] { color:#07182a; background:#bad8ff; border-color:#d5e8ff; }
+#match-center .mc-league-picker { margin-top:28px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
+#match-center .mc-league-picker button { min-height:68px; font-size:15px; }
+#match-center .mc-upcoming-empty { padding:40px 28px; border:1px solid #607fa455; border-radius:10px; background:#132238; }
+#match-center .mc-upcoming-empty > span { color:#a9c8ef; font-size:13px; }
+#match-center .mc-upcoming-empty h3 { margin:16px 0 12px; font:800 26px var(--f-body); color:#f1f6ff; }
+#match-center .mc-upcoming-empty p { color:#bdcde0; font-size:14px; }
+#match-center .mc-upcoming-empty a { display:inline-block; margin-top:22px; color:#b9d9ff; font-size:13px; }
+@media(max-width:600px) { #match-center .mc-league-picker { grid-template-columns:1fr; } }

@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/match-center.js": {
-      "includeFiles": "public/data/eml-snapshot.json",
+      "includeFiles": "public/data/**/*.json",
       "maxDuration": 10
     },
     "api/partnership-inquiry.js": {
@@ -84,3 +84,4 @@
     }
   ]
 }
+

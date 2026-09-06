@@ -160,3 +160,35 @@
   .jersey-showcase-details>div+div{border-top:1px solid rgba(126,211,255,.12);border-left:0}
 }
 @media(prefers-reduced-motion:reduce){.jersey-showcase-card img{transition:none}}
+
+/* Product showcase: one generous image, club details alongside. */
+.site #jersey .jersey-showcase-container { max-width:1200px; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); grid-template-areas:'gallery heading' 'gallery details'; gap:0 64px; align-items:start; }
+.site #jersey .jersey-showcase-header { grid-area:heading; display:block; padding-top:48px; }
+.site #jersey .jersey-showcase-title { font-family:var(--f-body); font-size:clamp(40px,4.8vw,66px); line-height:1.05; letter-spacing:-.04em; max-width:none; margin:0; }
+.site #jersey .jersey-showcase-title span { color:#b7d5fa; }
+.site #jersey .jersey-showcase-intro { border:0; padding:28px 0 0; }
+.site #jersey .jersey-showcase-intro > span { color:#b4c9e2; font:700 12px var(--f-body); letter-spacing:.08em; }
+.site #jersey .jersey-showcase-intro p { font-size:15px; line-height:1.8; color:#c0cadb; max-width:42ch; }
+.site #jersey .jersey-showcase-gallery { grid-area:gallery; display:block; }
+.site #jersey .jersey-showcase-card { border:1px solid #829fc333; border-radius:12px; box-shadow:0 20px 50px #0003; }
+.site #jersey .jersey-showcase-card picture { aspect-ratio:1122/1402; }
+.site #jersey .jersey-showcase-card img { object-fit:contain; }
+.site #jersey .jersey-showcase-card:hover img { transform:none; }
+.site #jersey .jersey-showcase-card figcaption { padding:22px; flex-direction:row; align-items:center; }
+.site #jersey .jersey-showcase-card figcaption strong { font:700 13px var(--f-body); letter-spacing:.04em; }
+.site #jersey .jersey-view-picker { display:flex; gap:10px; margin-top:14px; }
+.site #jersey .jersey-view-picker button { flex:1; min-height:46px; padding:10px 16px; border:1px solid #6382a64d; border-radius:6px; background:#142136; color:#c3d2e5; font:700 13px var(--f-body); cursor:pointer; transition:background .2s; }
+.site #jersey .jersey-view-picker button[aria-pressed='true'] { background:#b7d5fa; color:#0a1b30; border-color:#cee5ff; }
+.site #jersey .jersey-view-picker button:focus-visible { outline:2px solid #e3efff; outline-offset:4px; }
+.site #jersey .jersey-showcase-details { grid-area:details; grid-template-columns:1fr; margin-top:32px; border-color:#829fc333; }
+.site #jersey .jersey-showcase-details > div { display:grid; grid-template-columns:100px minmax(0,1fr); gap:24px; align-items:baseline; padding:20px 0; }
+.site #jersey .jersey-showcase-details > div + div { border-left:0; border-top:1px solid #829fc326; }
+.site #jersey .jersey-showcase-details dt { color:#9eb4ce; font:600 11px/1.5 var(--f-body); letter-spacing:.07em; }
+.site #jersey .jersey-showcase-details dd { margin:0; color:#e6effb; font:600 14px/1.6 var(--f-body); letter-spacing:0; text-transform:none; }
+@media(max-width:800px) {
+ .site #jersey .jersey-showcase-container { grid-template-columns:1fr; grid-template-areas:'heading' 'gallery' 'details'; gap:28px; }
+ .site #jersey .jersey-showcase-header { padding-top:0; }
+ .site #jersey .jersey-showcase-gallery { width:100%; max-width:560px; justify-self:center; }
+ .site #jersey .jersey-showcase-details { margin-top:0; }
+}
+@media(prefers-reduced-motion:reduce) { .site #jersey .jersey-view-picker button { transition:none; } }

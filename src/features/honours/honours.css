@@ -141,3 +141,17 @@
   .identity-principle{align-items:flex-start;flex-direction:column;gap:9px;margin-top:28px}
   .identity-statement::after{right:-220px}
 }
+
+/* Clear achievement hierarchy: season, result, competition. */
+.site #honours .honours-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+.site #honours .honour-card { display:flex; flex-direction:column; min-height:270px; padding:0; border:1px solid #8baed44d; border-radius:12px; background:linear-gradient(135deg,#1d334e,#101e31); box-shadow:0 12px 30px #0004; overflow:hidden; }
+.site #honours .honour-card::before, .site #honours .honour-card::after { display:none; }
+.site #honours .honour-card-head { display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; gap:12px; padding:28px; flex:1; }
+.site #honours .honour-season { color:#b0c5df; font:600 11px/1.5 var(--f-body); letter-spacing:.06em; }
+.site #honours .honour-mark { margin:10px 0 0; padding:0; width:auto; height:auto; border:0; background:none; box-shadow:none; color:#d6e8ff; font:800 64px/1 var(--f-body); letter-spacing:-.04em; }
+.site #honours .honour-mark--text { font-size:36px; line-height:1.25; letter-spacing:-.025em; }
+.site #honours .honour-result { margin:0; padding:0; color:#a8cfff; font:700 16px/1.4 var(--f-body); border:0; background:none; text-transform:none; letter-spacing:0; }
+.site #honours .honour-copy { padding:22px 28px; min-height:88px; display:flex; align-items:center; border-top:1px solid #8baed430; background:#0c192a; }
+.site #honours .honour-competition { margin:0; color:#edf4ff; font:700 18px/1.4 var(--f-body); letter-spacing:0; text-transform:none; overflow-wrap:anywhere; }
+.site #honours .sec-title { font:800 clamp(32px,4vw,48px)/1.15 var(--f-body); letter-spacing:-.03em; }
+@media(max-width:760px) { .site #honours .honours-grid { grid-template-columns:1fr; gap:14px; } .site #honours .honour-card { min-height:240px; } }

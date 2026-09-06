@@ -27,14 +27,14 @@ after(async () => {
 test("Turkish homepage opens with one heading and Turkish document language", async () => {
   await page.setViewport(1280, 900);
   await page.navigate(`${baseUrl}/tr`);
-  await page.waitFor("Boolean(document.querySelector('.hero'))", { message:"Turkish hero" });
+  await page.waitFor("Boolean(document.querySelector('.brand-hero'))", { message:"Turkish hero" });
   const result = await page.evaluate("({ lang:document.documentElement.lang, h1:document.querySelectorAll('h1').length, path:location.pathname })");
   assert.deepEqual(result, { lang:"tr", h1:1, path:"/tr" });
 });
 
 test("English homepage opens with one heading and English document language", async () => {
   await page.navigate(`${baseUrl}/en`);
-  await page.waitFor("Boolean(document.querySelector('.hero'))", { message:"English hero" });
+  await page.waitFor("Boolean(document.querySelector('.brand-hero'))", { message:"English hero" });
   const result = await page.evaluate("({ lang:document.documentElement.lang, h1:document.querySelectorAll('h1').length, path:location.pathname })");
   assert.deepEqual(result, { lang:"en", h1:1, path:"/en" });
 });
@@ -157,7 +157,7 @@ test("320 px viewport has no horizontal document overflow", async () => {
 test("loading deferred homepage sections does not reset the scroll position", async () => {
   await page.setViewport(1280, 900);
   await page.navigate(`${baseUrl}/tr`);
-  await page.waitFor("Boolean(document.querySelector('.hero'))", { message:"homepage before deferred scroll" });
+  await page.waitFor("Boolean(document.querySelector('.brand-hero'))", { message:"homepage before deferred scroll" });
   await page.evaluate("window.scrollTo({ top:3800, behavior:'instant' }); true");
   await page.waitFor("window.scrollY > 3000", { message:"deep homepage scroll" });
   await page.waitFor("Boolean(document.querySelector('#identity:not(.deferred-section-placeholder)'))", { timeoutMs:8_000, message:"deferred identity section" });
@@ -208,4 +208,5 @@ test("valid player deep link survives a hard refresh", { skip:!firstPlayer && "N
   await page.waitFor("Boolean(document.querySelector('.player-profile-layout'))", { message:"player deep link refresh" });
   assert.equal(await page.evaluate("location.pathname"), pathname);
 });
+
 

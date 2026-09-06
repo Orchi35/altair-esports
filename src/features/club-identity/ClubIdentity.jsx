@@ -1,5 +1,6 @@
 import "./club-identity.css";
 import "./club-identity-editorial.css";
+import "./club-identity-profile.css";
 
 import { getLocalizedSectionHref } from "../../app/routes.js";
 
@@ -19,6 +20,7 @@ export function ClubIdentity({ copy, locale }) {
         </div>
 
         <div className="identity-editorial">
+          <img className="identity-watermark" src="/altair-brand-logo.png" alt="" aria-hidden="true" width="500" height="500" loading="lazy"/>
           <aside className="identity-foundation" aria-label={copy.identity.founded}>
             <span className="identity-foundation-label">{copy.identity.foundedLabel}</span>
             <strong className="identity-foundation-year">2025</strong>
@@ -34,6 +36,13 @@ export function ClubIdentity({ copy, locale }) {
               <span className="identity-principle-text">{copy.identity.motto}</span>
             </div>
           </article>
+        </div>
+        <div className="identity-values">
+          {copy.identity.cards.map((item) => <article className="identity-value" key={item.k}>
+            <span className="identity-value-index" aria-hidden="true">{item.k}</span>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </article>)}
         </div>
       </div>
     </section>

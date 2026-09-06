@@ -1,4 +1,5 @@
 import "./jersey-showcase.css";
+import { useState } from "react";
 
 const JERSEY_SOURCES = {
   front:"/jersey/altair-jersey-front",
@@ -34,6 +35,7 @@ function JerseyImage({ alt, side }) {
 
 export function JerseyShowcase({ copy }) {
   const content = copy.jersey;
+  const [side, setSide] = useState("front");
 
   return (
     <section className="section jersey-showcase" id="jersey" aria-labelledby="jersey-title">
@@ -53,20 +55,17 @@ export function JerseyShowcase({ copy }) {
 
         <div className="jersey-showcase-gallery" aria-label={content.galleryLabel}>
           <figure className="jersey-showcase-card jersey-showcase-card-front">
-            <JerseyImage alt={content.frontAlt} side="front" />
+            <JerseyImage alt={side === "front" ? content.frontAlt : content.backAlt} side={side} />
             <figcaption>
-              <span aria-hidden="true">01</span>
-              <strong>{content.frontLabel}</strong>
+              <span aria-hidden="true">{side === "front" ? "01 / 02" : "02 / 02"}</span>
+              <strong>{side === "front" ? content.frontLabel : content.backLabel}</strong>
             </figcaption>
           </figure>
 
-          <figure className="jersey-showcase-card jersey-showcase-card-back">
-            <JerseyImage alt={content.backAlt} side="back" />
-            <figcaption>
-              <span aria-hidden="true">02</span>
-              <strong>{content.backLabel}</strong>
-            </figcaption>
-          </figure>
+          <div className="jersey-view-picker">
+            <button type="button" aria-pressed={side === "front"} onClick={() => setSide("front")}>{content.frontLabel}</button>
+            <button type="button" aria-pressed={side === "back"} onClick={() => setSide("back")}>{content.backLabel}</button>
+          </div>
         </div>
 
         <dl className="jersey-showcase-details">

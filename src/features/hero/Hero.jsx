@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { getLocalizedSectionHref } from "../../app/routes.js";
-import { ACTIVE_COMPETITION } from "../../config/competition.js";
+
 import { trackHeroCta } from "../../services/analytics/actions.js";
 import { systemClock } from "../../utils/clock.js";
 import {
@@ -81,11 +81,6 @@ export function Hero({ copy, lang, locale, matchCenter, clock = systemClock }) {
   const statusLabel = match
     ? copy.matchCenter.matchStatuses[statusKey] || copy.matchCenter.matchStatuses.scheduled
     : null;
-  const hasConfiguredSeason = String(matchCenter?.meta?.seasonId || ACTIVE_COMPETITION.tournamentId)
-    === String(ACTIVE_COMPETITION.tournamentId);
-  const seasonLabel = hasConfiguredSeason
-    ? ACTIVE_COMPETITION.label[lang]
-    : matchCenter?.meta?.seasonName || ACTIVE_COMPETITION.label[lang];
   const isLoading = matchCenter?.meta?.status === "loading";
   const noMatchMessage = matchCenter?.meta?.status === "season-ended"
     ? copy.matchCenter.seasonEnded
@@ -94,35 +89,14 @@ export function Hero({ copy, lang, locale, matchCenter, clock = systemClock }) {
       : copy.matchCenter.noUpcoming;
 
   return (
-    <section className={`hero${lang === "TR" ? " hero--tr" : ""}`} id="top">
-      <picture className="hero-scene-picture" aria-hidden="true">
-        <source media="(max-width: 768px)" type="image/avif" srcSet="/hero-space-mobile.avif"/>
-        <source media="(max-width: 768px)" type="image/webp" srcSet="/hero-space-mobile.webp"/>
-        <source type="image/avif" srcSet="/hero-space-1280.avif 1280w, /hero-space-1672.avif 1672w" sizes="100vw"/>
-        <source type="image/webp" srcSet="/hero-space-1280.webp 1280w, /hero-space-1672.webp 1672w" sizes="100vw"/>
-        <img
-          src="/hero-space-1280.webp"
-          alt=""
-          className="hero-scene-image"
-          width="1672"
-          height="941"
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-        />
-      </picture>
-      <div className="hero-scene-overlay"/>
+    <section className="brand-hero" id="top">
 
-      <div className="hero-left">
-        <div className="hero-context" aria-label={copy.hero.contextLabel}>
-          <span><small>{copy.hero.leagueLabel}</small>{copy.hero.tagLeague}</span>
-          <i aria-hidden="true"/>
-          <span><small>{copy.hero.seasonLabel}</small>{seasonLabel}</span>
-        </div>
 
-        <h1 className="hero-h1 hero-h1--motto">
+      <div className="brand-hero-copy">
+
+        <h1 className="brand-motto">
           {copy.hero.slogan.map((line) => (
-            <span className="motto-line" key={line.continuation}>
+            <span className="brand-motto-line" key={line.continuation}>
               <strong>{line.emphasis}</strong> {line.continuation}
             </span>
           ))}
@@ -158,7 +132,14 @@ export function Hero({ copy, lang, locale, matchCenter, clock = systemClock }) {
               )}
             </>
           ) : (
-            <p className="hero-match-message" role="status">{noMatchMessage}</p>
+            <div className="hero-match-empty">
+              <div className="hero-match-empty-copy">
+                <p className="hero-match-message" role="status">{noMatchMessage}</p>
+                <a className="hero-fixture-link" href={getLocalizedSectionHref(locale, "match-center")}>
+                  {lang === "TR" ? "Maç merkezini keşfet" : "Explore match center"}<span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
           )}
         </div>
 
@@ -168,22 +149,10 @@ export function Hero({ copy, lang, locale, matchCenter, clock = systemClock }) {
         </div>
       </div>
 
-      <div className="hero-logo-3d">
-        <picture>
-          <source type="image/avif" srcSet="/logo-3d-320.avif 320w, /logo-3d-640.avif 640w, /logo-3d-1120.avif 1120w" sizes="(max-width: 480px) 72vw, (max-width: 768px) 70vw, (max-width: 1100px) 35vw, 560px"/>
-          <source type="image/webp" srcSet="/logo-3d-320.webp 320w, /logo-3d-640.webp 640w, /logo-3d-1120.webp 1120w" sizes="(max-width: 480px) 72vw, (max-width: 768px) 70vw, (max-width: 1100px) 35vw, 560px"/>
-          <img
-            src="/logo-3d-640.webp"
-            alt={lang === "TR" ? "ALTAIR eSports 3D arması" : "ALTAIR eSports 3D crest"}
-            className="hero-logo-3d-image"
-            width="640"
-            height="640"
-            loading="eager"
-            decoding="async"
-          />
-        </picture>
+      <div className="brand-art"><img src="/altair-brand-logo.png" alt="ALTAIR eSports" width="500" height="500" fetchPriority="high"/>
       </div>
 
     </section>
   );
 }
+

@@ -1,0 +1,59 @@
+{
+  "archives": [
+    {
+      "id": "eml-fc26-summer",
+      "snapshot": "/data/seasons/eml-fc26-summer/snapshot.json",
+      "locked": true,
+      "completeness": "complete-for-club",
+      "playoffScope": "quarterfinal",
+      "clubOutcome": "eliminated-in-quarterfinal"
+    }
+  ],
+  "nextSeason": {
+    "status": "awaiting-publication",
+    "competitions": [
+      {
+        "id": "vpg-elite",
+        "name": "VPG Elite",
+        "sourceUrl": "https://virtualprogaming.com",
+        "fixtures": [],
+        "results": [],
+        "standings": [],
+        "dataStatus": "unannounced",
+        "endpoints": {
+          "fixtures": null,
+          "results": null,
+          "standings": null
+        }
+      },
+      {
+        "id": "zewonka-league-2",
+        "name": "Zewonka League 2",
+        "sourceUrl": "https://club-champions.eu/fr/competition/detail/1",
+        "fixtures": [],
+        "results": [],
+        "standings": [],
+        "dataStatus": "unannounced",
+        "endpoints": {
+          "fixtures": null,
+          "results": null,
+          "standings": null
+        }
+      },
+      {
+        "id": "emajor-league-1",
+        "name": "Emajor League 1.Lig",
+        "sourceUrl": "https://emajorleague.com",
+        "fixtures": [],
+        "results": [],
+        "standings": [],
+        "dataStatus": "unannounced",
+        "endpoints": {
+          "fixtures": null,
+          "results": null,
+          "standings": null
+        }
+      }
+    ]
+  }
+}

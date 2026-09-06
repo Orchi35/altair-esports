@@ -18,7 +18,7 @@ import { ParserError, parseFixtureHtml, parsePlayoffFixtureHtml, parseStandingsH
 import { UpstreamError, fetchAllowedHtml } from "./upstream.js";
 
 const serverDirectory = path.dirname(fileURLToPath(import.meta.url));
-export const SNAPSHOT_FILE = path.resolve(serverDirectory, "..", "..", "public", "data", "eml-snapshot.json");
+export const SNAPSHOT_FILE = path.resolve(serverDirectory, "..", "..", "public", "data", "seasons", "eml-fc26-summer", "snapshot.json");
 export const SNAPSHOT_REFRESH_AFTER_MS = 60 * 60 * 1000;
 export const LIVE_VALIDITY_MS = 24 * 60 * 60 * 1000;
 export const RETRY_AFTER_SECONDS = 900;
@@ -112,7 +112,7 @@ export function inspectSnapshot(snapshot, { now = new Date().toISOString(), requ
   }
 
   const nowTimestamp = Date.parse(nowIso);
-  const isUsable = Date.parse(validFrom) <= nowTimestamp && nowTimestamp < Date.parse(validUntil);
+  const isUsable = Date.parse(validFrom) <= nowTimestamp && (data.meta.seasonStatus === "ended" || nowTimestamp < Date.parse(validUntil));
   if (requireCurrent && !isUsable) throw new SnapshotError("SNAPSHOT_EXPIRED", "Snapshot fallback has expired");
   return { snapshot, source, data, generatedAt, validFrom, validUntil, isUsable };
 }

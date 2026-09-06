@@ -128,11 +128,11 @@ test("Hero component renders the verified CTA state variants", () => {
 
 test("Match Center renders loading, fresh, stale, empty, ended, unavailable and error states", () => {
   const expectations = {
-    loading:"aria-busy=\"true\"",
+    loading:"mc-next--loading",
     fresh:"mc-next-teams",
     stale:"mc-warning",
     empty:"mc-next--empty",
-    "season-ended":"mc-next--season-ended",
+    "season-ended":"mc-next--featured",
     unavailable:"mc-unavailable",
     error:"mc-next--error",
   };
@@ -191,7 +191,7 @@ test("Match Center renders the verified two-legged playoff bracket without inven
   assert.match(html, /Şampiyonluk Yolu/);
   assert.match(html, /Glarung FC/);
   assert.match(html, /ALTAIR eSports/);
-  assert.match(html, /Eşleşmeler EML tarafından doğrulandığında/);
+  assert.doesNotMatch(html, /Eşleşmeler EML tarafından doğrulandığında/);
 });
 
 test("unavailable Match Center hides old match details and exposes a cooled-down retry", () => {
@@ -272,3 +272,5 @@ test("Interactive components depend on the central analytics service", () => {
   assert.match(matchCenterSource, /trackMatchTabChange/);
   assert.doesNotMatch(`${heroSource}${matchCenterSource}`, /window\.va|@vercel\/analytics/);
 });
+
+

@@ -423,6 +423,7 @@ export function resolveMatchCenterData({ primary = null, fallback = null, error 
   if (error && fallback) {
     const normalizedFallback = asNormalizedFallback(fallback, nowIso);
     if (!normalizedFallback) return createErrorMatchCenterData(season, "FALLBACK_INVALID");
+    if (normalizedFallback.meta.seasonStatus === "ended") return normalizedFallback;
     const validUntil = normalizedFallback.meta.validUntil;
     if (!validUntil || Date.parse(validUntil) <= Date.parse(nowIso)) {
       return createUnavailableMatchCenterData({

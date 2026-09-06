@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { EML_TEAM_PATH } from "../src/config/competition.js";
+import { EML_TEAM_PATH, ACTIVE_COMPETITION } from "../src/config/competition.js";
 import { parseRosterHtml } from "../server/match-center/emlParser.js";
 import { fetchAllowedHtml } from "../server/match-center/upstream.js";
 import { createRateLimitedHtmlLoader } from "./lib/eml-rate-limit.mjs";
@@ -85,7 +85,7 @@ async function main() {
   await setWorkflowStatus("updated");
 }
 
-main().catch(async (error) => {
+(ACTIVE_COMPETITION.locked ? setWorkflowStatus("season_archived") : main()).catch(async (error) => {
   const code = typeof error?.code === "string" ? `${error.code}: ` : "";
   if (error?.code === "HTTP_429" && process.env.GITHUB_OUTPUT) {
     await fs.appendFile(process.env.GITHUB_OUTPUT, "status=rate_limited\n", "utf8");

@@ -10,6 +10,7 @@ import "./squad.css";
 import "./squad-centre.css";
 import "./featured-players.css";
 import "./squad-roster.css";
+import { useState } from "react";
 
 function SquadStatus({ copy, error, lastUpdate, loading, refetch, lang }) {
   const hasValidUpdate = lastUpdate instanceof Date && Number.isFinite(lastUpdate.getTime());
@@ -31,6 +32,7 @@ function SquadStatus({ copy, error, lastUpdate, loading, refetch, lang }) {
 
 export function Squad({ lang, copy, locale = "tr", compact = false }) {
   const squadData = useSquadStats();
+  const [position, setPosition] = useState("all");
   const { squad, loading, error, lastUpdate, refetch } = squadData;
   const activeRoster = normalizeActiveSquad(squad);
   const statsVerified = lastUpdate instanceof Date && Number.isFinite(lastUpdate.getTime());
@@ -75,11 +77,15 @@ export function Squad({ lang, copy, locale = "tr", compact = false }) {
                 />
               ))}
             </div>
-            {compact && <a className="sec-link" href={getRoutePath("squad", locale)}>{copy.featuredPlayers.allPlayers}<span aria-hidden="true">→</span></a>}
+            {compact && <a className="roster-view-all" href={getRoutePath("squad", locale)}>{copy.featuredPlayers.allPlayers}<span aria-hidden="true">→</span></a>}
           </section>
         )}
 
         {!compact && <section className="squad-full" aria-labelledby="squad-full-title">
+          <div className="roster-position-picker" aria-label={lang === "TR" ? "Mevki filtresi" : "Position filter"}>
+            <button type="button" aria-pressed={position === "all"} onClick={() => setPosition("all")}>{lang === "TR" ? "Tüm Kadro" : "All Players"} · {activeRoster.count}</button>
+            {activeRoster.groups.filter((g) => g.players.length).map((g) => <button key={g.id} type="button" aria-pressed={position === g.id} onClick={() => setPosition(g.id)}>{copy.squad.groups[g.id]} · {g.players.length}</button>)}
+          </div>
           <div className="squad-subheading squad-subheading--full">
             <div>
               <span>{copy.squad.fullEyebrow}</span>
@@ -90,7 +96,7 @@ export function Squad({ lang, copy, locale = "tr", compact = false }) {
 
           {activeRoster.count ? (
             <div className="squad-position-groups">
-              {activeRoster.groups.filter((group) => group.players.length).map((group) => {
+              {activeRoster.groups.filter((group) => group.players.length && (position === "all" || position === group.id)).map((group) => {
                 const headingId = `squad-group-${group.id.toLowerCase()}`;
                 return (
                   <section className="pos-section" aria-labelledby={headingId} key={group.id}>
