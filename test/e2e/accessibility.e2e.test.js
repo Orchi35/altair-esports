@@ -67,7 +67,7 @@ async function auditCurrentPage(label) {
 const firstPlayer = getPublishedPlayers()[0];
 const firstNews = getPublishedNews({ locale:"tr" })[0] || null;
 const routes = [
-  ["homepage", "/tr", ".hero"],
+  ["homepage", "/tr", ".brand-hero"],
   ["matches", "/tr/maclar", ".content-page"],
   ["squad", "/tr/kadro", ".content-page"],
   ["player detail", firstPlayer ? `/tr/oyuncular/${firstPlayer.slug}` : null, ".player-profile-layout"],
@@ -83,3 +83,5 @@ for (const [label, route, selector] of routes) {
     await auditCurrentPage(label);
   });
 }
+
+
