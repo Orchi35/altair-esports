@@ -17,7 +17,7 @@ function ClubMenu({ label, links, activeSection, onNavigate }) {
     <details className="nav-club" ref={ref} onBlur={(event) => {
       if (!event.currentTarget.contains(event.relatedTarget)) event.currentTarget.removeAttribute("open");
     }} onKeyDown={(event) => {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && ref.current?.open) {
         event.preventDefault();
         event.stopPropagation();
         ref.current.removeAttribute("open");
@@ -318,5 +318,7 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
     </nav>
   );
 }
+
+
 
 
