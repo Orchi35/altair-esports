@@ -27,20 +27,6 @@
         }
       },
       {
-        "id": "zewonka-league-2",
-        "name": "Zewonka League 2",
-        "sourceUrl": "https://club-champions.eu/fr/competition/detail/1",
-        "fixtures": [],
-        "results": [],
-        "standings": [],
-        "dataStatus": "unannounced",
-        "endpoints": {
-          "fixtures": null,
-          "results": null,
-          "standings": null
-        }
-      },
-      {
         "id": "emajor-league-1",
         "name": "Emajor League 1.Lig",
         "sourceUrl": "https://emajorleague.com",
