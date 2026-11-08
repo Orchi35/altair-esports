@@ -86,14 +86,17 @@ test("profile links are preserved and accessible card labels are contextual", ()
   assert.equal(UI_COPY.EN.squad.profileLabel("Example Player"), "View Example Player player profile");
 });
 
-test("home squad markup keeps the localized route, full groups and keyboard access", () => {
+test("home squad keeps the localized route and accessible league selection", () => {
   const squadComponent = read("../src/features/squad/Squad.jsx");
   const playerCard = read("../src/features/squad/PlayerCard.jsx");
   const navigation = read("../src/features/navigation/Navigation.jsx");
 
   assert.match(squadComponent, /id="squad"/);
-  assert.match(squadComponent, /activeRoster\.groups\.filter/);
-  assert.match(squadComponent, /activeRoster\.count/);
+  assert.match(squadComponent, /LeagueSquad/);
+  const leagueSquad = read("../src/features/squad/LeagueSquad.jsx");
+  assert.match(leagueSquad, /aria-pressed/);
+  assert.match(leagueSquad, /Nex Leagues/);
+  assert.doesNotMatch(leagueSquad, /useSquadStats|getPlayerContentByIgn/);
   assert.match(navigation, /getRoutePath\("squad", locale\)/);
   assert.match(playerCard, /aria-label=\{profileLabel\}/);
   assert.match(playerCard, /<article[^>]*aria-label=\{cardLabel\}/);

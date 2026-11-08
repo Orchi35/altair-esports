@@ -1,5 +1,12 @@
 {
   "functions": {
+    "api/vpg-roster.js": {
+      "maxDuration": 10
+    },
+    "api/vpg.js": {
+      "includeFiles": "public/data/vpg-elite-b.json",
+      "maxDuration": 10
+    },
     "api/match-center.js": {
       "includeFiles": "public/data/**/*.json",
       "maxDuration": 10

@@ -1,0 +1,40 @@
+.league-squad{font-family:var(--f-body,"Barlow",sans-serif);color:#eaf1f8}
+.league-squad-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px}
+.league-squad-tabs button,.league-squad-status button{min-height:44px;padding:10px 20px;border:1px solid #526d84;background:#111f30;color:#eaf1f8;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.league-squad-tabs button[aria-pressed="true"]{border-color:#86b7d5;background:#24425a;color:#fff}
+.league-squad button:focus-visible,.league-squad a:focus-visible{outline:3px solid #a9defb;outline-offset:3px}
+.league-squad-heading{display:flex;justify-content:space-between;align-items:end;gap:20px;border-bottom:1px solid #385168;padding-bottom:18px}
+.league-squad-heading span,.league-player-top{color:#9bb9cc;font-size:12px;font-weight:700;letter-spacing:.12em}
+.league-squad-heading h3{margin:6px 0 0;font-size:clamp(25px,3vw,36px);color:#fff}
+.league-squad-heading a,.league-player a{color:#a9d6ee;font-size:14px;font-weight:700}
+.league-squad-status{display:flex;align-items:center;flex-wrap:wrap;gap:8px;min-height:64px;color:#bdcedb;font-size:14px}
+.league-squad-status button{min-height:36px;padding:6px 12px;font-size:13px}
+.league-squad-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.league-player{min-width:0;display:flex;flex-direction:column;gap:18px;padding:22px;border:1px solid #385168;background:linear-gradient(145deg,#152a3c,#101d2c)}
+.league-player-top{display:flex;justify-content:space-between;gap:8px}
+.league-player h5{margin:0;color:#fff;font-size:22px;overflow-wrap:anywhere}
+.league-position-group{margin-top:32px}
+.league-position-heading{display:flex;align-items:center;gap:16px;margin:0 0 18px;color:#dceafa;font-family:inherit;font-size:21px;font-weight:700}
+.league-position-heading::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,#385168,transparent)}
+.league-player-image{aspect-ratio:4/5;overflow:hidden;border-radius:10px;background:#101d2c}
+.league-player-image img{display:block;width:100%;height:100%;object-fit:cover}
+.league-leaders{margin-top:28px}
+.league-leader-label{margin:0;color:#b8d5ed;font-family:inherit;font-size:16px;font-weight:500;line-height:1.5}
+.league-leader dl{margin-top:auto;grid-template-columns:1fr}
+.league-leader dd{font-size:36px;line-height:1.2;font-variant-numeric:tabular-nums}
+.league-player dl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0;padding-top:15px;border-top:1px solid #385168}
+.league-player dt{color:#adc1d0;font-size:12px}.league-player dd{margin:5px 0 0;color:#fff;font-size:20px;font-weight:700}.league-player a{margin-top:auto}
+.league-squad-state{padding:28px;border:1px solid #385168;background:#132638;color:#c6d5df}.league-squad-state h3{margin:0 0 8px;color:#fff}.league-squad-state p{margin:0}
+@media(max-width:1000px){.league-squad-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.league-squad-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.league-squad-heading{align-items:start;flex-direction:column}}
+@media(max-width:430px){.league-squad-grid{grid-template-columns:1fr}}
+
+.league-squad-note{margin:0 0 18px;color:#adc1d0;font-size:14px;line-height:1.5}
+.league-player dt{font-size:14px}
+.league-squad-tabs button{border-radius:10px}
+@media(max-width:600px){.content-page .league-squad{padding-inline:16px}}
+.league-squad--compact .league-squad-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.league-player{border-radius:16px;box-shadow:inset 0 1px 0 rgba(210,230,245,.08),0 12px 28px rgba(0,0,0,.15);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){.league-player:hover{transform:translateY(-3px);border-color:#7797ae;box-shadow:inset 0 1px 0 rgba(210,230,245,.12),0 16px 32px rgba(0,0,0,.22)}}
+@media(max-width:700px){.league-squad--compact .league-squad-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:430px){.league-squad--compact .league-squad-grid{grid-template-columns:1fr}}

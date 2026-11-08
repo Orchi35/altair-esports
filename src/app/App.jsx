@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DeferredSection } from "../components/ui/DeferredSection.jsx";
 import { COMPETITION_SEASONS } from "../config/competition.js";
-import { Hero } from "../features/hero/Hero.jsx";
+import { LiveHero as Hero } from "../features/hero/LiveHero.jsx";
 import { MatchCenter } from "../features/match-center/MatchCenter.jsx";
 import { QuickTeamStatus } from "../features/match-center/QuickTeamStatus.jsx";
 import { NotFoundPage } from "../features/not-found/NotFoundPage.jsx";

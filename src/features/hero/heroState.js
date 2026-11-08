@@ -80,7 +80,14 @@ export function resolveHeroState({ matchCenter, nowMs }) {
     };
   }
 
-  if (remainingMs !== null && remainingMs >= 0 && remainingMs <= HERO_COUNTDOWN_THRESHOLD_MS) {
+  if (match.broadcastOnKickoff && remainingMs !== null && remainingMs <= 0) {
+    return {
+      kind:"broadcast", match, showsLastMatch:false, startsAt, remainingMs,
+      primary:externalAction("twitch", SITE_LINKS.twitch),
+      secondary:internalAction("matchCenter", "#match-center"),
+    };
+  }
+  if (remainingMs !== null && remainingMs >= 0 && (match.broadcastOnKickoff || remainingMs <= HERO_COUNTDOWN_THRESHOLD_MS)) {
     return {
       kind:"countdown",
       match,

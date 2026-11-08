@@ -59,7 +59,7 @@ function HeroCountdown({ copy, parts, announcementKey }) {
   );
 }
 
-export function Hero({ copy, lang, locale, matchCenter, clock = systemClock }) {
+export function Hero({ copy, lang, locale, matchCenter, sourceUrl, updatedAt, clock = systemClock }) {
   const selectedMatch = selectHeroMatch(matchCenter).match;
   const countdown = useHeroCountdown(selectedMatch?.startsAt, {
     clock,
@@ -79,7 +79,7 @@ export function Hero({ copy, lang, locale, matchCenter, clock = systemClock }) {
       ? "completed"
       : match?.status;
   const statusLabel = match
-    ? copy.matchCenter.matchStatuses[statusKey] || copy.matchCenter.matchStatuses.scheduled
+    ? heroState.kind === "broadcast" ? (lang === "TR" ? "Maç saati" : "Match time") : copy.matchCenter.matchStatuses[statusKey] || copy.matchCenter.matchStatuses.scheduled
     : null;
   const isLoading = matchCenter?.meta?.status === "loading";
   const noMatchMessage = matchCenter?.meta?.status === "season-ended"
@@ -143,9 +143,10 @@ export function Hero({ copy, lang, locale, matchCenter, clock = systemClock }) {
           )}
         </div>
 
+        {sourceUrl && updatedAt && <p className="quick-status-note">{matchCenter.meta.status === "stale" ? copy.quickStatus.stale : (lang === "TR" ? "VPG · Otomatik güncellenir" : "VPG · Updates automatically")} · <time dateTime={updatedAt}>{formatMatchDate(updatedAt, lang, "Europe/Istanbul")} {formatMatchTime(updatedAt, lang, "Europe/Istanbul")}</time></p>}
         <div className="hero-ctas">
-          <HeroAction action={heroState.primary} copy={copy} locale={locale} primary/>
-          <HeroAction action={heroState.secondary} copy={copy} locale={locale}/>
+          <HeroAction action={sourceUrl && !heroState.primary.external && heroState.primary.action !== "countdown" ? { ...heroState.primary, external:true, href:sourceUrl } : heroState.primary} copy={copy} locale={locale} primary/>
+          <HeroAction action={sourceUrl && !heroState.secondary.external ? { ...heroState.secondary, external:true, href:sourceUrl } : heroState.secondary} copy={copy} locale={locale}/>
         </div>
       </div>
 
@@ -155,4 +156,3 @@ export function Hero({ copy, lang, locale, matchCenter, clock = systemClock }) {
     </section>
   );
 }
-

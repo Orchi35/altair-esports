@@ -209,13 +209,14 @@ export async function launchBrowser() {
     page,
     executable,
     async close() {
+      // Let Chromium release profile locks before terminating its parent process.
+      await cdp.send("Browser.close").catch(() => {});
       page.close();
-      if (!child.killed) child.kill();
       await new Promise((resolve) => {
         if (child.exitCode !== null) resolve();
         else {
           child.once("exit", resolve);
-          setTimeout(resolve, 2_000);
+          setTimeout(() => { if (child.exitCode === null && !child.killed) child.kill(); resolve(); }, 2_000);
         }
       });
       const normalizedProfile = path.resolve(profileDirectory);

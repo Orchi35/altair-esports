@@ -1,0 +1,14 @@
+.site #team-status .quick-league-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}.site #team-status .quick-league-slot{min-width:0}.site #team-status .quick-league-slot+div{border-left:1px solid #afc9e52b;padding-left:16px}.site #team-status .quick-league-slot h3{font:600 13px/1.5 'Segoe UI',sans-serif;margin:0 0 12px;color:#c4daf3}.site #team-status .quick-league-slot .quick-standing{gap:8px;flex-wrap:wrap;min-height:0}.site #team-status .quick-league-slot .quick-standing strong{font-size:32px}.site #team-status .quick-league-slot .quick-standing span{font-size:12px;padding:5px 8px}.site #team-status .quick-league-pending{display:block;color:#9fb5ce;font:500 13px/1.6 'Segoe UI',sans-serif;padding-top:7px}
+
+/* Last match surface follows the verified result. */
+.site #team-status .quick-status-card--result.quick-status-card--outcome-w{background:linear-gradient(135deg,#164c39,#103628);border-color:#73cba475;box-shadow:0 14px 28px #0004,inset 0 1px #c5ffe61a}
+.site #team-status .quick-status-card--outcome-w .quick-status-label{color:#c4eddb;border-bottom-color:#b6efd330}
+.site #team-status .quick-status-card--outcome-w .quick-outcome{color:#bbf7d8}
+.site #team-status .quick-status-card--result.quick-status-card--outcome-l{background:linear-gradient(135deg,#602632,#411c25);border-color:#e18d9975;box-shadow:0 14px 28px #0004,inset 0 1px #ffd6dc1a}
+.site #team-status .quick-status-card--outcome-l .quick-status-label{color:#f1cbd0;border-bottom-color:#f4c4ca30}
+.site #team-status .quick-status-card--outcome-l .quick-outcome{color:#ffd0d7}
+.site #team-status .quick-status-card--result.quick-status-card--outcome-d{background:linear-gradient(135deg,#fff,#e9eef5);border-color:#fff;box-shadow:0 14px 28px #0004,inset 0 1px #fff}
+.site #team-status .quick-status-card--outcome-d .quick-status-label{color:#44556b;border-bottom-color:#253e6026}
+.site #team-status .quick-status-card--outcome-d .quick-result>strong,.site #team-status .quick-status-card--outcome-d .quick-result>div>span{color:#172b43}
+.site #team-status .quick-status-card--outcome-d .quick-result>strong span{color:#63758b}
+.site #team-status .quick-status-card--outcome-d .quick-outcome{color:#40556f;background:transparent}

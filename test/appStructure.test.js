@@ -51,7 +51,7 @@ test("the app uses modular styles instead of the legacy App.css bundle", () => {
   assert.match(app, /lazy\(\(\) => import/);
   assert.match(app, /DeferredSection/);
   assert.doesNotMatch(styleIndex, /features\/squad\/squad\.css/);
-  assert.match(squad, /\.\/featured-players\.css/);
+  assert.match(read("../src/features/squad/LeagueSquad.jsx"), /\.\/league-squad\.css/);
   assert.match(squad, /\.\/squad\.css/);
 });
 

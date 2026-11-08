@@ -59,7 +59,8 @@ test("below-fold features and squad requests stay outside the initial bundle", (
 
   assert.match(app, /const Squad = lazy/);
   assert.doesNotMatch(app, /useSquadStats/);
-  assert.match(squad, /useSquadStats\(\)/);
+  assert.match(squad, /LeagueSquad/);
+  assert.match(read("../src/features/squad/LeagueSquad.jsx"), /useVpgRoster\(\)/);
   assert.doesNotMatch(styleIndex, /club-updates|club-identity|honours|partnerships|social-hub|squad\.css/);
 });
 

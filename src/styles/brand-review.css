@@ -225,3 +225,18 @@
 .site .nav .nav-lang-option.active .nav-lang-check{background:#bad8ff;color:#132942;border-color:#bad8ff;box-shadow:none}
 .site .nav .nav-lang button:focus-visible{outline:3px solid #d4e7ff;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){.site .nav .nav-lang *{transition:none}}
+
+/* Readable typography for the upcoming-match card and countdown. */
+.site .brand-hero .hero-match-card-head>span{font:500 13px/1.5 'Barlow',system-ui,sans-serif;letter-spacing:.07em;color:#c4dcf7}
+.site .brand-hero .hero-match-status{font:500 12px/1.5 'Barlow',system-ui,sans-serif;letter-spacing:.02em;padding:6px 10px}
+.site .brand-hero .hero-match-opponent{font:700 clamp(25px,2.4vw,34px)/1.3 'Barlow',system-ui,sans-serif;letter-spacing:-.015em;color:#f3f7ff;overflow-wrap:anywhere}
+.site .brand-hero .hero-match-meta{gap:18px;margin-top:22px}
+.site .brand-hero .hero-match-meta>div{min-width:0}
+.site .brand-hero .hero-match-meta dt{font:500 12px/1.5 'Barlow',system-ui,sans-serif;letter-spacing:.03em;color:#bbd0e8;margin-bottom:8px}
+.site .brand-hero .hero-match-meta dd{font:500 17px/1.5 'Barlow',system-ui,sans-serif;color:#edf5ff;overflow-wrap:anywhere}
+.site .brand-hero .hero-match-meta dd small{font-size:12px;color:#bad5f5}
+.site .brand-hero .hero-countdown-label{font:500 12px/1.5 'Barlow',system-ui,sans-serif;letter-spacing:.04em;color:#c9def7}
+.site .brand-hero .hero-countdown-unit strong{font:700 clamp(27px,3vw,38px)/1.2 'Barlow',system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.site .brand-hero .hero-countdown-unit small{font:500 12px/1.5 'Barlow',system-ui,sans-serif;letter-spacing:0;color:#c0d2e9;margin-top:7px}
+.site .brand-hero .hero-ctas .btn{font:500 14px/1.4 'Barlow',system-ui,sans-serif;letter-spacing:.015em;min-height:50px}
+@media(max-width:600px){.site .brand-hero .hero-match-meta{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px}.site .brand-hero .hero-match-meta>div:last-child{grid-column:1/-1}.site .brand-hero .hero-match-meta dd{font-size:16px}.site .brand-hero .hero-countdown-units{gap:8px}.site .brand-hero .hero-countdown-unit{min-width:0}.site .brand-hero .hero-countdown-unit small{font-size:11px}}

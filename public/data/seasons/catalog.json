@@ -14,8 +14,8 @@
     "competitions": [
       {
         "id": "vpg-elite",
-        "name": "VPG Elite",
-        "sourceUrl": "https://virtualprogaming.com",
+        "name": "VPG Elite B",
+        "sourceUrl": "https://virtualprogaming.com/team/ALTAIR-eSports/matches",
         "fixtures": [],
         "results": [],
         "standings": [],
@@ -27,9 +27,12 @@
         }
       },
       {
-        "id": "emajor-league-1",
-        "name": "Emajor League 1.Lig",
-        "sourceUrl": "https://emajorleague.com",
+        "id": "nex-leagues",
+        "name": "Nex Leagues",
+        "sourceUrl": "https://nexleagues.com/teams/ALT",
+        "leaguesUrl": "https://nexleagues.com/leagues",
+        "leagueId": null,
+        "seasonId": null,
         "fixtures": [],
         "results": [],
         "standings": [],

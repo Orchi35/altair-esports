@@ -155,6 +155,17 @@ export async function startTestServer() {
         response.writeHead(payload.statusCode, payload.headers).end(payload.body);
         return;
       }
+      if (url.pathname === "/api/vpg-roster") {
+        const players = ["GK", "CB", "CM", "ST", "RW"].map((position, index) => ({ id:index + 1, name:`VPG Player ${index + 1}`, position, apps:10 - index, goals:index, assists:5 - index, profileUrl:null }));
+        const payload = json({ status:"fresh", updatedAt:isoFromNow(0), statsScope:"team-season", season:20, players });
+        response.writeHead(payload.statusCode, payload.headers).end(payload.body);
+        return;
+      }
+      if (url.pathname === "/api/vpg") {
+        const payload = json({ status:"fresh", updatedAt:isoFromNow(0), fixtures:[{ id:1, startsAt:isoFromNow(86400000), homeTeam:{name:"ALTAIR eSports",slug:"ALTAIR-eSports"}, awayTeam:{name:"Test Opponent",slug:"opponent"}, score:null, round:1 }], results:[], standings:[{position:1,name:"ALTAIR eSports",slug:"ALTAIR-eSports",played:1,won:1,drawn:0,lost:0,goalDifference:2,points:3}] });
+        response.writeHead(payload.statusCode, payload.headers).end(payload.body);
+        return;
+      }
       if (url.pathname === "/api/partnership-inquiry") {
         const payload = request.method === "GET"
           ? json({ ok:true, data:{ configured:true } })

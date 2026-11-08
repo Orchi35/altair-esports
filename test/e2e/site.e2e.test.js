@@ -77,13 +77,14 @@ test("legacy fixtures hash opens the localized Match Center fixtures tab", async
   assert.equal(await page.evaluate("document.querySelectorAll('.content-match-card').length > 0"), true);
 });
 
-test("player card opens the local player detail route", { skip:!firstPlayer && "No verified player content exists" }, async () => {
+test("VPG squad groups players and Nex shows its pending state", async () => {
   await page.navigate(`${baseUrl}/tr/kadro`);
-  await page.waitFor("Boolean(document.querySelector('.p-card[href*=\"/tr/oyuncular/\"]'))", { message:"player card" });
-  const expectedPath = await page.evaluate("document.querySelector('.p-card[href*=\"/tr/oyuncular/\"]').getAttribute('href')");
-  await page.click(".p-card[href*=\"/tr/oyuncular/\"]");
-  await page.waitFor(`location.pathname === ${JSON.stringify(expectedPath)}`, { message:"player detail route" });
-  assert.equal(await page.evaluate("document.querySelectorAll('h1').length"), 1);
+  await page.waitFor("document.querySelectorAll('.league-player').length === 5");
+  assert.equal(await page.evaluate("document.querySelectorAll('.league-position-group').length"), 4);
+  await page.click('.league-squad-tabs button:nth-child(2)');
+  await page.waitFor("Boolean(document.querySelector('.league-squad-state'))");
+  assert.equal(await page.evaluate("document.querySelectorAll('.league-player').length"), 0);
+  assert.match(await page.evaluate("document.querySelector('.league-squad-state').textContent"), /Lig henüz başlamadı/);
 });
 
 test("verified news detail route opens", { skip:!firstNews && "No verified published news exists; production content is not fabricated for tests" }, async () => {
@@ -136,9 +137,9 @@ test("upstream 503 keeps the site and canonical squad usable without expired mat
   assert.equal(await page.evaluate("document.querySelector('.mc-unavailable-actions button')?.disabled"), true);
 
   await page.navigate(`${baseUrl}/tr/kadro`);
-  await page.waitFor("document.querySelectorAll('.p-card').length > 0", { message:"canonical squad cards" });
+  await page.waitFor("document.querySelectorAll('.league-player').length > 0", { message:"VPG squad cards" });
   const squadCards = await page.evaluate(`(() => {
-    const cards = [...document.querySelectorAll('.p-card')];
+    const cards = [...document.querySelectorAll('.league-player')];
     return { count:cards.length, unique:new Set(cards.map((card) => card.textContent.trim())).size };
   })()`);
   assert.ok(squadCards.count >= 5, "A verified active squad remains visible");
