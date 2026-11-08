@@ -1,5 +1,10 @@
 {
   "functions": {
+    "api/vpg-cup.js": {"maxDuration":10},
+    "api/vpg-player.js": {"maxDuration":20},
+    "api/vpg-match.js": {
+      "maxDuration": 10
+    },
     "api/vpg-roster.js": {
       "maxDuration": 10
     },
@@ -15,6 +20,12 @@
       "maxDuration": 10
     }
   },
+  "rewrites": [
+    {"source":"/tr/oyuncular/vpg-:id(\\d+)","destination":"/tr/index.html"},
+    {"source":"/en/players/vpg-:id(\\d+)","destination":"/en/index.html"},
+    {"source":"/tr/maclar/match-vpg-:id(\\d+)","destination":"/tr/index.html"},
+    {"source":"/en/matches/match-vpg-:id(\\d+)","destination":"/en/index.html"}
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",

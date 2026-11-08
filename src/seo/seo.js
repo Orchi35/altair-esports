@@ -235,6 +235,7 @@ export function getRouteSeo(route, { matchCenter = null } = {}) {
   }
 
   if (route.name === "match-detail") {
+    if (/^match-vpg-[1-9]\d{0,9}$/.test(route.slug)) return baseMetadata({ route, h1:locale === "tr" ? "VPG Maç Detayı" : "VPG Match Details", title:locale === "tr" ? "VPG Maç Detayı | ALTAIR eSports" : "VPG Match Details | ALTAIR eSports", description:locale === "tr" ? "ALTAIR eSports VPG maç bilgileri, skor ve oyuncu istatistikleri." : "ALTAIR eSports VPG match details, score and player statistics." });
     const match = findMatchBySlug(matchCenter, route.slug);
     if (!match) return notFoundMetadata(route);
     const date = formatMatchDate(match.startsAt, locale === "tr" ? "TR" : "EN", match.timezone);
@@ -261,6 +262,7 @@ export function getRouteSeo(route, { matchCenter = null } = {}) {
   }
 
   if (route.name === "player-detail") {
+    if (/^vpg-[1-9]\d{0,9}$/.test(route.slug)) return baseMetadata({route,h1:locale === "tr" ? "Oyuncu Profili" : "Player Profile",title:locale === "tr" ? "VPG Oyuncu Profili | ALTAIR eSports" : "VPG Player Profile | ALTAIR eSports",description:locale === "tr" ? "ALTAIR eSports oyuncu bilgileri ve güncel VPG sezon performansı." : "ALTAIR eSports player information and current VPG season performance."});
     const player = getPlayerContentBySlug(route.slug);
     if (!player) return notFoundMetadata(route);
     const localized = player.locales[locale];

@@ -12,9 +12,9 @@ let pending = null;
 const integer = (value) => Number.isInteger(value) && value >= 0;
 const text = (value) => typeof value === "string" && value.trim().length > 0;
 
-export function normalizeMatches(rows, status) {
+export function normalizeMatches(rows, status, tournamentId = null) {
   if (!Array.isArray(rows)) throw new Error("Invalid matches");
-  return rows.filter((row) => Number(row.league_id) === 1505 && Number(row.season) === 20 && row.tournament_id == null && row.status === status).map((row) => {
+  return rows.filter((row) => (tournamentId ? Number(row.tournament_id) === tournamentId : Number(row.league_id) === 1505 && row.tournament_id == null) && Number(row.season) === 20 && row.status === status).map((row) => {
     if (!integer(row.id) || !text(row.datetime) || !Number.isFinite(Date.parse(row.datetime)) || !text(row.home_name) || !text(row.away_name) || !text(row.home_slug) || !text(row.away_slug) || !integer(row.match_day) || (status === "complete" && (!integer(row.home_score) || !integer(row.away_score)))) throw new Error("Invalid match");
     return { id:row.id, startsAt:new Date(row.datetime).toISOString(), homeTeam:{ name:row.home_name, slug:row.home_slug }, awayTeam:{ name:row.away_name, slug:row.away_slug }, score:status === "complete" ? { home:row.home_score, away:row.away_score } : null, round:row.match_day };
   }).sort((a, b) => status === "complete" ? Date.parse(b.startsAt) - Date.parse(a.startsAt) : Date.parse(a.startsAt) - Date.parse(b.startsAt));

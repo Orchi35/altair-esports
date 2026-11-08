@@ -122,6 +122,8 @@ function safeOutputPath(urlPath) {
 }
 
 async function findStaticFile(urlPath) {
+  if (/^\/(tr\/oyuncular|en\/players)\/vpg-[1-9]\d{0,9}$/.test(urlPath)) return path.join(outputDirectory, urlPath.split("/")[1], "index.html");
+  if (/^\/(tr\/maclar|en\/matches)\/match-vpg-[1-9]\d{0,9}$/.test(urlPath)) return path.join(outputDirectory, urlPath.split("/")[1], "index.html");
   const candidate = safeOutputPath(urlPath);
   if (!candidate) return null;
   const choices = path.extname(candidate)
@@ -161,10 +163,24 @@ export async function startTestServer() {
         response.writeHead(payload.statusCode, payload.headers).end(payload.body);
         return;
       }
+      if (url.pathname === "/api/vpg-match") {
+        const payload = json({status:"fresh",updatedAt:isoFromNow(0),match:{id:1,startsAt:isoFromNow(86400000),round:1,season:20,competition:"Elite B",status:"scheduled",score:null,homeTeam:{id:38650,name:"ALTAIR eSports",slug:"ALTAIR-eSports",formation:null},awayTeam:{id:2,name:"Test Opponent",slug:"opponent",formation:null},statsAvailable:true,players:[]}});
+        response.writeHead(payload.statusCode, payload.headers).end(payload.body);
+        return;
+      }
+      if (url.pathname === "/api/vpg-player") {
+        const payload=json({status:"fresh",season:20,partial:false,player:{id:1,name:"VPG Player 1",position:"GK",apps:10,goals:0,assists:5,fullName:null,nationality:"TR",bio:null,joinedAt:null,accounts:{playstation:null,xbox:null,ea:null},totals:{},averageRating:null,matches:[]}});
+        response.writeHead(payload.statusCode,payload.headers).end(payload.body);
+        return;
+      }
       if (url.pathname === "/api/vpg") {
         const payload = json({ status:"fresh", updatedAt:isoFromNow(0), fixtures:[{ id:1, startsAt:isoFromNow(86400000), homeTeam:{name:"ALTAIR eSports",slug:"ALTAIR-eSports"}, awayTeam:{name:"Test Opponent",slug:"opponent"}, score:null, round:1 }], results:[], standings:[{position:1,name:"ALTAIR eSports",slug:"ALTAIR-eSports",played:1,won:1,drawn:0,lost:0,goalDifference:2,points:3}] });
         response.writeHead(payload.statusCode, payload.headers).end(payload.body);
         return;
+      }
+      if(url.pathname==="/api/vpg-cup"){
+        const payload=json({status:"fresh",updatedAt:isoFromNow(0),fixtures:[],results:[{id:2,competition:"European Pro Series HT",startsAt:isoFromNow(-86400000),homeTeam:{name:"ALTAIR eSports",slug:"ALTAIR-eSports"},awayTeam:{name:"Cup Opponent",slug:"cup-opponent"},score:{home:3,away:0},round:1}],standings:[]});
+        response.writeHead(payload.statusCode,payload.headers).end(payload.body);return;
       }
       if (url.pathname === "/api/partnership-inquiry") {
         const payload = request.method === "GET"

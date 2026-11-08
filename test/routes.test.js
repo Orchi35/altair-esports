@@ -103,7 +103,7 @@ test("content-page hash targets are scrolled after lazy route content mounts", (
 test("deep links are emitted as filesystem prerender routes", () => {
   const config = JSON.parse(fs.readFileSync(new URL("../vercel.json", import.meta.url), "utf8"));
   const packageJson = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
-  assert.equal("rewrites" in config, false);
+  assert.deepEqual(config.rewrites.map(rule => rule.source), ["/tr/oyuncular/vpg-:id(\\d+)","/en/players/vpg-:id(\\d+)","/tr/maclar/match-vpg-:id(\\d+)", "/en/matches/match-vpg-:id(\\d+)"]);
   assert.match(packageJson.scripts.build, /generate-seo\.mjs/);
 });
 

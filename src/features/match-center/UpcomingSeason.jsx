@@ -7,6 +7,7 @@ export function UpcomingSeason({ lang }) {
   const leagues = catalog.nextSeason.competitions;
   const [leagueId, setLeagueId] = useState(leagues[0].id);
   const [view, setView] = useState("standings");
+  const [cup,setCup]=useState(false);
   const league = leagues.find((item) => item.id === leagueId);
   const labels = tr ? { fixtures:"Fikstür", results:"Sonuçlar", standings:"Puan Durumu" } : { fixtures:"Fixtures", results:"Results", standings:"Standings" };
   return <section className="mc-upcoming" aria-label={tr ? "Yeni sezon" : "New season"}>
@@ -16,10 +17,11 @@ export function UpcomingSeason({ lang }) {
     <div className="mc-league-picker" aria-label={tr ? "Lig seçimi" : "Select league"}>
       {leagues.map((item) => <button key={item.id} type="button" aria-pressed={leagueId === item.id} onClick={() => setLeagueId(item.id)}>{item.name}</button>)}
     </div>
+    {league.id === "vpg-elite" && <div className="mc-upcoming-views" role="group" aria-label={tr ? "VPG organizasyonu" : "VPG competition"}><button type="button" aria-pressed={!cup} onClick={()=>setCup(false)}>Elite B</button><button type="button" aria-pressed={cup} onClick={()=>setCup(true)}>European Pro Series HT</button></div>}
     <div className="mc-upcoming-views" aria-label={tr ? "Veri türü" : "Data view"}>
       {Object.entries(labels).map(([key, label]) => <button key={key} type="button" aria-pressed={view === key} onClick={() => setView(key)}>{label}</button>)}
     </div>
-    {league.id === "vpg-elite" ? <VpgCompetition view={view} lang={lang}/> : <div className="mc-upcoming-empty" role="status" aria-live="polite">
+    {league.id === "vpg-elite" ? <VpgCompetition view={view} lang={lang} cup={cup}/> : <div className="mc-upcoming-empty" role="status" aria-live="polite">
       <span>{league.name} · {labels[view]}</span>
       <h3>{tr ? "Lig başlangıcı bekleniyor" : "Awaiting league start"}</h3>
       <p>{tr ? "Nex Leagues katılımımız için lig henüz başlamadı. Fikstür, sonuçlar ve puan durumu lig bilgileri kesinleştiğinde burada yer alacak." : "The league has not started yet. Fixtures, results and standings will appear here once league details are confirmed."}</p>

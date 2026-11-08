@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useVpgRoster } from "../../hooks/useVpgRoster.js";
 import { groupLeaguePlayers, getLeagueLeaders } from "./leagueRosterModel.js";
 import { LeaguePlayerImage } from "./LeaguePlayerImage.jsx";
+import { getRoutePath } from "../../app/routes.js";
 import "./league-squad.css";
 
 export function LeagueSquad({ locale = "tr", compact = false }) {
@@ -36,6 +37,7 @@ export function LeagueSquad({ locale = "tr", compact = false }) {
               <h5>{player.name}</h5>
               {player.position && <span className="league-player-top">{player.position}</span>}
               <dl><div><dt>{stats.find(([key]) => key === stat)[1]}</dt><dd>{player[stat]}</dd></div></dl>
+              <a href={getRoutePath("player-detail",locale,`vpg-${player.id}`)} aria-label={`${player.name} · ${tr ? "Profili Gör" : "View Profile"}`}>{tr ? "Profili Gör →" : "View Profile →"}</a>
             </> : <p>{tr ? "İstatistik henüz mevcut değil." : "Statistics are not available yet."}</p>}
           </article>)}</div>}
           {!compact && groups.map(group => <section className="league-position-group" key={group.id}>
@@ -46,7 +48,7 @@ export function LeagueSquad({ locale = "tr", compact = false }) {
               <LeaguePlayerImage league={league} player={player}/>
               <h5>{player.name}</h5>
               <dl>{stats.map(([key, label]) => <div key={key}><dt>{label}</dt><dd>{player[key] ?? "—"}</dd></div>)}</dl>
-              {player.profileUrl && <a href={player.profileUrl} target="_blank" rel="noreferrer">{tr ? "VPG profili" : "VPG profile"} ↗</a>}
+              <a href={getRoutePath("player-detail",locale,`vpg-${player.id}`)} aria-label={`${player.name} · ${tr ? "Profili Gör" : "View Profile"}`}>{tr ? "Profili Gör →" : "View Profile →"}</a>
             </article>
           ))}</div></section>)}
           {!loading && !error && players.length === 0 && <p className="league-squad-state">{tr ? "Kadro bilgisi henüz mevcut değil." : "Squad information is not yet available."}</p>}

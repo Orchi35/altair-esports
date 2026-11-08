@@ -87,6 +87,46 @@ test("VPG squad groups players and Nex shows its pending state", async () => {
   assert.match(await page.evaluate("document.querySelector('.league-squad-state').textContent"), /Lig henüz başlamadı/);
 });
 
+test("league hub defaults to standings and match details survive a refresh", async () => {
+  await page.navigate(`${baseUrl}/tr/maclar`);
+  await page.waitFor("Boolean(document.querySelector('.hub-tabs'))");
+  assert.equal(await page.evaluate("document.querySelector('.hub-tabs:not(.hub-competitions) button[aria-pressed=true]').textContent"), "Puan Durumu");
+  await page.click('.hub-tabs:not(.hub-competitions) button:nth-child(2)');
+  await page.waitFor("Boolean(document.querySelector('.content-match-footer a'))");
+  await page.click('.content-match-footer a');
+  await page.waitFor("Boolean(document.querySelector('.detail-scoreboard'))");
+  assert.equal(await page.evaluate('location.pathname'), '/tr/maclar/match-vpg-1');
+  await page.reload();
+  await page.waitFor("Boolean(document.querySelector('.detail-scoreboard'))");
+  assert.match(await page.evaluate("document.querySelector('.detail-scoreboard').textContent"), /Test Opponent/);
+  await page.navigate(`${baseUrl}/tr/maclar`);
+  await page.waitFor("Boolean(document.querySelector('.hub-leagues'))");
+  await page.click('.hub-leagues button:nth-child(2)');
+  assert.match(await page.evaluate("document.querySelector('.content-state').textContent"), /Nex Leagues henüz başlamadı/);
+});
+
+test("VPG player cards open a profile that survives a hard refresh",async()=>{
+  await page.navigate(`${baseUrl}/tr/kadro`);
+  await page.waitFor("Boolean(document.querySelector('.league-player a'))");
+  await page.click('.league-player a');
+  await page.waitFor("Boolean(document.querySelector('.vpg-profile-identity'))");
+  assert.equal(await page.evaluate('location.pathname'),'/tr/oyuncular/vpg-1');
+  assert.equal(await page.evaluate("document.querySelector('h1').textContent"),'VPG Player 1');
+  await page.reload();
+  await page.waitFor("Boolean(document.querySelector('.vpg-profile-metrics'))");
+  assert.equal(await page.evaluate("document.querySelectorAll('.vpg-profile-metrics>div').length"),11);
+});
+
+test("cup results stay separate from Elite B",async()=>{
+ await page.navigate(`${baseUrl}/tr/maclar#results`);
+ await page.waitFor("Boolean(document.querySelector('.hub-competitions'))");
+ await page.click('.hub-competitions button:nth-child(2)');
+ await page.waitFor("document.querySelector('.content-match-card')?.textContent.includes('Cup Opponent')");
+ assert.match(await page.evaluate("document.querySelector('.content-match-card').textContent"),/European Pro Series HT/);
+ await page.click('.hub-competitions button:first-child');
+ await page.waitFor("!document.querySelector('.content-match-card')");
+});
+
 test("verified news detail route opens", { skip:!firstNews && "No verified published news exists; production content is not fabricated for tests" }, async () => {
   await page.navigate(`${baseUrl}/tr/haberler/${firstNews?.slug}`);
   await page.waitFor("Boolean(document.querySelector('.news-article'))", { message:"news article" });
