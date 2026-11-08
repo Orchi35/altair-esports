@@ -40,7 +40,7 @@ export default function NewsPage({ copy, lang, locale }) {
           </div>
           {visible < filtered.length && <button className="content-more" type="button" onClick={() => setVisible((value) => value + PAGE_SIZE)}>{copy.pages.common.showMore}</button>}
         </>
-      ) : <ContentState>{copy.pages.news.empty}</ContentState>}
+      ) : news.length > 0 ? <ContentState>{copy.pages.news.empty}</ContentState> : null}
     </ContentPage>
   );
 }

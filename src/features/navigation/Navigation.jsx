@@ -163,7 +163,6 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
   const links = [
     [getRoutePath("squad", locale), isTurkish ? "Takım" : "Team", "squad"],
     [getLocalizedSectionHref(locale, "match-center"), copy.nav.links.matchCenter, "match-center"],
-    [getRoutePath("news", locale), isTurkish ? "Haberler" : "News", "updates"],
     [getRoutePath("partnerships", locale), isTurkish ? "İş Birlikleri" : "Partnerships", "sponsors"],
   ];
   return (

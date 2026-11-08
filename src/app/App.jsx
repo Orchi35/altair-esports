@@ -30,8 +30,6 @@ const MatchesPage = lazy(() => import("../pages/matches/MatchesPage.jsx"));
 const MatchDetailPage = lazy(() => import("../pages/matches/MatchDetailPage.jsx"));
 const SquadPage = lazy(() => import("../pages/squad/SquadPage.jsx"));
 const PlayerDetailPage = lazy(() => import("../pages/squad/PlayerDetailPage.jsx"));
-const NewsPage = lazy(() => import("../pages/news/NewsPage.jsx"));
-const NewsDetailPage = lazy(() => import("../pages/news/NewsDetailPage.jsx"));
 const HonoursPage = lazy(() => import("../pages/honours/HonoursPage.jsx"));
 const PartnershipsPage = lazy(() => import("../pages/partnerships/PartnershipsPage.jsx"));
 
@@ -137,8 +135,6 @@ export default function AltairFC() {
   if (route.name === "match-detail") page = <MatchDetailPage {...pageProps} slug={route.slug} matchCenter={matchCenter} refetch={refetchMatchCenter}/>;
   if (route.name === "squad") page = <SquadPage {...pageProps}/>;
   if (route.name === "player-detail") page = <PlayerDetailPage {...pageProps} slug={route.slug}/>;
-  if (route.name === "news") page = <NewsPage {...pageProps}/>;
-  if (route.name === "news-detail") page = <NewsDetailPage {...pageProps} slug={route.slug}/>;
   if (route.name === "honours") page = <HonoursPage {...pageProps}/>;
   if (route.name === "partnerships") page = <PartnershipsPage {...pageProps}/>;
 

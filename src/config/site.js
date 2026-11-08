@@ -1,4 +1,5 @@
 export const SITE_LINKS = {
+  x:"https://x.com/ALTAIR_eSpor",
   instagram:"https://www.instagram.com/altairesports/",
   twitch:"https://www.twitch.tv/altairespor",
   youtube:"https://www.youtube.com/@AltairESPOR",

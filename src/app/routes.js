@@ -8,8 +8,6 @@ export const ROUTE_DEFINITIONS = Object.freeze([
   { name:"match-detail", paths:{ tr:["maclar", ":slug"], en:["matches", ":slug"] }, sectionId:"match-center", detail:true },
   { name:"squad", paths:{ tr:["kadro"], en:["squad"] }, sectionId:"squad" },
   { name:"player-detail", paths:{ tr:["oyuncular", ":slug"], en:["players", ":slug"] }, sectionId:"squad", detail:true },
-  { name:"news", paths:{ tr:["haberler"], en:["news"] }, sectionId:"updates" },
-  { name:"news-detail", paths:{ tr:["haberler", ":slug"], en:["news", ":slug"] }, sectionId:"updates", detail:true },
   { name:"honours", paths:{ tr:["basarilar"], en:["honours"] }, sectionId:"honours" },
   { name:"partnerships", paths:{ tr:["partnerlik"], en:["partnerships"] }, sectionId:"sponsors" },
 ]);
@@ -26,7 +24,6 @@ const LEGACY_HASH_TARGETS = Object.freeze({
   "#fixtures":{ routeName:"matches", hash:"#fixtures" },
   "#standings":{ routeName:"matches", hash:"#standings" },
   "#jersey":{ routeName:"home", hash:"#jersey" },
-  "#updates":{ routeName:"news", hash:"" },
   "#squad":{ routeName:"squad", hash:"" },
   "#identity":{ routeName:"home", hash:"#identity" },
   "#honours":{ routeName:"honours", hash:"" },

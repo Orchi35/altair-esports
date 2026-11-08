@@ -48,6 +48,6 @@ export default function MatchesPage(props) {
       {data && !matches.length && <ContentState>{tr ? "Bu görünümde karşılaşma bulunmuyor." : "No matches found in this view."}</ContentState>}
       {matches.length > limit && <button className="content-more" onClick={() => setLimit(value => value + 8)}>{copy.pages.common.showMore}</button>}
     </section>}
-    <div className="hub-archive"><span>{tr ? "Kulüp geçmişi" : "Club history"}</span><button onClick={() => setArchive(true)}>{tr ? "Geçmiş sezon · EML Yaz Ligi →" : "Season archive · EML Summer League →"}</button></div>
+    <div className="hub-archive"><button onClick={() => setArchive(true)}>{tr ? "Geçmiş sezon · EML Yaz Ligi →" : "Season archive · EML Summer League →"}</button></div>
   </ContentPage>;
 }

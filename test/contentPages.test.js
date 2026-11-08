@@ -66,15 +66,13 @@ test("squad page separates wide attackers from full-backs in the four requested 
   ]);
 });
 
-test("all eight content pages are route-level lazy chunks", () => {
+test("all six active content pages are route-level lazy chunks", () => {
   const source = fs.readFileSync(new URL("../src/app/App.jsx", import.meta.url), "utf8");
   [
     "MatchesPage",
     "MatchDetailPage",
     "SquadPage",
     "PlayerDetailPage",
-    "NewsPage",
-    "NewsDetailPage",
     "HonoursPage",
     "PartnershipsPage",
   ].forEach((page) => assert.match(source, new RegExp(`const ${page} = lazy`)));

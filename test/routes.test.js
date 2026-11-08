@@ -47,8 +47,8 @@ test("route tree exposes every requested Turkish and English path", () => {
   assert.equal(getRoutePath("match-detail", "en", "week-1"), "/en/matches/week-1");
   assert.equal(getRoutePath("squad", "tr"), "/tr/kadro");
   assert.equal(getRoutePath("player-detail", "en", "orcun-bektas"), "/en/players/orcun-bektas");
-  assert.equal(getRoutePath("news", "tr"), "/tr/haberler");
-  assert.equal(getRoutePath("news-detail", "en", "club-update"), "/en/news/club-update");
+  assert.equal(resolveRoute("/tr/haberler").name, "not-found");
+  assert.equal(resolveRoute("/en/news/club-update").name, "not-found");
   assert.equal(getRoutePath("honours", "tr"), "/tr/basarilar");
   assert.equal(getRoutePath("partnerships", "en"), "/en/partnerships");
 });
@@ -60,8 +60,8 @@ test("language switch keeps the equivalent page and slug", () => {
     "/en/players/orcun-bektas",
   );
   assert.equal(
-    getLocalizedRoutePath(resolveRoute("/en/news/season-report"), "tr"),
-    "/tr/haberler/season-report",
+    getLocalizedRoutePath(resolveRoute("/en/matches/season-report"), "tr"),
+    "/tr/maclar/season-report",
   );
 });
 

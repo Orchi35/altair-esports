@@ -1,7 +1,7 @@
 import { getRoutePath, resolveRoute, SUPPORTED_LOCALES } from "../app/routes.js";
 import { HONOURS_CONTENT } from "../content/honours/index.js";
 import { createMatchSlug, findMatchBySlug, getAllMatches } from "../content/matches/index.js";
-import { getNewsBySlug, getPublishedNews, NEWS_CONTENT } from "../content/news/index.js";
+import { getNewsBySlug, NEWS_CONTENT } from "../content/news/index.js";
 import { PARTNERSHIP_CONTENT } from "../content/partnerships/index.js";
 import { getPlayerContentBySlug, getPublishedPlayers } from "../content/players/index.js";
 import { SITE_LINKS } from "../config/site.js";
@@ -323,10 +323,10 @@ export function buildPublicRouteCatalog({ matchCenter = null } = {}) {
   };
 
   SUPPORTED_LOCALES.forEach((locale) => {
-    ["home", "matches", "squad", "news", "honours", "partnerships"].forEach((name) => add(name, locale));
+    ["home", "matches", "squad", "honours", "partnerships"].forEach((name) => add(name, locale));
     getPublishedPlayers().forEach((player) => add("player-detail", locale, player.slug));
     getAllMatches(matchCenter).forEach((match) => add("match-detail", locale, createMatchSlug(match)));
-    getPublishedNews({ locale }).forEach((article) => add("news-detail", locale, article.slug));
+
   });
 
   return routeRecords.sort((left, right) => left.seo.canonical.localeCompare(right.seo.canonical));
