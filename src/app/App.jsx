@@ -27,6 +27,7 @@ const Honours = lazy(() => import("../features/honours/Honours.jsx").then((modul
 const PartnershipSection = lazy(() => import("../features/partnerships/PartnershipSection.jsx").then((module) => ({ default:module.PartnershipSection })));
 const SocialHub = lazy(() => import("../features/social/SocialHub.jsx").then((module) => ({ default:module.SocialHub })));
 const MatchesPage = lazy(() => import("../pages/matches/MatchesPage.jsx"));
+const BuilderPage = lazy(() => import("../pages/builder/BuilderPage.jsx"));
 const MatchDetailPage = lazy(() => import("../pages/matches/MatchDetailPage.jsx"));
 const SquadPage = lazy(() => import("../pages/squad/SquadPage.jsx"));
 const PlayerDetailPage = lazy(() => import("../pages/squad/PlayerDetailPage.jsx"));
@@ -131,6 +132,7 @@ export default function AltairFC() {
 
   let page = null;
   const pageProps = { copy, lang:activeLang, locale:route.locale };
+  if (route.name === "builder") page = <BuilderPage {...pageProps}/>;
   if (route.name === "matches") page = <MatchesPage {...pageProps} matchCenter={matchCenter} refetch={refetchMatchCenter} retryWaitSeconds={retryWaitSeconds} isRetryCoolingDown={isRetryCoolingDown}/>;
   if (route.name === "match-detail") page = <MatchDetailPage {...pageProps} slug={route.slug} matchCenter={matchCenter} refetch={refetchMatchCenter}/>;
   if (route.name === "squad") page = <SquadPage {...pageProps}/>;

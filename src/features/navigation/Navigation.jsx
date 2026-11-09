@@ -161,6 +161,7 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
     [getLocalizedSectionHref(locale, "jersey"), copy.nav.links.jersey, "jersey"],
   ];
   const links = [
+    [getRoutePath("builder", locale), "FC27 Builder", "builder"],
     [getRoutePath("squad", locale), isTurkish ? "Takım" : "Team", "squad"],
     [getLocalizedSectionHref(locale, "match-center"), copy.nav.links.matchCenter, "match-center"],
     [getRoutePath("partnerships", locale), isTurkish ? "İş Birlikleri" : "Partnerships", "sponsors"],

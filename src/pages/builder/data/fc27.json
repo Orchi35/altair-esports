@@ -1,0 +1,7688 @@
+{
+  "source": "https://fcpro.club/",
+  "version": "fc27-2026-11-09",
+  "archetypes": [
+    {
+      "id": 1,
+      "key": "shot_stopper",
+      "nameKey": "archetype.shot_stopper",
+      "position": "GK",
+      "category": 1,
+      "specializations": [
+        1,
+        2,
+        3
+      ],
+      "def_playstyle_1": 34,
+      "def_playstyle_2": 35,
+      "def_playstyle_3": 10,
+      "def_playstyle_4": 35,
+      "keyAttributes": [
+        0,
+        29,
+        30,
+        32
+      ],
+      "skill_move": 1,
+      "weak_foot": 1,
+      "skill_max": 2,
+      "weak_max": 3,
+      "height_min": 184,
+      "height_max": 200,
+      "weight_min": 80,
+      "weight_max": 100,
+      "height_def": 192,
+      "weight_def": 90,
+      "perk_1": 60,
+      "perk_2": 61,
+      "defaultAttributes": {
+        "acceleration": 75,
+        "sprintSpeed": 55,
+        "positioning": 50,
+        "finishing": 40,
+        "shotPower": 50,
+        "longShots": 40,
+        "volleys": 40,
+        "penalties": 40,
+        "vision": 65,
+        "crossing": 40,
+        "fkAccuracy": 40,
+        "shortPassing": 65,
+        "longPassing": 65,
+        "curve": 40,
+        "agility": 50,
+        "balance": 65,
+        "reactions": 75,
+        "ballControl": 65,
+        "dribbling": 45,
+        "composure": 55,
+        "interceptions": 65,
+        "headingAccuracy": 40,
+        "defAwareness": 40,
+        "standTackle": 40,
+        "slideTackle": 50,
+        "jumping": 65,
+        "stamina": 65,
+        "strength": 65,
+        "aggression": 65,
+        "gkDiving": 75,
+        "gkHandling": 75,
+        "gkKicking": 65,
+        "gkReflexes": 75,
+        "gkPositioning": 75
+      },
+      "maxAttributes": {
+        "acceleration": 92,
+        "sprintSpeed": 85,
+        "positioning": 85,
+        "finishing": 75,
+        "shotPower": 75,
+        "longShots": 60,
+        "volleys": 60,
+        "penalties": 70,
+        "vision": 92,
+        "crossing": 82,
+        "fkAccuracy": 75,
+        "shortPassing": 92,
+        "longPassing": 90,
+        "curve": 75,
+        "agility": 90,
+        "balance": 90,
+        "reactions": 96,
+        "ballControl": 85,
+        "dribbling": 75,
+        "composure": 90,
+        "interceptions": 90,
+        "headingAccuracy": 75,
+        "defAwareness": 75,
+        "standTackle": 75,
+        "slideTackle": 70,
+        "jumping": 96,
+        "stamina": 90,
+        "strength": 96,
+        "aggression": 92,
+        "gkDiving": 99,
+        "gkHandling": 99,
+        "gkKicking": 99,
+        "gkReflexes": 99,
+        "gkPositioning": 99
+      },
+      "name": "Shot Stopper",
+      "image": "/builder/archetypes/1.png"
+    },
+    {
+      "id": 2,
+      "key": "sweeper_keeper",
+      "nameKey": "archetype.sweeper_keeper",
+      "position": "GK",
+      "category": 1,
+      "specializations": [
+        4,
+        5,
+        6
+      ],
+      "def_playstyle_1": 31,
+      "def_playstyle_2": 32,
+      "def_playstyle_3": 35,
+      "def_playstyle_4": 30,
+      "keyAttributes": [
+        19,
+        29,
+        31,
+        33
+      ],
+      "skill_move": 1,
+      "weak_foot": 1,
+      "skill_max": 3,
+      "weak_max": 4,
+      "height_min": 179,
+      "height_max": 197,
+      "weight_min": 80,
+      "weight_max": 100,
+      "height_def": 188,
+      "weight_def": 90,
+      "perk_1": 55,
+      "perk_2": 56,
+      "defaultAttributes": {
+        "acceleration": 75,
+        "sprintSpeed": 65,
+        "positioning": 50,
+        "finishing": 40,
+        "shotPower": 50,
+        "longShots": 45,
+        "volleys": 40,
+        "penalties": 55,
+        "vision": 75,
+        "crossing": 40,
+        "fkAccuracy": 40,
+        "shortPassing": 50,
+        "longPassing": 75,
+        "curve": 40,
+        "agility": 65,
+        "balance": 70,
+        "reactions": 75,
+        "ballControl": 65,
+        "dribbling": 65,
+        "composure": 75,
+        "interceptions": 75,
+        "headingAccuracy": 65,
+        "defAwareness": 40,
+        "standTackle": 50,
+        "slideTackle": 65,
+        "jumping": 75,
+        "stamina": 75,
+        "strength": 70,
+        "aggression": 75,
+        "gkDiving": 75,
+        "gkHandling": 65,
+        "gkKicking": 75,
+        "gkReflexes": 75,
+        "gkPositioning": 75
+      },
+      "maxAttributes": {
+        "acceleration": 92,
+        "sprintSpeed": 88,
+        "positioning": 85,
+        "finishing": 75,
+        "shotPower": 75,
+        "longShots": 60,
+        "volleys": 60,
+        "penalties": 80,
+        "vision": 99,
+        "crossing": 85,
+        "fkAccuracy": 75,
+        "shortPassing": 92,
+        "longPassing": 96,
+        "curve": 75,
+        "agility": 90,
+        "balance": 90,
+        "reactions": 96,
+        "ballControl": 90,
+        "dribbling": 85,
+        "composure": 92,
+        "interceptions": 96,
+        "headingAccuracy": 90,
+        "defAwareness": 75,
+        "standTackle": 85,
+        "slideTackle": 90,
+        "jumping": 99,
+        "stamina": 92,
+        "strength": 96,
+        "aggression": 96,
+        "gkDiving": 99,
+        "gkHandling": 99,
+        "gkKicking": 99,
+        "gkReflexes": 99,
+        "gkPositioning": 99
+      },
+      "name": "Sweeper Keeper",
+      "image": "/builder/archetypes/2.png"
+    },
+    {
+      "id": 3,
+      "key": "progressor",
+      "nameKey": "archetype.progressor",
+      "position": "MID",
+      "category": 2,
+      "specializations": [
+        7,
+        8,
+        9
+      ],
+      "def_playstyle_1": 10,
+      "def_playstyle_2": 17,
+      "def_playstyle_3": 8,
+      "def_playstyle_4": 16,
+      "keyAttributes": [
+        19,
+        9,
+        21,
+        24
+      ],
+      "skill_move": 2,
+      "weak_foot": 2,
+      "skill_max": 4,
+      "weak_max": 4,
+      "height_min": 177,
+      "height_max": 195,
+      "weight_min": 75,
+      "weight_max": 95,
+      "height_def": 186,
+      "weight_def": 85,
+      "perk_1": 45,
+      "perk_2": 46,
+      "defaultAttributes": {
+        "acceleration": 70,
+        "sprintSpeed": 72,
+        "positioning": 70,
+        "finishing": 50,
+        "shotPower": 65,
+        "longShots": 50,
+        "volleys": 50,
+        "penalties": 65,
+        "vision": 75,
+        "crossing": 50,
+        "fkAccuracy": 45,
+        "shortPassing": 75,
+        "longPassing": 75,
+        "curve": 50,
+        "agility": 70,
+        "balance": 70,
+        "reactions": 65,
+        "ballControl": 70,
+        "dribbling": 65,
+        "composure": 75,
+        "interceptions": 75,
+        "headingAccuracy": 75,
+        "defAwareness": 75,
+        "standTackle": 75,
+        "slideTackle": 75,
+        "jumping": 75,
+        "stamina": 65,
+        "strength": 70,
+        "aggression": 65
+      },
+      "maxAttributes": {
+        "acceleration": 92,
+        "sprintSpeed": 92,
+        "positioning": 90,
+        "finishing": 85,
+        "shotPower": 92,
+        "longShots": 85,
+        "volleys": 75,
+        "penalties": 92,
+        "vision": 92,
+        "crossing": 92,
+        "fkAccuracy": 90,
+        "shortPassing": 96,
+        "longPassing": 96,
+        "curve": 85,
+        "agility": 92,
+        "balance": 92,
+        "reactions": 99,
+        "ballControl": 96,
+        "dribbling": 92,
+        "composure": 96,
+        "interceptions": 96,
+        "headingAccuracy": 96,
+        "defAwareness": 99,
+        "standTackle": 99,
+        "slideTackle": 96,
+        "jumping": 99,
+        "stamina": 92,
+        "strength": 96,
+        "aggression": 96
+      },
+      "name": "Progressor",
+      "image": "/builder/archetypes/3.png"
+    },
+    {
+      "id": 4,
+      "key": "boss",
+      "nameKey": "archetype.boss",
+      "position": "MID",
+      "category": 2,
+      "specializations": [
+        10,
+        11,
+        12
+      ],
+      "def_playstyle_1": 28,
+      "def_playstyle_2": 19,
+      "def_playstyle_3": 4,
+      "def_playstyle_4": 17,
+      "keyAttributes": [
+        18,
+        25,
+        21,
+        24
+      ],
+      "skill_move": 2,
+      "weak_foot": 2,
+      "skill_max": 3,
+      "weak_max": 4,
+      "height_min": 180,
+      "height_max": 196,
+      "weight_min": 80,
+      "weight_max": 100,
+      "height_def": 188,
+      "weight_def": 90,
+      "perk_1": 50,
+      "perk_2": 51,
+      "defaultAttributes": {
+        "acceleration": 70,
+        "sprintSpeed": 70,
+        "positioning": 75,
+        "finishing": 45,
+        "shotPower": 70,
+        "longShots": 60,
+        "volleys": 60,
+        "penalties": 65,
+        "vision": 55,
+        "crossing": 45,
+        "fkAccuracy": 50,
+        "shortPassing": 65,
+        "longPassing": 65,
+        "curve": 50,
+        "agility": 65,
+        "balance": 75,
+        "reactions": 60,
+        "ballControl": 65,
+        "dribbling": 60,
+        "composure": 65,
+        "interceptions": 75,
+        "headingAccuracy": 75,
+        "defAwareness": 75,
+        "standTackle": 75,
+        "slideTackle": 75,
+        "jumping": 75,
+        "stamina": 70,
+        "strength": 75,
+        "aggression": 75
+      },
+      "maxAttributes": {
+        "acceleration": 90,
+        "sprintSpeed": 90,
+        "positioning": 90,
+        "finishing": 82,
+        "shotPower": 96,
+        "longShots": 85,
+        "volleys": 80,
+        "penalties": 92,
+        "vision": 90,
+        "crossing": 90,
+        "fkAccuracy": 90,
+        "shortPassing": 92,
+        "longPassing": 90,
+        "curve": 75,
+        "agility": 90,
+        "balance": 90,
+        "reactions": 99,
+        "ballControl": 92,
+        "dribbling": 88,
+        "composure": 92,
+        "interceptions": 96,
+        "headingAccuracy": 99,
+        "defAwareness": 96,
+        "standTackle": 96,
+        "slideTackle": 99,
+        "jumping": 99,
+        "stamina": 92,
+        "strength": 99,
+        "aggression": 99
+      },
+      "name": "Boss",
+      "image": "/builder/archetypes/4.png"
+    },
+    {
+      "id": 5,
+      "key": "engine",
+      "nameKey": "archetype.engine",
+      "position": "MID",
+      "category": 3,
+      "specializations": [
+        13,
+        14,
+        15
+      ],
+      "def_playstyle_1": 14,
+      "def_playstyle_2": 26,
+      "def_playstyle_3": 17,
+      "def_playstyle_4": 21,
+      "keyAttributes": [
+        20,
+        9,
+        21,
+        5
+      ],
+      "skill_move": 2,
+      "weak_foot": 3,
+      "skill_max": 4,
+      "weak_max": 5,
+      "height_min": 168,
+      "height_max": 188,
+      "weight_min": 65,
+      "weight_max": 85,
+      "height_def": 178,
+      "weight_def": 75,
+      "perk_1": 35,
+      "perk_2": 36,
+      "defaultAttributes": {
+        "acceleration": 75,
+        "sprintSpeed": 70,
+        "positioning": 70,
+        "finishing": 50,
+        "shotPower": 70,
+        "longShots": 65,
+        "volleys": 65,
+        "penalties": 65,
+        "vision": 65,
+        "crossing": 65,
+        "fkAccuracy": 50,
+        "shortPassing": 75,
+        "longPassing": 70,
+        "curve": 65,
+        "agility": 68,
+        "balance": 75,
+        "reactions": 70,
+        "ballControl": 65,
+        "dribbling": 65,
+        "composure": 70,
+        "interceptions": 75,
+        "headingAccuracy": 65,
+        "defAwareness": 70,
+        "standTackle": 70,
+        "slideTackle": 75,
+        "jumping": 65,
+        "stamina": 75,
+        "strength": 75,
+        "aggression": 70
+      },
+      "maxAttributes": {
+        "acceleration": 92,
+        "sprintSpeed": 92,
+        "positioning": 90,
+        "finishing": 90,
+        "shotPower": 92,
+        "longShots": 85,
+        "volleys": 90,
+        "penalties": 92,
+        "vision": 90,
+        "crossing": 96,
+        "fkAccuracy": 95,
+        "shortPassing": 96,
+        "longPassing": 92,
+        "curve": 90,
+        "agility": 92,
+        "balance": 96,
+        "reactions": 99,
+        "ballControl": 92,
+        "dribbling": 92,
+        "composure": 92,
+        "interceptions": 92,
+        "headingAccuracy": 90,
+        "defAwareness": 92,
+        "standTackle": 92,
+        "slideTackle": 92,
+        "jumping": 92,
+        "stamina": 99,
+        "strength": 96,
+        "aggression": 96
+      },
+      "name": "Disruptor",
+      "image": "/builder/archetypes/5.png"
+    },
+    {
+      "id": 6,
+      "key": "marauder",
+      "nameKey": "archetype.marauder",
+      "position": "MID",
+      "category": 2,
+      "specializations": [
+        16,
+        17,
+        18
+      ],
+      "def_playstyle_1": 25,
+      "def_playstyle_2": 12,
+      "def_playstyle_3": 20,
+      "def_playstyle_4": 23,
+      "keyAttributes": [
+        1,
+        14,
+        25,
+        5
+      ],
+      "skill_move": 2,
+      "weak_foot": 3,
+      "skill_max": 5,
+      "weak_max": 5,
+      "height_min": 168,
+      "height_max": 188,
+      "weight_min": 65,
+      "weight_max": 85,
+      "height_def": 178,
+      "weight_def": 75,
+      "perk_1": 40,
+      "perk_2": 41,
+      "defaultAttributes": {
+        "acceleration": 75,
+        "sprintSpeed": 75,
+        "positioning": 65,
+        "finishing": 55,
+        "shotPower": 65,
+        "longShots": 60,
+        "volleys": 65,
+        "penalties": 65,
+        "vision": 60,
+        "crossing": 75,
+        "fkAccuracy": 60,
+        "shortPassing": 65,
+        "longPassing": 65,
+        "curve": 75,
+        "agility": 70,
+        "balance": 65,
+        "reactions": 70,
+        "ballControl": 70,
+        "dribbling": 70,
+        "composure": 65,
+        "interceptions": 70,
+        "headingAccuracy": 65,
+        "defAwareness": 70,
+        "standTackle": 70,
+        "slideTackle": 75,
+        "jumping": 60,
+        "stamina": 75,
+        "strength": 60,
+        "aggression": 72
+      },
+      "maxAttributes": {
+        "acceleration": 95,
+        "sprintSpeed": 95,
+        "positioning": 92,
+        "finishing": 90,
+        "shotPower": 92,
+        "longShots": 90,
+        "volleys": 96,
+        "penalties": 96,
+        "vision": 92,
+        "crossing": 99,
+        "fkAccuracy": 95,
+        "shortPassing": 92,
+        "longPassing": 92,
+        "curve": 96,
+        "agility": 95,
+        "balance": 92,
+        "reactions": 99,
+        "ballControl": 96,
+        "dribbling": 92,
+        "composure": 92,
+        "interceptions": 96,
+        "headingAccuracy": 90,
+        "defAwareness": 96,
+        "standTackle": 96,
+        "slideTackle": 96,
+        "jumping": 92,
+        "stamina": 96,
+        "strength": 92,
+        "aggression": 96
+      },
+      "name": "Marauder",
+      "image": "/builder/archetypes/6.png"
+    },
+    {
+      "id": 7,
+      "key": "recycler",
+      "nameKey": "archetype.recycler",
+      "position": "MID",
+      "category": 3,
+      "specializations": [
+        19,
+        20,
+        21
+      ],
+      "def_playstyle_1": 16,
+      "def_playstyle_2": 24,
+      "def_playstyle_3": 2,
+      "def_playstyle_4": 11,
+      "keyAttributes": [
+        23,
+        10,
+        21,
+        6
+      ],
+      "skill_move": 2,
+      "weak_foot": 3,
+      "skill_max": 4,
+      "weak_max": 5,
+      "height_min": 172,
+      "height_max": 192,
+      "weight_min": 65,
+      "weight_max": 85,
+      "height_def": 182,
+      "weight_def": 75,
+      "perk_1": 30,
+      "perk_2": 31,
+      "defaultAttributes": {
+        "acceleration": 70,
+        "sprintSpeed": 70,
+        "positioning": 70,
+        "finishing": 55,
+        "shotPower": 70,
+        "longShots": 65,
+        "volleys": 65,
+        "penalties": 65,
+        "vision": 75,
+        "crossing": 65,
+        "fkAccuracy": 50,
+        "shortPassing": 70,
+        "longPassing": 75,
+        "curve": 65,
+        "agility": 68,
+        "balance": 75,
+        "reactions": 65,
+        "ballControl": 65,
+        "dribbling": 65,
+        "composure": 72,
+        "interceptions": 75,
+        "headingAccuracy": 65,
+        "defAwareness": 75,
+        "standTackle": 75,
+        "slideTackle": 75,
+        "jumping": 65,
+        "stamina": 72,
+        "strength": 72,
+        "aggression": 75
+      },
+      "maxAttributes": {
+        "acceleration": 90,
+        "sprintSpeed": 90,
+        "positioning": 90,
+        "finishing": 90,
+        "shotPower": 96,
+        "longShots": 96,
+        "volleys": 90,
+        "penalties": 92,
+        "vision": 96,
+        "crossing": 92,
+        "fkAccuracy": 99,
+        "shortPassing": 96,
+        "longPassing": 96,
+        "curve": 90,
+        "agility": 92,
+        "balance": 92,
+        "reactions": 99,
+        "ballControl": 96,
+        "dribbling": 92,
+        "composure": 99,
+        "interceptions": 99,
+        "headingAccuracy": 90,
+        "defAwareness": 99,
+        "standTackle": 96,
+        "slideTackle": 92,
+        "jumping": 90,
+        "stamina": 96,
+        "strength": 96,
+        "aggression": 96
+      },
+      "name": "Recycler",
+      "image": "/builder/archetypes/7.png"
+    },
+    {
+      "id": 8,
+      "key": "maestro",
+      "nameKey": "archetype.maestro",
+      "position": "MID",
+      "category": 3,
+      "specializations": [
+        22,
+        23,
+        24
+      ],
+      "def_playstyle_1": 9,
+      "def_playstyle_2": 10,
+      "def_playstyle_3": 10,
+      "def_playstyle_4": 8,
+      "keyAttributes": [
+        12,
+        19,
+        13,
+        9
+      ],
+      "skill_move": 2,
+      "weak_foot": 3,
+      "skill_max": 5,
+      "weak_max": 5,
+      "height_min": 162,
+      "height_max": 188,
+      "weight_min": 65,
+      "weight_max": 85,
+      "height_def": 175,
+      "weight_def": 75,
+      "perk_1": 25,
+      "perk_2": 26,
+      "defaultAttributes": {
+        "acceleration": 70,
+        "sprintSpeed": 65,
+        "positioning": 80,
+        "finishing": 65,
+        "shotPower": 70,
+        "longShots": 70,
+        "volleys": 65,
+        "penalties": 70,
+        "vision": 75,
+        "crossing": 75,
+        "fkAccuracy": 75,
+        "shortPassing": 75,
+        "longPassing": 75,
+        "curve": 70,
+        "agility": 75,
+        "balance": 70,
+        "reactions": 65,
+        "ballControl": 75,
+        "dribbling": 65,
+        "composure": 75,
+        "interceptions": 75,
+        "headingAccuracy": 50,
+        "defAwareness": 65,
+        "standTackle": 72,
+        "slideTackle": 50,
+        "jumping": 60,
+        "stamina": 65,
+        "strength": 65,
+        "aggression": 65
+      },
+      "maxAttributes": {
+        "acceleration": 90,
+        "sprintSpeed": 90,
+        "positioning": 96,
+        "finishing": 96,
+        "shotPower": 96,
+        "longShots": 96,
+        "volleys": 96,
+        "penalties": 99,
+        "vision": 99,
+        "crossing": 92,
+        "fkAccuracy": 99,
+        "shortPassing": 96,
+        "longPassing": 99,
+        "curve": 96,
+        "agility": 99,
+        "balance": 96,
+        "reactions": 99,
+        "ballControl": 99,
+        "dribbling": 96,
+        "composure": 99,
+        "interceptions": 92,
+        "headingAccuracy": 85,
+        "defAwareness": 90,
+        "standTackle": 90,
+        "slideTackle": 90,
+        "jumping": 90,
+        "stamina": 92,
+        "strength": 92,
+        "aggression": 92
+      },
+      "name": "Maestro",
+      "image": "/builder/archetypes/8.png"
+    },
+    {
+      "id": 9,
+      "key": "creator",
+      "nameKey": "archetype.creator",
+      "position": "ATT",
+      "category": 3,
+      "specializations": [
+        25,
+        26,
+        27
+      ],
+      "def_playstyle_1": 8,
+      "def_playstyle_2": 13,
+      "def_playstyle_3": 7,
+      "def_playstyle_4": 25,
+      "keyAttributes": [
+        19,
+        12,
+        20,
+        27
+      ],
+      "skill_move": 2,
+      "weak_foot": 3,
+      "skill_max": 5,
+      "weak_max": 5,
+      "height_min": 162,
+      "height_max": 188,
+      "weight_min": 65,
+      "weight_max": 85,
+      "height_def": 175,
+      "weight_def": 75,
+      "perk_1": 20,
+      "perk_2": 21,
+      "defaultAttributes": {
+        "acceleration": 70,
+        "sprintSpeed": 65,
+        "positioning": 80,
+        "finishing": 65,
+        "shotPower": 72,
+        "longShots": 72,
+        "volleys": 72,
+        "penalties": 75,
+        "vision": 75,
+        "crossing": 75,
+        "fkAccuracy": 75,
+        "shortPassing": 75,
+        "longPassing": 75,
+        "curve": 75,
+        "agility": 72,
+        "balance": 65,
+        "reactions": 75,
+        "ballControl": 75,
+        "dribbling": 75,
+        "composure": 72,
+        "interceptions": 55,
+        "headingAccuracy": 50,
+        "defAwareness": 50,
+        "standTackle": 65,
+        "slideTackle": 50,
+        "jumping": 60,
+        "stamina": 65,
+        "strength": 65,
+        "aggression": 55
+      },
+      "maxAttributes": {
+        "acceleration": 92,
+        "sprintSpeed": 92,
+        "positioning": 99,
+        "finishing": 96,
+        "shotPower": 96,
+        "longShots": 99,
+        "volleys": 96,
+        "penalties": 99,
+        "vision": 99,
+        "crossing": 96,
+        "fkAccuracy": 99,
+        "shortPassing": 96,
+        "longPassing": 96,
+        "curve": 99,
+        "agility": 99,
+        "balance": 96,
+        "reactions": 99,
+        "ballControl": 96,
+        "dribbling": 96,
+        "composure": 96,
+        "interceptions": 85,
+        "headingAccuracy": 85,
+        "defAwareness": 85,
+        "standTackle": 90,
+        "slideTackle": 90,
+        "jumping": 90,
+        "stamina": 92,
+        "strength": 92,
+        "aggression": 92
+      },
+      "name": "Creator",
+      "image": "/builder/archetypes/9.png"
+    },
+    {
+      "id": 10,
+      "key": "spark",
+      "nameKey": "archetype.spark",
+      "position": "ATT",
+      "category": 4,
+      "specializations": [
+        28,
+        29,
+        30
+      ],
+      "def_playstyle_1": 23,
+      "def_playstyle_2": 21,
+      "def_playstyle_3": 13,
+      "def_playstyle_4": 20,
+      "keyAttributes": [
+        0,
+        2,
+        13,
+        15
+      ],
+      "skill_move": 3,
+      "weak_foot": 3,
+      "skill_max": 5,
+      "weak_max": 5,
+      "height_min": 162,
+      "height_max": 188,
+      "weight_min": 65,
+      "weight_max": 85,
+      "height_def": 175,
+      "weight_def": 75,
+      "perk_1": 15,
+      "perk_2": 16,
+      "defaultAttributes": {
+        "acceleration": 75,
+        "sprintSpeed": 75,
+        "positioning": 80,
+        "finishing": 65,
+        "shotPower": 65,
+        "longShots": 65,
+        "volleys": 72,
+        "penalties": 75,
+        "vision": 75,
+        "crossing": 75,
+        "fkAccuracy": 65,
+        "shortPassing": 75,
+        "longPassing": 65,
+        "curve": 75,
+        "agility": 75,
+        "balance": 75,
+        "reactions": 75,
+        "ballControl": 75,
+        "dribbling": 75,
+        "composure": 72,
+        "interceptions": 55,
+        "headingAccuracy": 50,
+        "defAwareness": 50,
+        "standTackle": 55,
+        "slideTackle": 45,
+        "jumping": 55,
+        "stamina": 65,
+        "strength": 65,
+        "aggression": 50
+      },
+      "maxAttributes": {
+        "acceleration": 99,
+        "sprintSpeed": 95,
+        "positioning": 96,
+        "finishing": 96,
+        "shotPower": 92,
+        "longShots": 92,
+        "volleys": 96,
+        "penalties": 99,
+        "vision": 96,
+        "crossing": 99,
+        "fkAccuracy": 99,
+        "shortPassing": 96,
+        "longPassing": 92,
+        "curve": 96,
+        "agility": 99,
+        "balance": 96,
+        "reactions": 99,
+        "ballControl": 96,
+        "dribbling": 99,
+        "composure": 96,
+        "interceptions": 85,
+        "headingAccuracy": 85,
+        "defAwareness": 85,
+        "standTackle": 80,
+        "slideTackle": 75,
+        "jumping": 85,
+        "stamina": 92,
+        "strength": 90,
+        "aggression": 92
+      },
+      "name": "Spark",
+      "image": "/builder/archetypes/10.png"
+    },
+    {
+      "id": 11,
+      "key": "magician",
+      "nameKey": "archetype.magician",
+      "position": "ATT",
+      "category": 4,
+      "specializations": [
+        31,
+        32,
+        33
+      ],
+      "def_playstyle_1": 20,
+      "def_playstyle_2": 0,
+      "def_playstyle_3": 1,
+      "def_playstyle_4": 13,
+      "keyAttributes": [
+        0,
+        16,
+        27,
+        3
+      ],
+      "skill_move": 3,
+      "weak_foot": 3,
+      "skill_max": 5,
+      "weak_max": 5,
+      "height_min": 162,
+      "height_max": 188,
+      "weight_min": 60,
+      "weight_max": 80,
+      "height_def": 175,
+      "weight_def": 70,
+      "perk_1": 10,
+      "perk_2": 11,
+      "defaultAttributes": {
+        "acceleration": 75,
+        "sprintSpeed": 70,
+        "positioning": 80,
+        "finishing": 75,
+        "shotPower": 70,
+        "longShots": 65,
+        "volleys": 72,
+        "penalties": 75,
+        "vision": 75,
+        "crossing": 65,
+        "fkAccuracy": 65,
+        "shortPassing": 75,
+        "longPassing": 50,
+        "curve": 75,
+        "agility": 72,
+        "balance": 75,
+        "reactions": 75,
+        "ballControl": 75,
+        "dribbling": 75,
+        "composure": 72,
+        "interceptions": 50,
+        "headingAccuracy": 65,
+        "defAwareness": 45,
+        "standTackle": 40,
+        "slideTackle": 40,
+        "jumping": 60,
+        "stamina": 65,
+        "strength": 65,
+        "aggression": 55
+      },
+      "maxAttributes": {
+        "acceleration": 95,
+        "sprintSpeed": 95,
+        "positioning": 96,
+        "finishing": 99,
+        "shotPower": 92,
+        "longShots": 96,
+        "volleys": 96,
+        "penalties": 99,
+        "vision": 96,
+        "crossing": 92,
+        "fkAccuracy": 99,
+        "shortPassing": 96,
+        "longPassing": 92,
+        "curve": 99,
+        "agility": 99,
+        "balance": 99,
+        "reactions": 99,
+        "ballControl": 96,
+        "dribbling": 96,
+        "composure": 96,
+        "interceptions": 82,
+        "headingAccuracy": 85,
+        "defAwareness": 82,
+        "standTackle": 75,
+        "slideTackle": 75,
+        "jumping": 85,
+        "stamina": 92,
+        "strength": 90,
+        "aggression": 92
+      },
+      "name": "Magician",
+      "image": "/builder/archetypes/11.png"
+    },
+    {
+      "id": 12,
+      "key": "finisher",
+      "nameKey": "archetype.finisher",
+      "position": "ATT",
+      "category": 4,
+      "specializations": [
+        34,
+        35,
+        36
+      ],
+      "def_playstyle_1": 6,
+      "def_playstyle_2": 22,
+      "def_playstyle_3": 25,
+      "def_playstyle_4": 5,
+      "keyAttributes": [
+        16,
+        26,
+        7,
+        9
+      ],
+      "skill_move": 3,
+      "weak_foot": 3,
+      "skill_max": 5,
+      "weak_max": 5,
+      "height_min": 164,
+      "height_max": 190,
+      "weight_min": 70,
+      "weight_max": 90,
+      "height_def": 177,
+      "weight_def": 80,
+      "perk_1": 0,
+      "perk_2": 1,
+      "defaultAttributes": {
+        "acceleration": 75,
+        "sprintSpeed": 70,
+        "positioning": 80,
+        "finishing": 75,
+        "shotPower": 75,
+        "longShots": 60,
+        "volleys": 75,
+        "penalties": 75,
+        "vision": 65,
+        "crossing": 55,
+        "fkAccuracy": 65,
+        "shortPassing": 70,
+        "longPassing": 50,
+        "curve": 70,
+        "agility": 72,
+        "balance": 75,
+        "reactions": 75,
+        "ballControl": 75,
+        "dribbling": 70,
+        "composure": 75,
+        "interceptions": 60,
+        "headingAccuracy": 75,
+        "defAwareness": 55,
+        "standTackle": 50,
+        "slideTackle": 40,
+        "jumping": 65,
+        "stamina": 65,
+        "strength": 70,
+        "aggression": 65
+      },
+      "maxAttributes": {
+        "acceleration": 95,
+        "sprintSpeed": 95,
+        "positioning": 99,
+        "finishing": 99,
+        "shotPower": 99,
+        "longShots": 96,
+        "volleys": 99,
+        "penalties": 99,
+        "vision": 92,
+        "crossing": 92,
+        "fkAccuracy": 99,
+        "shortPassing": 92,
+        "longPassing": 92,
+        "curve": 96,
+        "agility": 99,
+        "balance": 96,
+        "reactions": 99,
+        "ballControl": 96,
+        "dribbling": 96,
+        "composure": 99,
+        "interceptions": 85,
+        "headingAccuracy": 96,
+        "defAwareness": 85,
+        "standTackle": 75,
+        "slideTackle": 75,
+        "jumping": 92,
+        "stamina": 92,
+        "strength": 92,
+        "aggression": 96
+      },
+      "name": "Finisher",
+      "image": "/builder/archetypes/12.png"
+    },
+    {
+      "id": 13,
+      "key": "target",
+      "nameKey": "archetype.target",
+      "position": "ATT",
+      "category": 4,
+      "specializations": [
+        37,
+        38,
+        39
+      ],
+      "def_playstyle_1": 4,
+      "def_playstyle_2": 29,
+      "def_playstyle_3": 11,
+      "def_playstyle_4": 24,
+      "keyAttributes": [
+        22,
+        18,
+        4,
+        6
+      ],
+      "skill_move": 2,
+      "weak_foot": 2,
+      "skill_max": 5,
+      "weak_max": 5,
+      "height_min": 177,
+      "height_max": 195,
+      "weight_min": 80,
+      "weight_max": 100,
+      "height_def": 186,
+      "weight_def": 90,
+      "perk_1": 5,
+      "perk_2": 6,
+      "defaultAttributes": {
+        "acceleration": 70,
+        "sprintSpeed": 65,
+        "positioning": 80,
+        "finishing": 72,
+        "shotPower": 75,
+        "longShots": 65,
+        "volleys": 72,
+        "penalties": 75,
+        "vision": 65,
+        "crossing": 50,
+        "fkAccuracy": 65,
+        "shortPassing": 75,
+        "longPassing": 50,
+        "curve": 55,
+        "agility": 70,
+        "balance": 75,
+        "reactions": 75,
+        "ballControl": 70,
+        "dribbling": 70,
+        "composure": 72,
+        "interceptions": 50,
+        "headingAccuracy": 75,
+        "defAwareness": 50,
+        "standTackle": 45,
+        "slideTackle": 40,
+        "jumping": 75,
+        "stamina": 60,
+        "strength": 75,
+        "aggression": 65
+      },
+      "maxAttributes": {
+        "acceleration": 90,
+        "sprintSpeed": 92,
+        "positioning": 96,
+        "finishing": 96,
+        "shotPower": 99,
+        "longShots": 96,
+        "volleys": 96,
+        "penalties": 99,
+        "vision": 92,
+        "crossing": 90,
+        "fkAccuracy": 99,
+        "shortPassing": 96,
+        "longPassing": 92,
+        "curve": 90,
+        "agility": 92,
+        "balance": 92,
+        "reactions": 99,
+        "ballControl": 92,
+        "dribbling": 92,
+        "composure": 96,
+        "interceptions": 82,
+        "headingAccuracy": 99,
+        "defAwareness": 82,
+        "standTackle": 75,
+        "slideTackle": 75,
+        "jumping": 96,
+        "stamina": 92,
+        "strength": 99,
+        "aggression": 92
+      },
+      "name": "Target",
+      "image": "/builder/archetypes/13.png"
+    }
+  ],
+  "attributes": [
+    {
+      "id": 0,
+      "key": "acceleration",
+      "engName": "Acceleration",
+      "abbr": "ACC"
+    },
+    {
+      "id": 1,
+      "key": "sprintSpeed",
+      "engName": "Sprint Speed",
+      "abbr": "SPD"
+    },
+    {
+      "id": 2,
+      "key": "agility",
+      "engName": "Agility",
+      "abbr": "AGI"
+    },
+    {
+      "id": 3,
+      "key": "balance",
+      "engName": "Balance",
+      "abbr": "BAL"
+    },
+    {
+      "id": 4,
+      "key": "jumping",
+      "engName": "Jumping",
+      "abbr": "JMP"
+    },
+    {
+      "id": 5,
+      "key": "stamina",
+      "engName": "Stamina",
+      "abbr": "STA"
+    },
+    {
+      "id": 6,
+      "key": "strength",
+      "engName": "Strength",
+      "abbr": "STR"
+    },
+    {
+      "id": 7,
+      "key": "reactions",
+      "engName": "Reactions",
+      "abbr": "REA"
+    },
+    {
+      "id": 8,
+      "key": "aggression",
+      "engName": "Aggression",
+      "abbr": "AGG"
+    },
+    {
+      "id": 9,
+      "key": "composure",
+      "engName": "Composure",
+      "abbr": "COM"
+    },
+    {
+      "id": 10,
+      "key": "interceptions",
+      "engName": "Interceptions",
+      "abbr": "INT"
+    },
+    {
+      "id": 11,
+      "key": "positioning",
+      "engName": "Attack Positioning",
+      "abbr": "POS"
+    },
+    {
+      "id": 12,
+      "key": "vision",
+      "engName": "Vision",
+      "abbr": "VIS"
+    },
+    {
+      "id": 13,
+      "key": "ballControl",
+      "engName": "Ball Control",
+      "abbr": "BAC"
+    },
+    {
+      "id": 14,
+      "key": "crossing",
+      "engName": "Crossing",
+      "abbr": "CRO"
+    },
+    {
+      "id": 15,
+      "key": "dribbling",
+      "engName": "Dribbling",
+      "abbr": "DRI"
+    },
+    {
+      "id": 16,
+      "key": "finishing",
+      "engName": "Finishing",
+      "abbr": "FIN"
+    },
+    {
+      "id": 17,
+      "key": "fkAccuracy",
+      "engName": "FK Accuracy",
+      "abbr": "FKA"
+    },
+    {
+      "id": 18,
+      "key": "headingAccuracy",
+      "engName": "Heading Accuracy",
+      "abbr": "HEA"
+    },
+    {
+      "id": 19,
+      "key": "longPassing",
+      "engName": "Long Passing",
+      "abbr": "LPA"
+    },
+    {
+      "id": 20,
+      "key": "shortPassing",
+      "engName": "Short Passing",
+      "abbr": "SPA"
+    },
+    {
+      "id": 21,
+      "key": "defAwareness",
+      "engName": "Def Awareness",
+      "abbr": "DFA"
+    },
+    {
+      "id": 22,
+      "key": "shotPower",
+      "engName": "Shot Power",
+      "abbr": "SHO"
+    },
+    {
+      "id": 23,
+      "key": "longShots",
+      "engName": "Long Shots",
+      "abbr": "LSH"
+    },
+    {
+      "id": 24,
+      "key": "standTackle",
+      "engName": "Standing Tackle",
+      "abbr": "STT"
+    },
+    {
+      "id": 25,
+      "key": "slideTackle",
+      "engName": "Sliding Tackle",
+      "abbr": "SLT"
+    },
+    {
+      "id": 26,
+      "key": "volleys",
+      "engName": "Volleys",
+      "abbr": "VOL"
+    },
+    {
+      "id": 27,
+      "key": "curve",
+      "engName": "Curve",
+      "abbr": "CRV"
+    },
+    {
+      "id": 28,
+      "key": "penalties",
+      "engName": "Penalties",
+      "abbr": "PEN"
+    },
+    {
+      "id": 29,
+      "key": "gkDiving",
+      "engName": "GK Diving",
+      "abbr": "GKD"
+    },
+    {
+      "id": 30,
+      "key": "gkHandling",
+      "engName": "GK Handling",
+      "abbr": "GKH"
+    },
+    {
+      "id": 31,
+      "key": "gkKicking",
+      "engName": "GK Kicking",
+      "abbr": "GKK"
+    },
+    {
+      "id": 32,
+      "key": "gkReflexes",
+      "engName": "GK Reflexes",
+      "abbr": "GKR"
+    },
+    {
+      "id": 33,
+      "key": "gkPositioning",
+      "engName": "GK Positioning",
+      "abbr": "GKP"
+    }
+  ],
+  "curves": [
+    {
+      "curveType": "CHEAP",
+      "minValue": 1,
+      "maxValue": 60,
+      "cost": 1
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 61,
+      "maxValue": 63,
+      "cost": 1
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 64,
+      "maxValue": 66,
+      "cost": 1
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 67,
+      "maxValue": 69,
+      "cost": 1
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 70,
+      "maxValue": 74,
+      "cost": 2
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 75,
+      "maxValue": 79,
+      "cost": 3
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 80,
+      "maxValue": 84,
+      "cost": 3
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 85,
+      "maxValue": 89,
+      "cost": 6
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 90,
+      "maxValue": 92,
+      "cost": 8
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 93,
+      "maxValue": 94,
+      "cost": 10
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 95,
+      "maxValue": 95,
+      "cost": 15
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 96,
+      "maxValue": 96,
+      "cost": 20
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 97,
+      "maxValue": 97,
+      "cost": 25
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 98,
+      "maxValue": 98,
+      "cost": 30
+    },
+    {
+      "curveType": "CHEAP",
+      "minValue": 99,
+      "maxValue": 99,
+      "cost": 35
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 1,
+      "maxValue": 60,
+      "cost": 1
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 61,
+      "maxValue": 63,
+      "cost": 1
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 64,
+      "maxValue": 66,
+      "cost": 2
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 67,
+      "maxValue": 69,
+      "cost": 2
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 70,
+      "maxValue": 74,
+      "cost": 3
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 75,
+      "maxValue": 79,
+      "cost": 4
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 80,
+      "maxValue": 84,
+      "cost": 5
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 85,
+      "maxValue": 89,
+      "cost": 8
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 90,
+      "maxValue": 92,
+      "cost": 11
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 93,
+      "maxValue": 94,
+      "cost": 15
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 95,
+      "maxValue": 95,
+      "cost": 20
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 96,
+      "maxValue": 96,
+      "cost": 25
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 97,
+      "maxValue": 97,
+      "cost": 30
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 98,
+      "maxValue": 98,
+      "cost": 35
+    },
+    {
+      "curveType": "LOW",
+      "minValue": 99,
+      "maxValue": 99,
+      "cost": 40
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 1,
+      "maxValue": 60,
+      "cost": 1
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 61,
+      "maxValue": 63,
+      "cost": 2
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 64,
+      "maxValue": 66,
+      "cost": 3
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 67,
+      "maxValue": 69,
+      "cost": 3
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 70,
+      "maxValue": 74,
+      "cost": 4
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 75,
+      "maxValue": 79,
+      "cost": 6
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 80,
+      "maxValue": 84,
+      "cost": 7
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 85,
+      "maxValue": 89,
+      "cost": 11
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 90,
+      "maxValue": 92,
+      "cost": 15
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 93,
+      "maxValue": 94,
+      "cost": 20
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 95,
+      "maxValue": 95,
+      "cost": 25
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 96,
+      "maxValue": 96,
+      "cost": 30
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 97,
+      "maxValue": 97,
+      "cost": 35
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 98,
+      "maxValue": 98,
+      "cost": 40
+    },
+    {
+      "curveType": "STANDARD",
+      "minValue": 99,
+      "maxValue": 99,
+      "cost": 45
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 1,
+      "maxValue": 60,
+      "cost": 2
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 61,
+      "maxValue": 63,
+      "cost": 3
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 64,
+      "maxValue": 66,
+      "cost": 4
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 67,
+      "maxValue": 69,
+      "cost": 5
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 70,
+      "maxValue": 74,
+      "cost": 6
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 75,
+      "maxValue": 79,
+      "cost": 8
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 80,
+      "maxValue": 84,
+      "cost": 10
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 85,
+      "maxValue": 89,
+      "cost": 15
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 90,
+      "maxValue": 92,
+      "cost": 20
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 93,
+      "maxValue": 94,
+      "cost": 25
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 95,
+      "maxValue": 95,
+      "cost": 30
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 96,
+      "maxValue": 96,
+      "cost": 35
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 97,
+      "maxValue": 97,
+      "cost": 40
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 98,
+      "maxValue": 98,
+      "cost": 45
+    },
+    {
+      "curveType": "EXPENSIVE",
+      "minValue": 99,
+      "maxValue": 99,
+      "cost": 50
+    },
+    {
+      "curveType": "CURVE_SW_1",
+      "minValue": 3,
+      "maxValue": 3,
+      "cost": 8
+    },
+    {
+      "curveType": "CURVE_SW_1",
+      "minValue": 4,
+      "maxValue": 4,
+      "cost": 15
+    },
+    {
+      "curveType": "CURVE_SW_1",
+      "minValue": 5,
+      "maxValue": 5,
+      "cost": 25
+    },
+    {
+      "curveType": "CURVE_SW_2",
+      "minValue": 2,
+      "maxValue": 2,
+      "cost": 10
+    },
+    {
+      "curveType": "CURVE_SW_2",
+      "minValue": 3,
+      "maxValue": 3,
+      "cost": 20
+    },
+    {
+      "curveType": "CURVE_SW_2",
+      "minValue": 4,
+      "maxValue": 4,
+      "cost": 35
+    },
+    {
+      "curveType": "CURVE_SW_2",
+      "minValue": 5,
+      "maxValue": 5,
+      "cost": 50
+    },
+    {
+      "curveType": "CURVE_SW_3",
+      "minValue": 2,
+      "maxValue": 2,
+      "cost": 5
+    },
+    {
+      "curveType": "CURVE_SW_3",
+      "minValue": 3,
+      "maxValue": 3,
+      "cost": 10
+    },
+    {
+      "curveType": "CURVE_SW_3",
+      "minValue": 4,
+      "maxValue": 4,
+      "cost": 20
+    },
+    {
+      "curveType": "CURVE_SW_3",
+      "minValue": 5,
+      "maxValue": 5,
+      "cost": 35
+    },
+    {
+      "curveType": "CURVE_SW_4",
+      "minValue": 2,
+      "maxValue": 2,
+      "cost": 8
+    },
+    {
+      "curveType": "CURVE_SW_4",
+      "minValue": 3,
+      "maxValue": 3,
+      "cost": 15
+    },
+    {
+      "curveType": "CURVE_SW_4",
+      "minValue": 4,
+      "maxValue": 4,
+      "cost": 25
+    },
+    {
+      "curveType": "CURVE_SW_4",
+      "minValue": 5,
+      "maxValue": 5,
+      "cost": 40
+    }
+  ],
+  "attributeCurves": {
+    "1-0": "STANDARD",
+    "2-0": "EXPENSIVE",
+    "3-0": "EXPENSIVE",
+    "4-0": "EXPENSIVE",
+    "5-0": "STANDARD",
+    "6-0": "EXPENSIVE",
+    "7-0": "EXPENSIVE",
+    "8-0": "EXPENSIVE",
+    "9-0": "EXPENSIVE",
+    "10-0": "EXPENSIVE",
+    "11-0": "STANDARD",
+    "12-0": "EXPENSIVE",
+    "13-0": "EXPENSIVE",
+    "1-8": "LOW",
+    "2-8": "LOW",
+    "3-8": "LOW",
+    "4-8": "CHEAP",
+    "5-8": "CHEAP",
+    "6-8": "LOW",
+    "7-8": "LOW",
+    "8-8": "LOW",
+    "9-8": "LOW",
+    "10-8": "LOW",
+    "11-8": "LOW",
+    "12-8": "LOW",
+    "13-8": "LOW",
+    "1-2": "EXPENSIVE",
+    "2-2": "EXPENSIVE",
+    "3-2": "EXPENSIVE",
+    "4-2": "EXPENSIVE",
+    "5-2": "EXPENSIVE",
+    "6-2": "EXPENSIVE",
+    "7-2": "EXPENSIVE",
+    "8-2": "STANDARD",
+    "9-2": "EXPENSIVE",
+    "10-2": "STANDARD",
+    "11-2": "EXPENSIVE",
+    "12-2": "EXPENSIVE",
+    "13-2": "EXPENSIVE",
+    "1-11": "LOW",
+    "2-11": "LOW",
+    "3-11": "LOW",
+    "4-11": "LOW",
+    "5-11": "LOW",
+    "6-11": "LOW",
+    "7-11": "LOW",
+    "8-11": "LOW",
+    "9-11": "LOW",
+    "10-11": "LOW",
+    "11-11": "LOW",
+    "12-11": "LOW",
+    "13-11": "LOW",
+    "1-3": "STANDARD",
+    "2-3": "STANDARD",
+    "3-3": "STANDARD",
+    "4-3": "STANDARD",
+    "5-3": "STANDARD",
+    "6-3": "STANDARD",
+    "7-3": "STANDARD",
+    "8-3": "STANDARD",
+    "9-3": "STANDARD",
+    "10-3": "STANDARD",
+    "11-3": "STANDARD",
+    "12-3": "STANDARD",
+    "13-3": "LOW",
+    "1-13": "STANDARD",
+    "2-13": "LOW",
+    "3-13": "LOW",
+    "4-13": "STANDARD",
+    "5-13": "STANDARD",
+    "6-13": "STANDARD",
+    "7-13": "STANDARD",
+    "8-13": "LOW",
+    "9-13": "STANDARD",
+    "10-13": "STANDARD",
+    "11-13": "LOW",
+    "12-13": "STANDARD",
+    "13-13": "STANDARD",
+    "1-9": "STANDARD",
+    "2-9": "STANDARD",
+    "3-9": "LOW",
+    "4-9": "STANDARD",
+    "5-9": "STANDARD",
+    "6-9": "STANDARD",
+    "7-9": "STANDARD",
+    "8-9": "STANDARD",
+    "9-9": "STANDARD",
+    "10-9": "STANDARD",
+    "11-9": "STANDARD",
+    "12-9": "LOW",
+    "13-9": "STANDARD",
+    "1-14": "STANDARD",
+    "2-14": "STANDARD",
+    "3-14": "STANDARD",
+    "4-14": "STANDARD",
+    "5-14": "STANDARD",
+    "6-14": "LOW",
+    "7-14": "STANDARD",
+    "8-14": "STANDARD",
+    "9-14": "STANDARD",
+    "10-14": "STANDARD",
+    "11-14": "STANDARD",
+    "12-14": "STANDARD",
+    "13-14": "STANDARD",
+    "1-27": "LOW",
+    "2-27": "LOW",
+    "3-27": "LOW",
+    "4-27": "LOW",
+    "5-27": "LOW",
+    "6-27": "LOW",
+    "7-27": "LOW",
+    "8-27": "LOW",
+    "9-27": "CHEAP",
+    "10-27": "LOW",
+    "11-27": "CHEAP",
+    "12-27": "LOW",
+    "13-27": "LOW",
+    "1-21": "STANDARD",
+    "2-21": "STANDARD",
+    "3-21": "LOW",
+    "4-21": "STANDARD",
+    "5-21": "STANDARD",
+    "6-21": "STANDARD",
+    "7-21": "LOW",
+    "8-21": "STANDARD",
+    "9-21": "STANDARD",
+    "10-21": "STANDARD",
+    "11-21": "STANDARD",
+    "12-21": "STANDARD",
+    "13-21": "STANDARD",
+    "1-15": "EXPENSIVE",
+    "2-15": "EXPENSIVE",
+    "3-15": "EXPENSIVE",
+    "4-15": "EXPENSIVE",
+    "5-15": "EXPENSIVE",
+    "6-15": "EXPENSIVE",
+    "7-15": "EXPENSIVE",
+    "8-15": "EXPENSIVE",
+    "9-15": "STANDARD",
+    "10-15": "STANDARD",
+    "11-15": "EXPENSIVE",
+    "12-15": "EXPENSIVE",
+    "13-15": "EXPENSIVE",
+    "1-16": "EXPENSIVE",
+    "2-16": "EXPENSIVE",
+    "3-16": "EXPENSIVE",
+    "4-16": "EXPENSIVE",
+    "5-16": "EXPENSIVE",
+    "6-16": "EXPENSIVE",
+    "7-16": "EXPENSIVE",
+    "8-16": "EXPENSIVE",
+    "9-16": "EXPENSIVE",
+    "10-16": "EXPENSIVE",
+    "11-16": "EXPENSIVE",
+    "12-16": "STANDARD",
+    "13-16": "EXPENSIVE",
+    "1-17": "LOW",
+    "2-17": "LOW",
+    "3-17": "LOW",
+    "4-17": "LOW",
+    "5-17": "LOW",
+    "6-17": "LOW",
+    "7-17": "LOW",
+    "8-17": "LOW",
+    "9-17": "LOW",
+    "10-17": "LOW",
+    "11-17": "LOW",
+    "12-17": "LOW",
+    "13-17": "LOW",
+    "1-18": "STANDARD",
+    "2-18": "STANDARD",
+    "3-18": "STANDARD",
+    "4-18": "LOW",
+    "5-18": "STANDARD",
+    "6-18": "STANDARD",
+    "7-18": "STANDARD",
+    "8-18": "STANDARD",
+    "9-18": "STANDARD",
+    "10-18": "STANDARD",
+    "11-18": "STANDARD",
+    "12-18": "STANDARD",
+    "13-18": "LOW",
+    "1-10": "EXPENSIVE",
+    "2-10": "EXPENSIVE",
+    "3-10": "EXPENSIVE",
+    "4-10": "EXPENSIVE",
+    "5-10": "EXPENSIVE",
+    "6-10": "EXPENSIVE",
+    "7-10": "STANDARD",
+    "8-10": "EXPENSIVE",
+    "9-10": "EXPENSIVE",
+    "10-10": "EXPENSIVE",
+    "11-10": "EXPENSIVE",
+    "12-10": "EXPENSIVE",
+    "13-10": "EXPENSIVE",
+    "1-4": "LOW",
+    "2-4": "LOW",
+    "3-4": "LOW",
+    "4-4": "CHEAP",
+    "5-4": "LOW",
+    "6-4": "LOW",
+    "7-4": "LOW",
+    "8-4": "LOW",
+    "9-4": "LOW",
+    "10-4": "LOW",
+    "11-4": "LOW",
+    "12-4": "LOW",
+    "13-4": "CHEAP",
+    "1-19": "STANDARD",
+    "2-19": "LOW",
+    "3-19": "LOW",
+    "4-19": "STANDARD",
+    "5-19": "STANDARD",
+    "6-19": "STANDARD",
+    "7-19": "STANDARD",
+    "8-19": "LOW",
+    "9-19": "STANDARD",
+    "10-19": "STANDARD",
+    "11-19": "STANDARD",
+    "12-19": "STANDARD",
+    "13-19": "STANDARD",
+    "1-23": "STANDARD",
+    "2-23": "STANDARD",
+    "3-23": "STANDARD",
+    "4-23": "STANDARD",
+    "5-23": "STANDARD",
+    "6-23": "STANDARD",
+    "7-23": "STANDARD",
+    "8-23": "STANDARD",
+    "9-23": "LOW",
+    "10-23": "STANDARD",
+    "11-23": "STANDARD",
+    "12-23": "STANDARD",
+    "13-23": "STANDARD",
+    "1-28": "LOW",
+    "2-28": "LOW",
+    "3-28": "LOW",
+    "4-28": "LOW",
+    "5-28": "LOW",
+    "6-28": "LOW",
+    "7-28": "LOW",
+    "8-28": "LOW",
+    "9-28": "LOW",
+    "10-28": "LOW",
+    "11-28": "LOW",
+    "12-28": "LOW",
+    "13-28": "LOW",
+    "1-7": "CHEAP",
+    "2-7": "LOW",
+    "3-7": "LOW",
+    "4-7": "LOW",
+    "5-7": "LOW",
+    "6-7": "LOW",
+    "7-7": "LOW",
+    "8-7": "CHEAP",
+    "9-7": "LOW",
+    "10-7": "LOW",
+    "11-7": "LOW",
+    "12-7": "CHEAP",
+    "13-7": "LOW",
+    "1-20": "STANDARD",
+    "2-20": "EXPENSIVE",
+    "3-20": "EXPENSIVE",
+    "4-20": "EXPENSIVE",
+    "5-20": "EXPENSIVE",
+    "6-20": "EXPENSIVE",
+    "7-20": "STANDARD",
+    "8-20": "EXPENSIVE",
+    "9-20": "EXPENSIVE",
+    "10-20": "EXPENSIVE",
+    "11-20": "STANDARD",
+    "12-20": "EXPENSIVE",
+    "13-20": "EXPENSIVE",
+    "1-22": "STANDARD",
+    "2-22": "STANDARD",
+    "3-22": "STANDARD",
+    "4-22": "STANDARD",
+    "5-22": "STANDARD",
+    "6-22": "STANDARD",
+    "7-22": "STANDARD",
+    "8-22": "STANDARD",
+    "9-22": "STANDARD",
+    "10-22": "STANDARD",
+    "11-22": "STANDARD",
+    "12-22": "STANDARD",
+    "13-22": "STANDARD",
+    "1-25": "STANDARD",
+    "2-25": "STANDARD",
+    "3-25": "STANDARD",
+    "4-25": "STANDARD",
+    "5-25": "STANDARD",
+    "6-25": "LOW",
+    "7-25": "STANDARD",
+    "8-25": "STANDARD",
+    "9-25": "STANDARD",
+    "10-25": "STANDARD",
+    "11-25": "STANDARD",
+    "12-25": "STANDARD",
+    "13-25": "STANDARD",
+    "1-1": "EXPENSIVE",
+    "2-1": "EXPENSIVE",
+    "3-1": "EXPENSIVE",
+    "4-1": "EXPENSIVE",
+    "5-1": "EXPENSIVE",
+    "6-1": "STANDARD",
+    "7-1": "EXPENSIVE",
+    "8-1": "EXPENSIVE",
+    "9-1": "EXPENSIVE",
+    "10-1": "STANDARD",
+    "11-1": "EXPENSIVE",
+    "12-1": "EXPENSIVE",
+    "13-1": "EXPENSIVE",
+    "1-5": "LOW",
+    "2-5": "LOW",
+    "3-5": "LOW",
+    "4-5": "LOW",
+    "5-5": "CHEAP",
+    "6-5": "CHEAP",
+    "7-5": "LOW",
+    "8-5": "LOW",
+    "9-5": "LOW",
+    "10-5": "LOW",
+    "11-5": "LOW",
+    "12-5": "LOW",
+    "13-5": "LOW",
+    "1-24": "EXPENSIVE",
+    "2-24": "EXPENSIVE",
+    "3-24": "EXPENSIVE",
+    "4-24": "EXPENSIVE",
+    "5-24": "STANDARD",
+    "6-24": "EXPENSIVE",
+    "7-24": "EXPENSIVE",
+    "8-24": "EXPENSIVE",
+    "9-24": "EXPENSIVE",
+    "10-24": "EXPENSIVE",
+    "11-24": "EXPENSIVE",
+    "12-24": "EXPENSIVE",
+    "13-24": "EXPENSIVE",
+    "1-6": "STANDARD",
+    "2-6": "STANDARD",
+    "3-6": "STANDARD",
+    "4-6": "LOW",
+    "5-6": "STANDARD",
+    "6-6": "STANDARD",
+    "7-6": "LOW",
+    "8-6": "STANDARD",
+    "9-6": "STANDARD",
+    "10-6": "STANDARD",
+    "11-6": "STANDARD",
+    "12-6": "STANDARD",
+    "13-6": "LOW",
+    "1-12": "STANDARD",
+    "2-12": "LOW",
+    "3-12": "STANDARD",
+    "4-12": "STANDARD",
+    "5-12": "STANDARD",
+    "6-12": "STANDARD",
+    "7-12": "STANDARD",
+    "8-12": "STANDARD",
+    "9-12": "LOW",
+    "10-12": "LOW",
+    "11-12": "STANDARD",
+    "12-12": "STANDARD",
+    "13-12": "STANDARD",
+    "1-26": "LOW",
+    "2-26": "LOW",
+    "3-26": "LOW",
+    "4-26": "LOW",
+    "5-26": "LOW",
+    "6-26": "LOW",
+    "7-26": "LOW",
+    "8-26": "LOW",
+    "9-26": "LOW",
+    "10-26": "LOW",
+    "11-26": "LOW",
+    "12-26": "CHEAP",
+    "13-26": "LOW",
+    "1-29": "STANDARD",
+    "2-29": "STANDARD",
+    "1-30": "STANDARD",
+    "2-30": "EXPENSIVE",
+    "1-31": "EXPENSIVE",
+    "2-31": "STANDARD",
+    "1-33": "EXPENSIVE",
+    "2-33": "STANDARD",
+    "1-32": "STANDARD",
+    "2-32": "EXPENSIVE"
+  },
+  "skillCurves": {
+    "1-102": "CURVE_SW_3",
+    "1-103": "CURVE_SW_2",
+    "2-102": "CURVE_SW_3",
+    "2-103": "CURVE_SW_4",
+    "3-102": "CURVE_SW_3",
+    "3-103": "CURVE_SW_4",
+    "4-102": "CURVE_SW_3",
+    "4-103": "CURVE_SW_2",
+    "5-102": "CURVE_SW_3",
+    "5-103": "CURVE_SW_2",
+    "6-102": "CURVE_SW_3",
+    "6-103": "CURVE_SW_4",
+    "7-102": "CURVE_SW_1",
+    "7-103": "CURVE_SW_4",
+    "8-102": "CURVE_SW_3",
+    "8-103": "CURVE_SW_4",
+    "9-102": "CURVE_SW_3",
+    "9-103": "CURVE_SW_4",
+    "10-102": "CURVE_SW_1",
+    "10-103": "CURVE_SW_4",
+    "11-102": "CURVE_SW_3",
+    "11-103": "CURVE_SW_4",
+    "12-102": "CURVE_SW_1",
+    "12-103": "CURVE_SW_2",
+    "13-102": "CURVE_SW_1",
+    "13-103": "CURVE_SW_2"
+  },
+  "playstyles": [
+    {
+      "id": 0,
+      "engName": "Finesse Shot",
+      "icon": "/images/playstyles/icontrait0.png",
+      "category": "Scoring",
+      "image": "/builder/playstyles/0.png",
+      "plusImage": "/builder/playstyles/0-plus.png"
+    },
+    {
+      "id": 1,
+      "engName": "Chip Shot",
+      "icon": "/images/playstyles/icontrait1.png",
+      "category": "Scoring",
+      "image": "/builder/playstyles/1.png",
+      "plusImage": "/builder/playstyles/1-plus.png"
+    },
+    {
+      "id": 2,
+      "engName": "Power Shot",
+      "icon": "/images/playstyles/icontrait2.png",
+      "category": "Scoring",
+      "image": "/builder/playstyles/2.png",
+      "plusImage": "/builder/playstyles/2-plus.png"
+    },
+    {
+      "id": 3,
+      "engName": "Dead Ball",
+      "icon": "/images/playstyles/icontrait3.png",
+      "category": "Scoring",
+      "image": "/builder/playstyles/3.png",
+      "plusImage": "/builder/playstyles/3-plus.png"
+    },
+    {
+      "id": 4,
+      "engName": "Precision Header",
+      "icon": "/images/playstyles/icontrait4.png",
+      "category": "Scoring",
+      "image": "/builder/playstyles/4.png",
+      "plusImage": "/builder/playstyles/4-plus.png"
+    },
+    {
+      "id": 5,
+      "engName": "Acrobatic",
+      "icon": "/images/playstyles/icontrait5.png",
+      "category": "Scoring",
+      "image": "/builder/playstyles/5.png",
+      "plusImage": "/builder/playstyles/5-plus.png"
+    },
+    {
+      "id": 6,
+      "engName": "Low Driven Shot",
+      "icon": "/images/playstyles/icontrait6.png",
+      "category": "Scoring",
+      "image": "/builder/playstyles/6.png",
+      "plusImage": "/builder/playstyles/6-plus.png"
+    },
+    {
+      "id": 7,
+      "engName": "Gamechanger",
+      "icon": "/images/playstyles/icontrait7.png",
+      "category": "Scoring",
+      "image": "/builder/playstyles/7.png",
+      "plusImage": "/builder/playstyles/7-plus.png"
+    },
+    {
+      "id": 8,
+      "engName": "Incisive Pass",
+      "icon": "/images/playstyles/icontrait8.png",
+      "category": "Passing",
+      "image": "/builder/playstyles/8.png",
+      "plusImage": "/builder/playstyles/8-plus.png"
+    },
+    {
+      "id": 9,
+      "engName": "Pinged Pass",
+      "icon": "/images/playstyles/icontrait9.png",
+      "category": "Passing",
+      "image": "/builder/playstyles/9.png",
+      "plusImage": "/builder/playstyles/9-plus.png"
+    },
+    {
+      "id": 10,
+      "engName": "Long Ball Pass",
+      "icon": "/images/playstyles/icontrait10.png",
+      "category": "Passing",
+      "image": "/builder/playstyles/10.png",
+      "plusImage": "/builder/playstyles/10-plus.png"
+    },
+    {
+      "id": 11,
+      "engName": "Tiki Taka",
+      "icon": "/images/playstyles/icontrait11.png",
+      "category": "Passing",
+      "image": "/builder/playstyles/11.png",
+      "plusImage": "/builder/playstyles/11-plus.png"
+    },
+    {
+      "id": 12,
+      "engName": "Whipped Pass",
+      "icon": "/images/playstyles/icontrait12.png",
+      "category": "Passing",
+      "image": "/builder/playstyles/12.png",
+      "plusImage": "/builder/playstyles/12-plus.png"
+    },
+    {
+      "id": 13,
+      "engName": "Inventive",
+      "icon": "/images/playstyles/icontrait13.png",
+      "category": "Passing",
+      "image": "/builder/playstyles/13.png",
+      "plusImage": "/builder/playstyles/13-plus.png"
+    },
+    {
+      "id": 14,
+      "engName": "Jockey",
+      "icon": "/images/playstyles/icontrait14.png",
+      "category": "Defending",
+      "image": "/builder/playstyles/14.png",
+      "plusImage": "/builder/playstyles/14-plus.png"
+    },
+    {
+      "id": 15,
+      "engName": "Block",
+      "icon": "/images/playstyles/icontrait15.png",
+      "category": "Defending",
+      "image": "/builder/playstyles/15.png",
+      "plusImage": "/builder/playstyles/15-plus.png"
+    },
+    {
+      "id": 16,
+      "engName": "Intercept",
+      "icon": "/images/playstyles/icontrait16.png",
+      "category": "Defending",
+      "image": "/builder/playstyles/16.png",
+      "plusImage": "/builder/playstyles/16-plus.png"
+    },
+    {
+      "id": 17,
+      "engName": "Anticipate",
+      "icon": "/images/playstyles/icontrait17.png",
+      "category": "Defending",
+      "image": "/builder/playstyles/17.png",
+      "plusImage": "/builder/playstyles/17-plus.png"
+    },
+    {
+      "id": 18,
+      "engName": "Slide Tackle",
+      "icon": "/images/playstyles/icontrait18.png",
+      "category": "Defending",
+      "image": "/builder/playstyles/18.png",
+      "plusImage": "/builder/playstyles/18-plus.png"
+    },
+    {
+      "id": 19,
+      "engName": "Aerial Fortress",
+      "icon": "/images/playstyles/icontrait19.png",
+      "category": "Defending",
+      "image": "/builder/playstyles/19.png",
+      "plusImage": "/builder/playstyles/19-plus.png"
+    },
+    {
+      "id": 20,
+      "engName": "Technical",
+      "icon": "/images/playstyles/icontrait20.png",
+      "category": "Ball Control",
+      "image": "/builder/playstyles/20.png",
+      "plusImage": "/builder/playstyles/20-plus.png"
+    },
+    {
+      "id": 21,
+      "engName": "Rapid",
+      "icon": "/images/playstyles/icontrait21.png",
+      "category": "Ball Control",
+      "image": "/builder/playstyles/21.png",
+      "plusImage": "/builder/playstyles/21-plus.png"
+    },
+    {
+      "id": 22,
+      "engName": "First Touch",
+      "icon": "/images/playstyles/icontrait22.png",
+      "category": "Ball Control",
+      "image": "/builder/playstyles/22.png",
+      "plusImage": "/builder/playstyles/22-plus.png"
+    },
+    {
+      "id": 23,
+      "engName": "Trickster",
+      "icon": "/images/playstyles/icontrait23.png",
+      "category": "Ball Control",
+      "image": "/builder/playstyles/23.png",
+      "plusImage": "/builder/playstyles/23-plus.png"
+    },
+    {
+      "id": 24,
+      "engName": "Press Proven",
+      "icon": "/images/playstyles/icontrait24.png",
+      "category": "Ball Control",
+      "image": "/builder/playstyles/24.png",
+      "plusImage": "/builder/playstyles/24-plus.png"
+    },
+    {
+      "id": 25,
+      "engName": "Quick Step",
+      "icon": "/images/playstyles/icontrait25.png",
+      "category": "Physical",
+      "image": "/builder/playstyles/25.png",
+      "plusImage": "/builder/playstyles/25-plus.png"
+    },
+    {
+      "id": 26,
+      "engName": "Relentless",
+      "icon": "/images/playstyles/icontrait26.png",
+      "category": "Physical",
+      "image": "/builder/playstyles/26.png",
+      "plusImage": "/builder/playstyles/26-plus.png"
+    },
+    {
+      "id": 27,
+      "engName": "Long Throw",
+      "icon": "/images/playstyles/icontrait27.png",
+      "category": "Physical",
+      "image": "/builder/playstyles/27.png",
+      "plusImage": "/builder/playstyles/27-plus.png"
+    },
+    {
+      "id": 28,
+      "engName": "Bruiser",
+      "icon": "/images/playstyles/icontrait28.png",
+      "category": "Physical",
+      "image": "/builder/playstyles/28.png",
+      "plusImage": "/builder/playstyles/28-plus.png"
+    },
+    {
+      "id": 29,
+      "engName": "Enforcer",
+      "icon": "/images/playstyles/icontrait29.png",
+      "category": "Physical",
+      "image": "/builder/playstyles/29.png",
+      "plusImage": "/builder/playstyles/29-plus.png"
+    },
+    {
+      "id": 30,
+      "engName": "Far Throw",
+      "icon": "/images/playstyles/icontrait30.png",
+      "category": "Physical",
+      "image": "/builder/playstyles/30.png",
+      "plusImage": "/builder/playstyles/30-plus.png"
+    },
+    {
+      "id": 31,
+      "engName": "Footwork",
+      "icon": "/images/playstyles/icontrait31.png",
+      "category": "Goalkeeping",
+      "image": "/builder/playstyles/31.png",
+      "plusImage": "/builder/playstyles/31-plus.png"
+    },
+    {
+      "id": 32,
+      "engName": "Cross Claimer",
+      "icon": "/images/playstyles/icontrait32.png",
+      "category": "Goalkeeping",
+      "image": "/builder/playstyles/32.png",
+      "plusImage": "/builder/playstyles/32-plus.png"
+    },
+    {
+      "id": 33,
+      "engName": "1v1 Close Down",
+      "icon": "/images/playstyles/icontrait33.png",
+      "category": "Goalkeeping",
+      "image": "/builder/playstyles/33.png",
+      "plusImage": "/builder/playstyles/33-plus.png"
+    },
+    {
+      "id": 34,
+      "engName": "Far Reach",
+      "icon": "/images/playstyles/icontrait34.png",
+      "category": "Goalkeeping",
+      "image": "/builder/playstyles/34.png",
+      "plusImage": "/builder/playstyles/34-plus.png"
+    },
+    {
+      "id": 35,
+      "engName": "Deflector",
+      "icon": "/images/playstyles/icontrait35.png",
+      "category": "Goalkeeping",
+      "image": "/builder/playstyles/35.png",
+      "plusImage": "/builder/playstyles/35-plus.png"
+    }
+  ],
+  "specializations": [
+    {
+      "id": 1,
+      "nameKey": "specialization.shot_stopper_plus",
+      "nameEng": "Shot Stopper+",
+      "archetypeId": 1,
+      "sig_playstyle": 32
+    },
+    {
+      "id": 2,
+      "nameKey": "specialization.spider",
+      "nameEng": "Spider",
+      "archetypeId": 1,
+      "sig_playstyle": 33
+    },
+    {
+      "id": 3,
+      "nameKey": "specialization.octopus",
+      "nameEng": "Octopus",
+      "archetypeId": 1,
+      "sig_playstyle": 31
+    },
+    {
+      "id": 4,
+      "nameKey": "specialization.sweeper_keeper_plus",
+      "nameEng": "Sweeper Keeper+",
+      "archetypeId": 2,
+      "sig_playstyle": 30
+    },
+    {
+      "id": 5,
+      "nameKey": "specialization.launcher",
+      "nameEng": "Launcher",
+      "archetypeId": 2,
+      "sig_playstyle": 10
+    },
+    {
+      "id": 6,
+      "nameKey": "specialization.extra",
+      "nameEng": "Extra",
+      "archetypeId": 2,
+      "sig_playstyle": 24
+    },
+    {
+      "id": 7,
+      "nameKey": "specialization.progressor_plus",
+      "nameEng": "Progressor+",
+      "archetypeId": 3,
+      "sig_playstyle": 14
+    },
+    {
+      "id": 8,
+      "nameKey": "specialization.pioneer",
+      "nameEng": "Pioneer",
+      "archetypeId": 3,
+      "sig_playstyle": 9
+    },
+    {
+      "id": 9,
+      "nameKey": "specialization.janitor",
+      "nameEng": "Janitor",
+      "archetypeId": 3,
+      "sig_playstyle": 25
+    },
+    {
+      "id": 10,
+      "nameKey": "specialization.boss_plus",
+      "nameEng": "Boss+",
+      "archetypeId": 4,
+      "sig_playstyle": 18
+    },
+    {
+      "id": 11,
+      "nameKey": "specialization.enforcer",
+      "nameEng": "Enforcer",
+      "archetypeId": 4,
+      "sig_playstyle": 24
+    },
+    {
+      "id": 12,
+      "nameKey": "specialization.capitano",
+      "nameEng": "Capitano",
+      "archetypeId": 4,
+      "sig_playstyle": 15
+    },
+    {
+      "id": 13,
+      "nameKey": "specialization.disruptor_plus",
+      "nameEng": "Disruptor+",
+      "archetypeId": 5,
+      "sig_playstyle": 16
+    },
+    {
+      "id": 14,
+      "nameKey": "specialization.everywhere",
+      "nameEng": "Everywhere",
+      "archetypeId": 5,
+      "sig_playstyle": 18
+    },
+    {
+      "id": 15,
+      "nameKey": "specialization.gadget",
+      "nameEng": "Gadget",
+      "archetypeId": 5,
+      "sig_playstyle": 28
+    },
+    {
+      "id": 16,
+      "nameKey": "specialization.marauder_plus",
+      "nameEng": "Marauder+",
+      "archetypeId": 6,
+      "sig_playstyle": 18
+    },
+    {
+      "id": 17,
+      "nameKey": "specialization.speedster",
+      "nameEng": "Speedster",
+      "archetypeId": 6,
+      "sig_playstyle": 21
+    },
+    {
+      "id": 18,
+      "nameKey": "specialization.athlete",
+      "nameEng": "Athlete",
+      "archetypeId": 6,
+      "sig_playstyle": 28
+    },
+    {
+      "id": 19,
+      "nameKey": "specialization.recycler_plus",
+      "nameEng": "Recycler+",
+      "archetypeId": 7,
+      "sig_playstyle": 9
+    },
+    {
+      "id": 20,
+      "nameKey": "specialization.driver",
+      "nameEng": "Driver",
+      "archetypeId": 7,
+      "sig_playstyle": 29
+    },
+    {
+      "id": 21,
+      "nameKey": "specialization.thief",
+      "nameEng": "Thief",
+      "archetypeId": 7,
+      "sig_playstyle": 17
+    },
+    {
+      "id": 22,
+      "nameKey": "specialization.maestro_plus",
+      "nameEng": "Maestro+",
+      "archetypeId": 8,
+      "sig_playstyle": 20
+    },
+    {
+      "id": 23,
+      "nameKey": "specialization.crasher",
+      "nameEng": "Crasher",
+      "archetypeId": 8,
+      "sig_playstyle": 22
+    },
+    {
+      "id": 24,
+      "nameKey": "specialization.heartbeat",
+      "nameEng": "Heartbeat",
+      "archetypeId": 8,
+      "sig_playstyle": 26
+    },
+    {
+      "id": 25,
+      "nameKey": "specialization.creator_plus",
+      "nameEng": "Creator+",
+      "archetypeId": 9,
+      "sig_playstyle": 12
+    },
+    {
+      "id": 26,
+      "nameKey": "specialization.architect",
+      "nameEng": "Architect",
+      "archetypeId": 9,
+      "sig_playstyle": 3
+    },
+    {
+      "id": 27,
+      "nameKey": "specialization.sniper",
+      "nameEng": "Sniper",
+      "archetypeId": 9,
+      "sig_playstyle": 2
+    },
+    {
+      "id": 28,
+      "nameKey": "specialization.spark_plus",
+      "nameEng": "Spark+",
+      "archetypeId": 10,
+      "sig_playstyle": 25
+    },
+    {
+      "id": 29,
+      "nameKey": "specialization.joker",
+      "nameEng": "Joker",
+      "archetypeId": 10,
+      "sig_playstyle": 12
+    },
+    {
+      "id": 30,
+      "nameKey": "specialization.ace",
+      "nameEng": "Ace",
+      "archetypeId": 10,
+      "sig_playstyle": 1
+    },
+    {
+      "id": 31,
+      "nameKey": "specialization.magician_plus",
+      "nameEng": "Magician+",
+      "archetypeId": 11,
+      "sig_playstyle": 22
+    },
+    {
+      "id": 32,
+      "nameKey": "specialization.hotshot",
+      "nameEng": "Hotshot",
+      "archetypeId": 11,
+      "sig_playstyle": 2
+    },
+    {
+      "id": 33,
+      "nameKey": "specialization.invader",
+      "nameEng": "Invader",
+      "archetypeId": 11,
+      "sig_playstyle": 8
+    },
+    {
+      "id": 34,
+      "nameKey": "specialization.finisher_plus",
+      "nameEng": "Finisher+",
+      "archetypeId": 12,
+      "sig_playstyle": 1
+    },
+    {
+      "id": 35,
+      "nameKey": "specialization.presser",
+      "nameEng": "Presser",
+      "archetypeId": 12,
+      "sig_playstyle": 26
+    },
+    {
+      "id": 36,
+      "nameKey": "specialization.hunter",
+      "nameEng": "Hunter",
+      "archetypeId": 12,
+      "sig_playstyle": 7
+    },
+    {
+      "id": 37,
+      "nameKey": "specialization.target_plus",
+      "nameEng": "Target+",
+      "archetypeId": 13,
+      "sig_playstyle": 5
+    },
+    {
+      "id": 38,
+      "nameKey": "specialization.roamer",
+      "nameEng": "Roamer",
+      "archetypeId": 13,
+      "sig_playstyle": 8
+    },
+    {
+      "id": 39,
+      "nameKey": "specialization.runner",
+      "nameEng": "Runner",
+      "archetypeId": 13,
+      "sig_playstyle": 29
+    }
+  ],
+  "playstyleRequirements": [
+    {
+      "playstyleId": 0,
+      "attributeId": 12,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 0,
+      "attributeId": 16,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 0,
+      "attributeId": 27,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 1,
+      "attributeId": 7,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 1,
+      "attributeId": 9,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 1,
+      "attributeId": 13,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 2,
+      "attributeId": 16,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 2,
+      "attributeId": 22,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 2,
+      "attributeId": 23,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 3,
+      "attributeId": 14,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 3,
+      "attributeId": 17,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 3,
+      "attributeId": 22,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 4,
+      "attributeId": 4,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 4,
+      "attributeId": 6,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 4,
+      "attributeId": 18,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 5,
+      "attributeId": 2,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 5,
+      "attributeId": 7,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 5,
+      "attributeId": 26,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 6,
+      "attributeId": 9,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 6,
+      "attributeId": 16,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 6,
+      "attributeId": 22,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 7,
+      "attributeId": 9,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 7,
+      "attributeId": 16,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 7,
+      "attributeId": 27,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 8,
+      "attributeId": 12,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 8,
+      "attributeId": 19,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 8,
+      "attributeId": 27,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 9,
+      "attributeId": 19,
+      "requiredValue": 85
+    },
+    {
+      "playstyleId": 9,
+      "attributeId": 20,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 10,
+      "attributeId": 12,
+      "requiredValue": 85
+    },
+    {
+      "playstyleId": 10,
+      "attributeId": 19,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 11,
+      "attributeId": 7,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 11,
+      "attributeId": 13,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 11,
+      "attributeId": 20,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 12,
+      "attributeId": 14,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 12,
+      "attributeId": 19,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 13,
+      "attributeId": 9,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 13,
+      "attributeId": 19,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 13,
+      "attributeId": 27,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 14,
+      "attributeId": 2,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 14,
+      "attributeId": 21,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 14,
+      "attributeId": 24,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 15,
+      "attributeId": 2,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 15,
+      "attributeId": 6,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 15,
+      "attributeId": 7,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 16,
+      "attributeId": 8,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 16,
+      "attributeId": 10,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 17,
+      "attributeId": 3,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 17,
+      "attributeId": 21,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 17,
+      "attributeId": 24,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 18,
+      "attributeId": 8,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 18,
+      "attributeId": 25,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 19,
+      "attributeId": 4,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 19,
+      "attributeId": 18,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 20,
+      "attributeId": 3,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 20,
+      "attributeId": 13,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 20,
+      "attributeId": 15,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 21,
+      "attributeId": 0,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 21,
+      "attributeId": 1,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 21,
+      "attributeId": 15,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 22,
+      "attributeId": 9,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 22,
+      "attributeId": 13,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 23,
+      "attributeId": 0,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 23,
+      "attributeId": 2,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 23,
+      "attributeId": 15,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 24,
+      "attributeId": 6,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 24,
+      "attributeId": 9,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 24,
+      "attributeId": 13,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 25,
+      "attributeId": 0,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 25,
+      "attributeId": 1,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 25,
+      "attributeId": 5,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 26,
+      "attributeId": 2,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 26,
+      "attributeId": 5,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 27,
+      "attributeId": 6,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 27,
+      "attributeId": 12,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 28,
+      "attributeId": 6,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 28,
+      "attributeId": 8,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 28,
+      "attributeId": 21,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 29,
+      "attributeId": 3,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 29,
+      "attributeId": 6,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 29,
+      "attributeId": 13,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 30,
+      "attributeId": 12,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 30,
+      "attributeId": 19,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 30,
+      "attributeId": 31,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 31,
+      "attributeId": 2,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 31,
+      "attributeId": 3,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 31,
+      "attributeId": 32,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 32,
+      "attributeId": 4,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 32,
+      "attributeId": 6,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 32,
+      "attributeId": 33,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 33,
+      "attributeId": 0,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 33,
+      "attributeId": 2,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 33,
+      "attributeId": 8,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 34,
+      "attributeId": 2,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 34,
+      "attributeId": 7,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 34,
+      "attributeId": 29,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 35,
+      "attributeId": 6,
+      "requiredValue": 75
+    },
+    {
+      "playstyleId": 35,
+      "attributeId": 29,
+      "requiredValue": 80
+    },
+    {
+      "playstyleId": 35,
+      "attributeId": 32,
+      "requiredValue": 75
+    }
+  ],
+  "facilities": [
+    {
+      "id": 0,
+      "name_eng": "Equipment Manager",
+      "type": 1,
+      "get_Attribute_1": 4,
+      "get_Attribute_2": 5,
+      "get_PlayStyle": 5,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 4,
+      "level3_attr3_value": 4,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 1,
+      "name_eng": "Head Groundskeeper",
+      "type": 1,
+      "get_Attribute_1": 13,
+      "get_Attribute_2": 3,
+      "get_PlayStyle": 24,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 2,
+      "name_eng": "Performance Analyst",
+      "type": 1,
+      "get_Attribute_1": 20,
+      "get_Attribute_2": 12,
+      "get_PlayStyle": 11,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 3,
+      "name_eng": "Scout",
+      "type": 1,
+      "get_Attribute_1": 11,
+      "get_Attribute_2": 21,
+      "get_PlayStyle": 19,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 7,
+      "level3_attr3_value": 7,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1100000,
+      "ai": false
+    },
+    {
+      "id": 4,
+      "name_eng": "Sports Psychologist",
+      "type": 1,
+      "get_Attribute_1": 9,
+      "get_Attribute_2": 8,
+      "get_PlayStyle": 14,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1100000,
+      "ai": false
+    },
+    {
+      "id": 5,
+      "name_eng": "Sports Scientist",
+      "type": 1,
+      "get_Attribute_1": 0,
+      "get_Attribute_2": 7,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": 27,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 6,
+      "name_eng": "Att. Tactical Coach",
+      "type": 2,
+      "get_Attribute_1": 12,
+      "get_Attribute_2": 11,
+      "get_PlayStyle": 8,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1100000,
+      "ai": false
+    },
+    {
+      "id": 7,
+      "name_eng": "Def. Tactical Coach",
+      "type": 2,
+      "get_Attribute_1": 10,
+      "get_Attribute_2": 21,
+      "get_PlayStyle": 17,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1100000,
+      "ai": false
+    },
+    {
+      "id": 8,
+      "name_eng": "Fitness Coach",
+      "type": 2,
+      "get_Attribute_1": 5,
+      "get_Attribute_2": 4,
+      "get_PlayStyle": 26,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 9,
+      "name_eng": "GK Coach",
+      "type": 2,
+      "get_Attribute_1": 33,
+      "get_Attribute_2": 29,
+      "get_PlayStyle": 32,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1100000,
+      "ai": false
+    },
+    {
+      "id": 10,
+      "name_eng": "Passing Coach",
+      "type": 2,
+      "get_Attribute_1": 19,
+      "get_Attribute_2": 20,
+      "get_PlayStyle": 6,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 11,
+      "name_eng": "Shooting Coach",
+      "type": 2,
+      "get_Attribute_1": 23,
+      "get_Attribute_2": 16,
+      "get_PlayStyle": 1,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 12,
+      "name_eng": "Tackling Coach",
+      "type": 2,
+      "get_Attribute_1": 25,
+      "get_Attribute_2": 24,
+      "get_PlayStyle": 18,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 13,
+      "name_eng": "Technical Coach",
+      "type": 2,
+      "get_Attribute_1": 15,
+      "get_Attribute_2": 13,
+      "get_PlayStyle": 20,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 14,
+      "name_eng": "Agility Poles",
+      "type": 3,
+      "get_Attribute_1": 2,
+      "get_Attribute_2": 15,
+      "get_PlayStyle": 29,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 15,
+      "name_eng": "Ball Cannons",
+      "type": 3,
+      "get_Attribute_1": 32,
+      "get_Attribute_2": 30,
+      "get_PlayStyle": 30,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1100000,
+      "ai": false
+    },
+    {
+      "id": 16,
+      "name_eng": "Finishing Net",
+      "type": 3,
+      "get_Attribute_1": 16,
+      "get_Attribute_2": 27,
+      "get_PlayStyle": 0,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 17,
+      "name_eng": "Football Tennis Net",
+      "type": 3,
+      "get_Attribute_1": 26,
+      "get_Attribute_2": 18,
+      "get_PlayStyle": 4,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1100000,
+      "ai": false
+    },
+    {
+      "id": 18,
+      "name_eng": "GPS Vests",
+      "type": 3,
+      "get_Attribute_1": 11,
+      "get_Attribute_2": 5,
+      "get_PlayStyle": 18,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 7,
+      "level3_attr3_value": 7,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 19,
+      "name_eng": "Mini Goals",
+      "type": 3,
+      "get_Attribute_1": 16,
+      "get_Attribute_2": 20,
+      "get_PlayStyle": 7,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 20,
+      "name_eng": "Rebounders",
+      "type": 3,
+      "get_Attribute_1": 7,
+      "get_Attribute_2": 26,
+      "get_PlayStyle": 13,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1100000,
+      "ai": false
+    },
+    {
+      "id": 21,
+      "name_eng": "Set Piece Mannequins",
+      "type": 3,
+      "get_Attribute_1": 17,
+      "get_Attribute_2": 28,
+      "get_PlayStyle": 3,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 22,
+      "name_eng": "Speed Parachute",
+      "type": 3,
+      "get_Attribute_1": 0,
+      "get_Attribute_2": 1,
+      "get_PlayStyle": 25,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 1,
+      "level1_attr2_value": 1,
+      "level2_attr1_value": 2,
+      "level2_attr2_value": 2,
+      "level3_attr1_value": 3,
+      "level3_attr3_value": 3,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 23,
+      "name_eng": "Compression Boots",
+      "type": 3,
+      "get_Attribute_1": 22,
+      "get_Attribute_2": 6,
+      "get_PlayStyle": 9,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 24,
+      "name_eng": "Running Track",
+      "type": 4,
+      "get_Attribute_1": 1,
+      "get_Attribute_2": 5,
+      "get_PlayStyle": 21,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 1,
+      "level1_attr2_value": 1,
+      "level2_attr1_value": 2,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 3,
+      "level3_attr3_value": 5,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 25,
+      "name_eng": "Training Pitch",
+      "type": 4,
+      "get_Attribute_1": 19,
+      "get_Attribute_2": 14,
+      "get_PlayStyle": 12,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 26,
+      "name_eng": "Weight Room",
+      "type": 4,
+      "get_Attribute_1": 6,
+      "get_Attribute_2": 4,
+      "get_PlayStyle": 28,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 27,
+      "name_eng": "Yoga Instructor",
+      "type": 4,
+      "get_Attribute_1": 3,
+      "get_Attribute_2": 9,
+      "get_PlayStyle": 22,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 28,
+      "name_eng": "VR Room",
+      "type": 4,
+      "get_Attribute_1": 16,
+      "get_Attribute_2": 20,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": 27,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 4,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 29,
+      "name_eng": "Passing Drill",
+      "type": 2,
+      "get_Attribute_1": 10,
+      "get_Attribute_2": 19,
+      "get_PlayStyle": 16,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 30,
+      "name_eng": "Low Driven Drill",
+      "type": 3,
+      "get_Attribute_1": 3,
+      "get_Attribute_2": 12,
+      "get_PlayStyle": 10,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": false
+    },
+    {
+      "id": 31,
+      "name_eng": "Strength Drill",
+      "type": 2,
+      "get_Attribute_1": 6,
+      "get_Attribute_2": 24,
+      "get_PlayStyle": 15,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 4,
+      "level3_attr3_value": 4,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 32,
+      "name_eng": "Agility Drill",
+      "type": 1,
+      "get_Attribute_1": 2,
+      "get_Attribute_2": 13,
+      "get_PlayStyle": 23,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 3,
+      "level3_attr3_value": 4,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 33,
+      "name_eng": "Quick Finishing Drill",
+      "type": 3,
+      "get_Attribute_1": 1,
+      "get_Attribute_2": 16,
+      "get_PlayStyle": 2,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 3,
+      "level3_attr3_value": 3,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": false
+    },
+    {
+      "id": 76,
+      "name_eng": "Aerial Heading Drill",
+      "type": 3,
+      "get_Attribute_1": 9,
+      "get_Attribute_2": 18,
+      "get_PlayStyle": 4,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 5,
+      "level2_attr2_value": 5,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 500000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 35,
+      "name_eng": "Goalkeeping Coach",
+      "type": 0,
+      "get_Attribute_1": 33,
+      "get_Attribute_2": 29,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": true
+    },
+    {
+      "id": 36,
+      "name_eng": "Ball Cannons",
+      "type": 0,
+      "get_Attribute_1": 32,
+      "get_Attribute_2": 30,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": true
+    },
+    {
+      "id": 37,
+      "name_eng": "Training Dummies",
+      "type": 0,
+      "get_Attribute_1": 33,
+      "get_Attribute_2": 31,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 4,
+      "level3_attr3_value": 4,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 38,
+      "name_eng": "Reaction Balls",
+      "type": 0,
+      "get_Attribute_1": 32,
+      "get_Attribute_2": 33,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1400000,
+      "ai": true
+    },
+    {
+      "id": 39,
+      "name_eng": "Ball Tracking Drill",
+      "type": 0,
+      "get_Attribute_1": 29,
+      "get_Attribute_2": 32,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1200000,
+      "ai": true
+    },
+    {
+      "id": 40,
+      "name_eng": "Trampoline",
+      "type": 0,
+      "get_Attribute_1": 18,
+      "get_Attribute_2": 4,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 41,
+      "name_eng": "AI Speed Parachute",
+      "type": 0,
+      "get_Attribute_1": 0,
+      "get_Attribute_2": 1,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 500000,
+      "level_3_cost": 1000000,
+      "ai": true
+    },
+    {
+      "id": 42,
+      "name_eng": "Strength Drill",
+      "type": 0,
+      "get_Attribute_1": 24,
+      "get_Attribute_2": 6,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 43,
+      "name_eng": "AI Tactical Analyst",
+      "type": 0,
+      "get_Attribute_1": 21,
+      "get_Attribute_2": 8,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 44,
+      "name_eng": "AI GPS Tracking System",
+      "type": 0,
+      "get_Attribute_1": 11,
+      "get_Attribute_2": 0,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 45,
+      "name_eng": "AI Tackling Coach",
+      "type": 0,
+      "get_Attribute_1": 25,
+      "get_Attribute_2": 24,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 46,
+      "name_eng": "AI Trigger Drill",
+      "type": 0,
+      "get_Attribute_1": 14,
+      "get_Attribute_2": 20,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 4,
+      "level3_attr3_value": 4,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1000000,
+      "ai": true
+    },
+    {
+      "id": 47,
+      "name_eng": "AI Head Groundskeeper",
+      "type": 0,
+      "get_Attribute_1": 13,
+      "get_Attribute_2": 3,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 400000,
+      "level_3_cost": 900000,
+      "ai": true
+    },
+    {
+      "id": 48,
+      "name_eng": "Pressure Clearance Drill",
+      "type": 0,
+      "get_Attribute_1": 9,
+      "get_Attribute_2": 19,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 49,
+      "name_eng": "AI Footwork Specialist",
+      "type": 0,
+      "get_Attribute_1": 2,
+      "get_Attribute_2": 13,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 50,
+      "name_eng": "AI Defensive Tactical Coach",
+      "type": 0,
+      "get_Attribute_1": 10,
+      "get_Attribute_2": 21,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 51,
+      "name_eng": "Reaction Lights",
+      "type": 0,
+      "get_Attribute_1": 0,
+      "get_Attribute_2": 7,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 52,
+      "name_eng": "Smart Pitch",
+      "type": 0,
+      "get_Attribute_1": 20,
+      "get_Attribute_2": 12,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 53,
+      "name_eng": "Cones & Markers",
+      "type": 0,
+      "get_Attribute_1": 14,
+      "get_Attribute_2": 27,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 4,
+      "level3_attr3_value": 4,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1000000,
+      "ai": true
+    },
+    {
+      "id": 54,
+      "name_eng": "High-Performance Gym",
+      "type": 0,
+      "get_Attribute_1": 10,
+      "get_Attribute_2": 0,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 55,
+      "name_eng": "Attacking Tactics Coach",
+      "type": 0,
+      "get_Attribute_1": 12,
+      "get_Attribute_2": 11,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 56,
+      "name_eng": "Biomechanics Expert",
+      "type": 0,
+      "get_Attribute_1": 23,
+      "get_Attribute_2": 22,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 57,
+      "name_eng": "AI Technical Coach",
+      "type": 0,
+      "get_Attribute_1": 15,
+      "get_Attribute_2": 13,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 400000,
+      "level_3_cost": 900000,
+      "ai": true
+    },
+    {
+      "id": 58,
+      "name_eng": "Cognitive Trainer",
+      "type": 0,
+      "get_Attribute_1": 14,
+      "get_Attribute_2": 9,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 59,
+      "name_eng": "Assistant Conditioning Coach",
+      "type": 0,
+      "get_Attribute_1": 2,
+      "get_Attribute_2": 26,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 4,
+      "level3_attr3_value": 4,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1000000,
+      "ai": true
+    },
+    {
+      "id": 60,
+      "name_eng": "Weighted Headbands",
+      "type": 0,
+      "get_Attribute_1": 6,
+      "get_Attribute_2": 18,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 61,
+      "name_eng": "Assistant Passing Coach",
+      "type": 0,
+      "get_Attribute_1": 19,
+      "get_Attribute_2": 20,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 62,
+      "name_eng": "Shadow Marking Drill",
+      "type": 0,
+      "get_Attribute_1": 21,
+      "get_Attribute_2": 1,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 63,
+      "name_eng": "Heat Maps",
+      "type": 0,
+      "get_Attribute_1": 11,
+      "get_Attribute_2": 10,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 64,
+      "name_eng": "Cone Drills",
+      "type": 0,
+      "get_Attribute_1": 3,
+      "get_Attribute_2": 1,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 400000,
+      "level_3_cost": 900000,
+      "ai": true
+    },
+    {
+      "id": 65,
+      "name_eng": "Assistant High-Performance Coach",
+      "type": 0,
+      "get_Attribute_1": 9,
+      "get_Attribute_2": 12,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 66,
+      "name_eng": "Passing Arcs & Gates",
+      "type": 0,
+      "get_Attribute_1": 19,
+      "get_Attribute_2": 14,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 67,
+      "name_eng": "Sports Scientist",
+      "type": 0,
+      "get_Attribute_1": 0,
+      "get_Attribute_2": 7,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 500000,
+      "level_3_cost": 1000000,
+      "ai": true
+    },
+    {
+      "id": 68,
+      "name_eng": "Balance Discs",
+      "type": 0,
+      "get_Attribute_1": 3,
+      "get_Attribute_2": 6,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 5,
+      "level3_attr3_value": 5,
+      "level_1_cost": 200000,
+      "level_2_cost": 600000,
+      "level_3_cost": 1100000,
+      "ai": true
+    },
+    {
+      "id": 69,
+      "name_eng": "Assistant Video Analyst",
+      "type": 0,
+      "get_Attribute_1": 15,
+      "get_Attribute_2": 20,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 70,
+      "name_eng": "Weighted Vest",
+      "type": 0,
+      "get_Attribute_1": 4,
+      "get_Attribute_2": 26,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 4,
+      "level3_attr3_value": 4,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1000000,
+      "ai": true
+    },
+    {
+      "id": 71,
+      "name_eng": "Sprint Track",
+      "type": 0,
+      "get_Attribute_1": 1,
+      "get_Attribute_2": 13,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 500000,
+      "level_3_cost": 1000000,
+      "ai": true
+    },
+    {
+      "id": 72,
+      "name_eng": "Assistant Yoga Instructor",
+      "type": 0,
+      "get_Attribute_1": 3,
+      "get_Attribute_2": 2,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 73,
+      "name_eng": "AI Finishing Net",
+      "type": 0,
+      "get_Attribute_1": 16,
+      "get_Attribute_2": 27,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 3,
+      "level1_attr2_value": 3,
+      "level2_attr1_value": 4,
+      "level2_attr2_value": 4,
+      "level3_attr1_value": 6,
+      "level3_attr3_value": 6,
+      "level_1_cost": 300000,
+      "level_2_cost": 800000,
+      "level_3_cost": 1300000,
+      "ai": true
+    },
+    {
+      "id": 74,
+      "name_eng": "Assistant Physiotherapist",
+      "type": 0,
+      "get_Attribute_1": 8,
+      "get_Attribute_2": 10,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 4,
+      "level3_attr3_value": 4,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1000000,
+      "ai": true
+    },
+    {
+      "id": 75,
+      "name_eng": "AI Scout",
+      "type": 0,
+      "get_Attribute_1": 11,
+      "get_Attribute_2": 21,
+      "get_PlayStyle": null,
+      "get_playstyle_plus": null,
+      "level1_attr1_value": 2,
+      "level1_attr2_value": 2,
+      "level2_attr1_value": 3,
+      "level2_attr2_value": 3,
+      "level3_attr1_value": 4,
+      "level3_attr3_value": 4,
+      "level_1_cost": 100000,
+      "level_2_cost": 400000,
+      "level_3_cost": 1000000,
+      "ai": true
+    }
+  ],
+  "budgets": [
+    {
+      "value": 1,
+      "label": "1.0M"
+    },
+    {
+      "value": 1.1,
+      "label": "1.1M"
+    },
+    {
+      "value": 1.2,
+      "label": "1.2M"
+    },
+    {
+      "value": 1.3,
+      "label": "1.3M"
+    },
+    {
+      "value": 1.5,
+      "label": "1.5M"
+    },
+    {
+      "value": 1.7,
+      "label": "1.7M"
+    },
+    {
+      "value": 1.9,
+      "label": "1.9M"
+    },
+    {
+      "value": 2.1,
+      "label": "2.1M"
+    },
+    {
+      "value": 2.3,
+      "label": "2.3M"
+    },
+    {
+      "value": 2.5,
+      "label": "2.5M"
+    }
+  ],
+  "masteries": [
+    {
+      "archetypeId": 1,
+      "attributeIds": [
+        33,
+        32
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 2,
+      "attributeIds": [
+        30,
+        29
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 3,
+      "attributeIds": [
+        19,
+        24
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 4,
+      "attributeIds": [
+        8,
+        6
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 5,
+      "attributeIds": [
+        5,
+        10
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 6,
+      "attributeIds": [
+        25,
+        1
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 7,
+      "attributeIds": [
+        21,
+        20
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 8,
+      "attributeIds": [
+        7,
+        13
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 9,
+      "attributeIds": [
+        17,
+        12
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 10,
+      "attributeIds": [
+        14,
+        15
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 11,
+      "attributeIds": [
+        27,
+        0
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 12,
+      "attributeIds": [
+        9,
+        16
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "archetypeId": 13,
+      "attributeIds": [
+        3,
+        4
+      ],
+      "bonuses": {
+        "10": [
+          1,
+          1
+        ],
+        "30": [
+          0,
+          1
+        ],
+        "55": [
+          1,
+          0
+        ]
+      }
+    }
+  ],
+  "bodyModifiers": [
+    {
+      "id": 1,
+      "value": 1,
+      "attributeId": 0
+    },
+    {
+      "id": 1,
+      "value": -1,
+      "attributeId": 1
+    },
+    {
+      "id": 1,
+      "value": 1,
+      "attributeId": 2
+    },
+    {
+      "id": 1,
+      "value": 1,
+      "attributeId": 3
+    },
+    {
+      "id": 1,
+      "value": -1,
+      "attributeId": 4
+    },
+    {
+      "id": 1,
+      "value": -1,
+      "attributeId": 6
+    },
+    {
+      "id": 1,
+      "value": -1,
+      "attributeId": 29
+    },
+    {
+      "id": 1,
+      "value": 1,
+      "attributeId": 30
+    },
+    {
+      "id": 1,
+      "value": -1,
+      "attributeId": 32
+    },
+    {
+      "id": 2,
+      "value": 1,
+      "attributeId": 0
+    },
+    {
+      "id": 2,
+      "value": -1,
+      "attributeId": 1
+    },
+    {
+      "id": 2,
+      "value": 1,
+      "attributeId": 2
+    },
+    {
+      "id": 2,
+      "value": 1,
+      "attributeId": 3
+    },
+    {
+      "id": 2,
+      "value": -1,
+      "attributeId": 4
+    },
+    {
+      "id": 2,
+      "value": -1,
+      "attributeId": 6
+    },
+    {
+      "id": 2,
+      "value": -1,
+      "attributeId": 29
+    },
+    {
+      "id": 2,
+      "value": 1,
+      "attributeId": 30
+    },
+    {
+      "id": 2,
+      "value": -1,
+      "attributeId": 32
+    },
+    {
+      "id": 3,
+      "value": 2,
+      "attributeId": 0
+    },
+    {
+      "id": 3,
+      "value": -2,
+      "attributeId": 1
+    },
+    {
+      "id": 3,
+      "value": 2,
+      "attributeId": 2
+    },
+    {
+      "id": 3,
+      "value": 2,
+      "attributeId": 3
+    },
+    {
+      "id": 3,
+      "value": -2,
+      "attributeId": 4
+    },
+    {
+      "id": 3,
+      "value": -2,
+      "attributeId": 6
+    },
+    {
+      "id": 3,
+      "value": -2,
+      "attributeId": 29
+    },
+    {
+      "id": 3,
+      "value": 2,
+      "attributeId": 30
+    },
+    {
+      "id": 3,
+      "value": -2,
+      "attributeId": 32
+    },
+    {
+      "id": 4,
+      "value": 2,
+      "attributeId": 0
+    },
+    {
+      "id": 4,
+      "value": -2,
+      "attributeId": 1
+    },
+    {
+      "id": 4,
+      "value": 2,
+      "attributeId": 2
+    },
+    {
+      "id": 4,
+      "value": 2,
+      "attributeId": 3
+    },
+    {
+      "id": 4,
+      "value": -2,
+      "attributeId": 4
+    },
+    {
+      "id": 4,
+      "value": -2,
+      "attributeId": 6
+    },
+    {
+      "id": 4,
+      "value": -2,
+      "attributeId": 29
+    },
+    {
+      "id": 4,
+      "value": 2,
+      "attributeId": 30
+    },
+    {
+      "id": 4,
+      "value": -2,
+      "attributeId": 32
+    },
+    {
+      "id": 5,
+      "value": 3,
+      "attributeId": 0
+    },
+    {
+      "id": 5,
+      "value": -3,
+      "attributeId": 1
+    },
+    {
+      "id": 5,
+      "value": 3,
+      "attributeId": 2
+    },
+    {
+      "id": 5,
+      "value": 3,
+      "attributeId": 3
+    },
+    {
+      "id": 5,
+      "value": -3,
+      "attributeId": 4
+    },
+    {
+      "id": 5,
+      "value": -3,
+      "attributeId": 6
+    },
+    {
+      "id": 5,
+      "value": -3,
+      "attributeId": 29
+    },
+    {
+      "id": 5,
+      "value": 3,
+      "attributeId": 30
+    },
+    {
+      "id": 5,
+      "value": -3,
+      "attributeId": 32
+    },
+    {
+      "id": 6,
+      "value": 3,
+      "attributeId": 0
+    },
+    {
+      "id": 6,
+      "value": -3,
+      "attributeId": 1
+    },
+    {
+      "id": 6,
+      "value": 3,
+      "attributeId": 2
+    },
+    {
+      "id": 6,
+      "value": 3,
+      "attributeId": 3
+    },
+    {
+      "id": 6,
+      "value": -3,
+      "attributeId": 4
+    },
+    {
+      "id": 6,
+      "value": -3,
+      "attributeId": 6
+    },
+    {
+      "id": 6,
+      "value": -3,
+      "attributeId": 29
+    },
+    {
+      "id": 6,
+      "value": 3,
+      "attributeId": 30
+    },
+    {
+      "id": 6,
+      "value": -3,
+      "attributeId": 32
+    },
+    {
+      "id": 7,
+      "value": 4,
+      "attributeId": 0
+    },
+    {
+      "id": 7,
+      "value": -4,
+      "attributeId": 1
+    },
+    {
+      "id": 7,
+      "value": 4,
+      "attributeId": 2
+    },
+    {
+      "id": 7,
+      "value": 4,
+      "attributeId": 3
+    },
+    {
+      "id": 7,
+      "value": -4,
+      "attributeId": 4
+    },
+    {
+      "id": 7,
+      "value": -4,
+      "attributeId": 6
+    },
+    {
+      "id": 7,
+      "value": -4,
+      "attributeId": 29
+    },
+    {
+      "id": 7,
+      "value": 4,
+      "attributeId": 30
+    },
+    {
+      "id": 7,
+      "value": -4,
+      "attributeId": 32
+    },
+    {
+      "id": 8,
+      "value": -1,
+      "attributeId": 0
+    },
+    {
+      "id": 8,
+      "value": 1,
+      "attributeId": 1
+    },
+    {
+      "id": 8,
+      "value": -1,
+      "attributeId": 2
+    },
+    {
+      "id": 8,
+      "value": -1,
+      "attributeId": 3
+    },
+    {
+      "id": 8,
+      "value": 1,
+      "attributeId": 4
+    },
+    {
+      "id": 8,
+      "value": 1,
+      "attributeId": 6
+    },
+    {
+      "id": 8,
+      "value": 1,
+      "attributeId": 29
+    },
+    {
+      "id": 8,
+      "value": -1,
+      "attributeId": 30
+    },
+    {
+      "id": 8,
+      "value": 1,
+      "attributeId": 32
+    },
+    {
+      "id": 9,
+      "value": -1,
+      "attributeId": 0
+    },
+    {
+      "id": 9,
+      "value": 1,
+      "attributeId": 1
+    },
+    {
+      "id": 9,
+      "value": -1,
+      "attributeId": 2
+    },
+    {
+      "id": 9,
+      "value": -1,
+      "attributeId": 3
+    },
+    {
+      "id": 9,
+      "value": 1,
+      "attributeId": 4
+    },
+    {
+      "id": 9,
+      "value": 1,
+      "attributeId": 6
+    },
+    {
+      "id": 9,
+      "value": 1,
+      "attributeId": 29
+    },
+    {
+      "id": 9,
+      "value": -1,
+      "attributeId": 30
+    },
+    {
+      "id": 9,
+      "value": 1,
+      "attributeId": 32
+    },
+    {
+      "id": 10,
+      "value": -2,
+      "attributeId": 0
+    },
+    {
+      "id": 10,
+      "value": 2,
+      "attributeId": 1
+    },
+    {
+      "id": 10,
+      "value": -2,
+      "attributeId": 2
+    },
+    {
+      "id": 10,
+      "value": -2,
+      "attributeId": 3
+    },
+    {
+      "id": 10,
+      "value": 2,
+      "attributeId": 4
+    },
+    {
+      "id": 10,
+      "value": 2,
+      "attributeId": 6
+    },
+    {
+      "id": 10,
+      "value": 2,
+      "attributeId": 29
+    },
+    {
+      "id": 10,
+      "value": -2,
+      "attributeId": 30
+    },
+    {
+      "id": 10,
+      "value": 2,
+      "attributeId": 32
+    },
+    {
+      "id": 11,
+      "value": -2,
+      "attributeId": 0
+    },
+    {
+      "id": 11,
+      "value": 2,
+      "attributeId": 1
+    },
+    {
+      "id": 11,
+      "value": -2,
+      "attributeId": 2
+    },
+    {
+      "id": 11,
+      "value": -2,
+      "attributeId": 3
+    },
+    {
+      "id": 11,
+      "value": 2,
+      "attributeId": 4
+    },
+    {
+      "id": 11,
+      "value": 2,
+      "attributeId": 6
+    },
+    {
+      "id": 11,
+      "value": 2,
+      "attributeId": 29
+    },
+    {
+      "id": 11,
+      "value": -2,
+      "attributeId": 30
+    },
+    {
+      "id": 11,
+      "value": 2,
+      "attributeId": 32
+    },
+    {
+      "id": 12,
+      "value": -3,
+      "attributeId": 0
+    },
+    {
+      "id": 12,
+      "value": 3,
+      "attributeId": 1
+    },
+    {
+      "id": 12,
+      "value": -3,
+      "attributeId": 2
+    },
+    {
+      "id": 12,
+      "value": -3,
+      "attributeId": 3
+    },
+    {
+      "id": 12,
+      "value": 3,
+      "attributeId": 4
+    },
+    {
+      "id": 12,
+      "value": 3,
+      "attributeId": 6
+    },
+    {
+      "id": 12,
+      "value": 3,
+      "attributeId": 29
+    },
+    {
+      "id": 12,
+      "value": -3,
+      "attributeId": 30
+    },
+    {
+      "id": 12,
+      "value": 3,
+      "attributeId": 32
+    },
+    {
+      "id": 13,
+      "value": -3,
+      "attributeId": 0
+    },
+    {
+      "id": 13,
+      "value": 3,
+      "attributeId": 1
+    },
+    {
+      "id": 13,
+      "value": -3,
+      "attributeId": 2
+    },
+    {
+      "id": 13,
+      "value": -3,
+      "attributeId": 3
+    },
+    {
+      "id": 13,
+      "value": 3,
+      "attributeId": 4
+    },
+    {
+      "id": 13,
+      "value": 3,
+      "attributeId": 6
+    },
+    {
+      "id": 13,
+      "value": 3,
+      "attributeId": 29
+    },
+    {
+      "id": 13,
+      "value": -3,
+      "attributeId": 30
+    },
+    {
+      "id": 13,
+      "value": 3,
+      "attributeId": 32
+    },
+    {
+      "id": 14,
+      "value": -4,
+      "attributeId": 0
+    },
+    {
+      "id": 14,
+      "value": 4,
+      "attributeId": 1
+    },
+    {
+      "id": 14,
+      "value": -4,
+      "attributeId": 2
+    },
+    {
+      "id": 14,
+      "value": -4,
+      "attributeId": 3
+    },
+    {
+      "id": 14,
+      "value": 4,
+      "attributeId": 4
+    },
+    {
+      "id": 14,
+      "value": 4,
+      "attributeId": 6
+    },
+    {
+      "id": 14,
+      "value": 4,
+      "attributeId": 29
+    },
+    {
+      "id": 14,
+      "value": -4,
+      "attributeId": 30
+    },
+    {
+      "id": 14,
+      "value": 4,
+      "attributeId": 32
+    },
+    {
+      "id": 15,
+      "value": 1,
+      "attributeId": 0
+    },
+    {
+      "id": 15,
+      "value": 1,
+      "attributeId": 1
+    },
+    {
+      "id": 15,
+      "value": 1,
+      "attributeId": 2
+    },
+    {
+      "id": 15,
+      "value": -1,
+      "attributeId": 3
+    },
+    {
+      "id": 15,
+      "value": -1,
+      "attributeId": 4
+    },
+    {
+      "id": 15,
+      "value": -1,
+      "attributeId": 6
+    },
+    {
+      "id": 15,
+      "value": 1,
+      "attributeId": 29
+    },
+    {
+      "id": 15,
+      "value": -1,
+      "attributeId": 30
+    },
+    {
+      "id": 15,
+      "value": 1,
+      "attributeId": 32
+    },
+    {
+      "id": 16,
+      "value": 1,
+      "attributeId": 0
+    },
+    {
+      "id": 16,
+      "value": 1,
+      "attributeId": 1
+    },
+    {
+      "id": 16,
+      "value": 1,
+      "attributeId": 2
+    },
+    {
+      "id": 16,
+      "value": -1,
+      "attributeId": 3
+    },
+    {
+      "id": 16,
+      "value": -1,
+      "attributeId": 4
+    },
+    {
+      "id": 16,
+      "value": -1,
+      "attributeId": 6
+    },
+    {
+      "id": 16,
+      "value": 1,
+      "attributeId": 29
+    },
+    {
+      "id": 16,
+      "value": -1,
+      "attributeId": 30
+    },
+    {
+      "id": 16,
+      "value": 1,
+      "attributeId": 32
+    },
+    {
+      "id": 17,
+      "value": 2,
+      "attributeId": 0
+    },
+    {
+      "id": 17,
+      "value": 2,
+      "attributeId": 1
+    },
+    {
+      "id": 17,
+      "value": 2,
+      "attributeId": 2
+    },
+    {
+      "id": 17,
+      "value": -2,
+      "attributeId": 3
+    },
+    {
+      "id": 17,
+      "value": -2,
+      "attributeId": 4
+    },
+    {
+      "id": 17,
+      "value": -2,
+      "attributeId": 6
+    },
+    {
+      "id": 17,
+      "value": 2,
+      "attributeId": 29
+    },
+    {
+      "id": 17,
+      "value": -2,
+      "attributeId": 30
+    },
+    {
+      "id": 17,
+      "value": 2,
+      "attributeId": 32
+    },
+    {
+      "id": 18,
+      "value": 2,
+      "attributeId": 0
+    },
+    {
+      "id": 18,
+      "value": 2,
+      "attributeId": 1
+    },
+    {
+      "id": 18,
+      "value": 2,
+      "attributeId": 2
+    },
+    {
+      "id": 18,
+      "value": -2,
+      "attributeId": 3
+    },
+    {
+      "id": 18,
+      "value": -2,
+      "attributeId": 4
+    },
+    {
+      "id": 18,
+      "value": -2,
+      "attributeId": 6
+    },
+    {
+      "id": 18,
+      "value": 2,
+      "attributeId": 29
+    },
+    {
+      "id": 18,
+      "value": -2,
+      "attributeId": 30
+    },
+    {
+      "id": 18,
+      "value": 2,
+      "attributeId": 32
+    },
+    {
+      "id": 19,
+      "value": 3,
+      "attributeId": 0
+    },
+    {
+      "id": 19,
+      "value": 3,
+      "attributeId": 1
+    },
+    {
+      "id": 19,
+      "value": 3,
+      "attributeId": 2
+    },
+    {
+      "id": 19,
+      "value": -3,
+      "attributeId": 3
+    },
+    {
+      "id": 19,
+      "value": -3,
+      "attributeId": 4
+    },
+    {
+      "id": 19,
+      "value": -3,
+      "attributeId": 6
+    },
+    {
+      "id": 19,
+      "value": 3,
+      "attributeId": 29
+    },
+    {
+      "id": 19,
+      "value": -3,
+      "attributeId": 30
+    },
+    {
+      "id": 19,
+      "value": 3,
+      "attributeId": 32
+    },
+    {
+      "id": 20,
+      "value": -1,
+      "attributeId": 0
+    },
+    {
+      "id": 20,
+      "value": -1,
+      "attributeId": 1
+    },
+    {
+      "id": 20,
+      "value": -1,
+      "attributeId": 2
+    },
+    {
+      "id": 20,
+      "value": 1,
+      "attributeId": 3
+    },
+    {
+      "id": 20,
+      "value": 1,
+      "attributeId": 4
+    },
+    {
+      "id": 20,
+      "value": 1,
+      "attributeId": 6
+    },
+    {
+      "id": 20,
+      "value": -1,
+      "attributeId": 29
+    },
+    {
+      "id": 20,
+      "value": 1,
+      "attributeId": 30
+    },
+    {
+      "id": 20,
+      "value": -1,
+      "attributeId": 32
+    },
+    {
+      "id": 21,
+      "value": -1,
+      "attributeId": 0
+    },
+    {
+      "id": 21,
+      "value": -1,
+      "attributeId": 1
+    },
+    {
+      "id": 21,
+      "value": -1,
+      "attributeId": 2
+    },
+    {
+      "id": 21,
+      "value": 1,
+      "attributeId": 3
+    },
+    {
+      "id": 21,
+      "value": 1,
+      "attributeId": 4
+    },
+    {
+      "id": 21,
+      "value": 1,
+      "attributeId": 6
+    },
+    {
+      "id": 21,
+      "value": -1,
+      "attributeId": 29
+    },
+    {
+      "id": 21,
+      "value": 1,
+      "attributeId": 30
+    },
+    {
+      "id": 21,
+      "value": -1,
+      "attributeId": 32
+    },
+    {
+      "id": 22,
+      "value": -2,
+      "attributeId": 0
+    },
+    {
+      "id": 22,
+      "value": -2,
+      "attributeId": 1
+    },
+    {
+      "id": 22,
+      "value": -2,
+      "attributeId": 2
+    },
+    {
+      "id": 22,
+      "value": 2,
+      "attributeId": 3
+    },
+    {
+      "id": 22,
+      "value": 2,
+      "attributeId": 4
+    },
+    {
+      "id": 22,
+      "value": 2,
+      "attributeId": 6
+    },
+    {
+      "id": 22,
+      "value": -2,
+      "attributeId": 29
+    },
+    {
+      "id": 22,
+      "value": 2,
+      "attributeId": 30
+    },
+    {
+      "id": 22,
+      "value": -2,
+      "attributeId": 32
+    },
+    {
+      "id": 23,
+      "value": -2,
+      "attributeId": 0
+    },
+    {
+      "id": 23,
+      "value": -2,
+      "attributeId": 1
+    },
+    {
+      "id": 23,
+      "value": -2,
+      "attributeId": 2
+    },
+    {
+      "id": 23,
+      "value": 2,
+      "attributeId": 3
+    },
+    {
+      "id": 23,
+      "value": 2,
+      "attributeId": 4
+    },
+    {
+      "id": 23,
+      "value": 2,
+      "attributeId": 6
+    },
+    {
+      "id": 23,
+      "value": -2,
+      "attributeId": 29
+    },
+    {
+      "id": 23,
+      "value": 2,
+      "attributeId": 30
+    },
+    {
+      "id": 23,
+      "value": -2,
+      "attributeId": 32
+    },
+    {
+      "id": 24,
+      "value": -3,
+      "attributeId": 0
+    },
+    {
+      "id": 24,
+      "value": -3,
+      "attributeId": 1
+    },
+    {
+      "id": 24,
+      "value": -3,
+      "attributeId": 2
+    },
+    {
+      "id": 24,
+      "value": 3,
+      "attributeId": 3
+    },
+    {
+      "id": 24,
+      "value": 3,
+      "attributeId": 4
+    },
+    {
+      "id": 24,
+      "value": 3,
+      "attributeId": 6
+    },
+    {
+      "id": 24,
+      "value": -3,
+      "attributeId": 29
+    },
+    {
+      "id": 24,
+      "value": 3,
+      "attributeId": 30
+    },
+    {
+      "id": 24,
+      "value": -3,
+      "attributeId": 32
+    }
+  ],
+  "bodyBands": [
+    {
+      "id": 1,
+      "min": -2,
+      "max": -1,
+      "attributeId": 100
+    },
+    {
+      "id": 2,
+      "min": -4,
+      "max": -3,
+      "attributeId": 100
+    },
+    {
+      "id": 3,
+      "min": -6,
+      "max": -5,
+      "attributeId": 100
+    },
+    {
+      "id": 4,
+      "min": -8,
+      "max": -7,
+      "attributeId": 100
+    },
+    {
+      "id": 5,
+      "min": -10,
+      "max": -9,
+      "attributeId": 100
+    },
+    {
+      "id": 6,
+      "min": -12,
+      "max": -11,
+      "attributeId": 100
+    },
+    {
+      "id": 7,
+      "min": -14,
+      "max": -13,
+      "attributeId": 100
+    },
+    {
+      "id": 8,
+      "min": 1,
+      "max": 2,
+      "attributeId": 100
+    },
+    {
+      "id": 9,
+      "min": 3,
+      "max": 4,
+      "attributeId": 100
+    },
+    {
+      "id": 10,
+      "min": 5,
+      "max": 6,
+      "attributeId": 100
+    },
+    {
+      "id": 11,
+      "min": 7,
+      "max": 8,
+      "attributeId": 100
+    },
+    {
+      "id": 12,
+      "min": 9,
+      "max": 10,
+      "attributeId": 100
+    },
+    {
+      "id": 13,
+      "min": 11,
+      "max": 12,
+      "attributeId": 100
+    },
+    {
+      "id": 14,
+      "min": 13,
+      "max": 14,
+      "attributeId": 100
+    },
+    {
+      "id": 25,
+      "min": 0,
+      "max": 0,
+      "attributeId": 100
+    },
+    {
+      "id": 15,
+      "min": -4,
+      "max": -1,
+      "attributeId": 101
+    },
+    {
+      "id": 16,
+      "min": -8,
+      "max": -5,
+      "attributeId": 101
+    },
+    {
+      "id": 17,
+      "min": -12,
+      "max": -9,
+      "attributeId": 101
+    },
+    {
+      "id": 18,
+      "min": -16,
+      "max": -13,
+      "attributeId": 101
+    },
+    {
+      "id": 19,
+      "min": -20,
+      "max": -17,
+      "attributeId": 101
+    },
+    {
+      "id": 20,
+      "min": 1,
+      "max": 4,
+      "attributeId": 101
+    },
+    {
+      "id": 21,
+      "min": 5,
+      "max": 8,
+      "attributeId": 101
+    },
+    {
+      "id": 22,
+      "min": 9,
+      "max": 12,
+      "attributeId": 101
+    },
+    {
+      "id": 23,
+      "min": 13,
+      "max": 16,
+      "attributeId": 101
+    },
+    {
+      "id": 24,
+      "min": 17,
+      "max": 20,
+      "attributeId": 101
+    },
+    {
+      "id": 26,
+      "min": 0,
+      "max": 0,
+      "attributeId": 101
+    }
+  ],
+  "specializationRequirements": [
+    {
+      "specId": 1,
+      "attributeId": 4,
+      "requiredValue": 90
+    },
+    {
+      "specId": 1,
+      "attributeId": 30,
+      "requiredValue": 92
+    },
+    {
+      "specId": 1,
+      "attributeId": 33,
+      "requiredValue": 90
+    },
+    {
+      "specId": 2,
+      "attributeId": 0,
+      "requiredValue": 90
+    },
+    {
+      "specId": 2,
+      "attributeId": 2,
+      "requiredValue": 90
+    },
+    {
+      "specId": 2,
+      "attributeId": 32,
+      "requiredValue": 92
+    },
+    {
+      "specId": 3,
+      "attributeId": 6,
+      "requiredValue": 90
+    },
+    {
+      "specId": 3,
+      "attributeId": 29,
+      "requiredValue": 92
+    },
+    {
+      "specId": 3,
+      "attributeId": 33,
+      "requiredValue": 90
+    },
+    {
+      "specId": 4,
+      "attributeId": 12,
+      "requiredValue": 90
+    },
+    {
+      "specId": 4,
+      "attributeId": 29,
+      "requiredValue": 92
+    },
+    {
+      "specId": 4,
+      "attributeId": 31,
+      "requiredValue": 90
+    },
+    {
+      "specId": 5,
+      "attributeId": 19,
+      "requiredValue": 90
+    },
+    {
+      "specId": 5,
+      "attributeId": 31,
+      "requiredValue": 92
+    },
+    {
+      "specId": 5,
+      "attributeId": 32,
+      "requiredValue": 90
+    },
+    {
+      "specId": 6,
+      "attributeId": 9,
+      "requiredValue": 90
+    },
+    {
+      "specId": 6,
+      "attributeId": 20,
+      "requiredValue": 90
+    },
+    {
+      "specId": 6,
+      "attributeId": 11,
+      "requiredValue": 92
+    },
+    {
+      "specId": 7,
+      "attributeId": 19,
+      "requiredValue": 90
+    },
+    {
+      "specId": 7,
+      "attributeId": 21,
+      "requiredValue": 90
+    },
+    {
+      "specId": 7,
+      "attributeId": 24,
+      "requiredValue": 92
+    },
+    {
+      "specId": 8,
+      "attributeId": 15,
+      "requiredValue": 92
+    },
+    {
+      "specId": 8,
+      "attributeId": 19,
+      "requiredValue": 90
+    },
+    {
+      "specId": 8,
+      "attributeId": 20,
+      "requiredValue": 90
+    },
+    {
+      "specId": 9,
+      "attributeId": 0,
+      "requiredValue": 90
+    },
+    {
+      "specId": 9,
+      "attributeId": 1,
+      "requiredValue": 90
+    },
+    {
+      "specId": 9,
+      "attributeId": 25,
+      "requiredValue": 92
+    },
+    {
+      "specId": 10,
+      "attributeId": 25,
+      "requiredValue": 92
+    },
+    {
+      "specId": 10,
+      "attributeId": 8,
+      "requiredValue": 90
+    },
+    {
+      "specId": 10,
+      "attributeId": 6,
+      "requiredValue": 90
+    },
+    {
+      "specId": 11,
+      "attributeId": 9,
+      "requiredValue": 92
+    },
+    {
+      "specId": 11,
+      "attributeId": 12,
+      "requiredValue": 90
+    },
+    {
+      "specId": 11,
+      "attributeId": 13,
+      "requiredValue": 90
+    },
+    {
+      "specId": 12,
+      "attributeId": 2,
+      "requiredValue": 90
+    },
+    {
+      "specId": 12,
+      "attributeId": 7,
+      "requiredValue": 90
+    },
+    {
+      "specId": 12,
+      "attributeId": 21,
+      "requiredValue": 92
+    },
+    {
+      "specId": 13,
+      "attributeId": 5,
+      "requiredValue": 92
+    },
+    {
+      "specId": 13,
+      "attributeId": 20,
+      "requiredValue": 90
+    },
+    {
+      "specId": 13,
+      "attributeId": 24,
+      "requiredValue": 90
+    },
+    {
+      "specId": 14,
+      "attributeId": 8,
+      "requiredValue": 90
+    },
+    {
+      "specId": 14,
+      "attributeId": 12,
+      "requiredValue": 92
+    },
+    {
+      "specId": 14,
+      "attributeId": 20,
+      "requiredValue": 90
+    },
+    {
+      "specId": 15,
+      "attributeId": 2,
+      "requiredValue": 90
+    },
+    {
+      "specId": 15,
+      "attributeId": 3,
+      "requiredValue": 92
+    },
+    {
+      "specId": 15,
+      "attributeId": 15,
+      "requiredValue": 90
+    },
+    {
+      "specId": 16,
+      "attributeId": 1,
+      "requiredValue": 92
+    },
+    {
+      "specId": 16,
+      "attributeId": 8,
+      "requiredValue": 90
+    },
+    {
+      "specId": 16,
+      "attributeId": 25,
+      "requiredValue": 90
+    },
+    {
+      "specId": 17,
+      "attributeId": 0,
+      "requiredValue": 90
+    },
+    {
+      "specId": 17,
+      "attributeId": 1,
+      "requiredValue": 92
+    },
+    {
+      "specId": 17,
+      "attributeId": 15,
+      "requiredValue": 90
+    },
+    {
+      "specId": 18,
+      "attributeId": 6,
+      "requiredValue": 92
+    },
+    {
+      "specId": 18,
+      "attributeId": 8,
+      "requiredValue": 90
+    },
+    {
+      "specId": 18,
+      "attributeId": 21,
+      "requiredValue": 90
+    },
+    {
+      "specId": 19,
+      "attributeId": 6,
+      "requiredValue": 90
+    },
+    {
+      "specId": 19,
+      "attributeId": 19,
+      "requiredValue": 90
+    },
+    {
+      "specId": 19,
+      "attributeId": 20,
+      "requiredValue": 92
+    },
+    {
+      "specId": 20,
+      "attributeId": 6,
+      "requiredValue": 90
+    },
+    {
+      "specId": 20,
+      "attributeId": 3,
+      "requiredValue": 92
+    },
+    {
+      "specId": 20,
+      "attributeId": 1,
+      "requiredValue": 90
+    },
+    {
+      "specId": 21,
+      "attributeId": 10,
+      "requiredValue": 90
+    },
+    {
+      "specId": 21,
+      "attributeId": 21,
+      "requiredValue": 90
+    },
+    {
+      "specId": 21,
+      "attributeId": 24,
+      "requiredValue": 92
+    },
+    {
+      "specId": 22,
+      "attributeId": 3,
+      "requiredValue": 90
+    },
+    {
+      "specId": 22,
+      "attributeId": 12,
+      "requiredValue": 92
+    },
+    {
+      "specId": 22,
+      "attributeId": 15,
+      "requiredValue": 90
+    },
+    {
+      "specId": 23,
+      "attributeId": 9,
+      "requiredValue": 92
+    },
+    {
+      "specId": 23,
+      "attributeId": 13,
+      "requiredValue": 90
+    },
+    {
+      "specId": 23,
+      "attributeId": 16,
+      "requiredValue": 90
+    },
+    {
+      "specId": 24,
+      "attributeId": 2,
+      "requiredValue": 92
+    },
+    {
+      "specId": 24,
+      "attributeId": 5,
+      "requiredValue": 90
+    },
+    {
+      "specId": 24,
+      "attributeId": 8,
+      "requiredValue": 90
+    },
+    {
+      "specId": 25,
+      "attributeId": 19,
+      "requiredValue": 90
+    },
+    {
+      "specId": 25,
+      "attributeId": 14,
+      "requiredValue": 90
+    },
+    {
+      "specId": 25,
+      "attributeId": 12,
+      "requiredValue": 92
+    },
+    {
+      "specId": 26,
+      "attributeId": 14,
+      "requiredValue": 92
+    },
+    {
+      "specId": 26,
+      "attributeId": 17,
+      "requiredValue": 90
+    },
+    {
+      "specId": 26,
+      "attributeId": 22,
+      "requiredValue": 90
+    },
+    {
+      "specId": 27,
+      "attributeId": 16,
+      "requiredValue": 90
+    },
+    {
+      "specId": 27,
+      "attributeId": 22,
+      "requiredValue": 92
+    },
+    {
+      "specId": 27,
+      "attributeId": 23,
+      "requiredValue": 90
+    },
+    {
+      "specId": 28,
+      "attributeId": 0,
+      "requiredValue": 90
+    },
+    {
+      "specId": 28,
+      "attributeId": 1,
+      "requiredValue": 90
+    },
+    {
+      "specId": 28,
+      "attributeId": 2,
+      "requiredValue": 92
+    },
+    {
+      "specId": 29,
+      "attributeId": 11,
+      "requiredValue": 90
+    },
+    {
+      "specId": 29,
+      "attributeId": 14,
+      "requiredValue": 92
+    },
+    {
+      "specId": 29,
+      "attributeId": 19,
+      "requiredValue": 90
+    },
+    {
+      "specId": 30,
+      "attributeId": 16,
+      "requiredValue": 92
+    },
+    {
+      "specId": 30,
+      "attributeId": 13,
+      "requiredValue": 90
+    },
+    {
+      "specId": 30,
+      "attributeId": 7,
+      "requiredValue": 90
+    },
+    {
+      "specId": 31,
+      "attributeId": 0,
+      "requiredValue": 90
+    },
+    {
+      "specId": 31,
+      "attributeId": 9,
+      "requiredValue": 90
+    },
+    {
+      "specId": 31,
+      "attributeId": 13,
+      "requiredValue": 92
+    },
+    {
+      "specId": 32,
+      "attributeId": 16,
+      "requiredValue": 90
+    },
+    {
+      "specId": 32,
+      "attributeId": 22,
+      "requiredValue": 92
+    },
+    {
+      "specId": 32,
+      "attributeId": 23,
+      "requiredValue": 90
+    },
+    {
+      "specId": 33,
+      "attributeId": 11,
+      "requiredValue": 90
+    },
+    {
+      "specId": 33,
+      "attributeId": 12,
+      "requiredValue": 90
+    },
+    {
+      "specId": 33,
+      "attributeId": 19,
+      "requiredValue": 92
+    },
+    {
+      "specId": 34,
+      "attributeId": 7,
+      "requiredValue": 90
+    },
+    {
+      "specId": 34,
+      "attributeId": 9,
+      "requiredValue": 92
+    },
+    {
+      "specId": 34,
+      "attributeId": 13,
+      "requiredValue": 90
+    },
+    {
+      "specId": 35,
+      "attributeId": 8,
+      "requiredValue": 90
+    },
+    {
+      "specId": 35,
+      "attributeId": 5,
+      "requiredValue": 92
+    },
+    {
+      "specId": 35,
+      "attributeId": 2,
+      "requiredValue": 90
+    },
+    {
+      "specId": 36,
+      "attributeId": 11,
+      "requiredValue": 90
+    },
+    {
+      "specId": 36,
+      "attributeId": 16,
+      "requiredValue": 90
+    },
+    {
+      "specId": 36,
+      "attributeId": 27,
+      "requiredValue": 92
+    },
+    {
+      "specId": 37,
+      "attributeId": 2,
+      "requiredValue": 90
+    },
+    {
+      "specId": 37,
+      "attributeId": 4,
+      "requiredValue": 92
+    },
+    {
+      "specId": 37,
+      "attributeId": 26,
+      "requiredValue": 90
+    },
+    {
+      "specId": 38,
+      "attributeId": 12,
+      "requiredValue": 90
+    },
+    {
+      "specId": 38,
+      "attributeId": 19,
+      "requiredValue": 90
+    },
+    {
+      "specId": 38,
+      "attributeId": 20,
+      "requiredValue": 92
+    },
+    {
+      "specId": 39,
+      "attributeId": 1,
+      "requiredValue": 92
+    },
+    {
+      "specId": 39,
+      "attributeId": 6,
+      "requiredValue": 90
+    },
+    {
+      "specId": 39,
+      "attributeId": 11,
+      "requiredValue": 90
+    }
+  ],
+  "perks": [
+    {
+      "id": 0,
+      "name": "Fake to Real"
+    },
+    {
+      "id": 1,
+      "name": "1v1 Master"
+    },
+    {
+      "id": 2,
+      "name": "No Look Finisher"
+    },
+    {
+      "id": 3,
+      "name": "Turnover Finisher"
+    },
+    {
+      "id": 4,
+      "name": "First Time Finisher"
+    },
+    {
+      "id": 5,
+      "name": "6th Sense"
+    },
+    {
+      "id": 6,
+      "name": "Physical Shooter"
+    },
+    {
+      "id": 7,
+      "name": "Line Breaker"
+    },
+    {
+      "id": 8,
+      "name": "Blind Passer"
+    },
+    {
+      "id": 9,
+      "name": "High Speed Shooter"
+    },
+    {
+      "id": 10,
+      "name": "Getaway Driver"
+    },
+    {
+      "id": 11,
+      "name": "Ankle Breaker"
+    },
+    {
+      "id": 12,
+      "name": "One, Two"
+    },
+    {
+      "id": 13,
+      "name": "Cut and Shoot"
+    },
+    {
+      "id": 14,
+      "name": "Silver Platter"
+    },
+    {
+      "id": 15,
+      "name": "Bail Out"
+    },
+    {
+      "id": 16,
+      "name": "Cut Back Specialist"
+    },
+    {
+      "id": 17,
+      "name": "Twinkle Toes"
+    },
+    {
+      "id": 18,
+      "name": "Selfless"
+    },
+    {
+      "id": 19,
+      "name": "Stunning Shooter"
+    },
+    {
+      "id": 20,
+      "name": "Grasshopper Passer"
+    },
+    {
+      "id": 21,
+      "name": "Bullseye Passer"
+    },
+    {
+      "id": 22,
+      "name": "Assistant"
+    },
+    {
+      "id": 23,
+      "name": "Air Mail"
+    },
+    {
+      "id": 24,
+      "name": "Solo Shooter"
+    },
+    {
+      "id": 25,
+      "name": "Fly Trap"
+    },
+    {
+      "id": 26,
+      "name": "Eagle Eyes"
+    },
+    {
+      "id": 27,
+      "name": "Turn Over Specialist"
+    },
+    {
+      "id": 28,
+      "name": "Box Crash"
+    },
+    {
+      "id": 29,
+      "name": "Foot in and Run"
+    },
+    {
+      "id": 30,
+      "name": "Press and Pass"
+    },
+    {
+      "id": 31,
+      "name": "Physical Passer"
+    },
+    {
+      "id": 32,
+      "name": "Hard and Fast"
+    },
+    {
+      "id": 33,
+      "name": "Heart"
+    },
+    {
+      "id": 34,
+      "name": "Quick Fix"
+    },
+    {
+      "id": 35,
+      "name": "Tracker"
+    },
+    {
+      "id": 36,
+      "name": "Presser"
+    },
+    {
+      "id": 37,
+      "name": "Raider"
+    },
+    {
+      "id": 38,
+      "name": "Give and GOOO"
+    },
+    {
+      "id": 39,
+      "name": "Workhorse"
+    },
+    {
+      "id": 40,
+      "name": "High Speed Crosser"
+    },
+    {
+      "id": 41,
+      "name": "Tackle and Run"
+    },
+    {
+      "id": 42,
+      "name": "On the Move"
+    },
+    {
+      "id": 43,
+      "name": "Wing Burner"
+    },
+    {
+      "id": 44,
+      "name": "Wide Recovery"
+    },
+    {
+      "id": 45,
+      "name": "Restarter"
+    },
+    {
+      "id": 46,
+      "name": "Goalkeepers Favourite"
+    },
+    {
+      "id": 47,
+      "name": "Wall Bounce"
+    },
+    {
+      "id": 48,
+      "name": "Unexpected Forward"
+    },
+    {
+      "id": 49,
+      "name": "Last Player Back"
+    },
+    {
+      "id": 50,
+      "name": "Shuffler"
+    },
+    {
+      "id": 51,
+      "name": "Box Controller"
+    },
+    {
+      "id": 52,
+      "name": "Physical Tackle Specialist"
+    },
+    {
+      "id": 53,
+      "name": "Sweeper"
+    },
+    {
+      "id": 54,
+      "name": "Old School"
+    },
+    {
+      "id": 55,
+      "name": "Back Option"
+    },
+    {
+      "id": 56,
+      "name": "Rush Specialist"
+    },
+    {
+      "id": 57,
+      "name": "Box Defender"
+    },
+    {
+      "id": 58,
+      "name": "Distance Assister"
+    },
+    {
+      "id": 59,
+      "name": "El Loco"
+    },
+    {
+      "id": 60,
+      "name": "Low Shot Saver"
+    },
+    {
+      "id": 61,
+      "name": "Ready to Act"
+    },
+    {
+      "id": 62,
+      "name": "Quick Recovery"
+    },
+    {
+      "id": 63,
+      "name": "Boxer"
+    },
+    {
+      "id": 64,
+      "name": "Anticipator"
+    }
+  ],
+  "levelAP": [
+    100,
+    9,
+    9,
+    9,
+    19,
+    10,
+    10,
+    10,
+    10,
+    38,
+    13,
+    13,
+    13,
+    13,
+    25,
+    13,
+    13,
+    13,
+    13,
+    44,
+    19,
+    19,
+    19,
+    19,
+    38,
+    25,
+    25,
+    25,
+    25,
+    63,
+    25,
+    25,
+    25,
+    25,
+    38,
+    25,
+    25,
+    25,
+    25,
+    50,
+    25,
+    25,
+    25,
+    25,
+    44,
+    25,
+    25,
+    25,
+    25,
+    63,
+    25,
+    25,
+    25,
+    25,
+    50
+  ],
+  "levelPerks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "levelSlots": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4
+  ],
+  "signature1Plus": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "signature2Plus": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true
+  ],
+  "levelNextXP": [
+    80,
+    120,
+    125,
+    130,
+    135,
+    140,
+    145,
+    150,
+    155,
+    170,
+    185,
+    200,
+    215,
+    230,
+    250,
+    270,
+    290,
+    310,
+    330,
+    353,
+    376,
+    399,
+    422,
+    445,
+    470,
+    495,
+    520,
+    545,
+    570,
+    605,
+    640,
+    675,
+    710,
+    745,
+    790,
+    835,
+    880,
+    925,
+    970,
+    679,
+    729,
+    779,
+    829,
+    879,
+    934,
+    989,
+    1044,
+    1099,
+    1154,
+    1224,
+    1294,
+    1364,
+    1434,
+    1569,
+    0
+  ],
+  "levelXP": [
+    0,
+    80,
+    200,
+    325,
+    455,
+    590,
+    730,
+    875,
+    1025,
+    1180,
+    1350,
+    1535,
+    1735,
+    1950,
+    2180,
+    2430,
+    2700,
+    2990,
+    3300,
+    3630,
+    3983,
+    4359,
+    4758,
+    5180,
+    5625,
+    6095,
+    6590,
+    7110,
+    7655,
+    8225,
+    8830,
+    9470,
+    10145,
+    10855,
+    11600,
+    12390,
+    13225,
+    14105,
+    15030,
+    16000,
+    16679,
+    17408,
+    18187,
+    19016,
+    19895,
+    20829,
+    21818,
+    22862,
+    23961,
+    25115,
+    26339,
+    27633,
+    28997,
+    30431,
+    32000
+  ]
+}

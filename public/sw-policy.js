@@ -1,7 +1,7 @@
 (function exposeAltairServiceWorkerPolicy(scope) {
   "use strict";
 
-  const RELEASE_VERSION = "2026.08.28.2";
+  const RELEASE_VERSION = "2026.11.09.1";
   const CACHE_PREFIX = "altair-";
   const CACHE_NAMES = Object.freeze({
     shell:`${CACHE_PREFIX}shell-${RELEASE_VERSION}`,

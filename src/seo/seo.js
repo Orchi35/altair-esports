@@ -224,6 +224,7 @@ export function getRouteSeo(route, { matchCenter = null } = {}) {
   }
 
   const listCopy = copy[route.name];
+  if (route.name === "builder") return baseMetadata({route,title:locale === "tr" ? "FC27 Oyuncu Builder | ALTAIR eSports" : "FC27 Pro Clubs Builder | ALTAIR eSports",description:locale === "tr" ? "Arketip, AP, PlayStyle ve tesis bonuslarıyla FC27 oyuncunu oluştur, kaydet ve üyeliksiz bağlantıyla paylaş." : "Create, calculate and share FC27 player builds with archetypes, AP, PlayStyles and facility bonuses without an account.",h1:"Pro Clubs Builder",breadcrumbs:[rootBreadcrumb,{label:"Builder",path:getRoutePath("builder",locale)}]});
   if (["matches", "squad", "news", "honours", "partnerships"].includes(route.name) && listCopy) {
     const breadcrumbLabel = copy.breadcrumbs[route.name];
     const contentLastModified = route.name === "partnerships"
@@ -323,7 +324,7 @@ export function buildPublicRouteCatalog({ matchCenter = null } = {}) {
   };
 
   SUPPORTED_LOCALES.forEach((locale) => {
-    ["home", "matches", "squad", "honours", "partnerships"].forEach((name) => add(name, locale));
+    ["home", "builder", "matches", "squad", "honours", "partnerships"].forEach((name) => add(name, locale));
     getPublishedPlayers().forEach((player) => add("player-detail", locale, player.slug));
     getAllMatches(matchCenter).forEach((match) => add("match-detail", locale, createMatchSlug(match)));
 

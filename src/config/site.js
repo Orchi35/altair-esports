@@ -3,7 +3,7 @@ export const SITE_LINKS = {
   instagram:"https://www.instagram.com/altairesports/",
   twitch:"https://www.twitch.tv/altairespor",
   youtube:"https://www.youtube.com/@AltairESPOR",
-  discord:"https://discord.gg/uMgQKQmr",
+  discord:"https://discord.gg/UdpZVu8FK",
   emlTeam:"https://emajorleague.com/team/ALTAIReSports/",
   mediaKit:"/media-kit.html",
   mediaKitPdf:"/media/altair-esports-media-kit.pdf",

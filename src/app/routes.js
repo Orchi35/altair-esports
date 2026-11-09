@@ -4,6 +4,7 @@ export const SUPPORTED_LOCALES = Object.freeze(["tr", "en"]);
 
 export const ROUTE_DEFINITIONS = Object.freeze([
   { name:"home", paths:{ tr:[], en:[] }, sectionId:"top" },
+  { name:"builder", paths:{ tr:["builder"], en:["builder"] }, sectionId:"builder" },
   { name:"matches", paths:{ tr:["maclar"], en:["matches"] }, sectionId:"match-center" },
   { name:"match-detail", paths:{ tr:["maclar", ":slug"], en:["matches", ":slug"] }, sectionId:"match-center", detail:true },
   { name:"squad", paths:{ tr:["kadro"], en:["squad"] }, sectionId:"squad" },
@@ -173,6 +174,7 @@ export function getLocalizedRoutePath(route, targetLocale, currentHash = "") {
   }
   const base = getRoutePath(route?.name || "home", locale, route?.slug);
   if (route?.name === "matches" && TAB_HASHES.has(currentHash)) return `${base}${currentHash}`;
+  if (route?.name === "builder" && currentHash.startsWith("#build=")) return `${base}${currentHash}`;
   if (route?.name === "home" && HOME_HASHES.has(currentHash)) return `${base}${currentHash}`;
   return base;
 }
