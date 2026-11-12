@@ -27,6 +27,11 @@
     {"source":"/en/matches/match-vpg-:id(\\d+)","destination":"/en/index.html"}
   ],
   "headers": [
+    {"source":"/","headers":[{"key":"Cache-Control","value":"public, max-age=0, must-revalidate"}]},
+    {"source":"/index.html","headers":[{"key":"Cache-Control","value":"public, max-age=0, must-revalidate"}]},
+    {"source":"/tr/:path*","headers":[{"key":"Cache-Control","value":"public, max-age=0, must-revalidate"}]},
+    {"source":"/en/:path*","headers":[{"key":"Cache-Control","value":"public, max-age=0, must-revalidate"}]},
+    {"source":"/app-recovery.js","headers":[{"key":"Cache-Control","value":"public, max-age=0, must-revalidate"}]},
     {
       "source": "/assets/(.*)",
       "headers": [

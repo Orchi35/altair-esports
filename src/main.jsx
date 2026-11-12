@@ -15,3 +15,4 @@ createRoot(document.getElementById('root')).render(
 
 registerVercelObservability()
 registerServiceWorker()
+window.dispatchEvent(new Event('altair:app-ready'))
