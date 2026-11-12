@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createPenaltyService, createPenaltyHandler, resolveShot, weekKey, SHOT_INTERVAL_MS } from '../server/penalty/service.js'
-import { normalizePlayerId } from '../src/pages/penalty/playerId.js'
+import { createPenaltyService, createPenaltyHandler, resolveShot, weekKey, SHOT_INTERVAL_MS, bestLeaderboardEntries } from '../server/penalty/service.js'
+import { normalizePlayerId, playerRankingKey } from '../src/pages/penalty/playerId.js'
 
 const env = { PENALTY_REDIS_REST_URL: 'https://example.upstash.io', PENALTY_REDIS_REST_TOKEN: 'test-only', PENALTY_SIGNING_SECRET: 'test-secret-with-at-least-32-characters' }
 
@@ -16,7 +16,7 @@ function fixture() {
       strings.set(args[0], args[1])
       return 'OK'
     }
-    if (operation === 'ZREVRANGE') return [...(ranks.get(args[0]) || [])].sort((a, b) => JSON.parse(b).score - JSON.parse(a).score).slice(0, 50)
+    if (operation === 'ZREVRANGE') return [...(ranks.get(args[0]) || [])].sort((a, b) => JSON.parse(b).score - JSON.parse(a).score).slice(Number(args[1]), Number(args[2]) + 1)
     if (operation === 'EVAL') {
       const [script, count, ...rest] = args
       const keys = rest.slice(0, count)
@@ -28,17 +28,93 @@ function fixture() {
       }
       if (strings.has(keys[1])) return 0
       strings.set(keys[1], '1')
-      for (const key of keys.slice(2)) ranks.set(key, [...(ranks.get(key) || []), values[2]])
+      const legacyMatches = JSON.parse(values[5])
+      for (const [index,key] of keys.slice(2).entries()) {
+        const old = ranks.get(key) || []
+        const matches = member => legacyMatches[index].includes(member) || JSON.parse(member).playerKey === values[4]
+        const candidates = [JSON.parse(values[2]), ...old.filter(matches).map(member => JSON.parse(member))]
+        const winner = candidates.reduce((best,entry) => entry.score >= best.score ? entry : best)
+        winner.playerId ??= winner.name
+        winner.playerKey = values[4]
+        ranks.set(key, [...old.filter(member => !matches(member)), JSON.stringify(winner)].sort((a,b) => JSON.parse(b).score-JSON.parse(a).score).slice(0,1000))
+      }
       strings.delete(keys[0])
       return 1
     }
     throw new Error(`Unexpected Redis command: ${operation}`)
   }
   const service = createPenaltyService({ env, command, now: () => time, randomId: () => `test-${++id}` })
-  return { service, command, advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
+  return { service, command, ranks, currentWeek:() => weekKey(time), advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
 }
 const post = (service, body) => service({ method: 'POST', body })
 const expectCode = code => error => error.code === code
+
+test('historical rankings merge case and Unicode variants before selecting the top 50', () => {
+  const rows = Array.from({length:60},(_,i)=>JSON.stringify({id:i,playerId:i%2?'ORC-HI':'orc-hi',score:1400-i}))
+  rows.push(JSON.stringify({name:'Çağrı',score:1000}),JSON.stringify({playerId:'ÇAĞRI',score:1100}),JSON.stringify({playerId:'C\u0327ag\u0306rı',score:1050}))
+  rows.push('broken',JSON.stringify({playerId:'bad id',score:999}),JSON.stringify({playerId:'valid',score:-1}))
+  for(let i=0;i<60;i++) rows.push(JSON.stringify({playerId:`player_${i}`,score:900-i}))
+  const entries=bestLeaderboardEntries(rows.reverse())
+  assert.equal(entries.length,50)
+  assert.equal(entries[0].score,1400)
+  assert.equal(playerRankingKey(entries[0].playerId),'orc-hi')
+  assert.equal(entries[1].score,1100)
+  assert.equal(new Set(entries.map(e=>playerRankingKey(e.playerId))).size,50)
+  assert.equal(playerRankingKey(' ORC-HI '),playerRankingKey('orc-hi'))
+})
+
+async function completeRound(f, power=1) {
+  let {token}=await post(f.service,{action:'start'})
+  for(let i=0;i<10;i++){
+    const next=await post(f.service,{action:'shot',token,x:.1,y:.1,power})
+    token=next.token
+    f.advance()
+  }
+  return token
+}
+
+test('lower scores compact legacy duplicates while preserving separate weekly and all-time bests',async()=>{
+  const f=fixture()
+  const all='altair:penalty:v1:all',week=f.currentWeek()
+  f.ranks.set(all,[JSON.stringify({id:'old1',name:'ÇAĞRI',score:1400}),JSON.stringify({id:'old2',playerId:'Çağrı',score:900})])
+  f.ranks.set(week,[JSON.stringify({id:'old3',playerId:'Çağrı',score:700}),JSON.stringify({id:'old4',playerId:'ÇAĞRI',score:400})])
+  const token=await completeRound(f,0)
+  await post(f.service,{action:'submit',token,playerId:'çağrı'})
+  assert.equal(f.ranks.get(all).length,1)
+  assert.equal(f.ranks.get(week).length,1)
+  assert.equal((await f.service({query:{period:'all'}})).entries[0].score,1400)
+  assert.equal((await f.service()).entries[0].score,700)
+  await assert.rejects(post(f.service,{action:'submit',token,playerId:'çağrı'}),expectCode('SESSION_ALREADY_USED'))
+})
+
+test('concurrent rounds for one handle retain only the highest valid score',async()=>{
+  const f=fixture()
+  const high=await completeRound(f,1),low=await completeRound(f,0)
+  const results=await Promise.all([
+    post(f.service,{action:'submit',token:high,playerId:'ORC-HI'}),
+    post(f.service,{action:'submit',token:low,playerId:'orc-hi'})
+  ])
+  const highest=Math.max(...results.map(r=>r.entry.score))
+  assert.ok(highest>0)
+  for(const period of ['week','all']){
+    const entries=(await f.service({query:{period}})).entries
+    assert.equal(entries.length,1)
+    assert.equal(entries[0].score,highest)
+  }
+  assert.equal(f.ranks.get('altair:penalty:v1:all').length,1)
+  assert.equal(f.ranks.get(f.currentWeek()).length,1)
+})
+
+test('a new week gets its own personal best without resetting the all-time record',async()=>{
+  const f=fixture()
+  f.ranks.set('altair:penalty:v1:all',[JSON.stringify({playerId:'ORC-HI',score:1500})])
+  f.advance(7*24*60*60*1000)
+  const token=await completeRound(f,0)
+  await post(f.service,{action:'submit',token,playerId:'orc-hi'})
+  assert.equal((await f.service()).entries[0].score,0)
+  assert.equal((await f.service({query:{period:'all'}})).entries[0].score,1500)
+})
+
 
 test('player IDs preserve public game handles and reject invalid input', () => {
   for (const id of ['ORC-HI','Tru-Ardas','mcb06099','player_27','player.27','Çağrı']) assert.equal(normalizePlayerId(` ${id} `),id)

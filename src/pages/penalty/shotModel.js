@@ -6,13 +6,13 @@ export function powerFromMeter(position) {
   return distance <= 0.012 ? 1 : Math.min(0.99, 1 - distance * 2)
 }
 
-// On-target shots: 55% base save chance at 45% power, falling to 22% at 100%.
-// Central placement adds 10 percentage points; the farthest corners remove 10.
+// Central shots fall from 75% at 45% power to 10% at full power.
+// Placement reduces the chance by up to 5 percentage points.
 export function keeperSaveChance({x,y,power}) {
   if(power < .45)return 0;
   const placement=clamp(Math.hypot(x-.5,y-.5)/Math.SQRT1_2,0,1);
   const strength=clamp((power-.45)/.55,0,1);
-  return clamp(.55-.33*strength+.1-.2*placement,.12,.65);
+  return .75-.65*strength-.05*placement;
 }
 
 // Coordinates are normalized to the goal, with y increasing downward.

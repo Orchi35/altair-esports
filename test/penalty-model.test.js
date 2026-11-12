@@ -43,18 +43,30 @@ test('save rates decrease smoothly with power and reward corner placement', () =
     for(let i=45;i<=100;i++) {
       const chance=keeperSaveChance({x,y,power:i/100});
       assert.ok(chance<=previous+1e-12);
-      assert.ok(chance>=.12 && chance<=.65);
+      assert.ok(chance>=.05-1e-12 && chance<=.75);
       previous=chance;
     }
   }
-  assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:.5})-.62)<1e-10);
-  assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:1})-.32)<1e-10);
-  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:1})-.12)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:.45})-.75)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:.45})-.70)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:.75})-.39545454545)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:.75})-.34545454545)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:1})-.10)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:1})-.05)<1e-10);
   // Exhaustive deterministic rolls verify the outcome frequency, not just the formula.
-  for(const power of [.5,.75,1]) {
+  for(const power of [.45,.5,.75,.99,1]) for(const [x,y] of [[.5,.5],[.1,.1],[.9,.9]]) {
     let saves=0;
-    for(let i=0;i<1000;i++) if(shot({x:.5,y:.5,power,saveRoll:(i+.5)/1000}).outcome==='saved')saves++;
-    assert.equal(saves,Math.round(1000*keeperSaveChance({x:.5,y:.5,power})));
+    for(let i=0;i<1000;i++) {
+      const saveRoll=(i+.5)/1000;
+      const left=shot({x,y,power,saveRoll,keeperX:.1,keeperY:.5});
+      const right=shot({x,y,power,saveRoll,keeperX:.9,keeperY:.5});
+      assert.equal(left.outcome,right.outcome);
+      if(left.outcome==='saved')saves++;
+    }
+    assert.equal(saves,Math.round(1000*keeperSaveChance({x,y,power})));
+  }
+  for(const power of [.45,.5,.75,.99,1]) {
+    assert.ok(Math.abs(keeperSaveChance({x:.1,y:.1,power})-keeperSaveChance({x:.9,y:.9,power}))<1e-12);
   }
 })
 

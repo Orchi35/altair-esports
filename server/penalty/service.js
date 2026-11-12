@@ -1,6 +1,6 @@
 import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto'
 import { calculateShot } from '../../src/pages/penalty/shotModel.js'
-import { normalizePlayerId } from '../../src/pages/penalty/playerId.js'
+import { normalizePlayerId, playerRankingKey } from '../../src/pages/penalty/playerId.js'
 
 export const SHOT_COUNT = 10
 export const SHOT_INTERVAL_MS = 700
@@ -17,8 +17,28 @@ return 1`
 export const SUBMIT_SCRIPT = `-- penalty-submit
 if redis.call('GET', KEYS[1]) ~= ARGV[1] then return 0 end
 if not redis.call('SET', KEYS[2], '1', 'NX', 'EX', ARGV[4]) then return 0 end
-redis.call('ZADD', KEYS[3], ARGV[2], ARGV[3])
-redis.call('ZADD', KEYS[4], ARGV[2], ARGV[3])
+local legacy = cjson.decode(ARGV[6])
+for board = 3, 4 do
+  local aliases = {}
+  for _, member in ipairs(legacy[board - 2]) do aliases[member] = true end
+  local best = ARGV[3]
+  local bestScore = tonumber(ARGV[2])
+  local members = redis.call('ZREVRANGE', KEYS[board], 0, 999, 'WITHSCORES')
+  for i = 1, #members, 2 do
+    local member = members[i]
+    local ok, entry = pcall(cjson.decode, member)
+    if aliases[member] or (ok and type(entry) == 'table' and entry.playerKey == ARGV[5]) then
+      local score = tonumber(members[i + 1])
+      if score >= bestScore then best = member; bestScore = score end
+      redis.call('ZREM', KEYS[board], member)
+    end
+  end
+  local winner = cjson.decode(best)
+  winner.playerKey = ARGV[5]
+  winner.playerId = winner.playerId or winner.name
+  winner.score = bestScore
+  redis.call('ZADD', KEYS[board], bestScore, cjson.encode(winner))
+end
 redis.call('ZREMRANGEBYRANK', KEYS[3], 0, -1001)
 redis.call('ZREMRANGEBYRANK', KEYS[4], 0, -1001)
 redis.call('EXPIRE', KEYS[4], 1209600)
@@ -30,6 +50,26 @@ class PenaltyError extends Error {
 }
 const fail = (status, code) => { throw new PenaltyError(status, code) }
 const unit = value => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1
+
+function readEntry(member) {
+  try {
+    const value = JSON.parse(member)
+    const playerId = normalizePlayerId(value?.playerId ?? value?.name)
+    if (!playerId || !Number.isInteger(value.score) || value.score < 0 || value.score > 1500) return null
+    return { playerId, score:value.score }
+  } catch { return null }
+}
+
+export function bestLeaderboardEntries(members) {
+  const best = new Map()
+  for (const member of members) {
+    const entry = readEntry(member)
+    if (!entry) continue
+    const key = playerRankingKey(entry.playerId)
+    if (!best.has(key) || best.get(key).score < entry.score) best.set(key, entry)
+  }
+  return [...best.values()].sort((a, b) => b.score - a.score || playerRankingKey(a.playerId).localeCompare(playerRankingKey(b.playerId))).slice(0, 50)
+}
 
 export function weekKey(timestamp) {
   const date = new Date(timestamp)
@@ -92,12 +132,11 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
     if (method === 'GET') {
       const period = query.period || 'week'
       if (!['week', 'all'].includes(period)) fail(400, 'INVALID_PERIOD')
-      const members = await command(['ZREVRANGE', period === 'all' ? `${PREFIX}all` : weekKey(now()), 0, 49])
+      // Read the full retained board before deduplication so old repeated rounds
+      // cannot hide other players below the first 50 rows.
+      const members = await command(['ZREVRANGE', period === 'all' ? `${PREFIX}all` : weekKey(now()), 0, 999])
       if (!Array.isArray(members)) fail(503, 'LEADERBOARD_UNAVAILABLE')
-      const entries = members.map(member => {
-        const entry = JSON.parse(member)
-        return { playerId: entry.playerId ?? entry.name, score: entry.score }
-      })
+      const entries = bestLeaderboardEntries(members)
       return { configured: true, entries }
     }
     if (!body || typeof body !== 'object' || Array.isArray(body)) fail(400, 'INVALID_BODY')
@@ -126,8 +165,17 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
     if (state.shot !== SHOT_COUNT) fail(409, 'GAME_NOT_FINISHED')
     const playerId = normalizePlayerId(body.playerId)
     if (!playerId) fail(400, 'INVALID_PLAYER_ID')
-    const entry = JSON.stringify({ id: state.id, playerId, score: state.total })
-    const saved = await command(['EVAL', SUBMIT_SCRIPT, 4, sessionKey, `${PREFIX}submitted:${state.id}`, `${PREFIX}all`, weekKey(now()), body.token, state.total, entry, SESSION_MS / 1000])
+    const playerKey = playerRankingKey(playerId)
+    const boardKeys = [`${PREFIX}all`, weekKey(now())]
+    // Resolve historical Unicode/case variants in JS. The Lua transaction also
+    // matches playerKey, including submissions arriving after these reads.
+    const legacyMatches = await Promise.all(boardKeys.map(async key => {
+      const members = await command(['ZREVRANGE', key, 0, 999])
+      if (!Array.isArray(members)) fail(503, 'LEADERBOARD_UNAVAILABLE')
+      return members.filter(member => playerRankingKey(readEntry(member)?.playerId) === playerKey)
+    }))
+    const entry = JSON.stringify({ id: state.id, playerId, playerKey, score: state.total })
+    const saved = await command(['EVAL', SUBMIT_SCRIPT, 4, sessionKey, `${PREFIX}submitted:${state.id}`, ...boardKeys, body.token, state.total, entry, SESSION_MS / 1000, playerKey, JSON.stringify(legacyMatches)])
     if (saved !== 1) fail(409, 'SESSION_ALREADY_USED')
     return { submitted: true, entry: { playerId, score: state.total } }
   }
