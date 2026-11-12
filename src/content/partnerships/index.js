@@ -148,7 +148,7 @@ export const PARTNERSHIP_CONTENT = Object.freeze({
   related:Object.freeze({ news:Object.freeze([]) }),
   collaborationAreas:Object.freeze(collaborationAreas.map((item) => Object.freeze(item))),
   integrationExamples:Object.freeze(integrationExamples.map((item) => Object.freeze(item))),
-  mediaKit:Object.freeze({ htmlPath:"/media-kit.html", pdfPath:"/media/altair-esports-media-kit.pdf", updatedAt:"2026-08-11T00:00:00+03:00" }),
+  mediaKit:Object.freeze({ htmlPath:"/media-kit.html", pdfPath:"/media/altair-esports-media-kit.pdf", updatedAt:"2026-11-12T00:00:00+03:00" }),
   locales:Object.freeze({
     tr:Object.freeze({
       title:"Markanız için oyunun içinde gerçek bir yer.",

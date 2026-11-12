@@ -4,6 +4,7 @@ export const SUPPORTED_LOCALES = Object.freeze(["tr", "en"]);
 
 export const ROUTE_DEFINITIONS = Object.freeze([
   { name:"home", paths:{ tr:[], en:[] }, sectionId:"top" },
+  { name:"penalty", paths:{ tr:["penalti"], en:["penalty"] }, sectionId:"penalty" },
   { name:"builder", paths:{ tr:["builder"], en:["builder"] }, sectionId:"builder" },
   { name:"matches", paths:{ tr:["maclar"], en:["matches"] }, sectionId:"match-center" },
   { name:"match-detail", paths:{ tr:["maclar", ":slug"], en:["matches", ":slug"] }, sectionId:"match-center", detail:true },

@@ -2,6 +2,7 @@
 // Example: vpg: { "732864": { src:"/players/vpg/732864.webp", objectPosition:"50% 20%" } }
 export const LEAGUE_PLAYER_IMAGES = {
   vpg: {
+    "916844": { src: "/players/vpg/916844.png", objectPosition: "50% 0%" }, // GocebeEno
     "951110": { src: "/players/vpg/951110.png", objectPosition: "50% 0%" }, // ardaygz1o
     "869359": { src: "/players/vpg/869359.png", objectPosition: "50% 0%" }, // HzrqKing
     "829482": { src: "/players/vpg/829482.png", objectPosition: "50% 0%" }, // yakupeyz

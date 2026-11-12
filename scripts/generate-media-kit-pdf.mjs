@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PARTNERSHIP_CONTENT } from "../src/content/partnerships/index.js";
-import { validateMediaKitContent } from "./partnership-media-kit.mjs";
+import { formatDate, validateMediaKitContent } from "./partnership-media-kit.mjs";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectDirectory = path.resolve(scriptDirectory, "..");
@@ -133,7 +133,7 @@ async function main() {
   const now = new Date().toISOString();
   const verification = validateMediaKitContent({ now });
   const html = await fs.readFile(mediaKitHtml, "utf8");
-  if (!html.includes("PARTNERSHIP_METRICS:START") || !html.includes("Güncelleme · 11 Ağustos 2026")) {
+  if (!html.includes("PARTNERSHIP_METRICS:START") || !html.includes(formatDate(PARTNERSHIP_CONTENT.mediaKit.updatedAt))) {
     throw new Error("The built media kit HTML is incomplete or has not been normalized");
   }
 
@@ -141,13 +141,29 @@ async function main() {
   const profileDirectory = await fs.mkdtemp(path.join(os.tmpdir(), "altair-media-kit-"));
   await fs.mkdir(outputDirectory, { recursive:true });
   await fs.mkdir(publicDirectory, { recursive:true });
+  const freshPdf = path.join(outputDirectory, `media-kit-${Date.now()}.pdf`);
   const { server, url } = await createStaticServer();
   try {
-    await printPdf(browser, url, outputPdf, profileDirectory);
+    if (process.env.MEDIA_KIT_PYTHON_PATH) {
+      await new Promise((resolve, reject) => {
+        const child = spawn(process.env.MEDIA_KIT_PYTHON_PATH, [path.join(scriptDirectory, "render-media-kit-pdf.py"), mediaKitHtml, freshPdf], { stdio:"inherit", windowsHide:true });
+        child.once("error", reject);
+        child.once("exit", (code) => code === 0 ? resolve() : reject(new Error(`PDF renderer failed (${code})`)));
+      });
+    } else {
+      await printPdf(browser, url, freshPdf, profileDirectory);
+    }
+    await assertPdf(freshPdf);
+    await fs.rename(freshPdf, outputPdf);
   } finally {
     await new Promise((resolve) => server.close(resolve));
     try {
-      await fs.rm(profileDirectory, { recursive:true, force:true, maxRetries:5, retryDelay:100 });
+      const resolvedProfile = path.resolve(profileDirectory);
+      const temporaryRoot = path.resolve(os.tmpdir());
+      if (path.dirname(resolvedProfile) !== temporaryRoot || !path.basename(resolvedProfile).startsWith("altair-media-kit-")) {
+        throw new Error("Temporary browser profile is outside the expected directory");
+      }
+      await fs.rm(resolvedProfile, { recursive:true, force:true, maxRetries:5, retryDelay:100 });
     } catch {
       console.warn("Temporary browser profile could not be removed immediately; the operating system will reclaim it.");
     }

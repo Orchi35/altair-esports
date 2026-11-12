@@ -134,7 +134,7 @@ export function PartnershipInquiryForm({ areas, copy, locale }) {
         <span className="partnership-kicker">{copy.eyebrow}</span>
         <h2 id="partnership-form-title">{copy.title}</h2>
         <p>{copy.intro}</p>
-        <a href={SITE_LINKS.instagram} target="_blank" rel="noopener noreferrer" onClick={() => trackSocialOpen("instagram", locale)}>Instagram</a>
+        <a href={SITE_LINKS.instagram} target="_blank" rel="noopener noreferrer" onClick={() => trackSocialOpen("instagram", locale)}>{locale === "tr" ? "Instagram'dan İletişime Geç" : "Contact Us on Instagram"}<span aria-hidden="true">↗</span></a>
       </div>
 
       <form className="partnership-form" noValidate onSubmit={submit} aria-labelledby="partnership-form-title">

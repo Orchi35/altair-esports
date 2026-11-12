@@ -28,18 +28,18 @@ const STATIC_PAGES = Object.freeze([
     file:"privacy.html",
     locale:"tr",
     title:"Gizlilik Bildirimi | ALTAIR eSports",
-    description:"ALTAIR eSports internet sitesinde kullanılan veriler, analiz araçları, tarayıcı depolama alanı ve ziyaretçi hakları hakkında gizlilik bildirimi.",
+    description:"ALTAIR eSports Builder, Penaltı Arena, iş birliği formu, veri saklama ve ziyaretçi hakları hakkında gizlilik bildirimi.",
     image:"/og.jpg",
-    lastModified:"2026-08-11",
+    lastModified:"2026-11-12",
   },
   {
     path:"/terms.html",
     file:"terms.html",
     locale:"tr",
     title:"Kullanım Koşulları | ALTAIR eSports",
-    description:"ALTAIR eSports internet sitesinin içerik, fikri mülkiyet, güncel veri ve kabul edilebilir kullanım koşulları.",
+    description:"ALTAIR eSports Builder, Penaltı Arena, kulüp içerikleri ve marka iş birlikleri için kullanım koşulları.",
     image:"/og.jpg",
-    lastModified:"2026-08-09",
+    lastModified:"2026-11-12",
   },
 ]);
 
