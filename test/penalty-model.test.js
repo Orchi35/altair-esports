@@ -1,13 +1,46 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { calculateShot, powerFromMeter, keeperSaveChance } from '../src/pages/penalty/shotModel.js'
+import { calculateShot, powerFromMeter, keeperSaveChance, goalPoints, MAX_GOAL_POINTS, powerPercentage } from '../src/pages/penalty/shotModel.js'
 
 const shot = overrides => calculateShot({ x: 0.2, y: 0.2, power: 0.8, keeperX: 0.8, keeperY: 0.8, ...overrides })
 
+test('goal points prioritize power and reserve the maximum for exact perfect timing', () => {
+  for (const [power, points] of [[.45,28],[.5,35],[.75,79],[.9,113],[.99,137],[1,150]]) {
+    assert.equal(goalPoints(power), points)
+    assert.equal(shot({ power, saveRoll:1 }).points, points)
+  }
+  let previous = 0
+  for (let percentage=0;percentage<=100;percentage++) {
+    const points=goalPoints(percentage/100)
+    assert.ok(points>=previous)
+    if (percentage>=45) assert.ok(points>previous)
+    if (percentage<100) assert.ok(points<MAX_GOAL_POINTS)
+    previous=points
+  }
+  assert.equal(goalPoints(1-Number.EPSILON),137)
+  assert.equal(goalPoints(.9099),goalPoints(.9))
+  assert.equal(powerPercentage(.58),58)
+  assert.equal(powerPercentage(1-Number.EPSILON),99)
+  assert.equal(powerPercentage(1),100)
+  for (const invalid of [NaN,Infinity,-1,1.01,'1',null]) assert.equal(goalPoints(invalid),0)
+})
+
+test('perfect goals always earn the maximum and failed shots never earn timing points', () => {
+  for (const [x,y] of [[.5,.5],[.1,.1],[.9,.9]]) {
+    for (const power of [.5,.75,.99,1]) assert.equal(shot({x,y,power,saveRoll:1}).points,goalPoints(power))
+    assert.equal(shot({x,y,power:1,saveRoll:0}).points,0)
+  }
+  for (const result of [shot({x:0,power:1}),shot({y:0,power:1}),shot({power:.3}),shot({power:.1})]) assert.equal(result.points,0)
+  assert.equal(Array.from({length:10},()=>shot({power:1,saveRoll:1})).reduce((total,result)=>total+result.points,0),1500)
+})
+
 test('meter reserves 100% for its narrow center band', () => {
   assert.equal(powerFromMeter(0.5), 1)
-  assert.equal(powerFromMeter(0.511), 1)
-  assert.ok(powerFromMeter(0.513) < 1)
+  for (const position of [0.491,0.492,0.508,0.509]) assert.equal(powerFromMeter(position),1)
+  for (const position of [0.4909,0.5091,0.489,0.511]) {
+    assert.ok(powerFromMeter(position)<1)
+    assert.ok(powerPercentage(powerFromMeter(position))<100)
+  }
   assert.equal(powerFromMeter(0), 0)
   assert.equal(powerFromMeter(1), 0)
 })
@@ -37,22 +70,22 @@ test('keeper can save a perfect shot and goals score points', () => {
   assert.ok(goal.points > 0 && goal.points <= 150)
 })
 
-test('save rates decrease smoothly with power and reward corner placement', () => {
+test('save rates decrease with power and are equal across shot locations', () => {
   for(const [x,y] of [[.5,.5],[.2,.2],[0,0],[1,1]]) {
     let previous=1;
     for(let i=45;i<=100;i++) {
       const chance=keeperSaveChance({x,y,power:i/100});
       assert.ok(chance<=previous+1e-12);
-      assert.ok(chance>=.05-1e-12 && chance<=.75);
+      assert.ok(chance>=.10-1e-12 && chance<=.75);
       previous=chance;
     }
   }
   assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:.45})-.75)<1e-10);
-  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:.45})-.70)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:.45})-.75)<1e-10);
   assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:.75})-.39545454545)<1e-10);
-  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:.75})-.34545454545)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:.75})-.39545454545)<1e-10);
   assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:1})-.10)<1e-10);
-  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:1})-.05)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:1})-.10)<1e-10);
   // Exhaustive deterministic rolls verify the outcome frequency, not just the formula.
   for(const power of [.45,.5,.75,.99,1]) for(const [x,y] of [[.5,.5],[.1,.1],[.9,.9]]) {
     let saves=0;
@@ -61,12 +94,15 @@ test('save rates decrease smoothly with power and reward corner placement', () =
       const left=shot({x,y,power,saveRoll,keeperX:.1,keeperY:.5});
       const right=shot({x,y,power,saveRoll,keeperX:.9,keeperY:.5});
       assert.equal(left.outcome,right.outcome);
+      assert.equal(left.outcome,shot({x:.5,y:.5,power,saveRoll}).outcome);
       if(left.outcome==='saved')saves++;
     }
     assert.equal(saves,Math.round(1000*keeperSaveChance({x,y,power})));
   }
   for(const power of [.45,.5,.75,.99,1]) {
-    assert.ok(Math.abs(keeperSaveChance({x:.1,y:.1,power})-keeperSaveChance({x:.9,y:.9,power}))<1e-12);
+    for (const [x,y] of [[.1,.1],[.9,.9],[.5,.1],[.1,.5],[.9,.5],[.5,.9]]) {
+      assert.equal(keeperSaveChance({x,y,power}),keeperSaveChance({x:.5,y:.5,power}));
+    }
   }
 })
 

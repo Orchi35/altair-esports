@@ -1,18 +1,35 @@
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value))
 
+export const MAX_GOAL_POINTS = 150
+export const PERFECT_WINDOW_HALF_WIDTH = 0.009
+
+export function powerPercentage(power) {
+  if (!Number.isFinite(power)) return 0
+  if (power === 1) return 100
+  return clamp(Math.floor(power * 100 + 1e-9), 0, 99)
+}
+
+// Timing determines scoring; aiming selects the ball's trajectory.
+// Perfect timing earns an exclusive bonus. Near-perfect values cannot round up to it.
+export function goalPoints(power) {
+  if (!Number.isFinite(power) || power < .45 || power > 1) return 0
+  if (power === 1) return MAX_GOAL_POINTS
+  const displayedPower = powerPercentage(power) / 100
+  return Math.round(140 * displayedPower * displayedPower)
+}
+
 // Only the narrow center band awards a perfect strike.
 export function powerFromMeter(position) {
   const distance = Math.abs(clamp(position, 0, 1) - 0.5)
-  return distance <= 0.012 ? 1 : Math.min(0.99, 1 - distance * 2)
+  return distance <= PERFECT_WINDOW_HALF_WIDTH + Number.EPSILON ? 1 : Math.min(0.99, 1 - distance * 2)
 }
 
-// Central shots fall from 75% at 45% power to 10% at full power.
-// Placement reduces the chance by up to 5 percentage points.
-export function keeperSaveChance({x,y,power}) {
+// All on-target shots fall from 75% at 45% power to 10% at full power.
+// Both keepers use the same probability, independent of shot location.
+export function keeperSaveChance({power}) {
   if(power < .45)return 0;
-  const placement=clamp(Math.hypot(x-.5,y-.5)/Math.SQRT1_2,0,1);
   const strength=clamp((power-.45)/.55,0,1);
-  return .75-.65*strength-.05*placement;
+  return .75-.65*strength;
 }
 
 // Coordinates are normalized to the goal, with y increasing downward.
@@ -54,7 +71,6 @@ export function calculateShot({ x, y, power, keeperX, keeperY, saveRoll=.5 }) {
     }
   }
   const goal = outcome === 'goal'
-  const placement = Math.min(1, Math.hypot(x - 0.5, y - 0.5) / Math.SQRT1_2)
-  const points = goal ? 100 + Math.round(30 * placement + 20 * power) : 0
+  const points = goal ? goalPoints(power) : 0
   return { goal, points, keeperX, keeperY, outcome, perfect, postSide, targetX, targetY, impactX: outcome === 'post' ? impactX : outcome === 'saved' ? x : targetX, impactY: outcome === 'post' ? impactY : outcome === 'saved' ? y : targetY }
 }
