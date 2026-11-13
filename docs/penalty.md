@@ -1,62 +1,54 @@
-# Ortak liderlik tablosunu etkinleştirme
+# Penalty Arena: storage, identity and security
 
-Oyun şu anda antrenman modunda çalışır. Puanlar yalnızca bu tarayıcıda tutulur; ortak sıralama için aşağıdaki kurulum gerekir.
+## Configuration
 
-1. Upstash hesabında bir Redis veritabanı oluştur.
-2. Veritabanının REST URL ve okuma/yazma yetkili REST token değerlerini al.
-3. Vercel'de canlı siteyi sunan projenin sunucu ortam değişkenlerine şunları ekle:
-   - PENALTY_REDIS_REST_URL
-   - PENALTY_REDIS_REST_TOKEN
-   - PENALTY_SIGNING_SECRET (en az 32 karakterlik rastgele gizli değer)
-4. Anahtarları sohbete veya kaynak koda yapıştırma; Vercel ortam ayarlarında tut.
-5. Yeniden yayınla. /api/penalty?period=week yanıtında configured:true görünmeli.
-6. On atışı tamamlayıp oyuncu ID ile skor kaydet; başka bir tarayıcıdan haftalık ve tüm zamanlar sıralamasını kontrol et.
+Configure server-only PENALTY_REDIS_REST_URL (Upstash HTTPS REST URL), PENALTY_REDIS_REST_TOKEN (read/write), and PENALTY_SIGNING_SECRET (random secret, at least 32 characters) in Vercel. Never commit secrets, use VITE_* variables for these values, or log owner/session tokens. The deployment root must contain package.json and api/penalty.js. Redeploy after changing variables. Preview/test must use separate storage; never write test scores to production. Rotating the secret invalidates rounds but preserves scores.
 
-Ayrıntılı teknik kurulum ve sınırlar aşağıdadır. Canlı veritabanı bağlantısı henüz doğrulanmadı.
+Without configuration the UI explicitly runs practice mode. Practice scores cannot enter rankings. The API returns 503 LEADERBOARD_NOT_CONFIGURED when configuration is missing; storage failure fails closed. There are no fabricated ranking entries.
 
-# Penalty leaderboard setup
+## Protocol 2: 2026-11-13
 
-The game can run in practice mode without a database. Practice scores and the local best are browser-only and cannot be submitted to the shared rankings. The API responds with HTTP 503 and `LEADERBOARD_NOT_CONFIGURED` until all three server environment variables are configured. There are no seeded or invented ranking entries.
+Writes require POST /api/penalty with application/json. Responses are uncached; browser cross-site writes are rejected.
 
-## Connect persistent storage
+1. start: {action:'start',playerId,ownerToken} returns {token}.
+2. arm: {action:'arm',token} returns {token,timing:{startsAt,expiresAt,legMs},requestReceivedAt,serverNow}.
+3. shot: ONLY {action:'shot',token,x,y} returns {token,result,total,shot,finished}. Coordinates must be finite numbers in [0,1]. Result includes server power, points, outcome and animation coordinates.
+4. Repeat arm/shot for ten attempts, replacing the token after every response.
+5. submit: {action:'submit',token,playerId} returns {submitted:true,entry:{playerId,score}}. The client auto-submits after the final animation, with retry on failure.
+6. GET /api/penalty?period=week or period=all returns {configured:true,entries:[{playerId,score}]}, at most 50 entries.
 
-1. Create an Upstash account at <https://console.upstash.com/> and create a Redis database. Choose a region close to your Vercel deployment.
-2. Open that database's REST API connection details. Copy the REST URL and the full read/write REST token. The read-only token cannot save scores.
-3. Open your Vercel project's Settings → Environment Variables. Add these exact names for Production (and Preview if you want preview deployments to use the service):
+The reported exploit substituted client power. Ranked shots now reject power, timestamps, score, save-roll and history fields. Power is calculated at service entry, BEFORE Redis latency, against signed server timing. Protocol-1 sessions cannot arm, shoot or submit. Historical stored scores are preserved and are not retroactively proven legitimate.
 
-   | Variable | Value |
-   | --- | --- |
-   | `PENALTY_REDIS_REST_URL` | The database's HTTPS REST URL |
-   | `PENALTY_REDIS_REST_TOKEN` | The database's read/write REST token |
-   | `PENALTY_SIGNING_SECRET` | A private random secret of at least 32 characters |
+Arm atomically consumes its previous token. A meter cannot be reset or rearmed. It begins 800 ms after the later of server time and the previous shot's 2,000 ms cooldown. Prearming supports reduced-motion users without shortening the cooldown. Meter pacing is server-issued at 580-660 ms edge-to-edge; the window expires after 30 seconds. Rounds expire after 30 minutes. New start replaces the owner's active session. Arm, shot and submit check that pointer inside their Redis transaction, revoking previous rounds across tabs and handles, including completed but unsubmitted rounds. Replays/concurrent branches cannot produce multiple accepted shots or submissions.
 
-4. Generate a secret locally with `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"`. Paste the output as the signing secret. Keep these values in server environment settings; never put them in `VITE_*` variables, frontend code, or Git.
-5. Redeploy the Vercel project so its server functions receive the variables. The deployed project root must be the repository folder containing `package.json` and `api/penalty.js` (locally named `current-site`); do not add a nested root if the Git repository already starts there.
-6. Open `/api/penalty?period=week` on the deployed domain. A fresh database should return `{"configured":true,"entries":[]}`. Finish ten ranked shots and submit a player ID; verify it appears in both weekly and all-time views, including from a different browser.
+The UI uses a monotonic clock and estimates transport delay from arm round trip minus server processing. This estimate affects drawing ONLY; no client clock/latency compensation is trusted for scoring. Returned server power appears after shooting. The original narrow perfect band remains; unstable network latency can disagree with the preview. Expired/unsynchronized rounds fail instead of uploading a local result. Lost successful responses can leave stale tokens; restart the round.
 
-Use a separate database for previews if you want to avoid mixing test and production scores. Database availability, credentials, and billing remain the deployment owner's responsibility. Rotating the signing secret invalidates games in progress, but preserves saved rankings.
+## Scoring
 
-## API
+Practice and ranked share shotModel.js. A perfect goal earns 150; other goals earn round(140*(floor(power*100)/100)^2). Saves, posts, weak and wide shots earn zero. Maximum is 1,500. Only the central +/-0.009 band gives exactly 100%. Practice has a 620 ms local meter; ranked timing is server-issued.
 
-All writes are `POST /api/penalty` with JSON bodies. Responses are uncached.
+Both keepers use the same per-percentage save curve: 75% at 45% power down to 10% at full power. Repeated shots in one zone add 8 percentage points each, up to 32 extra points and a 95% total cap. Signed history controls this. Keeper randomness derives from secret, round ID and shot index. Selection changes appearance only. Animations follow server outcome/impact/target coordinates.
 
-- `{ "action": "start" }` → `{ token }`.
-- `{ "action": "shot", "token": "…", "x": 0.2, "y": 0.3, "power": 0.75 }` → `{ token, result: { goal, points, keeperX, keeperY }, total, shot, finished }`.
-- `{ "action": "submit", "token": "…", "playerId": "ORC-HI" }` → `{ submitted: true, entry: { name, score } }`.
-- `GET /api/penalty?period=week` or `period=all` → `{ configured: true, entries: [{ playerId, score }] }`, highest score first, at most 50 entries.
+## Player IDs and migration
 
-Coordinates are normalized to the goal rectangle: `(0,0)` is its top-left and `(1,1)` its bottom-right. Power is a number between 0 and 1; meter position is converted to power before the request. Shots have a 700 ms minimum interval; games expire after 30 minutes and finish after ten shots. Update the stored token after every accepted shot. Failed validation does not consume it. A network failure after an accepted shot can leave the client with a stale token; start a new game in that case.
+New IDs require 3-24 Unicode letters, digits, dots, underscores or hyphens, NFC-normalized and trimmed. Canonical keys ignore case and unify Turkish I variants. Historical two-character names remain readable but cannot start rounds.
 
-Scoring is power-based and shared by practice and ranked play. An exact 100% goal earns 150 points. Other goals earn round(140 × (floor(power × 100) / 100)²), based on the percentage shown on the meter: 99% = 137, 90% = 113, 75% = 79, 50% = 35 and 45% = 28 points. On-target placement changes neither save probability nor goal points. Saves, posts, wide and weak shots earn zero, including perfect-power attempts that do not score. Ten perfect goals total 1,500; existing historical records remain unchanged. The timing cursor travels edge-to-edge in 620 ms. Power peaks at the center; only the ±0.009 center window (1.8% of the meter width) gives exactly 100%. Power below 0.2 falls short, and power below 0.45 goes wide. Perfect timing adds a visual trail and banner but does not bypass keeper saves. The shared resolver returns outcome, targetX/Y and impactX/Y; the animation follows these server-authoritative endpoints, rebounding at the contact point for a save. Practice uses the same resolver with locally random keeper positioning and an independent save roll. Ranked rolls and positioning are derived on the server using separate HMAC bytes and an undisclosed signing secret; client-provided save rolls are ignored. For all on-target shots, save probability falls linearly from 75% at 45% power to 10% at full power, independently of shot location. At 50/75/100% power, save probabilities are approximately 69.09%, 39.55%, and 10%. Both keepers use exactly this model. Weak, wide and post shots do not enter the save lottery. Saved shots align the keeper with impact, while goals keep the keeper clear of the ball. The meter uses an isolated animation component with a steady track and sweet-spot glow; perfect-shot feedback only plays after shooting. Scores supplied by clients are ignored. Player IDs are required at submission and allow 2–24 characters: Unicode letters, numbers, periods, underscores, and hyphens (no internal spaces). IDs are NFC-normalized and trimmed on both client and server. The exact ID appears beside the score in both rankings. This is a public display identifier, not an authenticated or reserved identity. Existing stored name fields remain readable as playerId for compatibility.
+The browser remembers altair.penalty.playerId and a crypto-random 32-byte capability at altair.penalty.ownerToken. Start requires the latter as 64 lowercase hex characters. Redis stores its SHA-256 digest at altair:penalty:v1:owner:<canonical ID>, without expiry. Atomic claims prevent another owner from using the name. This is a browser capability, not real identity/account authentication. Clearing storage or changing browser loses access; there is no recovery UI. Unavailable storage allows practice only.
 
-Errors use `{ error: "CODE" }`: invalid input is HTTP 400; expired sessions are 410; unfinished, finished, or replayed sessions are 409; shots sent too quickly are 429. Configuration and storage failures are 503, with `configured: false`. Show a clear unavailable state, or explicitly switch to practice mode; never silently upload practice scores.
+Historical names without ownership proof remain reserved. Full retained weekly and all-time boards, including Unicode/case aliases, are checked. Do not assign them using an untrusted local display name; an administrator must separately verify ownership. Existing scores remain. Signed rounds bind the player identity; submit cannot replace it.
 
-## Persistence and limits
+## Persistence and abuse controls
 
-Sessions and rankings use the `altair:penalty:v1:` Redis namespace. Each shot atomically replaces its previous signed token. Submission atomically checks the final session, claims its ID with Redis `SET NX`, writes both sorted sets, and removes the session. This prevents branching the same session or submitting it twice. The weekly period starts Monday at 00:00 UTC and uses submission time. Each board retains its top 1,000 scores; the API returns the top 50. Weekly keys expire 14 days after the last submission; all-time scores remain until explicitly removed. Each weekly and all-time board displays only the highest score per normalized player ID (case-insensitive, with Turkish I variants unified). Historical duplicate rounds are merged before the top 50 is selected. On submission, one atomic Redis operation keeps the higher previous/new score and removes older entries for that ID on both boards; their best scores remain independent. Legacy Unicode variants are identified before the transaction, and canonical keys cover concurrent new submissions. Lower or equal rounds cannot overwrite a higher score. IDs remain public handles, not authenticated identities.
+Redis namespace remains altair:penalty:v1: for compatibility; game protocol is 2. Each board retains top 1,000 entries, returning top 50 after deduplication. Submit atomically keeps the best per canonical player independently for both boards, preserving older higher scores. New entries include protocol and completion time. Weeks start Monday 00:00 UTC using submission time. Weekly boards expire 14 days after last submission; all-time scores and ownership have no automatic expiry. Session/replay keys expire within 30 minutes.
 
-These controls protect score integrity and session replay, but do not establish player identity or prevent automated play or requests creating many sessions. Add deployment rate limits or a challenge if traffic requires stronger abuse controls. Do not advertise the game as cheat-proof. There is no account or password collection. Keeper selection (mcb06099 / Tru-Ardas) changes the on-pitch avatar and player identification only, so both choices have identical difficulty.
+Redis counters limit each IP/subnet to 120 GETs and 180 POSTs/minute; starts to 12/minute and 120/hour per IP and 6/minute per owner. Global limits: 3,000 GETs and 6,000 POSTs/minute. IPv6 privacy addresses share /64 buckets. Counters store HMAC identifiers rather than raw IP and expire after 60 seconds or one hour. Rotating owner keys does not bypass the IP cap. Redis failures block ranked requests. Over-limit requests return 429 with Retry-After.
 
-Run backend tests with `node --test test/penalty.test.js`. Tests use an in-memory Redis command double to verify the contract, signature validation, sequence, timing, scoring, and submission behavior. Deployment verification against the configured Upstash service is still required.
+Vercel address extraction uses platform-managed x-vercel-forwarded-for; elsewhere it uses the direct socket and ignores forwarded headers. Missing addresses share a limited bucket. Source: [Vercel request headers](https://vercel.com/docs/headers/request-headers). Adapt trusted address extraction before deploying behind another proxy. HTTP JSON/body-size validation applies before gameplay.
 
-Before starting, the validated public player ID is remembered in localStorage (`altair.penalty.playerId`) and prefilled on future visits. Completed ranked rounds submit automatically after the final shot animation; both leaderboards retain only the highest score for that ID. The ID stays fixed during a round and while a save is pending or unconfirmed. Successful saves allow ID changes before the next round. Failed submissions expose a retry button. Practice rounds never submit. Invalid stored IDs are ignored; unavailable storage never blocks play or score submission.
+## Verification and residual risks
+
+Run node --test test/penalty.test.js test/penalty-model.test.js test/penalty-player-id-storage.test.js and npm run verify. Unit tests simulate Redis commands; they do not prove production Lua behavior. Validate transactions against isolated Redis and complete a ranked round on a preview before release. Do not create production test scores.
+
+These controls reject forged power, score tampering and replay. They do NOT make a browser timing game bot-proof: timing is visible and scripts can schedule valid requests. Distributed/IP-rotating automation requires additional server-verified human challenges or edge bot protection. No external challenge has been provisioned by this change. Browser ownership does not prove one human per account. Do not claim every vulnerability is eliminated.
+
+The reported handle kinaci and other historical scores are not automatically removed. Moderation/reset requires a separate instruction. Production is unchanged until deployment.

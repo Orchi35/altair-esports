@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { createHmac } from 'node:crypto'
 import { createPenaltyService, createPenaltyHandler, resolveShot, weekKey, SHOT_INTERVAL_MS, bestLeaderboardEntries } from '../server/penalty/service.js'
 import { normalizePlayerId, playerRankingKey } from '../src/pages/penalty/playerId.js'
 
@@ -8,9 +9,12 @@ const env = { PENALTY_REDIS_REST_URL: 'https://example.upstash.io', PENALTY_REDI
 function fixture() {
   let time = Date.UTC(2026, 10, 12, 12)
   let id = 0
+  let delay = 0
   const strings = new Map()
   const ranks = new Map()
+  const expires = new Map()
   const command = async ([operation, ...args]) => {
+    time += delay
     if (operation === 'SET') {
       if (strings.has(args[0])) return null
       strings.set(args[0], args[1])
@@ -21,15 +25,34 @@ function fixture() {
       const [script, count, ...rest] = args
       const keys = rest.slice(0, count)
       const values = rest.slice(count)
+      if (script.includes('penalty-rate')) {
+        if ((expires.get(keys[0]) || 0) <= time) strings.delete(keys[0])
+        const n = Number(strings.get(keys[0]) || 0) + 1
+        strings.set(keys[0], n)
+        if (n === 1) expires.set(keys[0], time + Number(values[0]) * 1000)
+        return n
+      }
+      if (script.includes('penalty-start')) {
+        if (strings.has(keys[0])) return 0
+        strings.set(keys[0], values[0]); strings.set(keys[1], values[1]); return 1
+      }
+      if (script.includes('penalty-claim')) {
+        const existing = strings.get(keys[0])
+        if (existing) return existing === values[0] ? 1 : 0
+        if (values[1] === '1') return 0
+        strings.set(keys[0], values[0])
+        return 1
+      }
       if (strings.get(keys[0]) !== values[0]) return 0
       if (script.includes('penalty-advance')) {
+        if (strings.get(keys[1]) !== values[3]) return 0
         strings.set(keys[0], values[1])
         return 1
       }
-      if (strings.has(keys[1])) return 0
+      if (strings.get(keys[4]) !== values[6] || strings.has(keys[1])) return 0
       strings.set(keys[1], '1')
       const legacyMatches = JSON.parse(values[5])
-      for (const [index,key] of keys.slice(2).entries()) {
+      for (const [index,key] of keys.slice(2, 4).entries()) {
         const old = ranks.get(key) || []
         const matches = member => legacyMatches[index].includes(member) || JSON.parse(member).playerKey === values[4]
         const candidates = [JSON.parse(values[2]), ...old.filter(matches).map(member => JSON.parse(member))]
@@ -44,26 +67,32 @@ function fixture() {
     throw new Error(`Unexpected Redis command: ${operation}`)
   }
   const service = createPenaltyService({ env, command, now: () => time, randomId: () => `test-${++id}` })
-  return { service, command, ranks, currentWeek:() => weekKey(time), advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
+  return { service, command, ranks, setDelay: ms => { delay = ms }, currentWeek:() => weekKey(time), now:() => time, advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
 }
-const post = (service, body) => service({ method: 'POST', body })
+const post = (service, body) => service({ method: 'POST', body: body.action === 'start' ? { playerId: 'ORC-HI', ownerToken: 'a'.repeat(64), ...body } : body })
 const expectCode = code => error => error.code === code
+async function shoot(f, token, x=.1, y=.1, offset=.5) {
+  const armed = await post(f.service, {action:'arm', token})
+  f.advance(armed.timing.startsAt - f.now() + Math.round(armed.timing.legMs * offset))
+  const next = await post(f.service, {action:'shot', token:armed.token, x, y})
+  f.advance()
+  return next
+}
 
 test('ranked learning comes from signed session history, not client overrides',async()=>{
   const f=fixture()
   let {token}=await post(f.service,{action:'start'})
   for(let i=1;i<=5;i++) {
-    const next=await post(f.service,{action:'shot',token,x:.2,y:.2,power:1,keeperRead:null,streak:1})
+    const next=await shoot(f,token,.2,.2)
     assert.equal(next.result.keeperRead.streak,i)
     assert.ok(Math.abs(next.result.saveChance-(.1+(i-1)*.08))<1e-12)
     token=next.token
-    f.advance()
   }
-  const changed=await post(f.service,{action:'shot',token,x:.8,y:.2,power:1})
+  const changed=await shoot(f,token,.8,.2)
   assert.equal(changed.result.keeperRead.streak,1)
   assert.equal(changed.result.saveChance,.1)
   const fresh=await post(f.service,{action:'start'})
-  const first=await post(f.service,{action:'shot',token:fresh.token,x:.2,y:.2,power:1})
+  const first=await shoot(f,fresh.token,.2,.2)
   assert.equal(first.result.saveChance,.1)
 })
 
@@ -81,12 +110,16 @@ test('historical rankings merge case and Unicode variants before selecting the t
   assert.equal(playerRankingKey(' ORC-HI '),playerRankingKey('orc-hi'))
 })
 
-async function completeRound(f, power=1) {
-  let {token}=await post(f.service,{action:'start'})
+test('historical two-character handles remain visible and distinct', () => {
+  const entries = bestLeaderboardEntries([JSON.stringify({name:'AB',score:20}), JSON.stringify({name:'CD',score:10})])
+  assert.deepEqual(entries, [{playerId:'AB',score:20}, {playerId:'CD',score:10}])
+})
+
+async function completeRound(f, power=1, playerId='ORC-HI') {
+  let {token}=await post(f.service,{action:'start',playerId})
   for(let i=0;i<10;i++){
-    const next=await post(f.service,{action:'shot',token,x:.1,y:.1,power})
+    const next=await shoot(f,token,.1,.1,power/2)
     token=next.token
-    f.advance()
   }
   return token
 }
@@ -94,9 +127,9 @@ async function completeRound(f, power=1) {
 test('lower scores compact legacy duplicates while preserving separate weekly and all-time bests',async()=>{
   const f=fixture()
   const all='altair:penalty:v1:all',week=f.currentWeek()
+  const token=await completeRound(f,0,'Çağrı')
   f.ranks.set(all,[JSON.stringify({id:'old1',name:'ÇAĞRI',score:1400}),JSON.stringify({id:'old2',playerId:'Çağrı',score:900})])
   f.ranks.set(week,[JSON.stringify({id:'old3',playerId:'Çağrı',score:700}),JSON.stringify({id:'old4',playerId:'ÇAĞRI',score:400})])
-  const token=await completeRound(f,0)
   await post(f.service,{action:'submit',token,playerId:'çağrı'})
   assert.equal(f.ranks.get(all).length,1)
   assert.equal(f.ranks.get(week).length,1)
@@ -105,26 +138,16 @@ test('lower scores compact legacy duplicates while preserving separate weekly an
   await assert.rejects(post(f.service,{action:'submit',token,playerId:'çağrı'}),expectCode('SESSION_ALREADY_USED'))
 })
 
-test('concurrent rounds for one handle retain only the highest valid score',async()=>{
-  const f=fixture()
-  const high=await completeRound(f,1),low=await completeRound(f,0)
-  const results=await Promise.all([
-    post(f.service,{action:'submit',token:high,playerId:'ORC-HI'}),
-    post(f.service,{action:'submit',token:low,playerId:'orc-hi'})
-  ])
-  const highest=Math.max(...results.map(r=>r.entry.score))
-  assert.ok(highest>0)
-  for(const period of ['week','all']){
-    const entries=(await f.service({query:{period}})).entries
-    assert.equal(entries.length,1)
-    assert.equal(entries[0].score,highest)
-  }
-  assert.equal(f.ranks.get('altair:penalty:v1:all').length,1)
-  assert.equal(f.ranks.get(f.currentWeek()).length,1)
+test('new rounds supersede completed rounds before submission', async()=>{
+ const f=fixture(); const old=await completeRound(f,1); const current=await completeRound(f,0)
+ await assert.rejects(post(f.service,{action:'submit',token:old,playerId:'ORC-HI'}))
+ await post(f.service,{action:'submit',token:current,playerId:'ORC-HI'})
+ assert.equal((await f.service()).entries.length,1)
 })
 
 test('a new week gets its own personal best without resetting the all-time record',async()=>{
   const f=fixture()
+  await post(f.service,{action:'start'})
   f.ranks.set('altair:penalty:v1:all',[JSON.stringify({playerId:'ORC-HI',score:1500})])
   f.advance(7*24*60*60*1000)
   const token=await completeRound(f,0)
@@ -137,7 +160,7 @@ test('a new week gets its own personal best without resetting the all-time recor
 test('player IDs preserve public game handles and reject invalid input', () => {
   for (const id of ['ORC-HI','Tru-Ardas','mcb06099','player_27','player.27','Çağrı']) assert.equal(normalizePlayerId(` ${id} `),id)
   assert.equal(normalizePlayerId('a'.repeat(24)), 'a'.repeat(24))
-  for (const id of [null,42,'',' ','a','a'.repeat(25),'bad id','<script>','id@example.com','bad\nid']) assert.equal(normalizePlayerId(id),'')
+  for (const id of [null,42,'',' ','a','ab','a'.repeat(25),'bad id','<script>','id@example.com','bad\nid']) assert.equal(normalizePlayerId(id),'')
 })
 
 test('leaderboard is unavailable rather than fabricated without configuration', async () => {
@@ -167,53 +190,63 @@ test('shot resolver is deterministic, bounded, and validates coordinates', () =>
 test('server rejects tampering, out-of-range shots, and early submission', async () => {
   const { service } = fixture()
   const { token } = await post(service, { action: 'start' })
-  await assert.rejects(post(service, { action: 'shot', token: `${token}x`, x: 0.5, y: 0.5, power: 0.75 }), expectCode('INVALID_SESSION'))
+  await assert.rejects(post(service, { action: 'shot', token: `${token}x`, x: 0.5, y: 0.5 }), expectCode('INVALID_SESSION'))
   for (const invalid of [-0.1, 1.01, '0.5', null, Infinity]) {
-    await assert.rejects(post(service, { action: 'shot', token, x: invalid, y: 0.5, power: 0.75 }), expectCode('INVALID_SHOT'))
+    await assert.rejects(post(service, { action: 'shot', token, x: invalid, y: 0.5 }), expectCode('INVALID_SHOT'))
   }
-  await assert.rejects(post(service, { action: 'submit', token, playerId: 'Altair', score: 99999 }), expectCode('GAME_NOT_FINISHED'))
+  await assert.rejects(post(service, { action: 'submit', token, playerId: 'ORC-HI', score: 99999 }), expectCode('GAME_NOT_FINISHED'))
 })
 
-test('atomic progression accepts one concurrent shot and enforces shot timing', async () => {
-  const { service, advance } = fixture()
-  const { token } = await post(service, { action: 'start' })
-  const request = { action: 'shot', token, x: 0.1, y: 0.1, power: 0.75 }
-  const outcomes = await Promise.allSettled([post(service, request), post(service, request)])
-  assert.equal(outcomes.filter(outcome => outcome.status === 'fulfilled').length, 1)
-  assert.equal(outcomes.find(outcome => outcome.status === 'rejected').reason.code, 'SESSION_ALREADY_USED')
-  const next = outcomes.find(outcome => outcome.status === 'fulfilled').value
-  await assert.rejects(post(service, { ...request, token: next.token }), expectCode('SHOT_TOO_SOON'))
-  advance()
-  assert.equal((await post(service, { ...request, token: next.token })).shot, 2)
+test('arming enforces timing and atomic replay protection', async()=>{
+ const f=fixture(); const {token}=await post(f.service,{action:'start'})
+ await assert.rejects(post(f.service,{action:'shot',token,x:.1,y:.1}),expectCode('SHOT_NOT_ARMED'))
+ const arms=await Promise.allSettled([post(f.service,{action:'arm',token}),post(f.service,{action:'arm',token})])
+ assert.equal(arms.filter(x=>x.status==='fulfilled').length,1)
+ const armed=arms.find(x=>x.status==='fulfilled').value
+ assert.equal(armed.timing.startsAt-armed.serverNow,800); assert.equal(armed.timing.expiresAt-armed.timing.startsAt,30000)
+ await assert.rejects(post(f.service,{action:'arm',token:armed.token}),expectCode('SHOT_ALREADY_ARMED'))
+ await assert.rejects(post(f.service,{action:'shot',token:armed.token,x:.1,y:.1}),expectCode('SHOT_NOT_READY'))
+ f.advance(armed.timing.startsAt-f.now()+armed.timing.legMs)
+ const req={action:'shot',token:armed.token,x:.1,y:.1}
+ const shots=await Promise.allSettled([post(f.service,req),post(f.service,req)])
+ assert.equal(shots.filter(x=>x.status==='fulfilled').length,1)
+ const next=shots.find(x=>x.status==='fulfilled').value
+ const prearmed=await post(f.service,{action:'arm',token:next.token})
+ assert.equal(prearmed.timing.startsAt, f.now()+SHOT_INTERVAL_MS+800)
+ await assert.rejects(post(f.service,{action:'shot',token:prearmed.token,x:.1,y:.1}),expectCode('SHOT_TOO_SOON'))
+ f.advance(prearmed.timing.startsAt-f.now()+Math.round(prearmed.timing.legMs/2))
+ assert.equal((await post(f.service,{action:'shot',token:prearmed.token,x:.1,y:.1})).shot,2)
 })
 
-test('ten server-scored shots submit once into both persistent rankings', async () => {
-  const { service, advance } = fixture()
-  let { token } = await post(service, { action: 'start' })
-  let total = 0
-  for (let shot = 1; shot <= 10; shot++) {
-    const next = await post(service, { action: 'shot', token, x: 0.1, y: 0.1, power: 0.75, score: 99999 })
-    total += next.result.points
-    assert.equal(next.total, total)
-    assert.equal(next.shot, shot)
-    assert.equal(next.finished, shot === 10)
-    token = next.token
-    advance()
-  }
-  await assert.rejects(post(service, { action: 'shot', token, x: 0, y: 0, power: 0.7 }), expectCode('GAME_FINISHED'))
-  await assert.rejects(post(service, { action: 'submit', token, playerId: '<script>' }), expectCode('INVALID_PLAYER_ID'))
-  for (const playerId of ['', 'a', 'bad id', 'a'.repeat(25)]) await assert.rejects(post(service, { action:'submit', token, playerId }),expectCode('INVALID_PLAYER_ID'))
-  await assert.rejects(post(service, { action:'submit', token, name:'Legacy name' }),expectCode('INVALID_PLAYER_ID'))
-  const submissions = await Promise.allSettled([post(service, { action: 'submit', token, playerId: ' ORC-HI ', score: 99999 }), post(service, { action: 'submit', token, playerId: 'ORC-HI' })])
-  assert.equal(submissions.filter(item => item.status === 'fulfilled').length, 1)
-  for (const period of ['week', 'all']) assert.deepEqual(await service({ query: { period } }), { configured: true, entries: [{ playerId: 'ORC-HI', score: total }] })
+test('client power and score overrides cannot control server timing', async()=>{
+ const f=fixture(); const {token}=await post(f.service,{action:'start'}); const armed=await post(f.service,{action:'arm',token})
+ f.advance(armed.timing.startsAt-f.now())
+ for(const field of ['power','score','clientTime','keeperRead','streak']) await assert.rejects(post(f.service,{action:'shot',token:armed.token,x:.1,y:.1,[field]:1}),expectCode('CLIENT_SHOT_OVERRIDE'))
+ const bad=await post(f.service,{action:'shot',token:armed.token,x:.1,y:.1}); assert.equal(bad.result.power,0)
+ f.advance(); assert.equal((await shoot(f,bad.token)).result.power,1)
+})
+
+test('armed shots expire at the server deadline', async()=>{
+ const f=fixture(); const {token}=await post(f.service,{action:'start'}); const armed=await post(f.service,{action:'arm',token})
+ f.advance(armed.timing.expiresAt-f.now())
+ await assert.rejects(post(f.service,{action:'shot',token:armed.token,x:.1,y:.1}),expectCode('SHOT_EXPIRED'))
+})
+
+test('ten server-scored shots submit once into both persistent rankings', async()=>{
+ const f=fixture(); let {token}=await post(f.service,{action:'start'}); let total=0
+ for(let shot=1;shot<=10;shot++){const next=await shoot(f,token); total+=next.result.points; assert.equal(next.total,total); assert.equal(next.shot,shot); assert.equal(next.finished,shot===10); token=next.token}
+ await assert.rejects(post(f.service,{action:'arm',token}),expectCode('GAME_FINISHED'))
+ for(const playerId of ['','a','ab','bad id','a'.repeat(25)]) await assert.rejects(post(f.service,{action:'submit',token,playerId}),expectCode('INVALID_PLAYER_ID'))
+ const submissions=await Promise.allSettled([post(f.service,{action:'submit',token,playerId:' ORC-HI '}),post(f.service,{action:'submit',token,playerId:'ORC-HI'})])
+ assert.equal(submissions.filter(x=>x.status==='fulfilled').length,1)
+ for(const period of ['week','all']) assert.deepEqual(await f.service({query:{period}}),{configured:true,entries:[{playerId:'ORC-HI',score:total}]})
 })
 
 test('sessions expire and weeks use Monday UTC boundaries', async () => {
   const { service, advance } = fixture()
   const { token } = await post(service, { action: 'start' })
   advance(30 * 60 * 1000)
-  await assert.rejects(post(service, { action: 'shot', token, x: 0.1, y: 0.1, power: 0.7 }), expectCode('SESSION_EXPIRED'))
+  await assert.rejects(post(service, { action: 'shot', token, x: 0.1, y: 0.1 }), expectCode('SESSION_EXPIRED'))
   assert.ok(weekKey(Date.parse('2026-11-15T23:59:59Z')).endsWith('2026-11-09'))
   assert.ok(weekKey(Date.parse('2026-11-16T00:00:00Z')).endsWith('2026-11-16'))
 })
@@ -231,4 +264,101 @@ test('HTTP errors are structured, uncached, and conceal internal details', async
   assert.ok(!JSON.stringify(response.body).includes('private'))
   await createPenaltyHandler({ env })({ method: 'POST', body: '{bad' }, response)
   assert.equal(response.code, 400)
+})
+
+test('ownership claims are atomic and the same owner can resume', async () => {
+  const { service } = fixture()
+  const outcomes = await Promise.allSettled([
+    post(service, { action:'start', playerId:'Racer', ownerToken:'a'.repeat(64) }),
+    post(service, { action:'start', playerId:'racer', ownerToken:'b'.repeat(64) })
+  ])
+  assert.equal(outcomes.filter(x => x.status === 'fulfilled').length, 1)
+  const winner = outcomes.findIndex(x => x.status === 'fulfilled')
+  await post(service, { action:'start', playerId:'RACER', ownerToken:(winner === 0 ? 'a' : 'b').repeat(64) })
+  assert.equal(outcomes.find(x => x.status === 'rejected').reason.code, 'PLAYER_ID_TAKEN')
+})
+
+test('unowned legacy names cannot be claimed across case and Unicode variants', async () => {
+  for (const period of ['all', 'week']) {
+    const f = fixture()
+    f.ranks.set(period === 'all' ? 'altair:penalty:v1:all' : f.currentWeek(), [JSON.stringify({name:'ÇAĞRI',score:99})])
+    await assert.rejects(post(f.service, {action:'start', playerId:'c\u0327ag\u0306rı'}), expectCode('PLAYER_ID_TAKEN'))
+  }
+})
+
+test('start and submit enforce identity and minimum length', async () => {
+  const f = fixture()
+  for (const playerId of ['', 'a', 'ab']) await assert.rejects(post(f.service, {action:'start', playerId}), expectCode('INVALID_PLAYER_ID'))
+  for (const ownerToken of ['', 'A'.repeat(64), 'a'.repeat(63)]) await assert.rejects(post(f.service, {action:'start', ownerToken}), expectCode('IDENTITY_REQUIRED'))
+  const token = await completeRound(f)
+  await assert.rejects(post(f.service, {action:'submit', token, playerId:'Different'}), expectCode('PLAYER_ID_MISMATCH'))
+  await assert.rejects(post(f.service, {action:'submit', token, playerId:'ab'}), expectCode('INVALID_PLAYER_ID'))
+  await post(f.service, {action:'submit', token, playerId:'orc-hi'})
+})
+
+test('old signed sessions without a player identity cannot submit', async () => {
+  const f = fixture()
+  const payload = Buffer.from(JSON.stringify({id:'legacy',shot:10,total:0,exp:Date.UTC(2026,10,12,13),nextAt:0})).toString('base64url')
+  const token = `${payload}.${createHmac('sha256',env.PENALTY_SIGNING_SECRET).update(payload).digest('base64url')}`
+  await assert.rejects(post(f.service,{action:'submit',token,playerId:'ORC-HI'}),expectCode('SESSION_UPGRADE_REQUIRED'))
+})
+
+
+test('owner rate limit survives IP rotation and resets after its window', async()=>{
+ const f=fixture(); const start=(address,owner='a'.repeat(64))=>f.service({method:'POST',clientAddress:address,body:{action:'start',playerId:'ORC-HI',ownerToken:owner}})
+ for(let i=0;i<6;i++) await start('192.0.2.'+(i+1))
+ await assert.rejects(start('192.0.2.7'),expectCode('RATE_LIMITED'))
+ f.advance(60000); await start('192.0.2.7')
+})
+
+test('hourly start limit survives minute resets', async()=>{
+ const f=fixture()
+ for(let minute=0;minute<10;minute++) {
+   for(let i=0;i<12;i++) {
+     const owner=(minute*12+i).toString(16).padStart(64,'0')
+     await f.service({method:'POST',clientAddress:'192.0.2.1',body:{action:'start',playerId:'player_'+(minute*12+i),ownerToken:owner}})
+   }
+   f.advance(60000)
+ }
+ await assert.rejects(f.service({method:'POST',clientAddress:'192.0.2.1',body:{action:'start',playerId:'another',ownerToken:'f'.repeat(64)}}),expectCode('RATE_LIMITED'))
+ f.advance(3000000)
+ await f.service({method:'POST',clientAddress:'192.0.2.1',body:{action:'start',playerId:'another',ownerToken:'f'.repeat(64)}})
+})
+
+
+test('request arrival time, rather than Redis latency, determines shot power', async()=>{
+ const f=fixture(); const {token}=await post(f.service,{action:'start'}); const armed=await post(f.service,{action:'arm',token})
+ f.advance(armed.timing.startsAt-f.now()+Math.round(armed.timing.legMs/2))
+ f.setDelay(1000)
+ const shot=await post(f.service,{action:'shot',token:armed.token,x:.1,y:.1})
+ assert.equal(shot.result.power,1)
+})
+
+test('IPv6 privacy addresses in the same /64 share start limits', async()=>{
+ const f=fixture()
+ const start=(i,address)=>f.service({method:'POST',clientAddress:address,body:{action:'start',playerId:'player_'+i,ownerToken:i.toString(16).padStart(64,'0')}})
+ for(let i=0;i<12;i++) await start(i,'2001:db8:1234:5678::'+(i+1).toString(16))
+ await assert.rejects(start(12,'2001:0db8:1234:5678:aaaa:bbbb:cccc:dddd'),expectCode('RATE_LIMITED'))
+ await start(13,'2001:db8:1234:5679::1')
+})
+
+test('handler enforces JSON and cross-site restrictions and trusts only platform forwarding', async()=>{
+ const keys=[]
+ const command=async ([op,,,key])=>{
+   if(op==='EVAL') { keys.push(key); return 1 }
+   if(op==='ZREVRANGE') return []
+   throw new Error('unexpected command')
+ }
+ const response=()=>({setHeader(){},status(code){this.code=code;return this},json(body){this.body=body;return this}})
+ const invoke=async (environment,req)=>{const res=response(); await createPenaltyHandler({env:environment,command})(req,res); return res}
+ let res=await invoke(env,{method:'POST',headers:{'content-type':'text/plain'},body:{action:'start'}})
+ assert.equal(res.code,415)
+ res=await invoke(env,{method:'POST',headers:{'content-type':'application/json','sec-fetch-site':'cross-site'},body:{action:'start'}})
+ assert.equal(res.code,403)
+ const req={method:'GET',headers:{'x-vercel-forwarded-for':'192.0.2.10'},socket:{remoteAddress:'192.0.2.20'}}
+ await invoke(env,req); const direct=keys.at(-2)
+ await invoke({...env,VERCEL:'1'},req); const forwarded=keys.at(-2)
+ assert.notEqual(direct,forwarded)
+ await invoke({...env,VERCEL:'1'},{...req,headers:{'x-vercel-forwarded-for':'192.0.2.10, 192.0.2.11'}})
+ assert.equal(keys.at(-2),direct)
 })

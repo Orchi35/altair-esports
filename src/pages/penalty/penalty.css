@@ -50,3 +50,26 @@
 .pen-keeper-ready-breathe{transform-origin:0 85.546875px;animation:pen-keeper-weight-shift 2.6s ease-in-out infinite}
 @keyframes pen-keeper-weight-shift{0%,100%{transform:rotate(-.65deg) scaleY(.995)}50%{transform:rotate(.65deg) scaleY(1)}}
 @media(prefers-reduced-motion:reduce){.pen-keeper-ready-breathe{animation:none}}
+
+/* ID guidance belongs beside the entry action, with validation beside the input. */
+.pen-start-actions{display:flex;justify-content:center;align-items:stretch;flex-wrap:wrap;gap:12px;max-width:100%}
+.pen-id-reminder{display:flex;align-items:center;gap:10px;min-height:52px;padding:10px 14px;border:1px solid #779ab4;border-radius:10px;background:#10263ee8;color:#edf6ff;text-align:left;cursor:pointer;font-family:inherit}
+.pen-id-reminder>span:first-child{display:grid;place-items:center;width:32px;height:32px;border:1px solid #6689a6;border-radius:7px;font-size:12px;font-weight:700;color:#b9def8}
+.pen-id-reminder>span:nth-child(2){display:grid;gap:4px;min-width:0}
+.pen-id-reminder strong{font-size:14px;line-height:1.25}
+.pen-overlay .pen-id-reminder small{margin:0;font-size:12px;color:#b9cede;overflow-wrap:anywhere}
+.pen-id-reminder:focus-visible,.pen-player-identity input:focus-visible{outline:3px solid #a8dbff;outline-offset:3px}
+.pen-id-reminder:hover{background:#1d3b54}
+.pen-player-identity{flex-wrap:wrap}
+.pen-player-identity .pen-identity-error{flex:1 0 100%;color:#ffc8bd;font-size:14px}
+.pen-identity-error:empty{display:none}
+.pen-player-identity input[aria-invalid=true]{border-color:#efa694}
+#pen-player-id{scroll-margin-block:130px}
+@media(max-width:600px){
+ .pen-start-actions{gap:8px;flex-wrap:nowrap;width:100%}
+ .pen-start-actions .pen-primary{gap:10px;padding:10px 12px;white-space:nowrap}
+ .pen-id-reminder{gap:6px;padding:8px;min-width:0;min-height:44px}
+ .pen-id-reminder>span:first-child{display:none}
+ .pen-id-reminder strong{font-size:12px}
+ .pen-overlay .pen-id-reminder small{font-size:11px}
+}
