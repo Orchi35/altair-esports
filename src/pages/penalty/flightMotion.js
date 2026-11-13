@@ -1,4 +1,5 @@
 import {netContact} from './netMotion.js';
+import {KEEPER_CONTACT} from './keeperMotion.js';
 const lerp = (a, b, t) => a + (b - a) * t;
 const screen = (x, y) => ({ x: 220 + x * 560, y: 145 + y * 235 });
 export const FLIGHT_MS = 1150;
@@ -18,7 +19,7 @@ export function sampleFlight(result, progress) {
   const end = result.goal ? netContact(result) : screen(result.targetX, result.targetY);
   const contact = screen(result.impactX, result.impactY);
   const rebound = result.outcome === 'saved' || result.outcome === 'post';
-  const impactAt = result.outcome === 'post' ? POST_CONTACT : rebound ? .62 : 1;
+  const impactAt = result.outcome === 'post' ? POST_CONTACT : rebound ? KEEPER_CONTACT : 1;
   const first = p <= impactAt;
   const t = first ? p / impactAt : (p - impactAt) / (1 - impactAt);
   const from = first ? start : contact;

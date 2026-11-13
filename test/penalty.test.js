@@ -49,6 +49,24 @@ function fixture() {
 const post = (service, body) => service({ method: 'POST', body })
 const expectCode = code => error => error.code === code
 
+test('ranked learning comes from signed session history, not client overrides',async()=>{
+  const f=fixture()
+  let {token}=await post(f.service,{action:'start'})
+  for(let i=1;i<=5;i++) {
+    const next=await post(f.service,{action:'shot',token,x:.2,y:.2,power:1,keeperRead:null,streak:1})
+    assert.equal(next.result.keeperRead.streak,i)
+    assert.ok(Math.abs(next.result.saveChance-(.1+(i-1)*.08))<1e-12)
+    token=next.token
+    f.advance()
+  }
+  const changed=await post(f.service,{action:'shot',token,x:.8,y:.2,power:1})
+  assert.equal(changed.result.keeperRead.streak,1)
+  assert.equal(changed.result.saveChance,.1)
+  const fresh=await post(f.service,{action:'start'})
+  const first=await post(f.service,{action:'shot',token:fresh.token,x:.2,y:.2,power:1})
+  assert.equal(first.result.saveChance,.1)
+})
+
 test('historical rankings merge case and Unicode variants before selecting the top 50', () => {
   const rows = Array.from({length:60},(_,i)=>JSON.stringify({id:i,playerId:i%2?'ORC-HI':'orc-hi',score:1400-i}))
   rows.push(JSON.stringify({name:'Çağrı',score:1000}),JSON.stringify({playerId:'ÇAĞRI',score:1100}),JSON.stringify({playerId:'C\u0327ag\u0306rı',score:1050}))

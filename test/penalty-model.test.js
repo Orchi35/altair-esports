@@ -4,6 +4,27 @@ import { calculateShot, powerFromMeter, keeperSaveChance, goalPoints, MAX_GOAL_P
 
 const shot = overrides => calculateShot({ x: 0.2, y: 0.2, power: 0.8, keeperX: 0.8, keeperY: 0.8, ...overrides })
 
+test('consecutive shots in a zone increase saves, switching zones or restarting resets learning',()=>{
+  let keeperRead=null
+  for(let i=1;i<=10;i++) {
+    const result=shot({x:.2+(i%2)*.04,y:.2,power:1,saveRoll:.25,keeperRead})
+    assert.equal(result.keeperRead.streak,i)
+    assert.ok(Math.abs(result.saveChance-(.1+Math.min(i-1,4)*.08))<1e-12)
+    assert.equal(result.outcome,i<3?'goal':'saved')
+    keeperRead=result.keeperRead
+  }
+  for(const [x,y] of [[.8,.2],[.2,.8],[.5,.2]]) {
+    const changed=shot({x,y,power:1,keeperRead})
+    assert.equal(changed.saveChance,.1)
+    assert.equal(changed.keeperRead.streak,1)
+  }
+  assert.equal(shot({power:1}).saveChance,.1)
+  assert.equal(shot({power:.45,keeperRead}).saveChance,.95)
+  assert.equal(shot({power:.1,keeperRead}).outcome,'weak')
+  assert.equal(shot({power:.3,keeperRead}).outcome,'wide')
+  assert.equal(shot({x:0,power:1,keeperRead}).outcome,'post')
+})
+
 test('goal points prioritize power and reserve the maximum for exact perfect timing', () => {
   for (const [power, points] of [[.45,28],[.5,35],[.75,79],[.9,113],[.99,137],[1,150]]) {
     assert.equal(goalPoints(power), points)
@@ -75,15 +96,15 @@ test('save rates decrease with power and are equal across shot locations', () =>
     let previous=1;
     for(let i=45;i<=100;i++) {
       const chance=keeperSaveChance({x,y,power:i/100});
-      assert.ok(chance<=previous+1e-12);
+      assert.ok(chance<previous);
       assert.ok(chance>=.10-1e-12 && chance<=.75);
       previous=chance;
     }
   }
   assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:.45})-.75)<1e-10);
   assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:.45})-.75)<1e-10);
-  assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:.75})-.39545454545)<1e-10);
-  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:.75})-.39545454545)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:.75})-.4359)<1e-10);
+  assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:.75})-.4359)<1e-10);
   assert.ok(Math.abs(keeperSaveChance({x:.5,y:.5,power:1})-.10)<1e-10);
   assert.ok(Math.abs(keeperSaveChance({x:0,y:0,power:1})-.10)<1e-10);
   // Exhaustive deterministic rolls verify the outcome frequency, not just the formula.
@@ -132,3 +153,21 @@ test('shot outcomes remain consistent across the goal and power range', () => {
     }
   }
 })
+
+
+test('each displayed power percentage has one distinct save rate', () => {
+  const rates=new Set();
+  for(let percent=45;percent<=100;percent++) {
+    const rate=keeperSaveChance({power:percent/100});
+    rates.add(rate);
+    if(percent<100) assert.equal(keeperSaveChance({power:(percent+.99)/100}),rate);
+    assert.equal(shot({power:percent/100,saveRoll:rate-.000001}).outcome,'saved');
+    assert.equal(shot({power:percent/100,saveRoll:rate}).outcome,'goal');
+  }
+  assert.equal(rates.size,56);
+  for(const [percent,rate] of [[100,.1],[99,.1142],[90,.2391],[80,.3721],[70,.4976],[60,.6133],[50,.7134],[45,.75]]) {
+    assert.equal(keeperSaveChance({power:percent/100}),rate);
+  }
+  assert.equal(keeperSaveChance({power:1-Number.EPSILON}),.1142);
+  for(const power of [NaN,Infinity,-1,1.01,'1',null,.44999]) assert.equal(keeperSaveChance({power}),0);
+});

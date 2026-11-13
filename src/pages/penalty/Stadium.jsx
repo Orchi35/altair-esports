@@ -1,6 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import {FLIGHT_MS,sampleFlight,samplePostImpact} from './flightMotion.js';
-import {sampleKeeper,sampleKeeperRecovery} from './keeperMotion.js';
+import {sampleKeeper,sampleKeeperRecovery,keeperRecoveryDuration,KEEPER_CONTACT} from './keeperMotion.js';
 import AdvertisingBoard from './AdvertisingBoard.jsx';
 import GoalNet from './GoalNet.jsx';
 import {NET_SETTLE_MS,sampleGoalBall} from './netMotion.js';
@@ -24,10 +24,10 @@ export default function Stadium(props){
   if(phase!=='flight'&&phase!=='recover')return;
   let frame,start;
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const duration=phase==='flight'?FLIGHT_MS:1100;
+  const duration=phase==='flight'?FLIGHT_MS:keeperRecoveryDuration(flight?.result || {});
   const tick=time=>{start??=time;const p=reduce?1:Math.min(1,(time-start)/duration);setAnimation({key:animationKey,progress:p});if(p<1)frame=requestAnimationFrame(tick);else if(phase==='flight')onFlightComplete?.();else onRecoveryComplete?.();};
   frame=requestAnimationFrame(tick);return()=>cancelAnimationFrame(frame);
- },[phase,animationKey,onFlightComplete,onRecoveryComplete]);
+ },[phase,animationKey,flight,onFlightComplete,onRecoveryComplete]);
  return <><link rel="preload" as="image" href={`${ASSETS}keepers-atlas-v1.webp`}/><link rel="preload" as="image" href={`${ASSETS}keepers-transitions-v2.webp`}/><StadiumScene {...props} progress={animation.key===animationKey?animation.progress:0}/></>;
 }
 
@@ -85,12 +85,13 @@ export function StadiumScene({aim,setAim,flight,phase,tr,keeper,progress=0}){
  <g fill="#d0d9d9">{[220,780].map(x=><rect key={x} x={x-7} y="377" width="14" height="5" rx="2"/>)}</g>
  <ellipse cx={motion.shadowX} cy="382" rx={motion.shadowRx} ry="9" fill="url(#pen-shadow)" opacity={motion.shadowOpacity}/>
  <g className="pen-keeper-real" data-pose={motion.pose} transform={`translate(${motion.x} ${motion.y}) rotate(${motion.angle}) scale(${motion.facing} ${motion.scaleY})`} filter="url(#pen-keeper-shadow)">
-  <KeeperSprite col={col} pose={motion.pose}/>
+  <g className={phase==='aim'?'pen-keeper-ready-breathe':undefined}><KeeperSprite col={col} pose={motion.pose}/></g>
  </g>
+ {motion.impact>0&&<g aria-hidden="true" fill="#b9c5a1" opacity={motion.impact*.3}>{[-1,1].map(side=><ellipse key={side} cx={motion.x+side*(24+motion.impact*38)} cy="381" rx={10+motion.impact*22} ry={2+motion.impact*4}/>)}</g>}
  {!kicked&&phase!=='intro'&&<g transform={`translate(${220+aim.x*560} ${145+aim.y*235})`} className="pen-crosshair"><circle r="20" fill="#071d26" fillOpacity=".2" stroke="#e0f4ff" strokeOpacity=".85" strokeWidth="1.5"/><path d="M-29 0H-15M15 0H29M0 -29V-15M0 15V29" stroke="#e5f6ff" strokeWidth="1.5"/><circle r="2.5" fill="#fff"/></g>}
  <ellipse cx={ball.x} cy={kicked?Math.max(390,586-p*180):586} rx={31*ball.scale} ry={7*ball.scale} fill="url(#pen-shadow)" opacity={kicked?.65:.9}/>
  {kicked&&result?.perfect&&<g className="pen-power-trail" fill="#b8ffe2">{[.035,.07,.105,.14].map((lag,i)=>{const trail=sampleFlight(result,Math.max(0,p-lag));return <circle key={lag} cx={trail.x} cy={trail.y} r={(18-i*3)*trail.scale} opacity={(1-p)*(.5-i*.09)}/>;})}<circle cx={ball.x} cy={ball.y} r={34*ball.scale} fill="none" stroke="#a5ffd0" strokeWidth="2" opacity={1-p}/></g>}
- {result?.outcome==='saved'&&p>=.62&&p<.86&&<circle cx={contactX} cy={contactY} r={10+(p-.62)*100} fill="none" stroke="#fff" strokeWidth="1.5" opacity={1-(p-.62)/.24}/>}
+ {result?.outcome==='saved'&&p>=KEEPER_CONTACT&&p<KEEPER_CONTACT+.12&&<g aria-hidden="true" transform={`translate(${contactX} ${contactY})`} opacity={(1-(p-KEEPER_CONTACT)/.12)*.65}><path d="M-13-4L-20-7M10-10L15-16M11 8L18 13" stroke="#e5f2ff" strokeWidth="1.7" strokeLinecap="round"/></g>}
  {postImpact.flash>0&&<g className="pen-post-contact" transform={`translate(${contactX} ${contactY})`} opacity={postImpact.flash} aria-hidden="true"><circle r={12+(1-postImpact.flash)*15} fill="none" stroke="#deefff" strokeWidth="1.6"/><path d="M-23-6L-16-4M19-13L25-18M14 17L19 23" fill="none" stroke="#f6fbff" strokeWidth="2"/></g>}
  <g className="pen-football" data-outcome={kicked?result?.outcome:'ready'} style={{transform:`translate(${ball.x}px,${ball.y}px) scale(${ball.scale}) rotate(${ball.rotation}deg)`}}><image href={`${ASSETS}ball-v1.webp`} x="-28" y="-28" width="56" height="56"/></g>
  <text x="500" y="634" textAnchor="middle" fill="#deebe1" opacity=".6" fontSize="9" letterSpacing="5">ALTAIR • PENALTY ARENA</text>

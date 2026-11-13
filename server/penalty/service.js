@@ -78,13 +78,13 @@ export function weekKey(timestamp) {
   return `${PREFIX}week:${date.toISOString().slice(0, 10)}`
 }
 
-export function resolveShot({ id, shot, x, y, power }, secret) {
+export function resolveShot({ id, shot, x, y, power, keeperRead=null }, secret) {
   if (![x, y, power].every(unit)) fail(400, 'INVALID_SHOT')
   const random = createHmac('sha256', secret).update(`${id}:${shot}`).digest()
   const keeperX = 0.12 + (random.readUInt32BE(0) / 0xffffffff) * 0.76
   const keeperY = 0.15 + (random.readUInt32BE(4) / 0xffffffff) * 0.7
   const saveRoll = random.readUInt32BE(8) / 0x100000000
-  return calculateShot({ x, y, power, keeperX, keeperY, saveRoll })
+  return calculateShot({ x, y, power, keeperX, keeperY, saveRoll, keeperRead })
 }
 
 export function createPenaltyService({ env = process.env, fetchImpl = globalThis.fetch, now = Date.now, randomId = randomUUID, command: injectedCommand } = {}) {
@@ -124,6 +124,7 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
     try { state = JSON.parse(Buffer.from(parts[0], 'base64url').toString()) } catch { fail(400, 'INVALID_SESSION') }
     if (!state || typeof state.id !== 'string' || !Number.isInteger(state.shot) || state.shot < 0 || state.shot > SHOT_COUNT || !Number.isInteger(state.total) || state.total < 0 || state.total > 1500 || !Number.isFinite(state.exp) || !Number.isFinite(state.nextAt)) fail(400, 'INVALID_SESSION')
     if (state.exp <= now()) fail(410, 'SESSION_EXPIRED')
+    if (state.keeperRead != null && (!/^(left|center|right)-(high|low)$/.test(state.keeperRead.zone) || !Number.isInteger(state.keeperRead.streak) || state.keeperRead.streak < 1 || state.keeperRead.streak > state.shot)) fail(400, 'INVALID_SESSION')
     return state
   }
   return async function execute({ method = 'GET', query = {}, body = {} } = {}) {
@@ -155,8 +156,8 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       if (state.shot >= SHOT_COUNT) fail(409, 'GAME_FINISHED')
       if (![body.x, body.y, body.power].every(unit)) fail(400, 'INVALID_SHOT')
       if (now() < state.nextAt) fail(429, 'SHOT_TOO_SOON')
-      const result = resolveShot({ id: state.id, shot: state.shot + 1, x: body.x, y: body.y, power: body.power }, secret)
-      const next = { ...state, shot: state.shot + 1, total: state.total + result.points, nextAt: now() + SHOT_INTERVAL_MS }
+      const result = resolveShot({ id: state.id, shot: state.shot + 1, x: body.x, y: body.y, power: body.power, keeperRead:state.keeperRead }, secret)
+      const next = { ...state, keeperRead:result.keeperRead, shot: state.shot + 1, total: state.total + result.points, nextAt: now() + SHOT_INTERVAL_MS }
       const token = sign(next, secret)
       const advanced = await command(['EVAL', ADVANCE_SCRIPT, 1, sessionKey, body.token, token, Math.max(1, Math.ceil((state.exp - now()) / 1000))])
       if (advanced !== 1) fail(409, 'SESSION_ALREADY_USED')
