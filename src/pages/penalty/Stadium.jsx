@@ -1,13 +1,11 @@
 import {useEffect,useRef,useState} from 'react';
 import {FLIGHT_MS,sampleFlight,samplePostImpact} from './flightMotion.js';
 import {sampleKeeper,sampleKeeperRecovery,keeperRecoveryDuration,KEEPER_CONTACT} from './keeperMotion.js';
-import AdvertisingBoard from './AdvertisingBoard.jsx';
+import StadiumBackdrop from './StadiumBackdrop.jsx';
 import GoalNet from './GoalNet.jsx';
 import {NET_SETTLE_MS,sampleGoalBall} from './netMotion.js';
 
 const ASSETS='/games/penalty/';
-const PARTICLES=Array.from({length:38},(_,i)=>({x:i%2?825+(i*19)%150:20+(i*29)%150,y:85+(i*23)%185,color:['#d9efff','#78b8e6','#f5f3df'][i%3],delay:-(i*.31),duration:3.4+(i%5)*.43,drift:(i%2?-1:1)*(18+i%27)}));
-const CROWD_PATCHES=[{x:5,y:217,w:195,h:74},{x:800,y:214,w:195,h:78},{x:10,y:140,w:180,h:50},{x:810,y:140,w:180,h:50}];
 
 const POSES={ready:{y:0,h:680,w:146},dive:{y:690,h:370,w:200},land:{y:1210,h:210,w:200},crouch:{y:0,h:445,w:136,v2:true},push:{y:445,h:415,w:160,v2:true},kneel:{y:860,h:385,w:136,v2:true},block:{y:1245,h:529,w:146,v2:true}};
 function KeeperSprite({col,pose}){
@@ -53,29 +51,7 @@ export function StadiumScene({aim,setAim,flight,phase,tr,keeper,progress=0}){
  const goalHit=netHit;
  const contactX=result?220+result.impactX*560:500,contactY=result?145+result.impactY*235:285;
  return <svg ref={svg} className={`pen-stadium pen-stadium-real ${goalHit?'has-goal':''}`} viewBox="0 0 1000 650" role="img" aria-label={tr?'Gece stadyumu. Kaleye dokunarak nişan al.':'Night stadium. Tap the goal to aim.'} onPointerDown={point} onPointerMove={e=>{if(e.buttons)point(e);}}>
- <defs>
-  <linearGradient id="pen-scene-tone" x2="0" y2="1"><stop stopColor="#07182e" stopOpacity=".12"/><stop offset=".55" stopColor="#102134" stopOpacity=".08"/><stop offset="1" stopColor="#020e16" stopOpacity=".35"/></linearGradient>
-  <radialGradient id="pen-shadow"><stop stopColor="#010b10" stopOpacity=".65"/><stop offset="1" stopColor="#010b10" stopOpacity="0"/></radialGradient>
-  <radialGradient id="pen-light"><stop stopColor="#d9f3ff" stopOpacity=".16"/><stop offset="1" stopColor="#76beff" stopOpacity="0"/></radialGradient>
-  <pattern id="pen-side-net" width="15" height="14" patternUnits="userSpaceOnUse" patternTransform="skewY(20)"><path d="M15 0H0V14" fill="none" stroke="#e4f0ed" strokeOpacity=".42" strokeWidth=".8"/></pattern>
-  <filter id="pen-post-shadow" x="-20%" width="140%"><feDropShadow dx="2" dy="4" stdDeviation="2" floodColor="#04131c" floodOpacity=".6"/></filter>
-  <filter id="pen-keeper-shadow" x="-40%" y="-30%" width="180%" height="180%"><feDropShadow dx="1" dy="2" stdDeviation="1.3" floodColor="#021316" floodOpacity=".45"/></filter>
-  {CROWD_PATCHES.map((r,i)=><clipPath key={i} id={`pen-crowd-patch-${i}`}><rect x={r.x} y={r.y} width={r.w} height={r.h} rx="9"/></clipPath>)}
-  <clipPath id="pen-flag-left"><path d="M0 119L44 133L66 194L0 187Z"/></clipPath>
-  <clipPath id="pen-flag-right"><path d="M1000 117L957 132L936 194L1000 188Z"/></clipPath>
- </defs>
- <image className="pen-stadium-plate" href={`${ASSETS}stadium-v1.webp`} width="1000" height="650" preserveAspectRatio="none"/>
- {CROWD_PATCHES.map((r,i)=><g key={i} clipPath={`url(#pen-crowd-patch-${i})`}><g className="pen-crowd-motion" style={{animationDelay:`${-i*.48}s`,transformOrigin:`${r.x+r.w/2}px ${r.y+r.h}px`}}><image href={`${ASSETS}stadium-v1.webp`} width="1000" height="650" preserveAspectRatio="none"/></g></g>)}
- {['left','right'].map((side,i)=><g key={side} clipPath={`url(#pen-flag-${side})`}><g className="pen-flag-wave" style={{animationDelay:`${-i*.9}s`,transformOrigin:`${i?980:20}px 190px`}}><image href={`${ASSETS}stadium-v1.webp`} width="1000" height="650" preserveAspectRatio="none"/></g></g>)}
- <rect width="1000" height="650" fill="url(#pen-scene-tone)"/>
- <g className="pen-stadium-haze"><ellipse cx="80" cy="62" rx="195" ry="200" fill="url(#pen-light)"/><ellipse cx="920" cy="62" rx="195" ry="200" fill="url(#pen-light)"/></g>
- <g className="pen-confetti" aria-hidden="true">{PARTICLES.map((a,i)=><g key={i} transform={`translate(${a.x} ${a.y})`}><rect className="pen-confetti-piece" x="0" y="0" width={i%3===0?2:3} height={i%3===0?8:5} rx=".5" fill={a.color} style={{'--drift':`${a.drift}px`,animationDuration:`${a.duration}s`,animationDelay:`${a.delay}s`}}/></g>)}</g>
- <AdvertisingBoard/>
- {/* Chalk follows the ground plane; the penalty spot is underneath the ball. */}
- <g className="pen-pitch-lines" fill="none" stroke="#e6eee0" strokeWidth="2.4" opacity=".8"><path d="M0 381H1000"/><path d="M127 381L46 465H954L873 381"/><path d="M-60 381L-270 704H1270L1060 381"/><path d="M376 650Q500 611 624 650" strokeWidth="2.8"/></g>
- <ellipse cx="500" cy="586" rx="5" ry="2.2" fill="#f6f3e2" opacity=".9"/>
- <path d="M218 382L300 443M782 382L850 443" stroke="#072b22" strokeOpacity=".25" strokeWidth="8"/>
- <ellipse cx="500" cy="382" rx="310" ry="14" fill="url(#pen-shadow)" opacity=".65"/>
+ <StadiumBackdrop/>
  <GoalNet result={result} age={netAge}/>
  <g className="pen-goal-frame" fill="none" stroke="#dce8ee" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" filter="url(#pen-post-shadow)">
   <path data-post="left" d="M220 380V145" transform={`translate(${result?.postSide==='left'?postImpact.offset:0} 0)`}/>
