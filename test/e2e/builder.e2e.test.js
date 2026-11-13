@@ -19,6 +19,7 @@ test('builder stages drawer selections, allocates AP and restores a shared build
   await page.waitFor("document.querySelector('.builder-ap-bar').textContent.includes('Harcanan')");
   const spent=await page.evaluate("document.querySelector('.builder-ap-bar > div > span strong').textContent");
   assert.ok(Number(spent)>0);
+  await page.evaluate("[...document.querySelectorAll('.builder-workspace-nav button')].find(b=>b.textContent.includes('Oyun stilleri')).click()");
   await page.evaluate("document.querySelector('.builder-personal-slots button').click()");
   await page.waitFor("Boolean(document.querySelector('.builder-drawer[open]'))");
   await page.evaluate("[...document.querySelectorAll('.builder-drawer .builder-style-grid button')].find(b=>b.textContent.includes('Incisive Pass')).click()");
@@ -35,6 +36,7 @@ test('builder stages drawer selections, allocates AP and restores a shared build
   await page.evaluate("document.querySelector('.builder-drawer > footer .builder-primary').click()");
   await page.waitFor("!document.querySelector('.builder-drawer[open]') && document.querySelector('.builder-personal-slots').textContent.includes('Incisive Pass')");
   assert.ok(Number(await page.evaluate("document.querySelector('.builder-ap-bar > div > span strong').textContent"))>Number(spent));
+  await page.evaluate("[...document.querySelectorAll('.builder-workspace-nav button')].find(b=>b.textContent.includes('Tesisler')).click()");
   await page.evaluate("document.querySelector('.builder-add-facility').click()");
   await page.waitFor("Boolean(document.querySelector('.builder-drawer[open] .builder-facility-levels'))");
   await page.evaluate("document.querySelector('.builder-drawer .builder-facility-levels button').click()");
@@ -46,6 +48,7 @@ test('builder stages drawer selections, allocates AP and restores a shared build
   await page.waitFor("Boolean(document.querySelector('.builder-share input'))");
   const link=await page.evaluate("document.querySelector('.builder-share input').value");
   assert.ok(link.includes('#build='));
+  await page.evaluate("[...document.querySelectorAll('.builder-workspace-nav button')].find(b=>b.textContent.includes('Özellikler')).click()");
   const rating=await page.evaluate("document.querySelector('#builder-finishing').value");
   await fs.mkdir('work/builder-qa',{recursive:true});
   const desktop=await page.cdp.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
@@ -54,12 +57,15 @@ test('builder stages drawer selections, allocates AP and restores a shared build
   await page.navigate(link);
   await page.waitFor("Boolean(document.querySelector('#builder-finishing'))");
   assert.equal(await page.evaluate("document.querySelector('#builder-finishing').value"),rating);
+  await page.evaluate("[...document.querySelectorAll('.builder-workspace-nav button')].find(b=>b.textContent.includes('Oyun stilleri')).click()");
   assert.equal(await page.evaluate("document.querySelectorAll('.builder-personal-slots button img').length"),1);
   assert.equal(await page.evaluate("document.querySelector('.builder-personal-slots').textContent.includes('Incisive Pass')"),true);
+  await page.evaluate("[...document.querySelectorAll('.builder-workspace-nav button')].find(b=>b.textContent.includes('Tesisler')).click()");
   assert.equal(await page.evaluate("document.querySelectorAll('.builder-selected-facilities > div').length"),1);
   assert.equal(await page.evaluate('document.documentElement.scrollWidth > innerWidth'),false);
   const mobile=await page.cdp.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
   await fs.writeFile('work/builder-qa/mobile.png',Buffer.from(mobile.data,'base64'));
+  await page.evaluate("[...document.querySelectorAll('.builder-workspace-nav button')].find(b=>b.textContent.includes('Özellikler')).click()");
   await page.evaluate("document.querySelector('.builder-attributes').scrollIntoView({behavior:'instant',block:'start'})");
   const attrs=await page.cdp.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
   await fs.writeFile('work/builder-qa/mobile-attributes.png',Buffer.from(attrs.data,'base64'));
