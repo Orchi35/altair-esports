@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createHmac } from 'node:crypto'
+import { createHash, createHmac } from 'node:crypto'
 import { createPenaltyService, createPenaltyHandler, resolveShot, weekKey, SHOT_INTERVAL_MS, bestLeaderboardEntries } from '../server/penalty/service.js'
 import { normalizePlayerId, playerRankingKey } from '../src/pages/penalty/playerId.js'
 
@@ -39,7 +39,15 @@ function fixture() {
       if (script.includes('penalty-claim')) {
         const existing = strings.get(keys[0])
         if (existing) return existing === values[0] ? 1 : 0
-        if (values[1] === '1') return 0
+        if (expires.has(keys[1]) && expires.get(keys[1]) <= time) strings.delete(keys[1])
+        if (values[1] === '1') {
+          if (!values[2]) return -1
+          if (strings.get(keys[1]) !== values[2]) return -2
+          strings.set(keys[0], values[0])
+          strings.delete(keys[1])
+          return 1
+        }
+        if (values[2]) return -2
         strings.set(keys[0], values[0])
         return 1
       }
@@ -67,7 +75,7 @@ function fixture() {
     throw new Error(`Unexpected Redis command: ${operation}`)
   }
   const service = createPenaltyService({ env, command, now: () => time, randomId: () => `test-${++id}` })
-  return { service, command, ranks, setDelay: ms => { delay = ms }, currentWeek:() => weekKey(time), now:() => time, advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
+  return { service, command, ranks, strings, expires, setDelay: ms => { delay = ms }, currentWeek:() => weekKey(time), now:() => time, advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
 }
 const post = (service, body) => service({ method: 'POST', body: body.action === 'start' ? { playerId: 'ORC-HI', ownerToken: 'a'.repeat(64), ...body } : body })
 const expectCode = code => error => error.code === code
@@ -282,7 +290,7 @@ test('unowned legacy names cannot be claimed across case and Unicode variants', 
   for (const period of ['all', 'week']) {
     const f = fixture()
     f.ranks.set(period === 'all' ? 'altair:penalty:v1:all' : f.currentWeek(), [JSON.stringify({name:'ÇAĞRI',score:99})])
-    await assert.rejects(post(f.service, {action:'start', playerId:'c\u0327ag\u0306rı'}), expectCode('PLAYER_ID_TAKEN'))
+    await assert.rejects(post(f.service, {action:'start', playerId:'c\u0327ag\u0306rı'}), expectCode('LEGACY_ID_RECOVERY_REQUIRED'))
   }
 })
 
@@ -361,4 +369,50 @@ test('handler enforces JSON and cross-site restrictions and trusts only platform
  assert.notEqual(direct,forwarded)
  await invoke({...env,VERCEL:'1'},{...req,headers:{'x-vercel-forwarded-for':'192.0.2.10, 192.0.2.11'}})
  assert.equal(keys.at(-2),direct)
+})
+
+
+const recoveryCode = '0123456789abcdef0123456789abcdef'
+const recoveryDigest = createHash('sha256').update(recoveryCode).digest('hex')
+const recoveryKey = id => 'altair:penalty:v1:recovery:' + playerRankingKey(id)
+function seedLegacy(f, id, score=900) {
+  f.ranks.set('altair:penalty:v1:all', [JSON.stringify({name:id,score})])
+  f.ranks.set(f.currentWeek(), [JSON.stringify({name:id,score:score-100})])
+}
+
+test('legacy recovery claims the name once and preserves both leaderboards', async()=>{
+  const f=fixture(); seedLegacy(f,'ORC-HI'); f.strings.set(recoveryKey('ORC-HI'),recoveryDigest)
+  const beforeAll=[...f.ranks.get('altair:penalty:v1:all')], beforeWeek=[...f.ranks.get(f.currentWeek())]
+  await post(f.service,{action:'start',playerId:'orc-hi',recoveryCode:'01234567-89AB-CDEF-0123-456789ABCDEF'})
+  assert.equal(f.strings.has(recoveryKey('ORC-HI')),false)
+  assert.deepEqual(f.ranks.get('altair:penalty:v1:all'),beforeAll)
+  assert.deepEqual(f.ranks.get(f.currentWeek()),beforeWeek)
+  await post(f.service,{action:'start',playerId:'ORC-HI'})
+  await assert.rejects(post(f.service,{action:'start',playerId:'ORC-HI',ownerToken:'b'.repeat(64),recoveryCode}),expectCode('PLAYER_ID_TAKEN'))
+})
+
+test('legacy recovery requires a valid code for the specific name and never trusts a local name', async()=>{
+  const f=fixture(); seedLegacy(f,'ORC-HI'); f.ranks.get('altair:penalty:v1:all').push(JSON.stringify({name:'Other',score:800}))
+  f.strings.set(recoveryKey('ORC-HI'),recoveryDigest)
+  await assert.rejects(post(f.service,{action:'start',playerId:'ORC-HI'}),expectCode('LEGACY_ID_RECOVERY_REQUIRED'))
+  await assert.rejects(post(f.service,{action:'start',playerId:'ORC-HI',recoveryCode:'f'.repeat(32)}),expectCode('RECOVERY_CODE_INVALID'))
+  await assert.rejects(post(f.service,{action:'start',playerId:'Other',recoveryCode}),expectCode('RECOVERY_CODE_INVALID'))
+  await assert.rejects(post(f.service,{action:'start',playerId:'NewPlayer',recoveryCode}),expectCode('RECOVERY_CODE_INVALID'))
+  assert.equal(f.strings.has('altair:penalty:v1:owner:orc-hi'),false)
+  assert.equal(f.strings.get(recoveryKey('ORC-HI')),recoveryDigest)
+})
+
+test('expired and missing legacy recovery records reject a supplied code', async()=>{
+  const f=fixture(); seedLegacy(f,'ORC-HI')
+  await assert.rejects(post(f.service,{action:'start',recoveryCode}),expectCode('RECOVERY_CODE_INVALID'))
+  f.strings.set(recoveryKey('ORC-HI'),recoveryDigest); f.expires.set(recoveryKey('ORC-HI'),f.now()+1000); f.advance(1000)
+  await assert.rejects(post(f.service,{action:'start',recoveryCode}),expectCode('RECOVERY_CODE_INVALID'))
+})
+
+test('concurrent recovery by different owners claims the legacy name only once', async()=>{
+  const f=fixture(); seedLegacy(f,'ORC-HI'); f.strings.set(recoveryKey('ORC-HI'),recoveryDigest)
+  const results=await Promise.allSettled(['a','b'].map(owner=>post(f.service,{action:'start',ownerToken:owner.repeat(64),recoveryCode})))
+  assert.equal(results.filter(result=>result.status==='fulfilled').length,1)
+  assert.equal(results.filter(result=>result.status==='rejected').length,1)
+  assert.equal(f.strings.has(recoveryKey('ORC-HI')),false)
 })
