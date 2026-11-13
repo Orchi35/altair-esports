@@ -21,22 +21,14 @@ redis.call('SET', KEYS[2], ARGV[2], 'EX', ARGV[3])
 return 1`
 
 // Name ownership is permanent and independent of leaderboard pruning/week expiry.
-// Legacy migration requires an admin-issued single-use code. Public IDs and
-// localStorage names alone must never authorize taking over an existing score.
+// A concurrent claimant cannot replace an existing owner. Legacy names stay reserved.
 export const CLAIM_PLAYER_SCRIPT = `-- penalty-claim-player
 local owner = redis.call('GET', KEYS[1])
 if owner then
   if owner == ARGV[1] then return 1 end
   return 0
 end
-if ARGV[2] == '1' then
-  if ARGV[3] == '' then return -1 end
-  if redis.call('GET', KEYS[2]) ~= ARGV[3] then return -2 end
-  redis.call('SET', KEYS[1], ARGV[1])
-  redis.call('DEL', KEYS[2])
-  return 1
-end
-if ARGV[3] ~= '' then return -2 end
+if ARGV[2] == '1' then return 0 end
 redis.call('SET', KEYS[1], ARGV[1])
 return 1`
 
@@ -220,12 +212,7 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       const boards = await Promise.all([`${PREFIX}all`, weekKey(now())].map(key => command(['ZREVRANGE', key, 0, 999])))
       if (boards.some(members => !Array.isArray(members))) fail(503, 'LEADERBOARD_UNAVAILABLE')
       const legacyOccupied = boards.some(members => members.some(member => playerRankingKey(readEntry(member)?.playerId) === playerKey))
-      const recoveryCode = typeof body.recoveryCode === 'string' ? body.recoveryCode.trim().replaceAll('-', '').toLowerCase() : ''
-      if (body.recoveryCode != null && body.recoveryCode !== '' && !/^[a-f0-9]{32}$/.test(recoveryCode)) fail(400, 'RECOVERY_CODE_INVALID')
-      const recoveryDigest = recoveryCode ? createHash('sha256').update(recoveryCode).digest('hex') : ''
-      const claimed = await command(['EVAL', CLAIM_PLAYER_SCRIPT, 2, `${PREFIX}owner:${playerKey}`, `${PREFIX}recovery:${playerKey}`, ownerDigest, legacyOccupied ? '1' : '0', recoveryDigest])
-      if (claimed === -1) fail(409, 'LEGACY_ID_RECOVERY_REQUIRED')
-      if (claimed === -2) fail(400, 'RECOVERY_CODE_INVALID')
+      const claimed = await command(['EVAL', CLAIM_PLAYER_SCRIPT, 1, `${PREFIX}owner:${playerKey}`, ownerDigest, legacyOccupied ? '1' : '0'])
       if (claimed !== 1) fail(409, 'PLAYER_ID_TAKEN')
       const timestamp = now()
       const state = { v: PROTOCOL, id: randomId(), playerId, playerKey, ownerDigest, shot: 0, total: 0, exp: timestamp + SESSION_MS, nextAt: timestamp, timing: null }

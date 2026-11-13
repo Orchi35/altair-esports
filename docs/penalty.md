@@ -35,7 +35,7 @@ New IDs require 3-24 Unicode letters, digits, dots, underscores or hyphens, NFC-
 
 The browser remembers altair.penalty.playerId and a crypto-random 32-byte capability at altair.penalty.ownerToken. Start requires the latter as 64 lowercase hex characters. Redis stores its SHA-256 digest at altair:penalty:v1:owner:<canonical ID>, without expiry. Atomic claims prevent another owner from using the name. This is a browser capability, not real identity/account authentication. Clearing storage or changing browser loses access; there is no recovery UI. Unavailable storage allows practice only.
 
-Historical names without ownership proof remain reserved until an administrator issues a single-use migration code. Full retained weekly and all-time boards, including Unicode/case aliases, are checked. Do not assign them using an untrusted local display name; an administrator must separately verify ownership. Existing scores remain. Signed rounds bind the player identity; submit cannot replace it.
+Historical names without ownership proof remain reserved. Full retained weekly and all-time boards, including Unicode/case aliases, are checked. Do not assign them using an untrusted local display name; an administrator must separately verify ownership. Existing scores remain. Signed rounds bind the player identity; submit cannot replace it.
 
 ## Persistence and abuse controls
 
@@ -53,10 +53,6 @@ These controls reject forged power, score tampering and replay. They do NOT make
 
 The reported handle kinaci and other historical scores are not automatically removed. Moderation/reset requires a separate instruction. Production is unchanged until deployment.
 
-## Legacy ID migration
+## Leaderboard reset — 2026-11-13
 
-Existing players initially had no owner capability. They now receive LEGACY_ID_RECOVERY_REQUIRED, with a dedicated activation form, instead of the misleading occupied-name message. Never treat a browser-stored display name as proof.
-
-An administrator generates 16 random bytes per canonical ID, privately delivers the 32-hex code, and stores only SHA-256(normalized code) at altair:penalty:v1:recovery:<canonical ID> with a seven-day TTL and SET NX. Codes may be formatted with hyphens; the server trims, removes hyphens and lowercases before hashing. Do not place plaintext codes in Git, public URLs, logs, shared screenshots or public UI. Use an ignored *.local file for the private distribution list. Do not automatically send messages to players.
-
-Start optionally accepts recoveryCode. A legacy claim checks the digest, binds the browser owner and consumes the recovery key in the same Lua operation. Missing/incorrect/expired codes cannot claim names; existing owners cannot be overwritten with recovery codes. A new name cannot consume a legacy code. Scores are untouched. Repeating a successful start in the same browser needs no code. Losing this browser later needs separately verified administrative recovery; this migration is not a universal takeover mechanism.
+At the club owner’s request, both leaderboards, player name reservations, pending migration codes and active rounds were reset together. Previous records were moved to a separate administrative archive, outside the active namespace. Players can claim a name again through the regular start flow. No activation code or legacy activation form is needed. New claims retain browser ownership protection. Rate limits and server-side shot verification remain enabled.

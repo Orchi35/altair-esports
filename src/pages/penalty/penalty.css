@@ -73,11 +73,3 @@
  .pen-id-reminder strong{font-size:12px}
  .pen-overlay .pen-id-reminder small{font-size:11px}
 }
-.pen-recovery{grid-column:1/-1;width:100%;border-top:1px solid #294059;padding-top:12px}
-.pen-recovery-toggle{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;padding:10px 0;background:none;border:0;color:#b9d9fa;font:inherit;font-weight:600;text-align:left;cursor:pointer}
-.pen-recovery-toggle:focus-visible{outline:2px solid #9bc9ff;outline-offset:3px}
-.pen-recovery #pen-recovery-panel{display:grid;grid-template-columns:minmax(200px,1fr) minmax(200px,1.5fr);gap:16px;align-items:center;padding:14px;background:#101f30;border:1px solid #375570;border-radius:12px;margin-top:8px}
-.pen-recovery label{display:grid;gap:8px;color:#e5f0fc;font-size:14px}
-.pen-recovery input{width:100%;min-width:0;box-sizing:border-box;font-family:monospace;letter-spacing:.08em}
-.pen-recovery p{margin:0;color:#adc1d6;line-height:1.6;font-size:13px}
-@media(max-width:600px){.pen-recovery #pen-recovery-panel{grid-template-columns:1fr}}
