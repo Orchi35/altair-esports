@@ -56,3 +56,11 @@ The reported handle kinaci and other historical scores are not automatically rem
 ## Leaderboard reset — 2026-11-13
 
 At the club owner’s request, both leaderboards, player name reservations, pending migration codes and active rounds were reset together. Previous records were moved to a separate administrative archive, outside the active namespace. Players can claim a name again through the regular start flow. No activation code or legacy activation form is needed. New claims retain browser ownership protection. Rate limits and server-side shot verification remain enabled.
+
+## Synthetic shot input
+
+The shot handler ignores activations whose native browser event is not trusted, before changing game state or sending a request. This blocks the reported MutationObserver + DOM `click()` auto-shooter and synthetic `dispatchEvent` clicks. Native button mouse, touch, Enter and Space activation remain supported. The visible percentage and accessibility meter are retained.
+
+This is a client-side friction measure, not server proof of human input: a modified client, browser automation or directly scheduled API calls can bypass it. The server never accepts an `isTrusted` assertion as evidence. Server timing, signed rounds, replay protection and rate limits remain authoritative. Do not describe the game as cheat-proof or automatically ban players solely for high accuracy.
+
+Run `node --test test/e2e/penalty-input.e2e.test.js` after building for the local ranked-response regression. It exercises the reported observer, checks zero synthetic shot requests, and checks mouse, keyboard and touch activation without touching production scores.

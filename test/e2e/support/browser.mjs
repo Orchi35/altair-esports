@@ -133,6 +133,20 @@ export class BrowserPage {
     if (!clicked) throw new Error(`Unable to click missing selector: ${selector}`);
   }
 
+  // Actual browser input, distinct from the synthetic DOM click helper above.
+  async clickTrusted(selector) {
+    const point = await this.evaluate(`(() => {
+      const element = document.querySelector(${JSON.stringify(selector)});
+      if (!element) return null;
+      element.scrollIntoView({block:'center',behavior:'instant'});
+      const r = element.getBoundingClientRect();
+      return {x:r.x+r.width/2,y:r.y+r.height/2};
+    })()`);
+    if (!point) throw new Error(`Unable to click missing selector: ${selector}`);
+    await this.cdp.send('Input.dispatchMouseEvent', {type:'mousePressed',button:'left',clickCount:1,...point});
+    await this.cdp.send('Input.dispatchMouseEvent', {type:'mouseReleased',button:'left',clickCount:1,...point});
+  }
+
   async focus(selector) {
     const focused = await this.evaluate(`(() => { const element = document.querySelector(${JSON.stringify(selector)}); if (!element) return false; element.focus(); return document.activeElement === element; })()`);
     if (!focused) throw new Error(`Unable to focus selector: ${selector}`);

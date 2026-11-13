@@ -28,7 +28,8 @@ test('meter, shot, net and keeper recovery remain responsive through a full roun
   assert.ok(samples.every(n=>Number.isFinite(n)&&n>=0&&n<=100));
   t.diagnostic(JSON.stringify({aimScriptMs:+((after.ScriptDuration-before.ScriptDuration)*1000).toFixed(2),aimLayoutMs:+((after.LayoutDuration-before.LayoutDuration)*1000).toFixed(2),samples:samples.length}));
   for(let shot=1;shot<=10;shot++){
-   await page.evaluate(`new Promise(resolve=>{function aim(){if(Number(document.querySelector('.pen-meter').getAttribute('aria-valuenow'))>=90){document.querySelector('.pen-controls button').click();resolve(true)}else requestAnimationFrame(aim)}requestAnimationFrame(aim)})`);
+   await page.evaluate(`new Promise(resolve=>{function aim(){if(Number(document.querySelector('.pen-meter').getAttribute('aria-valuenow'))>=90)resolve(true);else requestAnimationFrame(aim)}requestAnimationFrame(aim)})`);
+   await page.clickTrusted('.pen-controls button');
    await page.waitFor("Boolean(document.querySelector('.pen-verdict'))");
    const held=await page.evaluate("document.querySelector('.pen-meter-cursor').style.transform");
    await page.evaluate('new Promise(resolve=>setTimeout(resolve,100))');
@@ -43,7 +44,7 @@ test('meter, shot, net and keeper recovery remain responsive through a full roun
   await page.click('.pen-restart');
   await page.waitFor("document.querySelector('.pen-controls button')?.disabled===false && !document.querySelector('.pen-finish')");
   await page.setReducedMotion(true);
-  await page.click('.pen-controls button');
+  await page.clickTrusted('.pen-controls button');
   await page.waitFor("Boolean(document.querySelector('.pen-verdict'))");
   await page.click('.pen-controls button');
   await page.waitFor("document.querySelector('.pen-controls button')?.disabled===false && document.querySelector('.pen-controls button').textContent.includes('ŞUT ÇEK')");
