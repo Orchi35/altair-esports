@@ -122,6 +122,7 @@ function safeOutputPath(urlPath) {
 }
 
 async function findStaticFile(urlPath) {
+  if (/^\/b\/[A-Za-z0-9_-]{12}$/.test(urlPath)) return path.join(outputDirectory,'tr','builder','index.html');
   if (/^\/(tr\/oyuncular|en\/players)\/vpg-[1-9]\d{0,9}$/.test(urlPath)) return path.join(outputDirectory, urlPath.split("/")[1], "index.html");
   if (/^\/(tr\/maclar|en\/matches)\/match-vpg-[1-9]\d{0,9}$/.test(urlPath)) return path.join(outputDirectory, urlPath.split("/")[1], "index.html");
   const candidate = safeOutputPath(urlPath);
@@ -138,12 +139,19 @@ async function findStaticFile(urlPath) {
   return null;
 }
 
-export async function startTestServer() {
+export async function startTestServer({builderHandler}={}) {
   await fs.access(path.join(outputDirectory, "tr", "index.html"));
   let mode = "fresh";
   const server = http.createServer(async (request, response) => {
     try {
       const url = new URL(request.url || "/", "http://127.0.0.1");
+      if(url.pathname==='/api/builds'&&builderHandler){
+        const chunks=[];for await(const chunk of request)chunks.push(chunk);
+        request.body=Buffer.concat(chunks).toString();request.query=Object.fromEntries(url.searchParams);
+        response.status=code=>{response.statusCode=code;return response;};
+        response.json=body=>response.end(JSON.stringify(body));
+        await builderHandler(request,response);return;
+      }
       if (url.pathname === "/__test__/match-center-mode") {
         const requestedMode = url.searchParams.get("value");
         mode = requestedMode === "stale" || requestedMode === "unavailable" ? requestedMode : "fresh";

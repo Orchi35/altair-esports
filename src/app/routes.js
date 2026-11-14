@@ -103,6 +103,10 @@ export function resolveRoute(pathname, fallbackLocale = DEFAULT_LOCALE) {
   const segments = normalizedPath.split("/").filter(Boolean);
   const locale = normalizeLocale(segments[0]);
   const safeFallback = normalizeLocale(fallbackLocale) || DEFAULT_LOCALE;
+  if (segments.length === 2 && segments[0] === 'b' && /^[A-Za-z0-9_-]{12}$/.test(segments[1])) {
+    return { ...ROUTE_BY_NAME.get('builder'), locale:safeFallback, langCode:localeToLangCode(safeFallback),
+      slug:null, shareId:segments[1], detail:false, isNotFound:false, pathname:normalizedPath, remainder:segments };
+  }
   if (!locale) {
     return {
       name:"not-found",
@@ -174,6 +178,8 @@ export function getLocalizedRoutePath(route, targetLocale, currentHash = "") {
     return `/${locale}${suffix ? `/${suffix}` : ""}`;
   }
   const base = getRoutePath(route?.name || "home", locale, route?.slug);
+  if (route?.name === 'builder' && currentHash.startsWith('#b=')) return `${base}${currentHash}`;
+  if (route?.shareId) return `${base}#b=${route.shareId}`;
   if (route?.name === "matches" && TAB_HASHES.has(currentHash)) return `${base}${currentHash}`;
   if (route?.name === "builder" && currentHash.startsWith("#build=")) return `${base}${currentHash}`;
   if (route?.name === "home" && HOME_HASHES.has(currentHash)) return `${base}${currentHash}`;
@@ -214,5 +220,5 @@ export function getStartupRedirect({ pathname, hash = "", storage, navigatorLang
 }
 
 export function isLocalizedAppPath(pathname) {
-  return Boolean(getLocaleFromPath(pathname));
+  return Boolean(getLocaleFromPath(pathname)) || /^\/b\/[A-Za-z0-9_-]{12}\/?$/.test(pathname);
 }

@@ -28,6 +28,18 @@ test("root defaults safely to Turkish", () => {
   assert.equal(resolveRoute("/en").name, "home");
 });
 
+test('short build routes preserve ID when changing language without becoming content slugs',()=>{
+ const route=resolveRoute('/b/Abc_123-xyz0','en');
+ assert.equal(route.name,'builder');
+ assert.equal(route.locale,'en');
+ assert.equal(route.shareId,'Abc_123-xyz0');
+ assert.equal(route.detail,false);
+ assert.equal(getLocalizedRoutePath(route,'tr'),'/tr/builder#b=Abc_123-xyz0');
+ assert.equal(getLocalizedRoutePath(resolveRoute('/tr/builder'),'en','#b=Abc_123-xyz0'),'/en/builder#b=Abc_123-xyz0');
+ assert.equal(getLocalizedRoutePath(resolveRoute('/tr/builder'),'en','#build=legacy'),'/en/builder#build=legacy');
+ for(const path of ['/b/short','/b/Abc_123-xyz0/more','/b/%3Cscript%3E'])assert.equal(resolveRoute(path).isNotFound,true);
+});
+
 test("stored choice has priority over browser language", () => {
   const storage = createStorage("en");
   assert.equal(getPreferredLocale({ storage, navigatorLanguage:"tr-TR" }), "en");
@@ -103,7 +115,8 @@ test("content-page hash targets are scrolled after lazy route content mounts", (
 test("deep links are emitted as filesystem prerender routes", () => {
   const config = JSON.parse(fs.readFileSync(new URL("../vercel.json", import.meta.url), "utf8"));
   const packageJson = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
-  assert.deepEqual(config.rewrites.map(rule => rule.source), ["/tr/oyuncular/vpg-:id(\\d+)","/en/players/vpg-:id(\\d+)","/tr/maclar/match-vpg-:id(\\d+)", "/en/matches/match-vpg-:id(\\d+)"]);
+  assert.deepEqual(config.rewrites.map(rule => rule.source), ["/b/:id([A-Za-z0-9_-]{12})","/tr/oyuncular/vpg-:id(\\d+)","/en/players/vpg-:id(\\d+)","/tr/maclar/match-vpg-:id(\\d+)", "/en/matches/match-vpg-:id(\\d+)"]);
+  assert.equal(config.rewrites[0].destination,'/tr/builder/index.html');
   assert.match(packageJson.scripts.build, /generate-seo\.mjs/);
 });
 

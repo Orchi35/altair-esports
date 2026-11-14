@@ -21,12 +21,14 @@
     }
   },
   "rewrites": [
+    {"source":"/b/:id([A-Za-z0-9_-]{12})","destination":"/tr/builder/index.html"},
     {"source":"/tr/oyuncular/vpg-:id(\\d+)","destination":"/tr/index.html"},
     {"source":"/en/players/vpg-:id(\\d+)","destination":"/en/index.html"},
     {"source":"/tr/maclar/match-vpg-:id(\\d+)","destination":"/tr/index.html"},
     {"source":"/en/matches/match-vpg-:id(\\d+)","destination":"/en/index.html"}
   ],
   "headers": [
+    {"source":"/b/:path*","headers":[{"key":"Cache-Control","value":"public, max-age=0, must-revalidate"},{"key":"X-Robots-Tag","value":"noindex, follow"}]},
     {"source":"/","headers":[{"key":"Cache-Control","value":"public, max-age=0, must-revalidate"}]},
     {"source":"/index.html","headers":[{"key":"Cache-Control","value":"public, max-age=0, must-revalidate"}]},
     {"source":"/tr/:path*","headers":[{"key":"Cache-Control","value":"public, max-age=0, must-revalidate"}]},

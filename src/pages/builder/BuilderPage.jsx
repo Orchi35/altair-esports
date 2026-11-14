@@ -1,4 +1,4 @@
-import {useEffect,useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import {ContentPage} from '../../components/layout/ContentPage.jsx';
 import {getRoutePath} from '../../app/routes.js';
 import {DATA,makeBuild,calculate,applySelection,attributeCost} from './engine.js';
@@ -6,18 +6,22 @@ import {GROUPS,encodeBuild,loadInitialBuild,attributeLabel} from './buildModel.j
 import {PlayStylesPanel,SpecializationsPanel,FacilitiesPanel,MasteryPanel} from './BuilderPanels.jsx';
 import BodyControl from './BodyControl.jsx';
 import {BuildLibrary} from './BuildLibrary.jsx';
+import {saveSharedBuild,shortBuildUrl} from './shareClient.js';
 import './builder.css';
 import './builder-layout.css';
 import './builder-refresh.css';
+import './builder-sharing.css';
 
 function initialBuild(){try{return loadInitialBuild(window.location.hash,window.localStorage);}catch{return {build:makeBuild(),source:'new'};}}
 
-export default function BuilderPage({locale='tr'}){
+export default function BuilderPage({locale='tr',sharedBuild=null,sharedUrl=''}){
  const tr=locale==='tr';
- const [initial]=useState(initialBuild);
+ const [initial]=useState(()=>sharedBuild?{build:sharedBuild,source:'shared'}:initialBuild());
  const [build,setBuild]=useState(initial.build);
  const [status,setStatus]=useState(initial.source==='invalid'?(tr?'Paylaşım bağlantısı geçersiz. Yeni bir build açıldı.':'Invalid share link. A new build has been opened.'):initial.source==='shared'?(tr?'Paylaşılan build açıldı. Seçimleri değiştirerek kendi sürümünü oluşturabilirsin.':'Shared build loaded. Change the selections to create your own version.'):'');
- const [shareLink,setShareLink]=useState('');
+ const [shareLink,setShareLink]=useState(sharedUrl);
+ const [sharing,setSharing]=useState(false),[exporting,setExporting]=useState(false),[shareFailed,setShareFailed]=useState(false);
+ const currentBuild=useRef(initial.build),shareLock=useRef(false),exportLock=useRef(false);
  const [inGame,setInGame]=useState(false);
  const [attributeGroup,setAttributeGroup]=useState('all');
  const [workspaceSection,setWorkspaceSection]=useState('attributes');
@@ -29,7 +33,7 @@ export default function BuilderPage({locale='tr'}){
  function commit(candidate){
   const check=calculate(candidate);
   if(check.errors.length){setStatus(`${tr?'Seçim uygulanamadı':'Selection could not be applied'}: ${check.errors.join(' · ')}`);return false;}
-  setBuild(candidate);setStatus('');setShareLink('');return true;
+  currentBuild.current=candidate;setBuild(candidate);setStatus('');setShareLink('');setShareFailed(false);return true;
  }
  function update(key,value){commit(key==='masteryMode'?{...build,mastery:value,masteryCustom:false}:{...build,[key]:value});}
  function select(kind,id){try{commit(applySelection(build,kind,id));}catch(error){setStatus(error.message);}}
@@ -52,15 +56,44 @@ export default function BuilderPage({locale='tr'}){
  }
  function reset(){commit({...makeBuild(build.archetypeId),level:build.level,name:build.name,notes:build.notes});}
  function resetAttributes(){commit({...build,attributes:{...archetype.defaultAttributes},playstyles:[],specialization:null});}
- async function share(){try{const link=`${window.location.origin}${getRoutePath('builder',locale)}#build=${encodeBuild(build)}`;setShareLink(link);window.history.replaceState(null,'',`#build=${encodeBuild(build)}`);try{await navigator.clipboard.writeText(link);setStatus(tr?'Paylaşım bağlantısı kopyalandı.':'Share link copied.');}catch{setStatus(tr?'Bağlantıyı aşağıdan kopyalayabilirsin.':'Copy the link below.');}}catch(error){setStatus(error.message);}}
+ async function copyLink(link){
+  setShareLink(link);
+  try{await navigator.clipboard.writeText(link);setStatus(tr?'Paylaşım bağlantısı kopyalandı.':'Share link copied.');}
+  catch{setStatus(tr?'Bağlantıyı aşağıdan seçip kopyalayabilirsin.':'Select and copy the link below.');}
+ }
+ async function share(){
+  if(shareLock.current)return;
+  shareLock.current=true;setSharing(true);setShareFailed(false);
+  const snapshot=build;
+  try{
+   const link=shareLink&&!shareLink.includes('#build=')?shareLink:shortBuildUrl(await saveSharedBuild(snapshot));
+   if(currentBuild.current!==snapshot){setStatus(tr?'Build değişti. Güncel seçimlerin için yeniden paylaş.':'Build changed. Share again for your latest selections.');return;}
+   await copyLink(link);
+  }catch{setShareFailed(true);setStatus(tr?'Kısa bağlantı oluşturulamadı. Tekrar deneyebilir veya klasik bağlantıyı kullanabilirsin.':'Short link could not be created. Retry or use a classic link.');}
+  finally{shareLock.current=false;setSharing(false);}
+ }
+ async function downloadCard(){
+  if(exportLock.current)return;
+  exportLock.current=true;setExporting(true);
+  try{
+   const {renderBuildCard}=await import('./buildCard.js');
+   const {blob,filename}=await renderBuildCard(build,{locale,shareUrl:shareLink});
+   const url=URL.createObjectURL(blob),link=document.createElement('a');
+   link.href=url;link.download=filename;document.body.append(link);link.click();link.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),60000);
+   setStatus(tr?'Build kartı PNG olarak hazırlandı.':'Build card prepared as a PNG.');
+  }catch{setStatus(tr?'Görsel hazırlanamadı. Tekrar dene.':'Image could not be prepared. Please retry.');}
+  finally{exportLock.current=false;setExporting(false);}
+ }
  const labels={body:tr?'Boy / kilo':'Height / weight',facilities:tr?'Tesisler':'Facilities',mastery:'Mastery'};
  const groups=GROUPS.map(([id,t,e,keys])=>[id,t,e,keys.filter(key=>Number.isFinite(archetype.defaultAttributes[key]))]).filter(row=>row[3].length);
  const activePerks=Number(DATA.levelPerks[build.level-1]||0);
  return <ContentPage className="builder-page" breadcrumbLabel="FC27 Builder" breadcrumbs={[{label:tr?'Ana Sayfa':'Home',href:getRoutePath('home',locale)},{label:'FC27 Builder'}]} eyebrow="ALTAIR LAB / CLUBS" title="FC27 Pro Clubs Builder" intro={tr?'Arketipini seç, AP’ni dağıt ve oyuncunu oluştur. Build’ini üyelik gerektirmeden bağlantıyla paylaş.':'Choose your archetype, allocate AP and build your player. Share your build with a link, without an account.'}>
  <div className="builder-workspace">
-  <div className="builder-toolbar"><label>{tr?'Build adı':'Build name'}<input maxLength="80" value={build.name} onChange={e=>update('name',e.target.value)} placeholder={tr?'Örn. Çevik bitirici':'e.g. Agile finisher'}/></label><div><button onClick={reset}>{tr?'Sıfırla':'Reset'}</button><BuildLibrary build={build} onLoad={commit} tr={tr}/><button className="builder-primary" onClick={share}>{tr?'Bağlantıyla paylaş ↗':'Share link ↗'}</button></div></div>
+  <div className="builder-toolbar"><label>{tr?'Build adı':'Build name'}<input maxLength="80" value={build.name} onChange={e=>update('name',e.target.value)} placeholder={tr?'Örn. Çevik bitirici':'e.g. Agile finisher'}/></label><div><button onClick={reset}>{tr?'Sıfırla':'Reset'}</button><BuildLibrary build={build} onLoad={commit} tr={tr}/><button className="builder-export" disabled={exporting} onClick={downloadCard}>{exporting?(tr?'Kart hazırlanıyor…':'Preparing card…'):(tr?'Build kartını indir ↓':'Download build card ↓')}</button><button className="builder-primary" disabled={sharing} onClick={share}>{sharing?(tr?'Bağlantı hazırlanıyor…':'Preparing link…'):(tr?'Bağlantıyla paylaş ↗':'Share link ↗')}</button></div></div>
   <p className="builder-status" role="status" aria-live="polite">{status}</p>
-  {shareLink&&<label className="builder-share">{tr?'Paylaşım bağlantısı':'Share link'}<input readOnly value={shareLink} onFocus={e=>e.target.select()}/></label>}
+  {shareLink&&<div className="builder-share"><label htmlFor="builder-share-link">{tr?'Paylaşım bağlantısı':'Share link'}</label><div><input id="builder-share-link" readOnly value={shareLink} onFocus={e=>e.target.select()}/><button onClick={()=>copyLink(shareLink)}>{tr?'Kopyala':'Copy'}</button></div><small>{tr?'Bağlantı bu seçimleri saklar. Bağlantıya sahip herkes build’i ve notlarını görebilir.':'This link preserves these selections. Anyone with the link can view the build and its notes.'}</small></div>}
+  {shareFailed&&<button className="builder-share-fallback" onClick={()=>copyLink(`${window.location.origin}${getRoutePath('builder',locale)}#build=${encodeBuild(build)}`)}>{tr?'Klasik bağlantıyı kullan':'Use a classic link'}</button>}
   <section className="builder-archetypes" aria-label={tr?'Arketip seçimi':'Archetype selection'}><div className="builder-panel-title"><h2>{tr?'Arketip':'Archetype'}</h2><span className="builder-help">{tr?'Arketip değişimi özellik dağılımını sıfırlar.':'Changing archetype resets attribute allocation.'}</span></div><div className="builder-archetype-list">{DATA.archetypes.map(a=><button key={a.id} aria-pressed={a.id===build.archetypeId} onClick={()=>changeArchetype(a.id)}><img src={a.image} width="64" height="76" alt=""/><span>{a.name}</span></button>)}</div></section>
   <div className="builder-ap-bar"><span>{archetype.name} <small>Lv. {build.level}</small></span><div><span>{tr?'Harcanan':'Spent'} <strong>{result.spentAP}</strong></span><span>{tr?'Toplam':'Total'} <strong>{result.totalAP}</strong></span><span className="builder-ap-remaining">{tr?'Kalan AP':'Remaining AP'} <strong>{result.remainingAP}</strong></span></div><div className="builder-ap-progress" aria-hidden="true"><span style={{width:`${Math.min(100,result.spentAP/Math.max(1,result.totalAP)*100)}%`}}/></div></div>
   <div className="builder-layout">

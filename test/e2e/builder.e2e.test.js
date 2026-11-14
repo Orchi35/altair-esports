@@ -47,7 +47,7 @@ test('builder stages drawer selections, allocates AP and restores a shared build
   await page.evaluate("document.querySelector('.builder-toolbar > div > .builder-primary').click()");
   await page.waitFor("Boolean(document.querySelector('.builder-share input'))");
   const link=await page.evaluate("document.querySelector('.builder-share input').value");
-  assert.ok(link.includes('#build='));
+  assert.match(link,/\/b\/[A-Za-z0-9_-]{12}$/);
   await page.evaluate("[...document.querySelectorAll('.builder-workspace-nav button')].find(b=>b.textContent.includes('Özellikler')).click()");
   const rating=await page.evaluate("document.querySelector('#builder-finishing').value");
   await fs.mkdir('work/builder-qa',{recursive:true});
