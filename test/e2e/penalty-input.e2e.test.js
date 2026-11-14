@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {launchBrowser} from './support/browser.mjs';
 import {startTestServer} from './support/testServer.mjs';
-import {calculateShot} from '../../src/pages/penalty/shotModel.js';
+import {calculateShot,powerFromMeter,powerPercentage} from '../../src/pages/penalty/shotModel.js';
 
 // A local ranked-response fixture: no production names, scores or requests.
 test('DOM auto-clicks send no shots; mouse, Enter, Space and touch still work',async t=>{
@@ -12,7 +12,10 @@ test('DOM auto-clicks send no shots; mouse, Enter, Space and touch still work',a
   browser=await launchBrowser();
   const page=browser.page;
   await page.setViewport(1280,1000);
-  const result={...calculateShot({x:.7,y:.3,power:.75,keeperX:.2,keeperY:.5,saveRoll:.99}),power:.75};
+  const results=[.5,.375,.55,.2].map(meterPosition=>{
+   const power=powerFromMeter(meterPosition);
+   return {...calculateShot({x:.7,y:.3,power,keeperX:.2,keeperY:.5,saveRoll:.99}),power,meterPosition};
+  });
   await page.cdp.send('Page.addScriptToEvaluateOnNewDocument',{source:`
    localStorage.setItem('altair.penalty.playerId','Input-QA');
    window.__shotRequests=0;
@@ -28,7 +31,9 @@ test('DOM auto-clicks send no shots; mouse, Enter, Space and touch still work',a
     }
     if(body.action==='shot'){
      window.__shotRequests++;
-     data={token:'local-test-token',result:${JSON.stringify(result)},total:${result.points},shot:1,finished:false};
+     const result=${JSON.stringify(results)}[window.__shotRequests-1];
+     await new Promise(resolve=>setTimeout(resolve,350));
+     data={token:'local-test-token',result,total:result.points,shot:1,finished:false};
     }
     return new Response(JSON.stringify(data),{headers:{'Content-Type':'application/json'}});
    };
@@ -77,7 +82,12 @@ test('DOM auto-clicks send no shots; mouse, Enter, Space and touch still work',a
    }
    await page.waitFor('Boolean(document.querySelector(".pen-verdict"))');
    assert.equal(await page.evaluate('window.__shotRequests'),before+1,`${input} sends exactly one shot`);
-   assert.equal(await page.evaluate("document.querySelector('.pen-meter').getAttribute('aria-valuenow')"),'75','server result remains authoritative');
+   const expected=results[before];
+   assert.equal(await page.evaluate("document.querySelector('.pen-meter').getAttribute('aria-valuenow')"),String(powerPercentage(expected.power)),'server result remains authoritative');
+   const position=await page.evaluate("parseFloat(document.querySelector('.pen-meter-cursor').style.transform.slice('translate3d('.length))/100");
+   assert.ok(Math.abs(position-expected.meterPosition)<1e-8,'result cursor agrees with server power even after delayed response');
+   assert.equal(await page.evaluate("Number(document.querySelectorAll('.pen-round-stats strong')[1].textContent)"),expected.points);
+   assert.equal(await page.evaluate("document.querySelector('.pen-power>div>span').textContent"),'DOĞRULANAN ŞUT');
   }
  }finally{
   await browser?.close();

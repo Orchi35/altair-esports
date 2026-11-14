@@ -2,7 +2,7 @@ import { createHash, createHmac, randomUUID, timingSafeEqual } from 'node:crypto
 import { calculateShot } from '../../src/pages/penalty/shotModel.js'
 import { normalizePlayerId, playerRankingKey } from '../../src/pages/penalty/playerId.js'
 import { isIP } from 'node:net'
-import { SHOT_WARMUP_MS, SHOT_WINDOW_MS, timedShotPower } from '../../src/pages/penalty/shotTiming.js'
+import { SHOT_WARMUP_MS, SHOT_WINDOW_MS, timedShotSample } from '../../src/pages/penalty/shotTiming.js'
 
 export const SHOT_COUNT = 10
 export const SHOT_INTERVAL_MS = 2000
@@ -250,8 +250,8 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       const receivedAt = requestAt
       if (receivedAt < state.timing.startsAt) fail(429, 'SHOT_NOT_READY')
       if (receivedAt >= state.timing.expiresAt) fail(410, 'SHOT_EXPIRED')
-      const power = timedShotPower(receivedAt, state.timing)
-      const result = { ...resolveShot({ id: state.id, shot: state.shot + 1, x: body.x, y: body.y, power, keeperRead:state.keeperRead }, secret), power }
+      const sample = timedShotSample(receivedAt, state.timing)
+      const result = { ...resolveShot({ id: state.id, shot: state.shot + 1, x: body.x, y: body.y, power:sample.power, keeperRead:state.keeperRead }, secret), ...sample }
       const next = { ...state, timing: null, keeperRead:result.keeperRead, shot: state.shot + 1, total: state.total + result.points, nextAt: receivedAt + SHOT_INTERVAL_MS }
       const token = await advance(next)
       return { token, result, total: next.total, shot: next.shot, finished: next.shot === SHOT_COUNT }

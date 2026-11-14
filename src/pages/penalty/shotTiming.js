@@ -9,6 +9,7 @@ export function meterPosition(elapsed, legMs = METER_LEG_MS) {
   return cycle <= 1 ? cycle : 2 - cycle
 }
 
-export function timedShotPower(receivedAt, timing) {
-  return powerFromMeter(meterPosition(receivedAt - timing.startsAt, timing.legMs))
+export function timedShotSample(receivedAt, timing) {
+  const position = meterPosition(receivedAt - timing.startsAt, timing.legMs)
+  return { meterPosition: position, power: powerFromMeter(position) }
 }

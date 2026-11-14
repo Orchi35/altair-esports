@@ -3,7 +3,7 @@ import {powerFromMeter,powerPercentage,PERFECT_WINDOW_HALF_WIDTH} from './shotMo
 import {meterPosition} from './shotTiming.js';
 
 // Update only the cursor/readout, without reconciling React on every frame.
-export default function PowerMeter({phase,meterRef,tr,timing,verifiedPower}){
+export default function PowerMeter({phase,meterRef,tr,timing,verifiedPower,verifiedPosition}){
  const cursor=useRef(null),readout=useRef(null),meter=useRef(null),lastPosition=useRef(0);
  useEffect(()=>{
   let frame,start,lastPercent=-1;
@@ -19,7 +19,11 @@ export default function PowerMeter({phase,meterRef,tr,timing,verifiedPower}){
   if(phase!=='aim'){
    const reset=['arming','intro','loading'].includes(phase);
    if(reset)lastPosition.current=0;
-   paint(lastPosition.current,reset?0:verifiedPower);
+   // The result cursor and readout must describe the same sampled instant.
+   // Older cached API responses may contain power only; keep those consistent too.
+   const fallback=verifiedPower===1?.5:lastPosition.current>.5?1-verifiedPower/2:verifiedPower/2;
+   const position=Number.isFinite(verifiedPosition)?verifiedPosition:Number.isFinite(verifiedPower)?fallback:lastPosition.current;
+   paint(reset?0:position,reset?0:verifiedPower);
    return;
   }
   const tick=time=>{
@@ -32,9 +36,9 @@ export default function PowerMeter({phase,meterRef,tr,timing,verifiedPower}){
   };
   frame=requestAnimationFrame(tick);
   return()=>cancelAnimationFrame(frame);
- },[phase,meterRef,timing,verifiedPower]);
+ },[phase,meterRef,timing,verifiedPower,verifiedPosition]);
  const t=(a,b)=>tr?a:b;
- return <div className="pen-power"><div><span>{t('ŞUT GÜCÜ','SHOT POWER')}</span><strong ref={readout}>0%</strong></div>
+ return <div className="pen-power"><div><span>{verifiedPower!=null?t(timing?'DOĞRULANAN ŞUT':'ŞUT SONUCU',timing?'VERIFIED SHOT':'SHOT RESULT'):phase==='pending'?t('ŞUT DOĞRULANIYOR…','VERIFYING SHOT…'):t('ŞUT GÜCÜ','SHOT POWER')}</span><strong ref={readout}>0%</strong></div>
   <div ref={meter} className="pen-meter" role="meter" aria-label={t('Şut gücü: ortada yüzde yüz','Shot power: one hundred percent in the center')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={0}>
    <span className="pen-sweet" style={{left:`${(0.5-PERFECT_WINDOW_HALF_WIDTH)*100}%`,width:`${PERFECT_WINDOW_HALF_WIDTH*200}%`}}/><span ref={cursor} className="pen-meter-cursor"><i/></span><b className="pen-meter-center">100%</b>
   </div><div className="pen-meter-scale"><span>0</span><span>{t('TAM ZAMANLAMA','PERFECT TIMING')}</span><span>0</span></div>

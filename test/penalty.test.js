@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { createHmac } from 'node:crypto'
 import { createPenaltyService, createPenaltyHandler, resolveShot, weekKey, SHOT_INTERVAL_MS, bestLeaderboardEntries } from '../server/penalty/service.js'
 import { normalizePlayerId, playerRankingKey } from '../src/pages/penalty/playerId.js'
+import {powerFromMeter,goalPoints,PERFECT_WINDOW_HALF_WIDTH} from '../src/pages/penalty/shotModel.js'
 
 const env = { PENALTY_REDIS_REST_URL: 'https://example.upstash.io', PENALTY_REDIS_REST_TOKEN: 'test-only', PENALTY_SIGNING_SECRET: 'test-secret-with-at-least-32-characters' }
 
@@ -221,7 +222,7 @@ test('arming enforces timing and atomic replay protection', async()=>{
 test('client power and score overrides cannot control server timing', async()=>{
  const f=fixture(); const {token}=await post(f.service,{action:'start'}); const armed=await post(f.service,{action:'arm',token})
  f.advance(armed.timing.startsAt-f.now())
- for(const field of ['power','score','clientTime','keeperRead','streak']) await assert.rejects(post(f.service,{action:'shot',token:armed.token,x:.1,y:.1,[field]:1}),expectCode('CLIENT_SHOT_OVERRIDE'))
+ for(const field of ['power','meterPosition','score','clientTime','keeperRead','streak']) await assert.rejects(post(f.service,{action:'shot',token:armed.token,x:.1,y:.1,[field]:1}),expectCode('CLIENT_SHOT_OVERRIDE'))
  const bad=await post(f.service,{action:'shot',token:armed.token,x:.1,y:.1}); assert.equal(bad.result.power,0)
  f.advance(); assert.equal((await shoot(f,bad.token)).result.power,1)
 })
@@ -332,6 +333,22 @@ test('request arrival time, rather than Redis latency, determines shot power', a
  f.setDelay(1000)
  const shot=await post(f.service,{action:'shot',token:armed.token,x:.1,y:.1})
  assert.equal(shot.result.power,1)
+ assert.ok(Math.abs(shot.result.meterPosition-.5)<=PERFECT_WINDOW_HALF_WIDTH)
+ assert.equal(powerFromMeter(shot.result.meterPosition),shot.result.power)
+})
+
+test('result position, power and goal points share the server arrival sample in both directions',async()=>{
+ const f=fixture();let {token}=await post(f.service,{action:'start'})
+ for(const offset of [.1,.45,.5,.55,.9,1.25,1.5,1.7]){
+  const shot=await shoot(f,token,.3,.3,offset)
+  const {meterPosition:position,power,points,goal,perfect}=shot.result
+  assert.ok(position>=0&&position<=1)
+  assert.equal(power,powerFromMeter(position))
+  assert.equal(points,goal?goalPoints(power):0)
+  assert.equal(perfect,Math.abs(position-.5)<=PERFECT_WINDOW_HALF_WIDTH)
+  if(points===150)assert.equal(perfect,true)
+  token=shot.token
+ }
 })
 
 test('IPv6 privacy addresses in the same /64 share start limits', async()=>{

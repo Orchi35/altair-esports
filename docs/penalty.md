@@ -57,6 +57,10 @@ The reported handle kinaci and other historical scores are not automatically rem
 
 At the club owner’s request, both leaderboards, player name reservations, pending migration codes and active rounds were reset together. Previous records were moved to a separate administrative archive, outside the active namespace. Players can claim a name again through the regular start flow. No activation code or legacy activation form is needed. New claims retain browser ownership protection. Rate limits and server-side shot verification remain enabled.
 
+## Shot result feedback
+
+Shot responses include both `meterPosition` and `power` from the same server request-arrival sample. The result cursor, percentage and points must agree; do not leave the cursor at the client's last animation frame while replacing only its readout with server power. The UI labels ranked results as verified. Practice also records its sampled position and power. Live cursor timing is still a network-delay estimate: this display fix does not make client click time identical to server arrival time, and the API does not accept a client position override.
+
 ## Synthetic shot input
 
 The shot handler ignores activations whose native browser event is not trusted, before changing game state or sending a request. This blocks the reported MutationObserver + DOM `click()` auto-shooter and synthetic `dispatchEvent` clicks. Native button mouse, touch, Enter and Space activation remain supported. The visible percentage and accessibility meter are retained.
