@@ -20,8 +20,8 @@ test('net impulse is concentrated near impact and fades away',()=>{
  assert.ok(displacement(hit.x,hit.y,900)<displacement(hit.x,hit.y,100)*.1);
 });
 test('goal flight joins the net animation continuously and the ball settles inside',()=>{
- for(const y of [.1,.4,.99]) for(const perfect of [false,true]) {
-  const result={...goal,targetY:y,perfect};
+ for(const y of [.1,.4,.99]) for(const perfect of [false,true]) for(const shotType of ['normal','panenka']) {
+  const result={...goal,targetY:y,perfect,shotType};
   const first=sampleGoalBall(result,0),last=sampleFlight(result,1);
   for(const key of ['x','y','scale','rotation']) assert.ok(Math.abs(first[key]-last[key])<1e-8);
   const resting=sampleGoalBall(result,NET_SETTLE_MS),hit=netContact(result);

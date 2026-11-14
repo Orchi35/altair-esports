@@ -12,7 +12,6 @@ function StadiumBackdrop(){
   <linearGradient id="pen-scene-tone" x2="0" y2="1"><stop stopColor="#07182e" stopOpacity=".12"/><stop offset=".55" stopColor="#102134" stopOpacity=".08"/><stop offset="1" stopColor="#020e16" stopOpacity=".35"/></linearGradient>
   <radialGradient id="pen-shadow"><stop stopColor="#010b10" stopOpacity=".65"/><stop offset="1" stopColor="#010b10" stopOpacity="0"/></radialGradient>
   <radialGradient id="pen-light"><stop stopColor="#d9f3ff" stopOpacity=".16"/><stop offset="1" stopColor="#76beff" stopOpacity="0"/></radialGradient>
-  <pattern id="pen-side-net" width="15" height="14" patternUnits="userSpaceOnUse" patternTransform="skewY(20)"><path d="M15 0H0V14" fill="none" stroke="#e4f0ed" strokeOpacity=".42" strokeWidth=".8"/></pattern>
   <filter id="pen-post-shadow" x="-20%" width="140%"><feDropShadow dx="2" dy="4" stdDeviation="2" floodColor="#04131c" floodOpacity=".6"/></filter>
   <filter id="pen-keeper-shadow" x="-40%" y="-30%" width="180%" height="180%"><feDropShadow dx="1" dy="2" stdDeviation="1.3" floodColor="#021316" floodOpacity=".45"/></filter>
   {CROWD_PATCHES.map((r,i)=><clipPath key={i} id={`pen-crowd-patch-${i}`}><rect x={r.x} y={r.y} width={r.w} height={r.h} rx="9"/></clipPath>)}

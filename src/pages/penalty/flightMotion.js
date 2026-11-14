@@ -4,6 +4,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const screen = (x, y) => ({ x: 220 + x * 560, y: 145 + y * 235 });
 export const FLIGHT_MS = 1150;
 export const POST_CONTACT = .68;
+export const flightDuration = result => result?.shotType === 'panenka' ? 1650 : FLIGHT_MS;
 
 // Damped displacement starts exactly on contact and ends before the result screen.
 export function samplePostImpact(result,progress) {
@@ -24,6 +25,13 @@ export function sampleFlight(result, progress) {
   const t = first ? p / impactAt : (p - impactAt) / (1 - impactAt);
   const from = first ? start : contact;
   const to = first && rebound ? contact : end;
+  if (result.shotType === 'panenka') {
+    const lift = result.outcome === 'weak' ? 24 : first ? 125 : 16;
+    const x = lerp(from.x, to.x, t);
+    const y = lerp(from.y, to.y, t) - Math.sin(t * Math.PI) * lift;
+    const scale = rebound && !first ? lerp(.46, result.outcome === 'post' ? .76 : .62, t) : lerp(1, .46, t);
+    return {x, y, scale, rotation: -150 * p};
+  }
   const lift = result.outcome === 'weak' ? 12 : first ? 75 : result.outcome === 'post' ? 12 : 35;
   const x = lerp(from.x, to.x, t);
   const y = lerp(from.y, to.y, t) - Math.sin(t * Math.PI) * lift;

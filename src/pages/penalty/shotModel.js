@@ -2,6 +2,9 @@ const clamp = (value, min, max) => Math.max(min, Math.min(max, value))
 
 export const MAX_GOAL_POINTS = 150
 export const PERFECT_WINDOW_HALF_WIDTH = 0.009
+export const PANENKA_PERFECT_WINDOW_HALF_WIDTH = 0.0045
+export const PANENKA_LIMIT = 2
+export const MAX_ROUND_POINTS = 1800
 
 export function powerPercentage(power) {
   if (!Number.isFinite(power)) return 0
@@ -11,17 +14,17 @@ export function powerPercentage(power) {
 
 // Timing determines scoring; aiming selects the ball's trajectory.
 // Perfect timing earns an exclusive bonus. Near-perfect values cannot round up to it.
-export function goalPoints(power) {
+export function goalPoints(power, shotType = 'normal') {
   if (!Number.isFinite(power) || power < .45 || power > 1) return 0
-  if (power === 1) return MAX_GOAL_POINTS
+  if (power === 1) return MAX_GOAL_POINTS * (shotType === 'panenka' ? 2 : 1)
   const displayedPower = powerPercentage(power) / 100
-  return Math.round(140 * displayedPower * displayedPower)
+  return Math.round(140 * displayedPower * displayedPower) * (shotType === 'panenka' ? 2 : 1)
 }
 
 // Only the narrow center band awards a perfect strike.
-export function powerFromMeter(position) {
+export function powerFromMeter(position, shotType = 'normal') {
   const distance = Math.abs(clamp(position, 0, 1) - 0.5)
-  return distance <= PERFECT_WINDOW_HALF_WIDTH + Number.EPSILON ? 1 : Math.min(0.99, 1 - distance * 2)
+  return distance <= (shotType === 'panenka' ? PANENKA_PERFECT_WINDOW_HALF_WIDTH : PERFECT_WINDOW_HALF_WIDTH) + Number.EPSILON ? 1 : Math.min(0.99, 1 - distance * 2)
 }
 
 // One rate per displayed whole percentage, shared by ranked and practice play.
@@ -47,16 +50,18 @@ export function repetitionBonus(streak = 1) {
 }
 
 // The location itself has no advantage; consecutive attempts in one zone do.
-export function keeperSaveChance({power, streak = 1}) {
+export function keeperSaveChance({power, streak = 1, shotType = 'normal'}) {
   if (!Number.isFinite(power) || power < .45 || power > 1) return 0
-  return Math.min(.95, KEEPER_SAVE_RATES[powerPercentage(power)] + repetitionBonus(streak))
+  if (shotType === 'panenka' && power === 1) return 0
+  const normalChance = Math.min(.95, KEEPER_SAVE_RATES[powerPercentage(power)] + repetitionBonus(streak))
+  return shotType === 'panenka' ? Math.min(.98, normalChance + .20) : normalChance
 }
 
 // Coordinates are normalized to the goal, with y increasing downward.
 // Ranked play supplies a secret-seeded roll; practice supplies its own random roll.
-export function calculateShot({ x, y, power, keeperX, keeperY, saveRoll=.5, keeperRead=null }) {
+export function calculateShot({ x, y, power, keeperX, keeperY, saveRoll=.5, keeperRead=null, shotType='normal' }) {
   const read = nextKeeperRead(keeperRead, x, y)
-  const saveChance = keeperSaveChance({power, streak:read.streak})
+  const saveChance = keeperSaveChance({power, streak:read.streak, shotType})
   const perfect = power === 1
   let outcome
   let postSide = null
@@ -93,6 +98,6 @@ export function calculateShot({ x, y, power, keeperX, keeperY, saveRoll=.5, keep
     }
   }
   const goal = outcome === 'goal'
-  const points = goal ? goalPoints(power) : 0
-  return { goal, points, keeperX, keeperY, outcome, perfect, postSide, targetX, targetY, keeperRead:read, saveChance, impactX: outcome === 'post' ? impactX : outcome === 'saved' ? x : targetX, impactY: outcome === 'post' ? impactY : outcome === 'saved' ? y : targetY }
+  const points = goal ? goalPoints(power, shotType) : 0
+  return { shotType, goal, points, keeperX, keeperY, outcome, perfect, postSide, targetX, targetY, keeperRead:read, saveChance, impactX: outcome === 'post' ? impactX : outcome === 'saved' ? x : targetX, impactY: outcome === 'post' ? impactY : outcome === 'saved' ? y : targetY }
 }

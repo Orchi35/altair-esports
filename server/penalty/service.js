@@ -1,5 +1,5 @@
 import { createHash, createHmac, randomUUID, timingSafeEqual } from 'node:crypto'
-import { calculateShot } from '../../src/pages/penalty/shotModel.js'
+import { calculateShot, powerFromMeter, PANENKA_LIMIT, MAX_ROUND_POINTS } from '../../src/pages/penalty/shotModel.js'
 import { normalizePlayerId, playerRankingKey } from '../../src/pages/penalty/playerId.js'
 import { isIP } from 'node:net'
 import { SHOT_WARMUP_MS, SHOT_WINDOW_MS, timedShotSample } from '../../src/pages/penalty/shotTiming.js'
@@ -8,7 +8,7 @@ export const SHOT_COUNT = 10
 export const SHOT_INTERVAL_MS = 2000
 const SESSION_MS = 30 * 60 * 1000
 const PREFIX = 'altair:penalty:v1:'
-const PROTOCOL = 2
+const PROTOCOL = 4
 
 export const RATE_SCRIPT = `-- penalty-rate
 local count = redis.call('INCR', KEYS[1])
@@ -112,7 +112,7 @@ function readEntry(member) {
   try {
     const value = JSON.parse(member)
     const playerId = normalizePlayerId(value?.playerId ?? value?.name,{minLength:2})
-    if (!playerId || !Number.isInteger(value.score) || value.score < 0 || value.score > 1500) return null
+    if (!playerId || !Number.isInteger(value.score) || value.score < 0 || value.score > MAX_ROUND_POINTS) return null
     return { playerId, score:value.score }
   } catch { return null }
 }
@@ -135,13 +135,17 @@ export function weekKey(timestamp) {
   return `${PREFIX}week:${date.toISOString().slice(0, 10)}`
 }
 
-export function resolveShot({ id, shot, x, y, power, keeperRead=null }, secret) {
-  if (![x, y, power].every(unit)) fail(400, 'INVALID_SHOT')
+export function shotEntropy(id, shot, secret) {
   const random = createHmac('sha256', secret).update(`${id}:${shot}`).digest()
   const keeperX = 0.12 + (random.readUInt32BE(0) / 0xffffffff) * 0.76
   const keeperY = 0.15 + (random.readUInt32BE(4) / 0xffffffff) * 0.7
   const saveRoll = random.readUInt32BE(8) / 0x100000000
-  return calculateShot({ x, y, power, keeperX, keeperY, saveRoll, keeperRead })
+  return { keeperX, keeperY, saveRoll }
+}
+
+export function resolveShot({ id, shot, x, y, power, keeperRead=null, shotType='normal' }, secret) {
+  if (![x, y, power].every(unit)) fail(400, 'INVALID_SHOT')
+  return calculateShot({ x, y, power, ...shotEntropy(id, shot, secret), keeperRead, shotType })
 }
 
 export function createPenaltyService({ env = process.env, fetchImpl = globalThis.fetch, now = Date.now, randomId = randomUUID, command: injectedCommand } = {}) {
@@ -186,9 +190,11 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
     if (!/^[A-Za-z0-9_-]{43}$/.test(parts[1]) || !timingSafeEqual(Buffer.from(parts[1]), Buffer.from(expected))) fail(400, 'INVALID_SESSION')
     let state
     try { state = JSON.parse(Buffer.from(parts[0], 'base64url').toString()) } catch { fail(400, 'INVALID_SESSION') }
-    if (!state || typeof state.id !== 'string' || !Number.isInteger(state.shot) || state.shot < 0 || state.shot > SHOT_COUNT || !Number.isInteger(state.total) || state.total < 0 || state.total > 1500 || !Number.isFinite(state.exp) || !Number.isFinite(state.nextAt)) fail(400, 'INVALID_SESSION')
+    if (!state || typeof state.id !== 'string' || !Number.isInteger(state.shot) || state.shot < 0 || state.shot > SHOT_COUNT || !Number.isInteger(state.total) || state.total < 0 || state.total > MAX_ROUND_POINTS || !Number.isFinite(state.exp) || !Number.isFinite(state.nextAt)) fail(400, 'INVALID_SESSION')
     if (state.exp <= now()) fail(410, 'SESSION_EXPIRED')
     if (state.v !== PROTOCOL) fail(409, 'SESSION_UPGRADE_REQUIRED')
+    if (!Number.isInteger(state.panenkasUsed) || state.panenkasUsed < 0 || state.panenkasUsed > Math.min(state.shot, PANENKA_LIMIT) || state.total > 150 * state.shot + 150 * state.panenkasUsed) fail(400, 'INVALID_SESSION')
+    if (!Number.isFinite(state.startedAt) || state.startedAt > state.exp || state.exp - state.startedAt !== SESSION_MS || !Number.isInteger(state.perfectShots) || state.perfectShots < 0 || state.perfectShots > state.shot || !Number.isInteger(state.repeatedSamples) || state.repeatedSamples < 0 || state.repeatedSamples > Math.max(0, state.shot - 1) || (state.shot === 0 ? state.lastMeterPosition !== null : !unit(state.lastMeterPosition))) fail(400, 'INVALID_SESSION')
     if (!normalizePlayerId(state.playerId) || state.playerKey !== playerRankingKey(state.playerId) || !/^[a-f0-9]{64}$/.test(state.ownerDigest)) fail(400, 'INVALID_SESSION')
     if (state.keeperRead != null && (!/^(left|center|right)-(high|low)$/.test(state.keeperRead.zone) || !Number.isInteger(state.keeperRead.streak) || state.keeperRead.streak < 1 || state.keeperRead.streak > state.shot)) fail(400, 'INVALID_SESSION')
     return state
@@ -214,8 +220,10 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       const entries = bestLeaderboardEntries(members)
       return { configured: true, entries }
     }
-    if (!body || typeof body !== 'object' || Array.isArray(body)) fail(400, 'INVALID_BODY')
+    if (!body || typeof body !== 'object' || Array.isArray(body) || Buffer.isBuffer(body)) fail(400, 'INVALID_BODY')
     if (body.action === 'start') {
+      if (Object.keys(body).some(key => !['action', 'playerId', 'ownerToken', 'timingMode'].includes(key))) fail(400, 'INVALID_BODY')
+      if (body.timingMode !== undefined && body.timingMode !== 'instant') fail(400, 'INVALID_TIMING_MODE')
       const playerId = normalizePlayerId(body.playerId)
       if (!playerId) fail(400, 'INVALID_PLAYER_ID')
       if (typeof body.ownerToken !== 'string' || !/^[a-f0-9]{64}$/.test(body.ownerToken)) fail(400, 'IDENTITY_REQUIRED')
@@ -225,6 +233,9 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
         [`start-ip:${addressKey}`, 12, 60],
         [`start-hour:${addressKey}`, 120, 3600],
         [`start-owner:${ownerDigest}`, 6, 60],
+        [`start-owner-hour:${ownerDigest}`, 60, 3600],
+        ['start-global', 60, 60],
+        ['start-global-hour', 1000, 3600],
       ])
       const boards = await Promise.all([`${PREFIX}all`, weekKey(now())].map(key => command(['ZREVRANGE', key, 0, 999])))
       if (boards.some(members => !Array.isArray(members))) fail(503, 'LEADERBOARD_UNAVAILABLE')
@@ -232,14 +243,23 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       const claimed = await command(['EVAL', CLAIM_PLAYER_SCRIPT, 1, `${PREFIX}owner:${playerKey}`, ownerDigest, legacyOccupied ? '1' : '0'])
       if (claimed !== 1) fail(409, 'PLAYER_ID_TAKEN')
       const timestamp = now()
-      const state = { v: PROTOCOL, id: randomId(), playerId, playerKey, ownerDigest, shot: 0, total: 0, exp: timestamp + SESSION_MS, nextAt: timestamp, timing: null }
+      const state = { v: PROTOCOL, id: randomId(), playerId, playerKey, ownerDigest, shot: 0, total: 0, exp: timestamp + SESSION_MS, nextAt: timestamp, timing: null, startedAt: timestamp, perfectShots: 0, panenkasUsed: 0, repeatedSamples: 0, lastMeterPosition: null }
+      if (body.timingMode === 'instant') state.timingMode = 'instant'
       const token = sign(state, secret)
       const stored = await command(['EVAL', START_SCRIPT, 2, `${PREFIX}session:${state.id}`, `${PREFIX}active:${ownerDigest}`, token, state.id, SESSION_MS / 1000])
       if (stored !== 1) fail(503, 'LEADERBOARD_UNAVAILABLE')
-      return { token, requestReceivedAt: requestAt, serverNow: now() }
+      return { token, ...(state.timingMode === 'instant' ? { timingMode: 'instant', shots: Array.from({ length: SHOT_COUNT }, (_, index) => shotEntropy(state.id, index + 1, secret)) } : {}), requestReceivedAt: requestAt, serverNow: now() }
     }
     if (!['arm', 'shot', 'submit'].includes(body.action)) fail(400, 'INVALID_ACTION')
     const state = verify(body.token, secret)
+    if (typeof body.ownerToken !== 'string' || !/^[a-f0-9]{64}$/.test(body.ownerToken)) fail(400, 'IDENTITY_REQUIRED')
+    const ownerDigest = createHash('sha256').update(body.ownerToken).digest()
+    if (!timingSafeEqual(ownerDigest, Buffer.from(state.ownerDigest, 'hex'))) fail(403, 'OWNER_MISMATCH')
+    const allowed = body.action === 'shot'
+      ? (state.timingMode === 'instant' ? ['action', 'token', 'ownerToken', 'x', 'y', 'meterPosition', 'shotType'] : ['action', 'token', 'ownerToken', 'x', 'y', 'shotType'])
+      : body.action === 'arm' ? ['action', 'token', 'ownerToken'] : ['action', 'token', 'ownerToken', 'playerId']
+    if (Object.keys(body).some(key => !allowed.includes(key))) fail(400, body.action === 'shot' ? 'CLIENT_SHOT_OVERRIDE' : 'INVALID_BODY')
+    await limits([[`owner-write:${state.ownerDigest}`, 120, 60]])
     const sessionKey = `${PREFIX}session:${state.id}`
     const activeKey = `${PREFIX}active:${state.ownerDigest}`
     async function advance(next) {
@@ -249,6 +269,7 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       return token
     }
     if (body.action === 'arm') {
+      if (state.timingMode === 'instant') fail(409, 'INSTANT_MODE')
       if (state.shot >= SHOT_COUNT) fail(409, 'GAME_FINISHED')
       if (state.timing) fail(409, 'SHOT_ALREADY_ARMED')
       // Per-shot pacing comes from the server, not from a caller's clock.
@@ -260,18 +281,23 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
     }
     if (body.action === 'shot') {
       if (state.shot >= SHOT_COUNT) fail(409, 'GAME_FINISHED')
+      const shotType = body.shotType === undefined ? 'normal' : body.shotType
+      if (!['normal', 'panenka'].includes(shotType)) fail(400, 'INVALID_SHOT')
+      if (shotType === 'panenka' && state.panenkasUsed >= PANENKA_LIMIT) fail(409, 'PANENKA_LIMIT_REACHED')
       if (![body.x, body.y].every(unit)) fail(400, 'INVALID_SHOT')
-      if (Object.keys(body).some(key => !['action', 'token', 'x', 'y'].includes(key))) fail(400, 'CLIENT_SHOT_OVERRIDE')
-      if (now() < state.nextAt) fail(429, 'SHOT_TOO_SOON')
-      if (!state.timing) fail(409, 'SHOT_NOT_ARMED')
+      const instant = state.timingMode === 'instant'
+      if (instant && !unit(body.meterPosition)) fail(400, 'INVALID_SHOT')
+      if (!instant && now() < state.nextAt) fail(429, 'SHOT_TOO_SOON')
+      if (!instant && !state.timing) fail(409, 'SHOT_NOT_ARMED')
       const receivedAt = requestAt
-      if (receivedAt < state.timing.startsAt) fail(429, 'SHOT_NOT_READY')
-      if (receivedAt >= state.timing.expiresAt) fail(410, 'SHOT_EXPIRED')
-      const sample = timedShotSample(receivedAt, state.timing)
-      const result = { ...resolveShot({ id: state.id, shot: state.shot + 1, x: body.x, y: body.y, power:sample.power, keeperRead:state.keeperRead }, secret), ...sample }
-      const next = { ...state, timing: null, keeperRead:result.keeperRead, shot: state.shot + 1, total: state.total + result.points, nextAt: receivedAt + SHOT_INTERVAL_MS }
+      if (!instant && receivedAt < state.timing.startsAt) fail(429, 'SHOT_NOT_READY')
+      if (!instant && receivedAt >= state.timing.expiresAt) fail(410, 'SHOT_EXPIRED')
+      const timingSample = instant ? { meterPosition: body.meterPosition } : timedShotSample(receivedAt, state.timing)
+      const sample = { ...timingSample, power: powerFromMeter(timingSample.meterPosition, shotType) }
+      const result = { ...resolveShot({ id: state.id, shot: state.shot + 1, x: body.x, y: body.y, power:sample.power, keeperRead:state.keeperRead, shotType }, secret), ...sample }
+      const next = { ...state, timing: null, keeperRead:result.keeperRead, shot: state.shot + 1, panenkasUsed: state.panenkasUsed + Number(shotType === 'panenka'), total: state.total + result.points, nextAt: receivedAt + SHOT_INTERVAL_MS, perfectShots: state.perfectShots + Number(result.perfect), repeatedSamples: state.repeatedSamples + Number(state.lastMeterPosition === sample.meterPosition), lastMeterPosition: sample.meterPosition }
       const token = await advance(next)
-      return { token, result, total: next.total, shot: next.shot, finished: next.shot === SHOT_COUNT, requestReceivedAt: requestAt, serverNow: now() }
+      return { token, result, total: next.total, shot: next.shot, panenkasUsed: next.panenkasUsed, finished: next.shot === SHOT_COUNT, requestReceivedAt: requestAt, serverNow: now() }
     }
     if (state.shot !== SHOT_COUNT) fail(409, 'GAME_NOT_FINISHED')
     const playerId = normalizePlayerId(body.playerId)
@@ -287,7 +313,7 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       if (!Array.isArray(members)) fail(503, 'LEADERBOARD_UNAVAILABLE')
       return members.filter(member => playerRankingKey(readEntry(member)?.playerId) === playerKey)
     }))
-    const entry = JSON.stringify({ id: state.id, playerId, playerKey, score: state.total, protocol: PROTOCOL, completedAt: now() })
+    const entry = JSON.stringify({ id: state.id, playerId, playerKey, score: state.total, protocol: PROTOCOL, timingMode: state.timingMode || 'server', completedAt: now(), review: { durationMs: Math.max(0, Math.min(SESSION_MS, now() - state.startedAt)), perfectShots: state.perfectShots, repeatedSamples: state.repeatedSamples } })
     const saved = await command(['EVAL', SUBMIT_SCRIPT, 5, sessionKey, `${PREFIX}submitted:${state.id}`, ...boardKeys, activeKey, body.token, state.total, entry, SESSION_MS / 1000, playerKey, JSON.stringify(legacyMatches), state.id])
     if (saved !== 1) fail(409, 'SESSION_ALREADY_USED')
     return { submitted: true, entry: { playerId, score: state.total } }
@@ -303,14 +329,27 @@ export function createPenaltyHandler(options = {}) {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow')
     try {
       let body = req.body
+      if (Buffer.isBuffer(body)) {
+        if (body.length > 4096) fail(413, 'BODY_TOO_LARGE')
+        body = body.toString('utf8')
+      }
       if (body && typeof body === 'object' && Buffer.byteLength(JSON.stringify(body)) > 4096) fail(413, 'BODY_TOO_LARGE')
       if (typeof body === 'string') {
         if (Buffer.byteLength(body) > 4096) fail(413, 'BODY_TOO_LARGE')
         try { body = JSON.parse(body) } catch { fail(400, 'INVALID_BODY') }
       }
+      if (req.method === 'POST' && (!body || typeof body !== 'object' || Array.isArray(body))) fail(400, 'INVALID_BODY')
       if (req.method === 'POST' && !/^application\/json(?:\s*;|$)/i.test(req.headers?.['content-type'] || '')) fail(415, 'JSON_REQUIRED')
-      if (req.method === 'POST' && req.headers?.['sec-fetch-site'] === 'cross-site') fail(403, 'CROSS_SITE_REQUEST')
+      if (req.method === 'POST' && ['same-site', 'cross-site'].includes(req.headers?.['sec-fetch-site'])) fail(403, 'CROSS_SITE_REQUEST')
       const environment = options.env || process.env
+      if (req.method === 'POST' && req.headers?.origin !== undefined) {
+        const host = req.headers?.host
+        const forwardedProto = environment.VERCEL === '1' ? req.headers?.['x-forwarded-proto'] : undefined
+        const protocol = forwardedProto === 'https' || forwardedProto === 'http' ? forwardedProto : req.socket?.encrypted ? 'https' : 'http'
+        let origin
+        try { origin = new URL(req.headers.origin) } catch { fail(403, 'CROSS_SITE_REQUEST') }
+        if (typeof host !== 'string' || origin.origin !== `${protocol}://${host}`) fail(403, 'CROSS_SITE_REQUEST')
+      }
       const forwarded = environment.VERCEL === '1' ? req.headers?.['x-vercel-forwarded-for'] : null
       const address = typeof forwarded === 'string' && isIP(forwarded.trim()) ? forwarded.trim() : req.socket?.remoteAddress
       const result = await execute({ method: req.method, query: req.query, body, clientAddress: address || 'unknown' })

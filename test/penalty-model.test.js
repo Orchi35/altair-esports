@@ -171,3 +171,17 @@ test('each displayed power percentage has one distinct save rate', () => {
   assert.equal(keeperSaveChance({power:1-Number.EPSILON}),.1142);
   for(const power of [NaN,Infinity,-1,1.01,'1',null,.44999]) assert.equal(keeperSaveChance({power}),0);
 });
+
+test('Panenka narrows timing, doubles goals and changes keeper saves', () => {
+  assert.equal(powerFromMeter(.505), 1)
+  assert.ok(powerFromMeter(.505, 'panenka') < 1)
+  assert.equal(goalPoints(1, 'panenka'), 300)
+  assert.equal(goalPoints(.8, 'panenka'), 2 * goalPoints(.8))
+  assert.equal(keeperSaveChance({power:1, streak:10, shotType:'panenka'}), 0)
+  assert.ok(Math.abs(keeperSaveChance({power:.8, shotType:'panenka'}) - keeperSaveChance({power:.8}) - .2) < 1e-12)
+  assert.equal(keeperSaveChance({power:.45, streak:10, shotType:'panenka'}), .98)
+  assert.equal(shot({power:1, saveRoll:0, shotType:'panenka'}).points, 300)
+  assert.equal(shot({x:0, power:1, shotType:'panenka'}).outcome, 'post')
+  assert.equal(shot({power:.1, shotType:'panenka'}).outcome, 'weak')
+  assert.equal(shot({power:.3, shotType:'panenka'}).outcome, 'wide')
+})

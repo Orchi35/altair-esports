@@ -19,5 +19,5 @@ export function sampleGoalBall(result,age){
  const contact=netContact(result),t=Math.max(0,Math.min(1,age/NET_SETTLE_MS));
  const pocket=deformNetPoint(contact.x,contact.y,result,age);
  const fall=Math.min(1,Math.max(0,(t-.13)/.72));
- return {x:pocket.x,y:pocket.y+Math.max(0,345-contact.y)*fall*fall,scale:.46,rotation:(result.perfect?900:540)+t*100};
+ return {x:pocket.x,y:pocket.y+Math.max(0,345-contact.y)*fall*fall,scale:.46,rotation:result.shotType==='panenka'?-150-t*70:(result.perfect?900:540)+t*100};
 }

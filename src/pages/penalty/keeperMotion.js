@@ -44,7 +44,8 @@ const shape = (pose, x, y, facing, angle = 0, reaction = 1) => {
 }
 
 export function sampleKeeper(result, progress) {
-  const p = clamp(progress), t = target(result), facing = t.x > 500 ? -1 : 1
+  // Successful chips draw an early commitment; saves keep exact glove contact.
+  const p = clamp(result.shotType === 'panenka' && result.goal ? progress * 1.35 : progress), t = target(result), facing = t.x > 500 ? -1 : 1
   if (p < .1) return shape('ready', 500, BASE_Y, facing, 0, 0)
   if (isRestrained(result)) {
     const step = 35 * -facing * smooth(phase(p, .1, .5))

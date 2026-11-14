@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { createHmac } from 'node:crypto'
 import { createPenaltyService, createPenaltyHandler, resolveShot, weekKey, SHOT_INTERVAL_MS, bestLeaderboardEntries } from '../server/penalty/service.js'
 import { normalizePlayerId, playerRankingKey } from '../src/pages/penalty/playerId.js'
-import {powerFromMeter,goalPoints,PERFECT_WINDOW_HALF_WIDTH} from '../src/pages/penalty/shotModel.js'
+import {calculateShot,powerFromMeter,goalPoints,PERFECT_WINDOW_HALF_WIDTH} from '../src/pages/penalty/shotModel.js'
 
 const env = { PENALTY_REDIS_REST_URL: 'https://example.upstash.io', PENALTY_REDIS_REST_TOKEN: 'test-only', PENALTY_SIGNING_SECRET: 'test-secret-with-at-least-32-characters' }
 
@@ -83,8 +83,50 @@ function fixture() {
   const service = createPenaltyService({ env, command, now: () => time, randomId: () => `test-${++id}` })
   return { service, command, ranks, strings, calls, setDelay: ms => { delay = ms }, currentWeek:() => weekKey(time), now:() => time, advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
 }
-const post = (service, body) => service({ method: 'POST', body: body.action === 'start' ? { playerId: 'ORC-HI', ownerToken: 'a'.repeat(64), ...body } : body })
+const post = (service, body) => service({ method: 'POST', body: body.action === 'start' ? { playerId: 'ORC-HI', ownerToken: 'a'.repeat(64), ...body } : { ownerToken: 'a'.repeat(64), ...body } })
 const expectCode = code => error => error.code === code
+
+test('instant mode resolves all ten shots from disclosed entropy and client meter regardless of delay', async () => {
+  const f = fixture()
+  const start = await post(f.service, {action:'start', timingMode:'instant'})
+  assert.equal(start.timingMode, 'instant')
+  assert.equal(start.shots.length, 10)
+  await assert.rejects(post(f.service, {action:'arm', token:start.token}), expectCode('INSTANT_MODE'))
+  await assert.rejects(post(f.service, {action:'submit', token:start.token, playerId:'ORC-HI'}), expectCode('GAME_NOT_FINISHED'))
+  for (const meterPosition of [-1, 2, null, NaN, Infinity, '0.5']) {
+    await assert.rejects(post(f.service, {action:'shot', token:start.token, x:.2, y:.2, meterPosition}), expectCode('INVALID_SHOT'))
+  }
+  for (const field of ['power', 'score', 'saveRoll', 'timingMode']) {
+    await assert.rejects(post(f.service, {action:'shot', token:start.token, x:.2, y:.2, meterPosition:.5, [field]:1}), expectCode('CLIENT_SHOT_OVERRIDE'))
+  }
+  let token = start.token, keeperRead = null, total = 0
+  for (let i = 0; i < 10; i++) {
+    const meterPosition = i / 10
+    const expected = calculateShot({x:.2, y:.2, power:powerFromMeter(meterPosition), ...start.shots[i], keeperRead})
+    f.setDelay(i % 2 ? 3000 : 0)
+    f.advance(i * 100)
+    const next = await post(f.service, {action:'shot', token, x:.2, y:.2, meterPosition})
+    assert.deepEqual(next.result, {...expected, meterPosition, power:powerFromMeter(meterPosition)})
+    total += expected.points
+    assert.equal(next.total, total)
+    await assert.rejects(post(f.service, {action:'shot', token, x:.2, y:.2, meterPosition}), expectCode('SESSION_ALREADY_USED'))
+    token = next.token
+    keeperRead = expected.keeperRead
+  }
+  assert.deepEqual((await post(f.service, {action:'submit', token, playerId:'ORC-HI'})).entry, {playerId:'ORC-HI', score:total})
+})
+
+test('instant mode is bound to the signed token', async () => {
+  const f = fixture()
+  const start = await post(f.service, {action:'start', timingMode:'instant'})
+  const [payload, signature] = start.token.split('.')
+  const state = JSON.parse(Buffer.from(payload, 'base64url').toString())
+  delete state.timingMode
+  const forged = `${Buffer.from(JSON.stringify(state)).toString('base64url')}.${signature}`
+  await assert.rejects(post(f.service, {action:'arm', token:forged}), expectCode('INVALID_SESSION'))
+  const normal = await post(f.service, {action:'start'})
+  await assert.rejects(post(f.service, {action:'shot', token:normal.token, x:.2, y:.2, meterPosition:.5}), expectCode('CLIENT_SHOT_OVERRIDE'))
+})
 async function shoot(f, token, x=.1, y=.1, offset=.5) {
   const armed = await post(f.service, {action:'arm', token})
   f.advance(armed.timing.startsAt - f.now() + Math.round(armed.timing.legMs * offset))
@@ -208,7 +250,7 @@ test('server rejects tampering, out-of-range shots, and early submission', async
   for (const invalid of [-0.1, 1.01, '0.5', null, Infinity]) {
     await assert.rejects(post(service, { action: 'shot', token, x: invalid, y: 0.5 }), expectCode('INVALID_SHOT'))
   }
-  await assert.rejects(post(service, { action: 'submit', token, playerId: 'ORC-HI', score: 99999 }), expectCode('GAME_NOT_FINISHED'))
+  await assert.rejects(post(service, { action: 'submit', token, playerId: 'ORC-HI', score: 99999 }), expectCode('INVALID_BODY'))
 })
 
 test('arming enforces timing and atomic replay protection', async()=>{
@@ -355,7 +397,7 @@ test('start admission stops before hourly and owner quotas when minute quota rej
  assert.deepEqual(entries().filter(([key])=>key.includes('rate:start-owner:')),ownerCounters)
  const calls=f.calls.slice(before)
  assert.equal(calls.length,2)
- assert.deepEqual(calls.map(call=>call[2]),[2,3])
+ assert.deepEqual(calls.map(call=>call[2]),[2,6])
 })
 
 test('global quota still rejects traffic spread across admitted IPs',async()=>{
@@ -385,7 +427,7 @@ test('start timestamps bracket server processing with two ordered admission roun
  assert.equal(started.serverNow,f.now())
  assert.equal(started.serverNow-arrival,6*75)
  const rateCalls=f.calls.filter(call=>call[0]==='EVAL'&&call[1].includes('penalty-ordered-rates'))
- assert.deepEqual(rateCalls.map(call=>call[2]),[2,3])
+ assert.deepEqual(rateCalls.map(call=>call[2]),[2,6])
  const payload=JSON.parse(Buffer.from(started.token.split('.')[0],'base64url').toString())
  assert.ok(payload.nextAt>started.requestReceivedAt)
  assert.ok(payload.nextAt<=started.serverNow)
@@ -416,8 +458,8 @@ test('request arrival time, rather than Redis latency, determines shot power', a
  const shot=await post(f.service,{action:'shot',token:armed.token,x:.1,y:.1})
  assert.equal(shot.requestReceivedAt,arrival)
  assert.equal(shot.serverNow,f.now())
- assert.equal(shot.serverNow-arrival,2000)
- assert.equal(f.calls.length-callsBefore,2)
+ assert.equal(shot.serverNow-arrival,3000)
+ assert.equal(f.calls.length-callsBefore,3)
  assert.equal(shot.result.power,1)
  assert.ok(Math.abs(shot.result.meterPosition-.5)<=PERFECT_WINDOW_HALF_WIDTH)
  assert.equal(powerFromMeter(shot.result.meterPosition),shot.result.power)
@@ -464,4 +506,79 @@ test('handler enforces JSON and cross-site restrictions and trusts only platform
  assert.notEqual(direct,forwarded)
  await invoke({...env,VERCEL:'1'},{...req,headers:{'x-vercel-forwarded-for':'192.0.2.10, 192.0.2.11'}})
  assert.equal(keys.at(-2),direct)
+})
+
+test('round token alone cannot write and spoofed fields are rejected', async()=>{
+ const f=fixture(); const {token}=await post(f.service,{action:'start',timingMode:'instant'})
+ for (const action of ['arm','shot','submit']) {
+   await assert.rejects(f.service({method:'POST',body:{action,token}}),expectCode('IDENTITY_REQUIRED'))
+   await assert.rejects(post(f.service,{action,token,ownerToken:'b'.repeat(64)}),expectCode('OWNER_MISMATCH'))
+ }
+ assert.equal([...f.strings.keys()].filter(k=>k.includes('owner-write:')).length,0)
+ await assert.rejects(post(f.service,{action:'start',score:1500}),expectCode('INVALID_BODY'))
+ await assert.rejects(post(f.service,{action:'arm',token,ownerDigest:'x'}),expectCode('INVALID_BODY'))
+ await assert.rejects(post(f.service,{action:'submit',token,playerId:'ORC-HI',score:1500}),expectCode('INVALID_BODY'))
+})
+
+test('owner write quota follows the owner across addresses', async()=>{
+ const f=fixture(); const {token}=await post(f.service,{action:'start',timingMode:'instant'})
+ for(let i=0;i<120;i++) await assert.rejects(f.service({method:'POST',clientAddress:`192.0.2.${i+1}`,body:{action:'arm',token,ownerToken:'a'.repeat(64)}}),expectCode('INSTANT_MODE'))
+ await assert.rejects(f.service({method:'POST',clientAddress:'198.51.100.1',body:{action:'arm',token,ownerToken:'a'.repeat(64)}}),expectCode('RATE_LIMITED'))
+})
+
+test('global start limit stops distributed starts', async()=>{
+ const f=fixture()
+ for(let i=0;i<60;i++) await f.service({method:'POST',clientAddress:`192.0.2.${i+1}`,body:{action:'start',playerId:`player_${i}`,ownerToken:i.toString(16).padStart(64,'0')}})
+ await assert.rejects(f.service({method:'POST',clientAddress:'198.51.100.1',body:{action:'start',playerId:'blocked',ownerToken:'f'.repeat(64)}}),expectCode('RATE_LIMITED'))
+})
+
+test('perfect instant rounds save bounded private review metadata', async()=>{
+ const f=fixture(); let {token}=await post(f.service,{action:'start',timingMode:'instant'})
+ for(let i=0;i<10;i++) token=(await post(f.service,{action:'shot',token,x:.2,y:.2,meterPosition:.5})).token
+ await post(f.service,{action:'submit',token,playerId:'ORC-HI'})
+ const entry=JSON.parse(f.ranks.get('altair:penalty:v1:all')[0])
+ assert.deepEqual(entry.review,{durationMs:0,perfectShots:10,repeatedSamples:9})
+ assert.equal(entry.timingMode,'instant')
+ assert.deepEqual(Object.keys((await f.service()).entries[0]).sort(),['playerId','score'])
+})
+
+test('handler rejects sibling origins and malformed or oversized buffers', async()=>{
+ const f=fixture(); const handler=createPenaltyHandler({env,command:f.command})
+ const invoke=async (body,headers={})=>{const res={setHeader(){},status(code){this.code=code;return this},json(value){this.body=value;return this}}; await handler({method:'POST',headers:{'content-type':'application/json',host:'example.com',...headers},body},res); return res}
+ assert.equal((await invoke('{}',{'sec-fetch-site':'same-site'})).body.error,'CROSS_SITE_REQUEST')
+ assert.equal((await invoke('{}',{origin:'http://sibling.example.com'})).body.error,'CROSS_SITE_REQUEST')
+ assert.equal((await invoke(Buffer.alloc(4097))).body.error,'BODY_TOO_LARGE')
+ assert.equal((await invoke(Buffer.from('"value"'))).body.error,'INVALID_BODY')
+})
+
+test('Panenka attempts are consumed on misses and concurrent attempts cannot branch', async () => {
+  const f = fixture()
+  const start = await post(f.service, {action:'start', timingMode:'instant'})
+  await assert.rejects(post(f.service, {action:'shot', token:start.token, x:.2, y:.2, meterPosition:.5, shotType:'other'}), expectCode('INVALID_SHOT'))
+  const body = {action:'shot', token:start.token, x:0, y:.2, meterPosition:.5, shotType:'panenka'}
+  const concurrent = await Promise.allSettled([post(f.service, body), post(f.service, body)])
+  assert.equal(concurrent.filter(r => r.status === 'fulfilled').length, 1)
+  assert.equal(concurrent.find(r => r.status === 'rejected').reason.code, 'SESSION_ALREADY_USED')
+  const first = concurrent.find(r => r.status === 'fulfilled').value
+  assert.equal(first.result.outcome, 'post')
+  assert.equal(first.panenkasUsed, 1)
+  const second = await post(f.service, {...body, token:first.token, meterPosition:0})
+  assert.equal(second.result.outcome, 'weak')
+  assert.equal(second.panenkasUsed, 2)
+  await assert.rejects(post(f.service, {...body, token:second.token}), expectCode('PANENKA_LIMIT_REACHED'))
+  const normal = await post(f.service, {...body, token:second.token, shotType:'normal', x:.2})
+  assert.equal(normal.panenkasUsed, 2)
+})
+
+test('maximum Panenka round score remains valid for submission and boards', async () => {
+  const f = fixture()
+  const start = await post(f.service, {action:'start', timingMode:'instant'})
+  const state = JSON.parse(Buffer.from(start.token.split('.')[0], 'base64url'))
+  Object.assign(state, {shot:10, total:1800, panenkasUsed:2, perfectShots:10, repeatedSamples:9, lastMeterPosition:.5})
+  const payload = Buffer.from(JSON.stringify(state)).toString('base64url')
+  const token = `${payload}.${createHmac('sha256', env.PENALTY_SIGNING_SECRET).update(payload).digest('base64url')}`
+  f.strings.set(`altair:penalty:v1:session:${state.id}`, token)
+  assert.equal((await post(f.service, {action:'submit', token, playerId:'ORC-HI'})).entry.score, 1800)
+  assert.equal((await f.service({method:'GET', query:{period:'all'}})).entries[0].score, 1800)
+  assert.equal(bestLeaderboardEntries([JSON.stringify({playerId:'valid', score:1801})]).length, 0)
 })
