@@ -1,11 +1,11 @@
-import {useEffect,useRef} from 'react';
+import {useLayoutEffect,useRef} from 'react';
 import {powerFromMeter,powerPercentage,PERFECT_WINDOW_HALF_WIDTH} from './shotModel.js';
 import {meterPosition} from './shotTiming.js';
 
 // Update only the cursor/readout, without reconciling React on every frame.
 export default function PowerMeter({phase,meterRef,tr,timing,verifiedPower,verifiedPosition}){
  const cursor=useRef(null),readout=useRef(null),meter=useRef(null),lastPosition=useRef(0);
- useEffect(()=>{
+ useLayoutEffect(()=>{
   let frame,start,lastPercent=-1;
   function paint(position,power){
    cursor.current.style.transform=`translate3d(${position*100}%,0,0)`;
@@ -26,7 +26,10 @@ export default function PowerMeter({phase,meterRef,tr,timing,verifiedPower,verif
    paint(reset?0:position,reset?0:verifiedPower);
    return;
   }
-  const tick=time=>{
+  const tick=()=>{
+   // RAF's timestamp describes the frame boundary, before other callbacks.
+   // Sample when we actually draw, so busy frames don't add their work to lag.
+   const time=performance.now();
    start??=time;
    const value=meterPosition(time-(timing?.localStartsAt??start),timing?.legMs);
    meterRef.current=value;

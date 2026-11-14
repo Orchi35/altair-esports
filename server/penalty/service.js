@@ -15,6 +15,17 @@ local count = redis.call('INCR', KEYS[1])
 if count == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end
 return count`
 
+// Stop at the first rejected bucket: blocked callers must not drain later,
+// shared quotas. One transaction preserves the previous admission ordering.
+export const RATE_LIMITS_SCRIPT = `-- penalty-ordered-rates
+for i, key in ipairs(KEYS) do
+  local count = redis.call('INCR', key)
+  if count == 1 then redis.call('EXPIRE', key, ARGV[i * 2]) end
+  if count < 1 then return -1 end
+  if count > tonumber(ARGV[i * 2 - 1]) then return i end
+end
+return 0`
+
 export const START_SCRIPT = `-- penalty-start
 if not redis.call('SET', KEYS[1], ARGV[1], 'NX', 'EX', ARGV[3]) then return 0 end
 redis.call('SET', KEYS[2], ARGV[2], 'EX', ARGV[3])
@@ -134,10 +145,12 @@ export function resolveShot({ id, shot, x, y, power, keeperRead=null }, secret) 
 }
 
 export function createPenaltyService({ env = process.env, fetchImpl = globalThis.fetch, now = Date.now, randomId = randomUUID, command: injectedCommand } = {}) {
-  async function limit(key, maximum, seconds) {
-    const count = await command(['EVAL', RATE_SCRIPT, 1, `${PREFIX}rate:${key}`, seconds])
-    if (!Number.isInteger(count) || count < 1) fail(503, 'LEADERBOARD_UNAVAILABLE')
-    if (count > maximum) throw new PenaltyError(429, 'RATE_LIMITED', seconds)
+  async function limits(buckets) {
+    const rejected = await command(['EVAL', RATE_LIMITS_SCRIPT, buckets.length,
+      ...buckets.map(([key]) => `${PREFIX}rate:${key}`),
+      ...buckets.flatMap(([, maximum, seconds]) => [maximum, seconds])])
+    if (!Number.isInteger(rejected) || rejected < 0 || rejected > buckets.length) fail(503, 'LEADERBOARD_UNAVAILABLE')
+    if (rejected !== 0) throw new PenaltyError(429, 'RATE_LIMITED', buckets[rejected - 1][2])
   }
   function configuration() {
     const url = env.PENALTY_REDIS_REST_URL
@@ -187,8 +200,10 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
     // HMAC avoids persisting raw IP addresses. Missing addresses share a limit,
     // never an unlimited bucket. Handler only supplies platform/socket addresses.
     const addressKey = createHmac('sha256', secret).update(rateAddress(clientAddress)).digest('hex')
-    await limit(`ip:${addressKey}:${method}`, method === 'GET' ? 120 : 180, 60)
-    await limit(`global:${method}`, method === 'GET' ? 3000 : 6000, 60)
+    await limits([
+      [`ip:${addressKey}:${method}`, method === 'GET' ? 120 : 180, 60],
+      [`global:${method}`, method === 'GET' ? 3000 : 6000, 60],
+    ])
     if (method === 'GET') {
       const period = query.period || 'week'
       if (!['week', 'all'].includes(period)) fail(400, 'INVALID_PERIOD')
@@ -206,9 +221,11 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       if (typeof body.ownerToken !== 'string' || !/^[a-f0-9]{64}$/.test(body.ownerToken)) fail(400, 'IDENTITY_REQUIRED')
       const playerKey = playerRankingKey(playerId)
       const ownerDigest = createHash('sha256').update(body.ownerToken).digest('hex')
-      await limit(`start-ip:${addressKey}`, 12, 60)
-      await limit(`start-hour:${addressKey}`, 120, 3600)
-      await limit(`start-owner:${ownerDigest}`, 6, 60)
+      await limits([
+        [`start-ip:${addressKey}`, 12, 60],
+        [`start-hour:${addressKey}`, 120, 3600],
+        [`start-owner:${ownerDigest}`, 6, 60],
+      ])
       const boards = await Promise.all([`${PREFIX}all`, weekKey(now())].map(key => command(['ZREVRANGE', key, 0, 999])))
       if (boards.some(members => !Array.isArray(members))) fail(503, 'LEADERBOARD_UNAVAILABLE')
       const legacyOccupied = boards.some(members => members.some(member => playerRankingKey(readEntry(member)?.playerId) === playerKey))
@@ -219,7 +236,7 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       const token = sign(state, secret)
       const stored = await command(['EVAL', START_SCRIPT, 2, `${PREFIX}session:${state.id}`, `${PREFIX}active:${ownerDigest}`, token, state.id, SESSION_MS / 1000])
       if (stored !== 1) fail(503, 'LEADERBOARD_UNAVAILABLE')
-      return { token }
+      return { token, requestReceivedAt: requestAt, serverNow: now() }
     }
     if (!['arm', 'shot', 'submit'].includes(body.action)) fail(400, 'INVALID_ACTION')
     const state = verify(body.token, secret)
@@ -254,7 +271,7 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       const result = { ...resolveShot({ id: state.id, shot: state.shot + 1, x: body.x, y: body.y, power:sample.power, keeperRead:state.keeperRead }, secret), ...sample }
       const next = { ...state, timing: null, keeperRead:result.keeperRead, shot: state.shot + 1, total: state.total + result.points, nextAt: receivedAt + SHOT_INTERVAL_MS }
       const token = await advance(next)
-      return { token, result, total: next.total, shot: next.shot, finished: next.shot === SHOT_COUNT }
+      return { token, result, total: next.total, shot: next.shot, finished: next.shot === SHOT_COUNT, requestReceivedAt: requestAt, serverNow: now() }
     }
     if (state.shot !== SHOT_COUNT) fail(409, 'GAME_NOT_FINISHED')
     const playerId = normalizePlayerId(body.playerId)

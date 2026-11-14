@@ -14,7 +14,9 @@ function fixture() {
   const strings = new Map()
   const ranks = new Map()
   const expires = new Map()
+  const calls = []
   const command = async ([operation, ...args]) => {
+    calls.push([operation, ...args])
     time += delay
     if (operation === 'SET') {
       if (strings.has(args[0])) return null
@@ -26,6 +28,17 @@ function fixture() {
       const [script, count, ...rest] = args
       const keys = rest.slice(0, count)
       const values = rest.slice(count)
+      if (script.includes('penalty-ordered-rates')) {
+        for (let i = 0; i < keys.length; i++) {
+          if ((expires.get(keys[i]) || 0) <= time) strings.delete(keys[i])
+          const n = Number(strings.get(keys[i]) || 0) + 1
+          strings.set(keys[i], n)
+          if (n === 1) expires.set(keys[i], time + Number(values[i * 2 + 1]) * 1000)
+          if (n < 1) return -1
+          if (n > Number(values[i * 2])) return i + 1
+        }
+        return 0
+      }
       if (script.includes('penalty-rate')) {
         if ((expires.get(keys[0]) || 0) <= time) strings.delete(keys[0])
         const n = Number(strings.get(keys[0]) || 0) + 1
@@ -68,7 +81,7 @@ function fixture() {
     throw new Error(`Unexpected Redis command: ${operation}`)
   }
   const service = createPenaltyService({ env, command, now: () => time, randomId: () => `test-${++id}` })
-  return { service, command, ranks, setDelay: ms => { delay = ms }, currentWeek:() => weekKey(time), now:() => time, advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
+  return { service, command, ranks, strings, calls, setDelay: ms => { delay = ms }, currentWeek:() => weekKey(time), now:() => time, advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
 }
 const post = (service, body) => service({ method: 'POST', body: body.action === 'start' ? { playerId: 'ORC-HI', ownerToken: 'a'.repeat(64), ...body } : body })
 const expectCode = code => error => error.code === code
@@ -312,6 +325,72 @@ test('owner rate limit survives IP rotation and resets after its window', async(
  f.advance(60000); await start('192.0.2.7')
 })
 
+test('ordered admission batches counters and blocked IPs do not drain global quota', async()=>{
+ const f=fixture()
+ for(let i=0;i<120;i++) await f.service({method:'GET',clientAddress:'192.0.2.1'})
+ const globalKey='altair:penalty:v1:rate:global:GET'
+ assert.equal(f.strings.get(globalKey),120)
+ assert.equal(f.calls.filter(call=>call[0]==='EVAL').length,120)
+ assert.ok(f.calls.filter(call=>call[0]==='EVAL').every(call=>call[2]===2))
+ const before=f.calls.length
+ await assert.rejects(f.service({method:'GET',clientAddress:'192.0.2.1'}),error=>error.code==='RATE_LIMITED'&&error.retryAfter===60)
+ assert.equal(f.calls.length,before+1)
+ assert.equal(f.strings.get(globalKey),120)
+ await f.service({method:'GET',clientAddress:'192.0.2.2'})
+ assert.equal(f.strings.get(globalKey),121)
+ f.advance(60000)
+ await f.service({method:'GET',clientAddress:'192.0.2.1'})
+ assert.equal(f.strings.get(globalKey),1)
+})
+
+test('start admission stops before hourly and owner quotas when minute quota rejects',async()=>{
+ const f=fixture()
+ for(let i=0;i<12;i++) await post(f.service,{action:'start',playerId:`player_${i}`,ownerToken:i.toString(16).padStart(64,'0')})
+ const entries=()=>[...f.strings.entries()]
+ const hourKey=entries().find(([key])=>key.includes('rate:start-hour:'))[0]
+ const ownerCounters=entries().filter(([key])=>key.includes('rate:start-owner:'))
+ const before=f.calls.length
+ await assert.rejects(post(f.service,{action:'start',playerId:'blocked',ownerToken:'f'.repeat(64)}),expectCode('RATE_LIMITED'))
+ assert.equal(f.strings.get(hourKey),12)
+ assert.deepEqual(entries().filter(([key])=>key.includes('rate:start-owner:')),ownerCounters)
+ const calls=f.calls.slice(before)
+ assert.equal(calls.length,2)
+ assert.deepEqual(calls.map(call=>call[2]),[2,3])
+})
+
+test('global quota still rejects traffic spread across admitted IPs',async()=>{
+ const f=fixture()
+ for(let i=0;i<3000;i++) await f.service({method:'GET',clientAddress:`192.0.2.${1+Math.floor(i/120)}`})
+ const before=f.calls.length
+ await assert.rejects(f.service({method:'GET',clientAddress:'192.0.2.26'}),error=>error.code==='RATE_LIMITED'&&error.retryAfter===60)
+ assert.equal(f.calls.length,before+1)
+ assert.equal(f.strings.get('altair:penalty:v1:rate:global:GET'),3001)
+})
+
+test('malformed ordered admission responses fail closed before any further Redis work',async()=>{
+ for(const result of [null,undefined,'0',-1,3,NaN,Infinity,.5,[],{}]) {
+   let calls=0
+   const service=createPenaltyService({env,command:async()=>{calls++;return result}})
+   await assert.rejects(service({method:'GET'}),expectCode('LEADERBOARD_UNAVAILABLE'))
+   assert.equal(calls,1)
+ }
+})
+
+test('start timestamps bracket server processing with two ordered admission round trips',async()=>{
+ const f=fixture()
+ f.setDelay(75)
+ const arrival=f.now()
+ const started=await post(f.service,{action:'start'})
+ assert.equal(started.requestReceivedAt,arrival)
+ assert.equal(started.serverNow,f.now())
+ assert.equal(started.serverNow-arrival,6*75)
+ const rateCalls=f.calls.filter(call=>call[0]==='EVAL'&&call[1].includes('penalty-ordered-rates'))
+ assert.deepEqual(rateCalls.map(call=>call[2]),[2,3])
+ const payload=JSON.parse(Buffer.from(started.token.split('.')[0],'base64url').toString())
+ assert.ok(payload.nextAt>started.requestReceivedAt)
+ assert.ok(payload.nextAt<=started.serverNow)
+})
+
 test('hourly start limit survives minute resets', async()=>{
  const f=fixture()
  for(let minute=0;minute<10;minute++) {
@@ -322,6 +401,7 @@ test('hourly start limit survives minute resets', async()=>{
    f.advance(60000)
  }
  await assert.rejects(f.service({method:'POST',clientAddress:'192.0.2.1',body:{action:'start',playerId:'another',ownerToken:'f'.repeat(64)}}),expectCode('RATE_LIMITED'))
+ assert.equal([...f.strings.keys()].filter(key=>key.includes('rate:start-owner:')).length,120)
  f.advance(3000000)
  await f.service({method:'POST',clientAddress:'192.0.2.1',body:{action:'start',playerId:'another',ownerToken:'f'.repeat(64)}})
 })
@@ -331,7 +411,13 @@ test('request arrival time, rather than Redis latency, determines shot power', a
  const f=fixture(); const {token}=await post(f.service,{action:'start'}); const armed=await post(f.service,{action:'arm',token})
  f.advance(armed.timing.startsAt-f.now()+Math.round(armed.timing.legMs/2))
  f.setDelay(1000)
+ const arrival=f.now()
+ const callsBefore=f.calls.length
  const shot=await post(f.service,{action:'shot',token:armed.token,x:.1,y:.1})
+ assert.equal(shot.requestReceivedAt,arrival)
+ assert.equal(shot.serverNow,f.now())
+ assert.equal(shot.serverNow-arrival,2000)
+ assert.equal(f.calls.length-callsBefore,2)
  assert.equal(shot.result.power,1)
  assert.ok(Math.abs(shot.result.meterPosition-.5)<=PERFECT_WINDOW_HALF_WIDTH)
  assert.equal(powerFromMeter(shot.result.meterPosition),shot.result.power)
@@ -361,8 +447,8 @@ test('IPv6 privacy addresses in the same /64 share start limits', async()=>{
 
 test('handler enforces JSON and cross-site restrictions and trusts only platform forwarding', async()=>{
  const keys=[]
- const command=async ([op,,,key])=>{
-   if(op==='EVAL') { keys.push(key); return 1 }
+ const command=async ([op,,count,...args])=>{
+   if(op==='EVAL') { keys.push(...args.slice(0,count)); return 0 }
    if(op==='ZREVRANGE') return []
    throw new Error('unexpected command')
  }

@@ -5,28 +5,30 @@ import PowerMeter from './PowerMeter.jsx';
 import {normalizePlayerId} from './playerId.js';
 import {getPlayerOwnerToken,readPlayerId,rememberPlayerId} from './playerIdStorage.js';
 import {calculateShot, powerFromMeter} from './shotModel.js';
+import {createArrivalClock} from './arrivalClock.js';
 import {getLeaguePlayerImage} from '../../features/squad/leaguePlayerImages.js';
 const keepers = [
  {id:'893787',name:'mcb06099',number:'GK',skin:'#c79575',hair:'#262626',jersey:'#139a73'},
  {id:'927266',name:'Tru-Ardas',number:'GK',skin:'#c39a80',hair:'#8f939b',jersey:'#197f75'},
 ];
 const empty={shot:0,total:0,results:[]};
-async function api(body,period='week'){
+async function api(body,period='week',clock){
  const sentAt=performance.now();
  const response=await fetch(`/api/penalty?period=${period}`,body?{signal:AbortSignal.timeout(10000),method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{signal:AbortSignal.timeout(10000)});
  const data=await response.json();if(!response.ok)throw new Error(data.error||'Service unavailable');
- if(body?.action==='arm'){
-  const receivedAt=performance.now();
-  // Estimate transport only, excluding server processing. This estimate affects
-  // the drawing, never server scoring; no client timestamp is sent with a shot.
-  const transport=Math.min(500,Math.max(0,receivedAt-sentAt-(data.serverNow-data.requestReceivedAt)));
-  data.timing={...data.timing,localStartsAt:receivedAt+data.timing.startsAt-data.serverNow-transport};
- }
+ const receivedAt=performance.now();
+ clock?.observe({sentAt,receivedAt,requestReceivedAt:data.requestReceivedAt,serverNow:data.serverNow});
+ // Freeze the estimate for this shot; subsequent samples cannot jump a moving bar.
+ if(body?.action==='arm')data.timing={...data.timing,localStartsAt:clock.localStart(data.timing.startsAt,receivedAt)};
  return data;
 }
 export default function PenaltyPage({locale='tr'}){
  const tr=locale==='tr', [phase,setPhase]=useState('intro'),[aim,setAim]=useState({x:.76,y:.3}),[keeperId,setKeeperId]=useState(keepers[0].id),[game,setGame]=useState(empty),[mode,setMode]=useState('practice'),[flight,setFlight]=useState(null),[period,setPeriod]=useState('week'),[board,setBoard]=useState(null),[playerId,setPlayerId]=useState(()=>readPlayerId()),[saving,setSaving]=useState(false),[notice,setNotice]=useState(''),[saved,setSaved]=useState(false),[best,setBest]=useState(()=>{try{return Number(localStorage.getItem('altair.penalty.best'))||0;}catch{return 0;}});
  const token=useRef(null),lock=useRef(false),meterRef=useRef(0),completedFlight=useRef(null),roundPlayerId=useRef(''),keeperRead=useRef(null);
+ const suppressReleaseClick=useRef(false);
+ const pressedShotKey=useRef(null);
+ const arrivalClock=useRef(null);
+ if(arrivalClock.current===null)arrivalClock.current=createArrivalClock();
  const [identityError,setIdentityError]=useState('');
  const [timing,setTiming]=useState(null);
  const playerIdInput=useRef(null);
@@ -56,7 +58,7 @@ export default function PenaltyPage({locale='tr'}){
   setFlight(null);meterRef.current=0;setTiming(null);
   if(!sessionToken){lock.current=false;setPhase('aim');return;}
   lock.current=true;setPhase('arming');
-  try{const data=await api({action:'arm',token:sessionToken});token.current=data.token;setTiming(data.timing);}
+  try{const data=await api({action:'arm',token:sessionToken},'week',arrivalClock.current);token.current=data.token;setTiming(data.timing);}
   catch{lock.current=false;setNotice(tr?'Şut doğrulanamadı. Başka bir sekmede tur açılmış veya oturum sona ermiş olabilir. Turu yeniden başlat.':'Shot could not be verified. A round may have started in another tab or the session expired. Restart the round.');setPhase('error');}
  },[tr]);
  const onRecoveryComplete=useCallback(()=>{void prepareShot(token.current);},[prepareShot]);
@@ -76,11 +78,12 @@ export default function PenaltyPage({locale='tr'}){
   const id=normalizePlayerId(playerId);
   if(!id){setIdentityError(tr?'Başlamak için 3–24 karakterlik oyuncu ID gir. Harf, rakam, nokta, alt çizgi veya tire kullan.':'Enter a player ID with 3–24 letters, numbers, dots, underscores or hyphens to start.');playerIdInput.current?.focus();return;}
   lock.current=true;setPhase('loading');setTiming(null);setIdentityError('');setNotice('');
+  arrivalClock.current.reset();
   let sessionToken=null;
   try{
    const ownerToken=getPlayerOwnerToken();
    if(!ownerToken)throw new Error('IDENTITY_STORAGE_UNAVAILABLE');
-   const data=await api({action:'start',playerId:id,ownerToken});
+   const data=await api({action:'start',playerId:id,ownerToken},'week',arrivalClock.current);
    sessionToken=data.token;
   }catch(error){
    if(error.message==='RATE_LIMITED'){lock.current=false;setPhase('intro');setNotice(tr?'Çok sık deneme yapıldı. Bir süre bekleyip tekrar dene.':'Too many attempts. Wait a while before trying again.');return;}
@@ -93,9 +96,35 @@ export default function PenaltyPage({locale='tr'}){
   roundPlayerId.current=id;rememberPlayerId(id);setPlayerId(id);token.current=sessionToken;setMode(sessionToken?'ranked':'practice');
   completedFlight.current=null;keeperRead.current=null;setGame({...empty});setAim({x:.76,y:.3});setFlight(null);setSaved(false);await prepareShot(sessionToken);
  }
+ // Send at press, not release: holding a mouse/touch/Space must not move shot timing.
+ // Retain trusted click activation for assistive technologies without a pointer event.
+ function pressShot(event){
+  if(event.nativeEvent?.isTrusted!==true||event.button!==0||!event.isPrimary)return;
+  suppressReleaseClick.current=false;
+  if(phase==='aim'&&!lock.current){suppressReleaseClick.current=true;void shoot(event);}
+ }
+ function keyShot(event){
+  if(event.nativeEvent?.isTrusted!==true||event.nativeEvent.isComposing||!['Enter',' '].includes(event.key))return;
+  if(event.repeat){event.preventDefault();return;}
+  suppressReleaseClick.current=false;
+  if(phase==='aim'){event.preventDefault();pressedShotKey.current=event.key;void shoot(event);}
+ }
+ function releaseShotKey(event){
+  if(event.nativeEvent?.isTrusted===true&&event.key===pressedShotKey.current){
+   event.preventDefault();pressedShotKey.current=null;
+  }
+ }
+ function activateShot(event){
+  // A long-held pointer may be released after the result is already displayed.
+  // Its trailing click must not advance the round or submit another shot.
+  if(suppressReleaseClick.current&&(event.detail>0||event.nativeEvent?.pointerType)){suppressReleaseClick.current=false;return;}
+  if(phase==='aim')void shoot(event);
+  else if(phase==='result')setPhase('recover');
+  else if(phase==='done'||phase==='error')void start();
+ }
  // Browser-generated activation only. This blocks DOM auto-clickers, not a modified client or direct API calls.
  async function shoot(event){if(event?.nativeEvent?.isTrusted!==true||phase!=='aim'||lock.current)return;lock.current=true;const shotPosition=meterRef.current;const shotPower=powerFromMeter(shotPosition);setPhase('pending');let next;
- try{if(token.current){next=await api({action:'shot',token:token.current,...aim});token.current=next.token;}else{const result={...calculateShot({...aim,power:shotPower,keeperX:.12+Math.random()*.76,keeperY:.15+Math.random()*.7,saveRoll:Math.random(),keeperRead:keeperRead.current}),power:shotPower,meterPosition:shotPosition};next={result,total:game.total+result.points,shot:game.shot+1,finished:game.shot===9};}
+ try{if(token.current){next=await api({action:'shot',token:token.current,...aim},'week',arrivalClock.current);token.current=next.token;}else{const result={...calculateShot({...aim,power:shotPower,keeperX:.12+Math.random()*.76,keeperY:.15+Math.random()*.7,saveRoll:Math.random(),keeperRead:keeperRead.current}),power:shotPower,meterPosition:shotPosition};next={result,total:game.total+result.points,shot:game.shot+1,finished:game.shot===9};}
  keeperRead.current=next.result.keeperRead;const current={...next,x:aim.x,y:aim.y};setFlight(current);setPhase('flight');
  }catch{setNotice(tr?'Bağlantı kesildi. Dereceli turu yeniden başlat.':'Connection lost. Restart the ranked round.');setPhase('error');lock.current=false;}}
 
@@ -112,7 +141,7 @@ export default function PenaltyPage({locale='tr'}){
   <div className="pen-shots" aria-label={t('Atış sonuçları','Shot results')}>{Array.from({length:10},(_,i)=><span key={i} className={game.results[i]===true?'goal':game.results[i]===false?'miss':''} aria-label={t('Şut ','Shot ')+(i+1)+': '+(game.results[i]===true?t('Gol','Goal'):game.results[i]===false?t('Gol değil','No goal'):t('Bekliyor','Pending'))}>{game.results[i]===true?'✓':game.results[i]===false?'×':'·'}</span>)}</div>
   <button type="button" className="pen-restart" onClick={start} disabled={saving||!['aim','result','error','done'].includes(phase)} title={t('Mevcut turu sıfırla ve 0 puanla yeniden başla','Reset the current round and start again with 0 points')}><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1.4 7.2M4 4v6h6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg><span>{t('Yeniden Başlat','Restart')}</span></button>
  </div>
- <div className="pen-controls"><PowerMeter {...{phase,meterRef,tr,timing}} verifiedPower={flight?.result.power} verifiedPosition={flight?.result.meterPosition}/><button className="pen-primary" disabled={saving||!['aim','result','error','done'].includes(phase)} onClick={event=>{if(phase==='aim')shoot(event);else if(phase==='result'){setPhase('recover');}else start();}}>{phase==='arming'?t('ŞUT HAZIRLANIYOR…','PREPARING SHOT…'):phase==='recover'?t('POZİSYONA DÖNÜYOR…','GETTING READY…'):phase==='result'?t('SONRAKİ ŞUT →','NEXT SHOT →'):phase==='done'||phase==='error'?t('TEKRAR OYNA ↗','PLAY AGAIN ↗'):t('ŞUT ÇEK →','SHOOT →')}</button></div>
+ <div className="pen-controls"><PowerMeter {...{phase,meterRef,tr,timing}} verifiedPower={flight?.result.power} verifiedPosition={flight?.result.meterPosition}/><button className="pen-primary" disabled={saving||!['aim','result','error','done'].includes(phase)} onPointerDown={pressShot} onKeyDown={keyShot} onKeyUp={releaseShotKey} onClick={activateShot}>{phase==='arming'?t('ŞUT HAZIRLANIYOR…','PREPARING SHOT…'):phase==='recover'?t('POZİSYONA DÖNÜYOR…','GETTING READY…'):phase==='result'?t('SONRAKİ ŞUT →','NEXT SHOT →'):phase==='done'||phase==='error'?t('TEKRAR OYNA ↗','PLAY AGAIN ↗'):t('ŞUT ÇEK →','SHOOT →')}</button></div>
  <div className="pen-aim-controls"><span>{t('Nişan','Aim')}</span><button disabled={phase!=='aim'} aria-label={t('Nişanı ayarla: yön tuşlarını kullan','Adjust aim using arrow keys')} onKeyDown={e=>{const delta={ArrowLeft:[-.04,0],ArrowRight:[.04,0],ArrowUp:[0,-.06],ArrowDown:[0,.06]}[e.key];if(delta){e.preventDefault();setAim(a=>({x:Math.max(0,Math.min(1,a.x+delta[0])),y:Math.max(0,Math.min(1,a.y+delta[1]))}));}}}>↑ ↓ ← →</button><small>{mode==='practice'?t('Antrenman • Bu cihazdaki rekor: ','Practice • Device best: ')+best:t('Dereceli tur • Sunucuda doğrulanır','Ranked round • Server verified')}</small></div>
  {phase==='done'&&<div className="pen-finish"><div><small>{t('TUR TAMAMLANDI','ROUND COMPLETE')}</small><h2>{game.total} <span>{t('puan','points')}</span></h2><p>{game.results.filter(Boolean).length}/10 {t('gol','goals')}</p></div>{mode==='ranked'?<div className="pen-auto-save" role="status"><strong>{saving?t('SKORUN KAYDEDİLİYOR…','SAVING YOUR SCORE…'):saved?t('SKORUN KAYDEDİLDİ','SCORE SAVED'):t('KAYIT DOĞRULANAMADI','SAVE UNCONFIRMED')}</strong><p>{t('Her tur sonunda otomatik kaydedilir. Sıralamada yalnızca en yüksek puanın görünür.','Saved automatically at the end of each round. Only your highest score appears on the leaderboard.')}</p>{!saving&&!saved&&<button className="pen-primary" onClick={save}>{t('TEKRAR DENE','RETRY')}</button>}</div>:<p>{t('Antrenman skorun yalnızca bu cihazda tutulur. Ortak sıralama henüz açılmadı.','Practice scores stay on this device. The global leaderboard is not open yet.')}</p>}</div>}
  <p className="pen-notice" role="status">{notice}</p></section>
