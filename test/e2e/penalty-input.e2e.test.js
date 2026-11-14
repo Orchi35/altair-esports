@@ -82,6 +82,9 @@ test('instant shots block DOM automation, respond to trusted presses and save in
     release=()=>page.cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
    }else if(input==='Enter'||input==='Space'){
     await page.focus('.pen-controls button');
+    // Focus/scroll work in the headless browser can stall rendering. Resume a
+    // fresh frame before exercising input; stalled-frame rejection has its own test.
+    await page.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
     const key=input==='Space'?{key:' ',code:'Space',windowsVirtualKeyCode:32}:{key:'Enter',code:'Enter',windowsVirtualKeyCode:13};
     await page.cdp.send('Input.dispatchKeyEvent',{type:'rawKeyDown',...key});
     release=async()=>{await page.focus('.pen-controls button');await page.cdp.send('Input.dispatchKeyEvent',{type:'rawKeyDown',...key,autoRepeat:true});await page.cdp.send('Input.dispatchKeyEvent',{type:'keyUp',...key});};

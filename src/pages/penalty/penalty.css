@@ -75,3 +75,41 @@
 }
 .pen-shot-picker{padding:20px 28px 0;display:grid;grid-template-columns:minmax(280px,1fr) 1fr;gap:20px;align-items:center}.pen-shot-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pen-shot-options button{display:grid;gap:8px;text-align:left;min-height:76px;padding:13px 16px;border:1px solid #415770;border-radius:10px;background:#142235;color:#d7e7f6;font:600 15px Barlow,Arial,sans-serif;cursor:pointer}.pen-shot-options button small{font-size:12px;font-weight:400;color:#a9bfd3}.pen-shot-options button span{display:flex;align-items:center;gap:8px}.pen-shot-options button b{font-size:12px;border-radius:5px;background:#dbc28d22;color:#f4d79b;padding:2px 6px}.pen-shot-options button[aria-pressed=true]{border-color:#9ac8ed;background:#233a50;box-shadow:inset 0 0 0 1px #9ac8ed}.pen-shot-options button[data-shot-option=panenka][aria-pressed=true]{border-color:#dfc38a;background:#343029;box-shadow:inset 0 0 0 1px #dfc38a}.pen-shot-options button:disabled{opacity:.5;cursor:not-allowed}.pen-shot-options button:focus-visible{outline:2px solid #fff;outline-offset:3px}.pen-shot-picker p{color:#b8c9d9;font-size:13px;line-height:1.6;margin:0}.pen-shot-options strong{font-variant-numeric:tabular-nums;color:#eaf3ff;margin-left:4px}@media(max-width:1100px){.pen-shot-picker{grid-template-columns:1fr;gap:12px}}@media(max-width:520px){.pen-shot-picker{padding:16px 16px 0}.pen-shot-options button{padding:12px;min-height:72px}.pen-shot-picker p{font-size:12px}}
 .pen-stadium[tabindex="0"]{cursor:crosshair}.pen-stadium:focus-visible{outline:3px solid #a5e5ff;outline-offset:-4px}.pen-aim-brackets{filter:drop-shadow(0 1px 2px #0009)}.pen-aim-target{isolation:isolate}.pen-stadium:active .pen-aim-brackets{stroke-width:3.5}
+.pen-play-area{scroll-margin-top:88px}
+/* Keep the entire SVG in view; screen-transform aiming also handles letterboxing.
+   Dashboard height is measured, so translated text and zoom need no fixed estimate. */
+@media(min-width:851px) and (min-height:600px){
+ .pen-play-area{--pen-pitch-cap:max(220px,calc(100svh - var(--pen-dashboard-height,300px) - 104px))}
+ .pen-play-area .pen-stadium{height:auto;max-height:var(--pen-pitch-cap);max-width:calc(var(--pen-pitch-cap) * 1.5384615385);margin-inline:auto;overflow:hidden}
+ .pen-play-area .pen-round-bar{padding:10px 20px;gap:14px}
+ .pen-play-area .pen-shot-picker{padding:12px 20px 0;gap:12px}
+ .pen-play-area .pen-shot-options button{min-height:58px;padding:9px 12px;gap:4px}
+ .pen-play-area .pen-controls{padding:14px 20px 8px;gap:20px}
+ .pen-play-area .pen-power>div:first-child{margin-bottom:8px}
+ .pen-play-area .pen-meter{margin-top:23px}
+ .pen-play-area .pen-power small{margin-top:7px}
+ .pen-play-area .pen-aim-controls{padding:6px 20px 12px}
+ .pen-play-area .pen-round-stats strong{font-size:23px}
+ .pen-play-area .pen-shots{max-width:none}
+ .pen-play-area .pen-field{background:radial-gradient(ellipse at center,#173444,#07131f 78%)}
+}
+/* Short desktop windows get a side console, preserving a useful goal size. */
+@media(min-width:1200px) and (min-height:600px) and (max-height:800px){
+ .pen-play-area{display:grid;grid-template-columns:minmax(0,1fr) 280px;align-items:start}
+ .pen-play-area .pen-field{height:calc(100svh - 104px);display:flex;align-items:center}
+ .pen-play-area .pen-stadium{max-height:100%;max-width:100%}
+ .pen-play-dashboard{border-left:1px solid #30465d}
+ .pen-play-area .pen-round-bar{flex-wrap:wrap;padding:12px;gap:10px}
+ .pen-play-area .pen-round-stats{gap:12px}
+ .pen-play-area .pen-round-stats>div{min-width:52px}
+ .pen-play-area .pen-round-stats>div+div{padding-left:12px}
+ .pen-play-area .pen-restart{padding:10px}
+ .pen-play-area .pen-restart span{display:none}
+ .pen-play-area .pen-shots{order:3;flex-basis:100%;gap:3px}
+ .pen-play-area .pen-shots span{width:19px;height:19px}
+ .pen-play-area .pen-shot-picker{grid-template-columns:1fr;padding:12px 12px 0}
+ .pen-play-area .pen-shot-picker p{display:none}
+ .pen-play-area .pen-controls{grid-template-columns:1fr;padding:18px 12px 10px;gap:14px}
+ .pen-play-area .pen-aim-controls{padding:8px 12px 12px;flex-wrap:wrap;gap:8px}
+ .pen-play-area .pen-aim-controls small{flex-basis:100%;text-align:left}
+}
