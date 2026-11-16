@@ -3,6 +3,7 @@ import { calculateShot, powerFromMeter, PANENKA_LIMIT, MAX_ROUND_POINTS } from '
 import { normalizePlayerId, playerRankingKey } from '../../src/pages/penalty/playerId.js'
 import { isIP } from 'node:net'
 import { SHOT_WARMUP_MS, SHOT_WINDOW_MS, timedShotSample } from '../../src/pages/penalty/shotTiming.js'
+import { ADD_WEEKLY_CONTRIBUTION_LUA, contributionKey, migrateWeeklyTotals, readWeeklyTotals, TOTALS_KEY, TOTAL_NAMES_KEY } from './weeklyTotals.js'
 
 export const SHOT_COUNT = 10
 export const SHOT_INTERVAL_MS = 2000
@@ -52,6 +53,7 @@ return 1`
 
 // Claim and both rankings are written together; a lost HTTP response cannot double-submit.
 export const SUBMIT_SCRIPT = `-- penalty-submit
+${ADD_WEEKLY_CONTRIBUTION_LUA}
 if redis.call('GET', KEYS[1]) ~= ARGV[1] then return 0 end
 if redis.call('GET', KEYS[5]) ~= ARGV[7] then return 0 end
 if not redis.call('SET', KEYS[2], '1', 'NX', 'EX', ARGV[4]) then return 0 end
@@ -76,6 +78,9 @@ for board = 3, 4 do
   winner.playerId = winner.playerId or winner.name
   winner.score = bestScore
   redis.call('ZADD', KEYS[board], bestScore, cjson.encode(winner))
+  if board == 4 then
+    contribute(KEYS[6], KEYS[7], KEYS[8], ARGV[5], winner.playerId, bestScore)
+  end
 end
 redis.call('ZREMRANGEBYRANK', KEYS[3], 0, -1001)
 redis.call('ZREMRANGEBYRANK', KEYS[4], 0, -1001)
@@ -213,9 +218,13 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
     if (method === 'GET') {
       const period = query.period || 'week'
       if (!['week', 'all'].includes(period)) fail(400, 'INVALID_PERIOD')
+      if (period === 'all') {
+        await migrateWeeklyTotals(command)
+        return { configured: true, entries: await readWeeklyTotals(command) }
+      }
       // Read the full retained board before deduplication so old repeated rounds
       // cannot hide other players below the first 50 rows.
-      const members = await command(['ZREVRANGE', period === 'all' ? `${PREFIX}all` : weekKey(now()), 0, 999])
+      const members = await command(['ZREVRANGE', weekKey(now()), 0, 999])
       if (!Array.isArray(members)) fail(503, 'LEADERBOARD_UNAVAILABLE')
       const entries = bestLeaderboardEntries(members)
       return { configured: true, entries }
@@ -305,6 +314,7 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
     const playerKey = playerRankingKey(playerId)
     if (!state.playerKey || !normalizePlayerId(state.playerId)) fail(409, 'IDENTITY_REQUIRED')
     if (playerKey !== state.playerKey) fail(409, 'PLAYER_ID_MISMATCH')
+    await migrateWeeklyTotals(command)
     const boardKeys = [`${PREFIX}all`, weekKey(now())]
     // Resolve historical Unicode/case variants in JS. The Lua transaction also
     // matches playerKey, including submissions arriving after these reads.
@@ -314,7 +324,7 @@ export function createPenaltyService({ env = process.env, fetchImpl = globalThis
       return members.filter(member => playerRankingKey(readEntry(member)?.playerId) === playerKey)
     }))
     const entry = JSON.stringify({ id: state.id, playerId, playerKey, score: state.total, protocol: PROTOCOL, timingMode: state.timingMode || 'server', completedAt: now(), review: { durationMs: Math.max(0, Math.min(SESSION_MS, now() - state.startedAt)), perfectShots: state.perfectShots, repeatedSamples: state.repeatedSamples } })
-    const saved = await command(['EVAL', SUBMIT_SCRIPT, 5, sessionKey, `${PREFIX}submitted:${state.id}`, ...boardKeys, activeKey, body.token, state.total, entry, SESSION_MS / 1000, playerKey, JSON.stringify(legacyMatches), state.id])
+    const saved = await command(['EVAL', SUBMIT_SCRIPT, 8, sessionKey, `${PREFIX}submitted:${state.id}`, ...boardKeys, activeKey, contributionKey(boardKeys[1]), TOTALS_KEY, TOTAL_NAMES_KEY, body.token, state.total, entry, SESSION_MS / 1000, playerKey, JSON.stringify(legacyMatches), state.id])
     if (saved !== 1) fail(409, 'SESSION_ALREADY_USED')
     return { submitted: true, entry: { playerId, score: state.total } }
   }

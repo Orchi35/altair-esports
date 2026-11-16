@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
 import { getResponsivePlayerImage } from "../src/utils/responsiveImage.js";
+import { getSocialCardPath } from "../src/seo/socialCards.js";
 
 const read = (filename) => fs.readFileSync(new URL(filename, import.meta.url), "utf8");
 const exists = (filename) => fs.existsSync(new URL(filename, import.meta.url));
@@ -35,9 +36,9 @@ test("hero uses the supplied crest with explicit dimensions and high priority", 
 test("social preview uses the optimized JPEG asset", () => {
   const html = read("../index.html");
 
-  assert.match(html, /https:\/\/www\.altairesports\.com\/og\.jpg/);
+  assert.ok(html.includes(`https://www.altairesports.com${getSocialCardPath()}`));
   assert.doesNotMatch(html, /og\.png/);
-  assert.ok(exists("../public/og.jpg"));
+  assert.ok(exists(`../public${getSocialCardPath()}`));
 });
 
 test("player image helper produces fixed 4:5 AVIF and WebP variants", () => {

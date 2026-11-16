@@ -6,6 +6,7 @@ import { buildPublicRouteCatalog, getRouteSeo, SITE_ORIGIN } from "../src/seo/se
 import { resolveRoute } from "../src/app/routes.js";
 import { PARTNERSHIP_CONTENT } from "../src/content/partnerships/index.js";
 import { injectPartnershipMetrics } from "./partnership-media-kit.mjs";
+import { getSocialCardPath } from "../src/seo/socialCards.js";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectDirectory = path.resolve(scriptDirectory, "..");
@@ -20,7 +21,7 @@ const STATIC_PAGES = Object.freeze([
     locale:"tr",
     title:"Medya Kiti ve Marka İş Birlikleri | ALTAIR eSports",
     description:"ALTAIR eSports marka kimliği, doğrulanmış rekabet geçmişi ve partnerlik yaklaşımını içeren güncel medya kiti.",
-    image:"/og.jpg",
+    image:getSocialCardPath("partnerships"),
     lastModified:PARTNERSHIP_CONTENT.mediaKit.updatedAt,
   },
   {
@@ -29,7 +30,7 @@ const STATIC_PAGES = Object.freeze([
     locale:"tr",
     title:"Gizlilik Bildirimi | ALTAIR eSports",
     description:"ALTAIR eSports Builder, Penaltı Arena, iş birliği formu, veri saklama ve ziyaretçi hakları hakkında gizlilik bildirimi.",
-    image:"/og.jpg",
+    image:getSocialCardPath(),
     lastModified:"2026-11-12",
   },
   {
@@ -38,7 +39,7 @@ const STATIC_PAGES = Object.freeze([
     locale:"tr",
     title:"Kullanım Koşulları | ALTAIR eSports",
     description:"ALTAIR eSports Builder, Penaltı Arena, kulüp içerikleri ve marka iş birlikleri için kullanım koşulları.",
-    image:"/og.jpg",
+    image:getSocialCardPath(),
     lastModified:"2026-11-12",
   },
 ]);

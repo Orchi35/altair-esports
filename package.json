@@ -22,6 +22,7 @@
     "partnership:verify": "node scripts/verify-partnership-data.mjs",
     "media-kit:pdf": "vite build --configLoader runner && node scripts/generate-seo.mjs && node scripts/generate-media-kit-pdf.mjs && node scripts/verify-partnership-data.mjs",
     "seo:generate": "node scripts/generate-seo.mjs",
+    "social:generate": "node scripts/generate-social-cards.mjs",
     "seo:verify": "node scripts/verify-seo.mjs",
     "preview": "vite preview",
     "update:squad-stats": "node scripts/update-squad-stats.mjs",

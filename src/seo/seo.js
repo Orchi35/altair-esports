@@ -5,10 +5,11 @@ import { getNewsBySlug, NEWS_CONTENT } from "../content/news/index.js";
 import { PARTNERSHIP_CONTENT } from "../content/partnerships/index.js";
 import { getPlayerContentBySlug, getPublishedPlayers } from "../content/players/index.js";
 import { SITE_LINKS } from "../config/site.js";
+import { getSocialCardPath } from "./socialCards.js";
 import { formatMatchDate, formatMatchTime, formatTimezoneLabel } from "../utils/dateTime.js";
 
 export const SITE_ORIGIN = "https://www.altairesports.com";
-export const DEFAULT_OG_IMAGE_PATH = "/og.jpg";
+export const DEFAULT_OG_IMAGE_PATH = getSocialCardPath();
 
 const LOCALE_CONFIG = Object.freeze({
   tr:{ html:"tr", og:"tr_TR", alternateOg:"en_US" },
@@ -17,7 +18,7 @@ const LOCALE_CONFIG = Object.freeze({
 
 const SEO_COPY = Object.freeze({
   tr:{
-    home:{ title:"ALTAIR eSports | Resmî FC 26 Pro Clubs Takımı", description:"ALTAIR eSports resmî sitesi: doğrulanmış maçlar, güncel kadro, başarılar, kulüp haberleri ve partnerlik bilgileri.", h1:"Birlikte oynar, birlikte kazanırız." },
+    home:{ title:"ALTAIR eSports | Pro Clubs ve Topluluk", description:"ALTAIR eSports dünyasına katıl: güncel kadro, maçlar, Penaltı Arena ve FC27 oyuncu Builder. Birlikte oynar, birlikte kazanırız.", h1:"Birlikte oynar, birlikte kazanırız." },
     matches:{ title:"Maçlar ve Sonuçlar | ALTAIR eSports", description:"ALTAIR eSports yaklaşan maçları, doğrulanmış son sonuçları ve güncel sezon bilgileri.", h1:"Maçlar" },
     squad:{ title:"Güncel Kadro | ALTAIR eSports", description:"ALTAIR eSports aktif kadrosunu kaleci, defans, orta saha ve hücum gruplarında inceleyin.", h1:"Kadro" },
     news:{ title:"Kulüp Haberleri | ALTAIR eSports", description:"ALTAIR eSports tarafından tarihli ve doğrulanmış olarak yayımlanan haberler, raporlar ve açıklamalar.", h1:"Haberler" },
@@ -29,7 +30,7 @@ const SEO_COPY = Object.freeze({
     breadcrumbs:{ home:"Ana Sayfa", matches:"Maçlar", squad:"Kadro", news:"Haberler", honours:"Başarılar", partnerships:"Partnerlik" },
   },
   en:{
-    home:{ title:"ALTAIR eSports | Official FC 26 Pro Clubs Team", description:"The official ALTAIR eSports site for verified matches, the active squad, club honours, news and partnership information.", h1:"Together we play, together we win." },
+    home:{ title:"ALTAIR eSports | Pro Clubs and Community", description:"Explore ALTAIR eSports: our squad, matches, Penalty Arena and FC27 player Builder. Together we play, together we win.", h1:"Together we play, together we win." },
     matches:{ title:"Matches and Results | ALTAIR eSports", description:"Upcoming ALTAIR eSports fixtures, verified recent results and current season information.", h1:"Matches" },
     squad:{ title:"Active Squad | ALTAIR eSports", description:"Explore the active ALTAIR eSports squad grouped into goalkeepers, defenders, midfielders and forwards.", h1:"Squad" },
     news:{ title:"Club News | ALTAIR eSports", description:"Dated and verified news, reports and official statements published by ALTAIR eSports.", h1:"News" },
@@ -147,8 +148,8 @@ function buildAlternates(route, article = null) {
 function baseMetadata({ route, title, description, h1, breadcrumbs, ogImage, ogType = "website", lastModified = null, structuredData = [], article = null }) {
   const locale = route.locale;
   const canonicalPath = getRoutePath(route.name, locale, route.slug);
-  const image = absoluteUrl(ogImage || DEFAULT_OG_IMAGE_PATH);
-  const imageIsDefault = image === absoluteUrl(DEFAULT_OG_IMAGE_PATH);
+  const image = absoluteUrl(ogImage || getSocialCardPath(route.name, locale));
+  const imageIsDefault = !ogImage;
   const breadcrumb = breadcrumbNode(breadcrumbs);
   return {
     title,
@@ -192,7 +193,7 @@ function notFoundMetadata(route) {
     ogTitle:copy.title,
     ogDescription:copy.description,
     ogUrl:null,
-    ogImage:absoluteUrl(DEFAULT_OG_IMAGE_PATH),
+    ogImage:absoluteUrl(getSocialCardPath("home", locale)),
     ogImageAlt:"ALTAIR eSports",
     ogImageWidth:1200,
     ogImageHeight:630,

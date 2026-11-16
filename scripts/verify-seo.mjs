@@ -48,6 +48,14 @@ async function verifyPage(record) {
   assert(readAttribute(html, /<title>([\s\S]*?)<\/title>/i) === record.title, `${label}: title differs from manifest`);
   assert(readAttribute(html, /<link\s+rel="canonical"\s+href="([^"]+)"/i) === record.canonical, `${label}: canonical differs from manifest`);
   assert(readAttribute(html, /<meta\s+name="description"\s+content="([^"]+)"/i), `${label}: empty description`);
+  const image = readAttribute(html, /<meta\s+property="og:image"\s+content="([^"]+)"/i);
+  const twitterImage = readAttribute(html, /<meta\s+name="twitter:image"\s+content="([^"]+)"/i);
+  assert(image && image === twitterImage, `${label}: missing or mismatched sharing images`);
+  if (new URL(image).pathname.startsWith("/social/")) {
+    await fs.access(path.join(outputDirectory, new URL(image).pathname));
+    assert(/property="og:image:width" content="1200"/.test(html), `${label}: missing card width`);
+    assert(/property="og:image:height" content="630"/.test(html), `${label}: missing card height`);
+  }
   record.alternates.forEach(({ hreflang, href }) => {
     const escapedLanguage = hreflang.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const pattern = new RegExp(`<link\\s+rel="alternate"\\s+hreflang="${escapedLanguage}"\\s+href="([^"]+)"`, "i");

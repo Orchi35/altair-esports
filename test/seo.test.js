@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
-import { resolveRoute } from "../src/app/routes.js";
+import { getRoutePath, resolveRoute } from "../src/app/routes.js";
+import { getSocialCardPath, SOCIAL_CARD_SECTIONS } from "../src/seo/socialCards.js";
 import { getPublishedNews } from "../src/content/news/index.js";
 import { buildPublicRouteCatalog, getRouteSeo, SITE_ORIGIN } from "../src/seo/seo.js";
 
@@ -25,6 +26,21 @@ const matchCenter = Object.freeze({
   recentResults:[],
   upcomingFixtures:[match],
   standings:[],
+});
+
+test("section sharing previews use distinct localized artwork with published files", () => {
+  const images = new Set();
+  for (const locale of ["tr", "en"]) for (const section of SOCIAL_CARD_SECTIONS) {
+    const seo = getRouteSeo(resolveRoute(getRoutePath(section, locale)), { matchCenter });
+    assert.equal(seo.ogImage, `${SITE_ORIGIN}${getSocialCardPath(section, locale)}`);
+    assert.equal(seo.ogImageWidth, 1200);
+    assert.equal(seo.ogImageHeight, 630);
+    const data = fs.readFileSync(new URL(`../public${getSocialCardPath(section, locale)}`, import.meta.url));
+    assert.equal(data.readUInt16BE(0), 0xffd8, "card is a real JPEG");
+    assert.ok(data.length < 300_000, "preview stays lightweight");
+    images.add(seo.ogImage);
+  }
+  assert.equal(images.size, 14);
 });
 
 function collectSchemaTypes(value, target = []) {

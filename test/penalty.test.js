@@ -4,6 +4,7 @@ import { createHmac } from 'node:crypto'
 import { createPenaltyService, createPenaltyHandler, resolveShot, weekKey, SHOT_INTERVAL_MS, bestLeaderboardEntries } from '../server/penalty/service.js'
 import { normalizePlayerId, playerRankingKey } from '../src/pages/penalty/playerId.js'
 import {calculateShot,powerFromMeter,goalPoints,PERFECT_WINDOW_HALF_WIDTH} from '../src/pages/penalty/shotModel.js'
+import {TOTALS_KEY, TOTAL_NAMES_KEY, TOTAL_MIGRATION_KEY, contributionKey, migrateWeeklyTotals} from '../server/penalty/weeklyTotals.js'
 
 const env = { PENALTY_REDIS_REST_URL: 'https://example.upstash.io', PENALTY_REDIS_REST_TOKEN: 'test-only', PENALTY_SIGNING_SECRET: 'test-secret-with-at-least-32-characters' }
 
@@ -13,21 +14,42 @@ function fixture() {
   let delay = 0
   const strings = new Map()
   const ranks = new Map()
+  const hashes = new Map()
+  const totals = new Map()
   const expires = new Map()
   const calls = []
+  const contribute = (week, key, name, score) => {
+    if (!hashes.has(week)) hashes.set(week, new Map())
+    const previous = hashes.get(week).get(key)
+    if (previous === undefined || score > previous) {
+      hashes.get(week).set(key, score)
+      totals.set(key, (totals.get(key) || 0) + score - (previous || 0))
+      if (!hashes.has(TOTAL_NAMES_KEY)) hashes.set(TOTAL_NAMES_KEY, new Map())
+      hashes.get(TOTAL_NAMES_KEY).set(key, name)
+    }
+  }
   const command = async ([operation, ...args]) => {
     calls.push([operation, ...args])
     time += delay
     if (operation === 'SET') {
-      if (strings.has(args[0])) return null
       strings.set(args[0], args[1])
       return 'OK'
     }
-    if (operation === 'ZREVRANGE') return [...(ranks.get(args[0]) || [])].sort((a, b) => JSON.parse(b).score - JSON.parse(a).score).slice(Number(args[1]), Number(args[2]) + 1)
+    if (operation === 'GET') return strings.get(args[0]) ?? null
+    if (operation === 'SCAN') return ['0', [...ranks.keys()].filter(key => key.startsWith('altair:penalty:v1:week:'))]
+    if (operation === 'HMGET') return args.slice(1).map(key => hashes.get(args[0])?.get(key) ?? null)
+    if (operation === 'ZREVRANGE') {
+      if (args[0] === TOTALS_KEY) return [...totals].sort((a,b) => b[1]-a[1]).slice(Number(args[1]), Number(args[2])+1).flatMap(([key,score]) => [key,String(score)])
+      return [...(ranks.get(args[0]) || [])].sort((a, b) => JSON.parse(b).score - JSON.parse(a).score).slice(Number(args[1]), Number(args[2]) === -1 ? undefined : Number(args[2]) + 1)
+    }
     if (operation === 'EVAL') {
       const [script, count, ...rest] = args
       const keys = rest.slice(0, count)
       const values = rest.slice(count)
+      if (script.includes('penalty-import-week')) {
+        for (const entry of JSON.parse(values[0])) contribute(keys[0], entry.playerKey, entry.playerId, entry.score)
+        return 1
+      }
       if (script.includes('penalty-ordered-rates')) {
         for (let i = 0; i < keys.length; i++) {
           if ((expires.get(keys[i]) || 0) <= time) strings.delete(keys[i])
@@ -74,6 +96,7 @@ function fixture() {
         winner.playerId ??= winner.name
         winner.playerKey = values[4]
         ranks.set(key, [...old.filter(member => !matches(member)), JSON.stringify(winner)].sort((a,b) => JSON.parse(b).score-JSON.parse(a).score).slice(0,1000))
+        if (index === 1) contribute(keys[5], values[4], winner.playerId, winner.score)
       }
       strings.delete(keys[0])
       return 1
@@ -81,7 +104,7 @@ function fixture() {
     throw new Error(`Unexpected Redis command: ${operation}`)
   }
   const service = createPenaltyService({ env, command, now: () => time, randomId: () => `test-${++id}` })
-  return { service, command, ranks, strings, calls, setDelay: ms => { delay = ms }, currentWeek:() => weekKey(time), now:() => time, advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
+  return { service, command, ranks, strings, hashes, totals, calls, setDelay: ms => { delay = ms }, currentWeek:() => weekKey(time), now:() => time, advance: (ms = SHOT_INTERVAL_MS) => { time += ms } }
 }
 const post = (service, body) => service({ method: 'POST', body: body.action === 'start' ? { playerId: 'ORC-HI', ownerToken: 'a'.repeat(64), ...body } : { ownerToken: 'a'.repeat(64), ...body } })
 const expectCode = code => error => error.code === code
@@ -180,7 +203,7 @@ async function completeRound(f, power=1, playerId='ORC-HI') {
   return token
 }
 
-test('lower scores compact legacy duplicates while preserving separate weekly and all-time bests',async()=>{
+test('migration uses weekly evidence, compacts aliases and ignores unrelated old all-time bests',async()=>{
   const f=fixture()
   const all='altair:penalty:v1:all',week=f.currentWeek()
   const token=await completeRound(f,0,'Çağrı')
@@ -189,7 +212,7 @@ test('lower scores compact legacy duplicates while preserving separate weekly an
   await post(f.service,{action:'submit',token,playerId:'çağrı'})
   assert.equal(f.ranks.get(all).length,1)
   assert.equal(f.ranks.get(week).length,1)
-  assert.equal((await f.service({query:{period:'all'}})).entries[0].score,1400)
+  assert.equal((await f.service({query:{period:'all'}})).entries[0].score,700)
   assert.equal((await f.service()).entries[0].score,700)
   await assert.rejects(post(f.service,{action:'submit',token,playerId:'çağrı'}),expectCode('SESSION_ALREADY_USED'))
 })
@@ -201,15 +224,71 @@ test('new rounds supersede completed rounds before submission', async()=>{
  assert.equal((await f.service()).entries.length,1)
 })
 
-test('a new week gets its own personal best without resetting the all-time record',async()=>{
+test('weekly totals survive public weekly board expiry and a zero score in the new week',async()=>{
   const f=fixture()
   await post(f.service,{action:'start'})
-  f.ranks.set('altair:penalty:v1:all',[JSON.stringify({playerId:'ORC-HI',score:1500})])
+  f.ranks.set(f.currentWeek(),[JSON.stringify({playerId:'ORC-HI',score:1500})])
+  assert.equal((await f.service({query:{period:'all'}})).entries[0].score,1500)
+  f.ranks.delete(f.currentWeek())
   f.advance(7*24*60*60*1000)
   const token=await completeRound(f,0)
   await post(f.service,{action:'submit',token,playerId:'orc-hi'})
   assert.equal((await f.service()).entries[0].score,0)
   assert.equal((await f.service({query:{period:'all'}})).entries[0].score,1500)
+})
+
+test('weekly highs add across weeks, lower and repeated rounds add nothing, improvements add only their delta', async()=>{
+  const f=fixture()
+  let token=await completeRound(f,1)
+  const first=(await post(f.service,{action:'submit',token,playerId:'ORC-HI'})).entry.score
+  assert.ok(first>0)
+  f.advance(7*24*60*60*1000)
+  token=await completeRound(f,1)
+  const second=(await post(f.service,{action:'submit',token,playerId:'orc-hi'})).entry.score
+  assert.ok(second>0)
+  assert.equal((await f.service({query:{period:'all'}})).entries[0].score,first+second)
+  await assert.rejects(post(f.service,{action:'submit',token,playerId:'ORC-HI'}),expectCode('SESSION_ALREADY_USED'))
+  token=await completeRound(f,0)
+  await post(f.service,{action:'submit',token,playerId:'ORC-HI'})
+  assert.equal((await f.service({query:{period:'all'}})).entries[0].score,first+second)
+  const previous=second
+  token=await completeRound(f,1)
+  const third=(await post(f.service,{action:'submit',token,playerId:'ORC-HI'})).entry.score
+  assert.equal((await f.service({query:{period:'all'}})).entries[0].score,first+Math.max(previous,third))
+  assert.equal((await f.service()).entries[0].score,Math.max(previous,third))
+})
+
+test('migration includes inactive players and all retained weeks; repeated imports cannot double count', async()=>{
+  const f=fixture()
+  const previous=weekKey(f.now()-7*24*60*60*1000)
+  f.ranks.set(previous,[JSON.stringify({name:'ÇAĞRI',score:1500}),JSON.stringify({name:'Çağrı',score:700})])
+  f.ranks.set(f.currentWeek(),[JSON.stringify({name:'çağrı',score:1200}),JSON.stringify({name:'Other',score:900})])
+  let entries=(await f.service({query:{period:'all'}})).entries
+  assert.deepEqual(entries.map(e=>e.score),[2700,900])
+  assert.equal(f.hashes.get(contributionKey(previous)).get(playerRankingKey('Çağrı')),1500)
+  f.strings.delete(TOTAL_MIGRATION_KEY)
+  entries=(await f.service({query:{period:'all'}})).entries
+  assert.deepEqual(entries.map(e=>e.score),[2700,900])
+  assert.equal(entries.length,2)
+})
+
+test('an interrupted paginated migration resumes without inflating totals, even with concurrent retries', async()=>{
+  const f=fixture()
+  const weeks=[weekKey(f.now()-7*24*60*60*1000),f.currentWeek()]
+  for (const week of weeks) f.ranks.set(week,[JSON.stringify({playerId:'ORC-HI',score:1200})])
+  let failSecond=true
+  const command=async args=>{
+    if(args[0]==='SCAN')return args[1]==='0'?['10',[weeks[0]]]:['0',[weeks[1]]]
+    if(failSecond&&args[0]==='EVAL'&&args[3]===contributionKey(weeks[1]))throw new Error('Temporary Redis outage')
+    return f.command(args)
+  }
+  await assert.rejects(migrateWeeklyTotals(command),/Temporary Redis outage/)
+  assert.equal(f.strings.has(TOTAL_MIGRATION_KEY),false)
+  assert.equal(f.totals.get('orc-hi'),1200)
+  failSecond=false
+  await Promise.all([migrateWeeklyTotals(command),migrateWeeklyTotals(command)])
+  assert.equal(f.totals.get('orc-hi'),2400)
+  assert.equal(f.strings.get(TOTAL_MIGRATION_KEY),'1')
 })
 
 
