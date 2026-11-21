@@ -5,9 +5,10 @@ import react from '@vitejs/plugin-react'
 import { matchCenterDevApi } from './server/match-center/vitePlugin.js'
 import { partnershipInquiryDevApi } from './server/partnership/vitePlugin.js'
 import { vpgDevApi } from './server/vpg/vitePlugin.js'
+import { nexDevApi } from './server/nex/vitePlugin.js'
 
 export default defineConfig({
-  plugins: [react(), builderDevApi(), penaltyDevApi(), matchCenterDevApi(), partnershipInquiryDevApi(), vpgDevApi()],
+  plugins: [react(), builderDevApi(), penaltyDevApi(), matchCenterDevApi(), partnershipInquiryDevApi(), vpgDevApi(), nexDevApi()],
   server: {
     proxy: {
       // Dev'de /api/eml-proxy?path=... → emajorleague.com/...

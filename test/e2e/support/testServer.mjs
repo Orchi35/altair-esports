@@ -182,6 +182,16 @@ export async function startTestServer({builderHandler,penaltyHandler}={}) {
         response.writeHead(payload.statusCode,payload.headers).end(payload.body);
         return;
       }
+      if (url.pathname === "/api/nex-player") {
+        const payload=json(url.searchParams.get("id")==="2"?{status:"unlinked",player:null}:{status:"fresh",season:"FC 27 1. SEZON",updatedAt:isoFromNow(0),player:{id:"nex-player",name:"Nex Test Player",handle:"NexHandle",apps:3,goals:2,assists:1,passes:80,tackles:4,manOfMatch:1,averageRating:8.5,sourceUrl:"https://nexleagues.com/players/p-pjar6nvy4gqa",matchesAvailable:true,matches:[{id:"nex-test",round:1,startsAt:isoFromNow(-86400000),homeTeam:{slug:"ALT",name:"ALTAIR eSports"},awayTeam:{slug:"NEX",name:"Nex Opponent"},score:{home:2,away:1},sourceUrl:"https://nexleagues.com/leagues/nex-super-lig/matches/nex-test"}]}});
+        response.writeHead(payload.statusCode,payload.headers).end(payload.body);return;
+      }
+      if (url.pathname === "/api/nex") {
+        const data=JSON.parse(await fs.readFile(path.join(projectDirectory,"public/data/nex-super-lig.json"),"utf8"));
+        const payload=json({...data,status:"fresh"});
+        response.writeHead(payload.statusCode,payload.headers).end(payload.body);
+        return;
+      }
       if (url.pathname === "/api/vpg") {
         const payload = json({ status:"fresh", updatedAt:isoFromNow(0), fixtures:[{ id:1, startsAt:isoFromNow(86400000), homeTeam:{name:"ALTAIR eSports",slug:"ALTAIR-eSports"}, awayTeam:{name:"Test Opponent",slug:"opponent"}, score:null, round:1 }], results:[], standings:[{position:1,name:"ALTAIR eSports",slug:"ALTAIR-eSports",played:1,won:1,drawn:0,lost:0,goalDifference:2,points:3}] });
         response.writeHead(payload.statusCode, payload.headers).end(payload.body);

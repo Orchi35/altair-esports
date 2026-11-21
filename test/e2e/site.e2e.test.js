@@ -102,7 +102,32 @@ test("league hub defaults to standings and match details survive a refresh", asy
   await page.navigate(`${baseUrl}/tr/maclar`);
   await page.waitFor("Boolean(document.querySelector('.hub-leagues'))");
   await page.click('.hub-leagues button:nth-child(2)');
-  assert.match(await page.evaluate("document.querySelector('.content-state').textContent"), /Nex Leagues henüz başlamadı/);
+  await page.waitFor("document.querySelectorAll('.nex-competition tbody tr').length === 16");
+  assert.match(await page.evaluate("document.querySelector('.nex-competition .is-altair').textContent"), /ALTAIR eSports/);
+});
+
+test("Nex filters ALTAIR fixtures, all teams, matchdays and results on desktop and mobile",async()=>{
+  await page.navigate(`${baseUrl}/tr/maclar#fixtures`);
+  await page.waitFor("Boolean(document.querySelector('.hub-leagues'))");
+  await page.click('.hub-leagues button:nth-child(2)');
+  await page.waitFor("document.querySelectorAll('.nex-competition .vpg-match').length === 8");
+  assert.ok(await page.evaluate("[...document.querySelectorAll('.nex-competition .vpg-match')].every(e=>e.textContent.includes('ALTAIR eSports'))"));
+  await page.evaluate("const select=document.querySelector('.nex-filters select'); select.value='1'; select.dispatchEvent(new Event('change',{bubbles:true}));");
+  await page.waitFor("document.querySelectorAll('.nex-competition .vpg-match').length === 1");
+  await page.click('.nex-team-toggle input');
+  await page.waitFor("document.querySelectorAll('.nex-competition .vpg-match').length === 8");
+  await page.setViewport(390,844);
+  assert.equal(await page.evaluate("document.documentElement.scrollWidth <= innerWidth"),true);
+  await page.click('.hub-tabs:not(.hub-competitions) button:nth-child(3)');
+  await page.waitFor("Boolean(document.querySelector('.nex-empty'))");
+  assert.match(await page.evaluate("document.querySelector('.nex-empty').textContent"),/sonucu bulunmuyor/);
+  await page.navigate(`${baseUrl}/en/matches`);
+  await page.waitFor("Boolean(document.querySelector('.hub-leagues'))");
+  await page.click('.hub-leagues button:nth-child(2)');
+  await page.waitFor("document.querySelectorAll('.nex-competition tbody tr').length === 16");
+  assert.match(await page.evaluate("document.querySelector('.nex-heading').textContent"),/Official league page/);
+  assert.equal(await page.evaluate("document.documentElement.scrollWidth <= innerWidth"),true);
+  await page.setViewport(1280,900);
 });
 
 test("VPG player cards open a profile that survives a hard refresh",async()=>{
@@ -125,6 +150,29 @@ test("cup results stay separate from Elite B",async()=>{
  assert.match(await page.evaluate("document.querySelector('.content-match-card').textContent"),/European Pro Series HT/);
  await page.click('.hub-competitions button:first-child');
  await page.waitFor("!document.querySelector('.content-match-card')");
+});
+
+test("player league selection isolates stats and matches and survives refresh on mobile",async()=>{
+  await page.navigate(`${baseUrl}/tr/oyuncular/vpg-1`);
+  await page.waitFor("Boolean(document.querySelector('.player-league-switch'))");
+  assert.equal(await page.evaluate("document.querySelector('.vpg-profile-metrics dd').textContent"),"10");
+  await page.click('.player-league-switch button:nth-child(2)');
+  await page.waitFor("Boolean(document.querySelector('.nex-player-performance .vpg-match'))");
+  assert.equal(await page.evaluate("document.querySelector('.vpg-profile-metrics dd').textContent"),"3");
+  assert.match(await page.evaluate("document.querySelector('.nex-player-performance').textContent"),/Nex Opponent/);
+  assert.equal(await page.evaluate("document.querySelectorAll('.vpg-profile-metrics').length"),1);
+  assert.equal(await page.evaluate("location.hash"),"#nex");
+  await page.setViewport(390,844);
+  await page.reload();
+  await page.waitFor("Boolean(document.querySelector('.nex-player-performance .vpg-match'))");
+  assert.equal(await page.evaluate("document.documentElement.scrollWidth<=innerWidth"),true);
+  await page.click('.player-league-switch button:nth-child(1)');
+  await page.waitFor("!document.querySelector('.nex-player-performance')");
+  assert.equal(await page.evaluate("document.querySelector('.vpg-profile-metrics dd').textContent"),"10");
+  await page.navigate(`${baseUrl}/en/players/vpg-2#nex`);
+  await page.waitFor("document.querySelector('.nex-player-performance')?.textContent.includes('No verified Nex account')");
+  assert.equal(await page.evaluate("document.querySelectorAll('.vpg-profile-metrics').length"),0);
+  await page.setViewport(1280,900);
 });
 
 test("verified news detail route opens", { skip:!firstNews && "No verified published news exists; production content is not fabricated for tests" }, async () => {

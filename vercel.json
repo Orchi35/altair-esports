@@ -1,5 +1,7 @@
 {
   "functions": {
+    "api/nex-player.js": {"includeFiles":"public/data/nex-*.json","maxDuration":15},
+    "api/nex.js": {"includeFiles":"public/data/nex-super-lig.json","maxDuration":15},
     "api/vpg-cup.js": {"maxDuration":10},
     "api/vpg-player.js": {"maxDuration":20},
     "api/vpg-match.js": {

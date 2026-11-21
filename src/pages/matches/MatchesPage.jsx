@@ -4,6 +4,7 @@ import { ContentPage, ContentState } from "../../components/layout/ContentPage.j
 import { useVpgData } from "../../hooks/useVpgData.js";
 import {useVpgCupData} from "../../hooks/useVpgCupData.js";
 import { VpgCompetition } from "../../features/match-center/VpgCompetition.jsx";
+import { NexCompetition } from "../../features/match-center/NexCompetition.jsx";
 import { MatchSummaryCard } from "./MatchSummaryCard.jsx";
 import ArchiveMatchesPage from "./ArchiveMatchesPage.jsx";
 import { toVpgMatch } from "./vpgMatchModel.js";
@@ -36,11 +37,11 @@ export default function MatchesPage(props) {
   return <ContentPage className="matches-studio league-match-hub" breadcrumbLabel={copy.pages.common.matches} breadcrumbs={[{label:copy.pages.common.home,href:getRoutePath("home",locale)},{label:copy.pages.common.matches}]} eyebrow="ALTAIR eSports" title={tr ? "Maç Merkezi" : "Match Center"} intro={tr ? "Ligler, karşılaşmalar ve sahadaki performansımız." : "Our leagues, matches and performances."}>
     <div className="hub-leagues" role="group" aria-label={tr ? "Lig seçimi" : "Select league"}>
       <button aria-pressed={league === "vpg"} onClick={() => {setLeague("vpg");setLimit(8);}}><span>01 / VPG</span><strong>Elite B</strong></button>
-      <button aria-pressed={league === "nex"} onClick={() => setLeague("nex")}><span>02 / NEX</span><strong>Nex Leagues</strong></button>
+      <button aria-pressed={league === "nex"} onClick={() => setLeague("nex")}><span>02 / NEX</span><strong>Nex Süper Lig</strong></button>
     </div>
     {league === "vpg" && <div className="hub-tabs hub-competitions" role="group" aria-label={tr?"VPG organizasyonu":"VPG competition"}><button aria-pressed={vpgCompetition === "elite"} onClick={()=>{setVpgCompetition("elite");setLimit(8);setQuery("");}}>Elite B</button><button aria-pressed={vpgCompetition === "cup"} onClick={()=>{setVpgCompetition("cup");setLimit(8);setQuery("");}}>European Pro Series HT</button></div>}
     <div className="hub-tabs" role="group" aria-label={tr ? "Maç bilgileri" : "Match information"}>{views.map(value => <button key={value} aria-pressed={view === value} onClick={() => changeView(value)}>{labels[value]}</button>)}</div>
-    {league === "nex" ? <ContentState>{tr ? "Nex Leagues henüz başlamadı. Fikstür, sonuçlar, puan durumu ve maç detayları yayımlandığında burada yer alacak." : "Nex Leagues has not started. Fixtures, results, standings and match details will appear here when published."}<br/><a href="https://nexleagues.com/teams/ALT" target="_blank" rel="noreferrer">ALTAIR · Nex Leagues ↗</a></ContentState> : view === "standings" ? <VpgCompetition view="standings" lang={lang} cup={vpgCompetition === "cup"}/> : <section className="content-section" aria-labelledby={view === "fixtures" ? "upcoming-matches-title" : "recent-results-title"}>
+    {league === "nex" ? <NexCompetition key={view} view={view} locale={locale}/> : view === "standings" ? <VpgCompetition view="standings" lang={lang} cup={vpgCompetition === "cup"}/> : <section className="content-section" aria-labelledby={view === "fixtures" ? "upcoming-matches-title" : "recent-results-title"}>
       <div className="hub-match-tools"><h2 id={view === "fixtures" ? "upcoming-matches-title" : "recent-results-title"}>{labels[view]}</h2><label>{tr ? "Takım ara" : "Search team"}<input type="search" value={query} onChange={event => {setQuery(event.target.value);setLimit(8);}} placeholder={tr ? "Rakip adı" : "Opponent name"}/></label></div>
       {!data && <ContentState>{loading ? copy.pages.common.loading : copy.pages.common.unavailable}</ContentState>}
       {data && (failed || data.status === "stale") && <p role="status">{tr ? "Son alınan veriler gösteriliyor." : "Showing last available data."}</p>}
