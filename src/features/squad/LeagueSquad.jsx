@@ -52,6 +52,7 @@ function SquadContent({ league, locale, compact, feed }) {
       <div className="league-squad-heading"><div><span>{nex ? "NEX SÜPER LİG" : "VIRTUAL PRO GAMING"}</span><h3>{label} {tr ? "Kadrosu" : "Squad"}</h3></div><a href={teamUrl} target="_blank" rel="noreferrer">{tr ? "Resmî takım sayfası" : "Official team page"} ↗</a></div>
       {(error || (loading && !data)) && <div className="league-squad-status" role="status" aria-live="polite">
         {loading && !data ? (tr ? "Kadro yükleniyor…" : "Loading squad…") : error ? (data ? (tr ? "Son alınan kadro gösteriliyor." : "Showing the last available squad.") : (tr ? "Kadro şu anda yüklenemiyor." : "The squad is currently unavailable.")) : (tr ? "VPG kadrosu" : "VPG squad")}
+        {nex && error && data?.updatedAt && <time dateTime={data.updatedAt}>{new Intl.DateTimeFormat(locale,{dateStyle:"medium",timeStyle:"short",timeZone:"Europe/Istanbul"}).format(new Date(data.updatedAt))} · {tr ? "Türkiye saati" : "Türkiye time"}</time>}
         {error && <button type="button" onClick={refetch}>{tr ? "Tekrar dene" : "Retry"}</button>}
       </div>}
       {compact && players.length > 0 && <div className="league-squad-grid league-leaders">{getLeagueLeaders(players).map(({ stat, player }) => <article className="league-player league-leader" key={stat}>

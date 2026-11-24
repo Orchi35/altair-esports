@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+
 const FRESH_INTERVAL = 5 * 60_000;
 const RETRY_INTERVAL = 60_000;
 
@@ -12,7 +14,14 @@ export async function readNexPage(url, fetchImpl) {
   return html;
 }
 
-export function createNexFeed(name, refresh, unavailable, now) {
+export async function readNexBackup(filename) {
+  const url = new URL(`../../public/data/${filename}`, import.meta.url);
+  const backup = JSON.parse(await readFile(url, "utf8"));
+  if (!Number.isFinite(Date.parse(backup.updatedAt))) throw new Error("Invalid Nex backup timestamp");
+  return backup;
+}
+
+export function createNexFeed(name, refresh, unavailable, now, readBackup) {
   let data = unavailable;
   let nextAttempt = 0;
   let pending;
@@ -26,6 +35,13 @@ export function createNexFeed(name, refresh, unavailable, now) {
       } catch (error) {
         console.warn(`Nex ${name} refresh failed:`, error.message);
         if (data.status === "fresh") data = { ...data, status: "stale" };
+        if (data.status === "unavailable" && readBackup) {
+          try {
+            data = { ...await readBackup(), status: "stale" };
+          } catch (backupError) {
+            console.warn(`Nex ${name} backup unavailable:`, backupError.message);
+          }
+        }
         nextAttempt = now() + RETRY_INTERVAL;
       }
       return data;

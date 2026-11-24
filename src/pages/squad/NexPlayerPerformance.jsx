@@ -42,7 +42,7 @@ export default function NexPlayerPerformance({id,locale}) {
       {player && <>
         <p>Nex Süper Lig · {data.season} · ALTAIR eSports</p>
         <div className="player-league-account"><span>{tr?"Nex oyuncusu":"Nex player"}: <strong>{player.name}</strong> · {player.handle}</span><a href={player.sourceUrl} target="_blank" rel="noopener noreferrer">{tr?"Nex profili":"Nex profile"} ↗</a></div>
-        {data.status==="stale" && <p className="vpg-notice" role="status">{tr?"Son doğrulanmış Nex kaydı gösteriliyor.":"Showing the last verified Nex record."}</p>}
+        {data.status==="stale" && <p className="vpg-notice" role="status">{tr?"Son doğrulanmış Nex kaydı gösteriliyor.":"Showing the last verified Nex record."} <time dateTime={data.updatedAt}>{date(data.updatedAt)}</time></p>}
         <dl className="vpg-profile-metrics">{metrics.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value ?? "—"}</dd></div>)}</dl>
         <p>{tr?"—: Nex tarafından henüz yayımlanmayan veri.":"—: Not yet published by Nex."}{player.partialStats && (tr?" Bazı istatistikler yalnızca doğrulanmış maçları kapsar.":" Some statistics cover verified matches only.")}</p>
       </>}

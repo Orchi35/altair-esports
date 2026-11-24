@@ -101,3 +101,15 @@ test("roster view calls only its Nex loader and rejects unknown views",async()=>
   await handler({method:"GET",url:"/api/nex?view=other"},res);
   assert.equal(status,400);
 });
+
+test("a cold server uses the dated ALTAIR backup then recovers to fresh data",async()=>{
+  let time=now(),healthy=false;
+  const backup=JSON.parse(await readFile(new URL("../public/data/nex-super-lig.json",import.meta.url),"utf8"));
+  assert.ok(backup.fixtures.concat(backup.results).every(m=>m.homeTeam.slug==="ALT" || m.awayTeam.slug==="ALT"));
+  const load=createNexService({now:()=>time,fetchImpl:url=>healthy?fetchImpl(url):offline(),readBackup:async()=>backup});
+  const stale=await load();
+  assert.equal(stale.status,"stale");
+  assert.equal(stale.updatedAt,backup.updatedAt);
+  healthy=true; time+=60000;
+  assert.equal((await load()).status,"fresh");
+});

@@ -1,20 +1,20 @@
-import {createNexFeed,readNexPage} from "./liveSource.js";
+import {createNexFeed,readNexPage,readNexBackup} from "./liveSource.js";
 import {getNex} from "./service.js";
 import {NEX_PLAYER_LINKS} from "./playerLinks.js";
 import {NEX_ROSTER_SOURCE,parseNexRoster,parseNexPlayerMatches} from "./playerParser.js";
 
 const profileIds = new Map(Object.entries(NEX_PLAYER_LINKS).map(([id, link]) => [link.slug, id]));
 
-export function createNexRosterService({fetchImpl=fetch,now=Date.now}={}) {
+export function createNexRosterService({fetchImpl=fetch,now=Date.now,readBackup}={}) {
   return createNexFeed("roster", async () => {
     const html = await readNexPage(NEX_ROSTER_SOURCE, fetchImpl);
     const roster = parseNexRoster(html, new Date(now()).toISOString());
     return { ...roster, players: roster.players.map(player => ({
       ...player, profileId: profileIds.get(player.id) ?? null,
     })) };
-  }, { status:"unavailable", updatedAt:null, players:[] }, now);
+  }, { status:"unavailable", updatedAt:null, players:[] }, now, readBackup);
 }
-export const getNexRoster=createNexRosterService();
+export const getNexRoster=createNexRosterService({ readBackup: () => readNexBackup("nex-roster.json") });
 
 export function createNexPlayerService({rosterLoader=getNexRoster,leagueLoader=getNex,fetchImpl=fetch,now=Date.now}={}) {
   const cache=new Map(),pending=new Map();

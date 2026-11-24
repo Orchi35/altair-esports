@@ -82,7 +82,7 @@ test("switching between VPG and Nex shows each provider's roster and profiles", 
   await page.waitFor("document.querySelectorAll('.league-player').length === 5");
   assert.equal(await page.evaluate("document.querySelectorAll('.league-position-group').length"), 4);
   await page.click('.league-squad-tabs button:nth-child(2)');
-  await page.waitFor("document.querySelector('.league-player a')?.href.startsWith('https://nexleagues.com/players/')");
+  await page.waitFor("document.querySelector('.league-player a')?.href.endsWith('#nex')");
   assert.match(await page.evaluate("document.querySelector('.league-squad-heading').textContent"), /Nex Kadrosu/);
   await page.click('.league-squad-tabs button:first-child');
   await page.waitFor("document.querySelectorAll('.league-player').length === 5");

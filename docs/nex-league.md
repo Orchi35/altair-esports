@@ -1,13 +1,13 @@
 # Nex Süper Lig
 
-The Match Center reads `/api/nex` for standings, fixtures and results. The squad tab requests `/api/nex?view=roster` when selected. The server reads the public league page and its `?section=fixtures` view at https://nexleagues.com/leagues/nex-super-lig. No account or API credential is required.
+The Match Center reads `/api/nex` for standings, fixtures and results. The squad tab requests `/api/nex?view=roster` when selected. The server reads the public league page and its `?section=fixtures&week=all` view at https://nexleagues.com/leagues/nex-super-lig. No account or API credential is required.
 
 - The standings retain the source's ranks (including ties), points and goal totals.
 - The league feed returns only ALTAIR’s home and away matches. Visitors can filter the club’s fixtures and results by matchday and opponent.
 - Match detail links go to the official Nex match page. Dates are displayed in Europe/Istanbul time.
 - Completed matches with valid scores appear under results. A live score is not treated as a final result.
 - On demand, each feed revalidates after five minutes and shares concurrent fetches. Visible league and squad tabs poll automatically. After an upstream error the server allows a retry after one minute.
-- An upstream outage preserves the last successful response held by that server instance and its original timestamp. A cold instance with no verified data returns HTTP 503 and Retry-After. The UI also retains the last response received during the session.
+- An upstream outage preserves the last successful response held by that server instance and its original timestamp. A cold instance reads the packaged verified squad or ALTAIR match backup and reports its original timestamp as stale. If both sources are unavailable, it returns HTTP 503 and Retry-After. Refresh the temporary backup with `node scripts/update-nex-snapshot.mjs`. The UI also retains the last response received during the session.
 
 The source currently renders public HTML, rather than a documented public API. Changes to its table, match markup or status labels may require updating `server/nex/parser.js`. Do not replace parse failures with zero scores. Representative source markup is retained in `test/fixtures/nex`; parser, cache and API coverage is in `test/nex.test.js`, and desktop/mobile filters are covered in `test/e2e/site.e2e.test.js`.
 

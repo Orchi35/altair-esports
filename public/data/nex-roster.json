@@ -1,6 +1,6 @@
 {
   "status": "fresh",
-  "updatedAt": "2026-11-21T05:01:41.826Z",
+  "updatedAt": "2026-11-24T15:16:27.035Z",
   "season": "FC 27 1. SEZON",
   "sourceUrl": "https://nexleagues.com/teams/ALT?view=kadro&league=nex-super-lig&season=2026",
   "players": [
@@ -16,7 +16,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-oysqpjhierno"
+      "sourceUrl": "https://nexleagues.com/players/p-oysqpjhierno",
+      "profileId": "893787"
     },
     {
       "id": "p-ysd3ccsepok2",
@@ -30,7 +31,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-ysd3ccsepok2"
+      "sourceUrl": "https://nexleagues.com/players/p-ysd3ccsepok2",
+      "profileId": "927266"
     },
     {
       "id": "p-772matm5cwcz",
@@ -44,7 +46,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-772matm5cwcz"
+      "sourceUrl": "https://nexleagues.com/players/p-772matm5cwcz",
+      "profileId": "860664"
     },
     {
       "id": "p-sdrvydu2d2oh",
@@ -58,7 +61,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-sdrvydu2d2oh"
+      "sourceUrl": "https://nexleagues.com/players/p-sdrvydu2d2oh",
+      "profileId": "845171"
     },
     {
       "id": "p-ohzklif6fzft",
@@ -72,7 +76,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-ohzklif6fzft"
+      "sourceUrl": "https://nexleagues.com/players/p-ohzklif6fzft",
+      "profileId": "869642"
     },
     {
       "id": "p-mtvcurok2awq",
@@ -86,7 +91,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-mtvcurok2awq"
+      "sourceUrl": "https://nexleagues.com/players/p-mtvcurok2awq",
+      "profileId": "927200"
     },
     {
       "id": "p-jgadrf3mb4hc",
@@ -100,7 +106,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-jgadrf3mb4hc"
+      "sourceUrl": "https://nexleagues.com/players/p-jgadrf3mb4hc",
+      "profileId": "759748"
     },
     {
       "id": "p-pjar6nvy4gqa",
@@ -114,7 +121,23 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-pjar6nvy4gqa"
+      "sourceUrl": "https://nexleagues.com/players/p-pjar6nvy4gqa",
+      "profileId": "732864"
+    },
+    {
+      "id": "p-hvvh777t7w53",
+      "name": "dingolabingo22",
+      "position": "CM",
+      "apps": null,
+      "goals": null,
+      "assists": null,
+      "passes": null,
+      "tackles": null,
+      "manOfMatch": null,
+      "averageRating": null,
+      "partialStats": false,
+      "sourceUrl": "https://nexleagues.com/players/p-hvvh777t7w53",
+      "profileId": "939666"
     },
     {
       "id": "p-2bbzlpwjskox",
@@ -128,7 +151,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-2bbzlpwjskox"
+      "sourceUrl": "https://nexleagues.com/players/p-2bbzlpwjskox",
+      "profileId": "894619"
     },
     {
       "id": "p-grznlwtcmzv4",
@@ -142,7 +166,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-grznlwtcmzv4"
+      "sourceUrl": "https://nexleagues.com/players/p-grznlwtcmzv4",
+      "profileId": "869359"
     },
     {
       "id": "p-dv6xekr7t3eo",
@@ -156,7 +181,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-dv6xekr7t3eo"
+      "sourceUrl": "https://nexleagues.com/players/p-dv6xekr7t3eo",
+      "profileId": "829482"
     },
     {
       "id": "dodo",
@@ -170,7 +196,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/dodo"
+      "sourceUrl": "https://nexleagues.com/players/dodo",
+      "profileId": "868786"
     },
     {
       "id": "p-gt4hyz5xjdre",
@@ -184,7 +211,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-gt4hyz5xjdre"
+      "sourceUrl": "https://nexleagues.com/players/p-gt4hyz5xjdre",
+      "profileId": "836365"
     },
     {
       "id": "p-hdkvd77pm6zo",
@@ -198,7 +226,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-hdkvd77pm6zo"
+      "sourceUrl": "https://nexleagues.com/players/p-hdkvd77pm6zo",
+      "profileId": "946408"
     },
     {
       "id": "p-txf7yhvjjgc2",
@@ -212,7 +241,8 @@
       "manOfMatch": null,
       "averageRating": null,
       "partialStats": false,
-      "sourceUrl": "https://nexleagues.com/players/p-txf7yhvjjgc2"
+      "sourceUrl": "https://nexleagues.com/players/p-txf7yhvjjgc2",
+      "profileId": "951110"
     }
   ]
 }
