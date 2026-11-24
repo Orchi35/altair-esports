@@ -8,6 +8,6 @@ function Portrait({ image, name }) {
 }
 
 export function LeaguePlayerImage({ league, player }) {
-  const image = getLeaguePlayerImage(league, player.id);
+  const image = getLeaguePlayerImage(league, player.id, player.profileId);
   return image?.src ? <Portrait key={image.src} image={image} name={player.name}/> : null;
 }

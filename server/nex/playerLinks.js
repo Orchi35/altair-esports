@@ -1,4 +1,4 @@
-// Verified using public VPG platform IDs and Nex player platform IDs, 2026-11-21.
+// Verified using public VPG and Nex platform accounts.
 // Keep explicit provider IDs: display-name similarity must never join statistics.
 export const NEX_PLAYER_LINKS = Object.freeze({
   "732864": {slug:"p-pjar6nvy4gqa",handle:"ORC-HI"},
@@ -11,8 +11,10 @@ export const NEX_PLAYER_LINKS = Object.freeze({
   "869359": {slug:"p-grznlwtcmzv4",handle:"HzrQ10"},
   "869642": {slug:"p-ohzklif6fzft",handle:"LethalGullit"},
   "893787": {slug:"p-oysqpjhierno",handle:"GK-mcbbt"},
+  "894619": {slug:"p-2bbzlpwjskox",handle:"Cemuygun58"},
   "927200": {slug:"p-mtvcurok2awq",handle:"Swindler3r"},
   "927266": {slug:"p-ysd3ccsepok2",handle:"TRU-Ardas"},
+  "939666": {slug:"p-hvvh777t7w53",handle:"ormanker22"},
   "946408": {slug:"p-hdkvd77pm6zo",handle:"yigitinski"},
   "951110": {slug:"p-txf7yhvjjgc2",handle:"ardaygz10"},
 });

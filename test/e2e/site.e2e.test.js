@@ -77,14 +77,16 @@ test("legacy fixtures hash opens the localized Match Center fixtures tab", async
   assert.equal(await page.evaluate("document.querySelectorAll('.content-match-card').length > 0"), true);
 });
 
-test("VPG squad groups players and Nex shows its pending state", async () => {
+test("switching between VPG and Nex shows each provider's roster and profiles", async () => {
   await page.navigate(`${baseUrl}/tr/kadro`);
   await page.waitFor("document.querySelectorAll('.league-player').length === 5");
   assert.equal(await page.evaluate("document.querySelectorAll('.league-position-group').length"), 4);
   await page.click('.league-squad-tabs button:nth-child(2)');
-  await page.waitFor("Boolean(document.querySelector('.league-squad-state'))");
-  assert.equal(await page.evaluate("document.querySelectorAll('.league-player').length"), 0);
-  assert.match(await page.evaluate("document.querySelector('.league-squad-state').textContent"), /Lig henüz başlamadı/);
+  await page.waitFor("document.querySelector('.league-player a')?.href.startsWith('https://nexleagues.com/players/')");
+  assert.match(await page.evaluate("document.querySelector('.league-squad-heading').textContent"), /Nex Kadrosu/);
+  await page.click('.league-squad-tabs button:first-child');
+  await page.waitFor("document.querySelectorAll('.league-player').length === 5");
+  assert.match(await page.evaluate("document.querySelector('.league-player a').href"), /\/vpg-/);
 });
 
 test("league hub defaults to standings and match details survive a refresh", async () => {
@@ -106,7 +108,7 @@ test("league hub defaults to standings and match details survive a refresh", asy
   assert.match(await page.evaluate("document.querySelector('.nex-competition .is-altair').textContent"), /ALTAIR eSports/);
 });
 
-test("Nex filters ALTAIR fixtures, all teams, matchdays and results on desktop and mobile",async()=>{
+test("Nex shows only ALTAIR matches and filters by matchday on desktop and mobile",async()=>{
   await page.navigate(`${baseUrl}/tr/maclar#fixtures`);
   await page.waitFor("Boolean(document.querySelector('.hub-leagues'))");
   await page.click('.hub-leagues button:nth-child(2)');
@@ -114,8 +116,8 @@ test("Nex filters ALTAIR fixtures, all teams, matchdays and results on desktop a
   assert.ok(await page.evaluate("[...document.querySelectorAll('.nex-competition .vpg-match')].every(e=>e.textContent.includes('ALTAIR eSports'))"));
   await page.evaluate("const select=document.querySelector('.nex-filters select'); select.value='1'; select.dispatchEvent(new Event('change',{bubbles:true}));");
   await page.waitFor("document.querySelectorAll('.nex-competition .vpg-match').length === 1");
-  await page.click('.nex-team-toggle input');
-  await page.waitFor("document.querySelectorAll('.nex-competition .vpg-match').length === 8");
+  assert.equal(await page.evaluate("document.querySelector('.nex-filters input[type=checkbox]')"), null);
+  assert.match(await page.evaluate("document.querySelector('.nex-competition .vpg-match').textContent"), /ALTAIR eSports/);
   await page.setViewport(390,844);
   assert.equal(await page.evaluate("document.documentElement.scrollWidth <= innerWidth"),true);
   await page.click('.hub-tabs:not(.hub-competitions) button:nth-child(3)');

@@ -187,7 +187,8 @@ export async function startTestServer({builderHandler,penaltyHandler}={}) {
         response.writeHead(payload.statusCode,payload.headers).end(payload.body);return;
       }
       if (url.pathname === "/api/nex") {
-        const data=JSON.parse(await fs.readFile(path.join(projectDirectory,"public/data/nex-super-lig.json"),"utf8"));
+        const filename=url.searchParams.get("view")==="roster"?"nex-roster.json":"nex-super-lig.json";
+        const data=JSON.parse(await fs.readFile(path.join(projectDirectory,"public/data",filename),"utf8"));
         const payload=json({...data,status:"fresh"});
         response.writeHead(payload.statusCode,payload.headers).end(payload.body);
         return;

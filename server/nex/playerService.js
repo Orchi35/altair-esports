@@ -1,35 +1,18 @@
-import {readFile} from "node:fs/promises";
+import {createNexFeed,readNexPage} from "./liveSource.js";
 import {getNex} from "./service.js";
 import {NEX_PLAYER_LINKS} from "./playerLinks.js";
 import {NEX_ROSTER_SOURCE,parseNexRoster,parseNexPlayerMatches} from "./playerParser.js";
 
-async function readPage(url,fetchImpl) {
-  const response=await fetchImpl(url,{signal:AbortSignal.timeout(8000),headers:{Accept:"text/html"}});
-  if(!response.ok) throw new Error("Nex unavailable");
-  const html=await response.text();
-  if(html.length>4_000_000) throw new Error("Nex response too large");
-  return html;
-}
+const profileIds = new Map(Object.entries(NEX_PLAYER_LINKS).map(([id, link]) => [link.slug, id]));
 
-export function createNexRosterService({fetchImpl=fetch,now=Date.now,readSnapshot=()=>readFile(new URL("../../public/data/nex-roster.json",import.meta.url),"utf8")}={}) {
-  let cached=null,pending=null,lastAttempt=-Infinity;
-  return function load() {
-    if(pending) return pending;
-    if(cached && now()-lastAttempt<300000) return Promise.resolve(cached);
-    lastAttempt=now();
-    pending=(async()=>{
-      try {cached=parseNexRoster(await readPage(NEX_ROSTER_SOURCE,fetchImpl),new Date(now()).toISOString());}
-      catch {
-        if(!cached) try {
-          const saved=JSON.parse(await readSnapshot());
-          if(saved.sourceUrl===NEX_ROSTER_SOURCE && Array.isArray(saved.players) && saved.players.length && Number.isFinite(Date.parse(saved.updatedAt))) cached=saved;
-        } catch { /* Report unavailable when there is no verified snapshot. */ }
-        if(cached) cached={...cached,status:"stale"};
-      }
-      return cached || {status:"unavailable",players:[]};
-    })().finally(()=>{pending=null;});
-    return pending;
-  };
+export function createNexRosterService({fetchImpl=fetch,now=Date.now}={}) {
+  return createNexFeed("roster", async () => {
+    const html = await readNexPage(NEX_ROSTER_SOURCE, fetchImpl);
+    const roster = parseNexRoster(html, new Date(now()).toISOString());
+    return { ...roster, players: roster.players.map(player => ({
+      ...player, profileId: profileIds.get(player.id) ?? null,
+    })) };
+  }, { status:"unavailable", updatedAt:null, players:[] }, now);
 }
 export const getNexRoster=createNexRosterService();
 
@@ -45,7 +28,7 @@ export function createNexPlayerService({rosterLoader=getNexRoster,leagueLoader=g
     const task=(async()=>{
       try {
         const [roster,league,profile]=await Promise.all([
-          rosterLoader(),leagueLoader(),readPage(`https://nexleagues.com/players/${link.slug}?view=istatistikler`,fetchImpl).catch(()=>null),
+          rosterLoader(),leagueLoader(),readNexPage(`https://nexleagues.com/players/${link.slug}?view=istatistikler`,fetchImpl).catch(()=>null),
         ]);
         if(roster.status==="unavailable") throw new Error("Roster unavailable");
         const player=roster.players.find(row=>row.id===link.slug);

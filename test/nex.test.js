@@ -15,7 +15,7 @@ test("Nex public HTML preserves tied ranks, Turkish names, UTC times and schedul
   const data=parseNex(standings,fixtures);
   assert.equal(data.standings.length,16);
   assert.ok(data.standings.every(row=>row.position===1));
-  assert.equal(data.fixtures.length,8);
+  assert.equal(data.fixtures.length,1);
   const match=data.fixtures.find(row=>row.homeTeam.slug==="ALT");
   assert.equal(match.awayTeam.name,"BETON UNİTED");
   assert.equal(match.startsAt,"2026-11-24T19:00:00.000Z");
@@ -28,7 +28,7 @@ test("completed scores, including 0–0, move to results; live scores do not",()
   const completed=fixtures.replaceAll("Planlandı","Tamamlandı").replaceAll(">VS</span>","><span>0</span> – <span>0</span></span>");
   const data=parseNex(standings,completed);
   assert.equal(data.fixtures.length,0);
-  assert.equal(data.results.length,8);
+  assert.equal(data.results.length,1);
   assert.deepEqual(data.results[0].score,{home:0,away:0});
   assert.equal(parseNex(standings,completed.replaceAll("Tamamlandı","Canlı")).results.length,0);
 });
@@ -54,12 +54,31 @@ test("service deduplicates requests, caches for five minutes and preserves times
   assert.deepEqual(stale.standings,a.standings);
 });
 
-test("offline service labels the checked-in snapshot and missing snapshot returns unavailable",async()=>{
-  const snapshot=await readFile(new URL("../public/data/nex-super-lig.json",import.meta.url),"utf8");
-  const data=await createNexService({fetchImpl:offline,now,readSnapshot:async()=>snapshot})();
-  assert.equal(data.status,"stale");
-  assert.equal(data.fixtures.filter(m=>m.homeTeam.slug==="ALT"||m.awayTeam.slug==="ALT").length,30);
-  assert.equal((await createNexService({fetchImpl:offline,readSnapshot:offline})()).status,"unavailable");
+test("cold outage returns unavailable, then refresh picks up a newly completed fixture",async()=>{
+  let time=now(), healthy=false, played=false, requests=0;
+  const load=createNexService({now:()=>time,fetchImpl:async url=>{
+    requests++;
+    if(!healthy) return offline();
+    if(!played || !url.includes("?section")) return fetchImpl(url);
+    const html=fixtures.replace(/<li\b[^>]*>[\s\S]*?<\/li>/g,row=>
+      row.replaceAll("Planlandı","Tamamlandı").replace(">VS</span>",">2 – 1</span>")
+    );
+    return {ok:true,text:async()=>html};
+  }});
+  assert.equal((await load()).status,"unavailable");
+  healthy=true;
+  await load();
+  assert.equal(requests,2);
+  time+=60001;
+  const first=await load();
+  assert.equal(first.status,"fresh");
+  assert.equal(first.fixtures.length,1);
+  time+=300001;
+  played=true;
+  const next=await load();
+  assert.equal(next.fixtures.length,0);
+  assert.deepEqual(next.results[0].score,{home:2,away:1});
+  assert.notEqual(next.updatedAt,first.updatedAt);
 });
 
 test("API rejects writes and returns 503 only when no data is available",async()=>{
@@ -71,4 +90,14 @@ test("API rejects writes and returns 503 only when no data is available",async()
   assert.equal(status,503);
   await createNexHandler(async()=>({status:"stale"}))({method:"GET"},res);
   assert.equal(status,200);
+});
+
+test("roster view calls only its Nex loader and rejects unknown views",async()=>{
+  let status;
+  const res={setHeader(){},status(value){status=value;return this;},json(value){return value;}};
+  const roster={status:"fresh",players:[{name:"Test"}]};
+  const handler=createNexHandler(()=>assert.fail("unexpected league request"),async()=>roster);
+  assert.deepEqual(await handler({method:"GET",url:"/api/nex?view=roster"},res),roster);
+  await handler({method:"GET",url:"/api/nex?view=other"},res);
+  assert.equal(status,400);
 });

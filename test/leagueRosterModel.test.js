@@ -25,6 +25,8 @@ test("artwork is isolated by league and stable player ID", () => {
   try {
     assert.equal(getLeaguePlayerImage("vpg", "test").src, "/players/example.webp");
     assert.equal(getLeaguePlayerImage("nex", "test"), null);
+    assert.equal(getLeaguePlayerImage("nex", "nex-slug", "test"), LEAGUE_PLAYER_IMAGES.vpg.test);
+    assert.equal(getLeaguePlayerImage("nex", "nex-slug", "missing"), null);
     assert.equal(getLeaguePlayerImage("vpg", "missing"), null);
   } finally { delete LEAGUE_PLAYER_IMAGES.vpg.test; }
 });

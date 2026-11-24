@@ -69,11 +69,22 @@ test("missing Nex history is explicitly unavailable and a failed roster preserve
   assert.deepEqual(stale.player,data.player);
 });
 
-test("Nex roster outage uses labeled snapshot; absent data never fabricates player totals",async()=>{
-  const data=await createNexRosterService({fetchImpl:offline,readSnapshot:async()=>JSON.stringify(roster)})();
-  assert.equal(data.status,"stale");
-  assert.equal(data.players[0].apps,null);
-  assert.equal((await createNexRosterService({fetchImpl:offline,readSnapshot:offline})()).status,"unavailable");
+test("roster returns only live source data and retains the last successful response on outage",async()=>{
+  let time=0,online=false;
+  const load=createNexRosterService({now:()=>time,fetchImpl:async()=>{
+    if(!online) return offline();
+    return {ok:true,text:async()=>rosterHtml};
+  }});
+  assert.equal((await load()).status,"unavailable");
+  online=true; time+=60000;
+  const fresh=await load();
+  assert.equal(fresh.status,"fresh");
+  assert.equal(fresh.players.find(p=>p.id===slug).profileId,"732864");
+  online=false; time+=300000;
+  const stale=await load();
+  assert.equal(stale.status,"stale");
+  assert.equal(stale.updatedAt,fresh.updatedAt);
+  assert.deepEqual(stale.players,fresh.players);
 });
 
 test("Nex player API disallows writes and preserves explicit unlinked/unavailable responses",async()=>{

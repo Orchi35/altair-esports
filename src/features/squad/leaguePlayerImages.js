@@ -2,6 +2,8 @@
 // Example: vpg: { "732864": { src:"/players/vpg/732864.webp", objectPosition:"50% 20%" } }
 export const LEAGUE_PLAYER_IMAGES = {
   vpg: {
+    "939666": { src: "/players/vpg/939666.png", objectPosition: "50% 0%" }, // dingolobingo
+    "894619": { src: "/players/vpg/894619.png", objectPosition: "50% 0%" }, // Cemuygun58
     "927200": { src: "/players/vpg/927200.png", objectPosition: "50% 0%" }, // Swindler3r
     "916844": { src: "/players/vpg/916844.png", objectPosition: "50% 0%" }, // GocebeEno
     "951110": { src: "/players/vpg/951110.png", objectPosition: "50% 0%" }, // ardaygz1o
@@ -24,6 +26,10 @@ export const LEAGUE_PLAYER_IMAGES = {
   nex: {},
 };
 
-export function getLeaguePlayerImage(league, playerId) {
-  return LEAGUE_PLAYER_IMAGES[league]?.[String(playerId)] || null;
+export function getLeaguePlayerImage(league, playerId, profileId) {
+  const portrait = LEAGUE_PLAYER_IMAGES[league]?.[String(playerId)];
+  if (!portrait && league === "nex" && profileId) {
+    return LEAGUE_PLAYER_IMAGES.vpg[profileId] ?? null;
+  }
+  return portrait ?? null;
 }

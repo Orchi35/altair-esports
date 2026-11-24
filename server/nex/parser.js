@@ -60,7 +60,9 @@ export function parseMatches(html, standings) {
 
 export function parseNex(standingsHtml, fixturesHtml, updatedAt = new Date().toISOString()) {
   const standings = parseStandings(standingsHtml);
-  const matches = parseMatches(fixturesHtml, standings);
+  const matches = parseMatches(fixturesHtml, standings).filter(match =>
+    match.homeTeam.slug === "ALT" || match.awayTeam.slug === "ALT"
+  );
   return {status:"fresh",updatedAt,sourceUrl:NEX_SOURCE,season:text(standingsHtml.match(/class="nexl-view-head__eyebrow"[^>]*>([\s\S]*?)<\/p>/)?.[1] || ""),standings,
     fixtures:matches.filter(match=>!match.score).sort((a,b)=>(a.startsAt || "9999").localeCompare(b.startsAt || "9999") || a.round-b.round),
     results:matches.filter(match=>match.score).sort((a,b)=>(b.startsAt || "").localeCompare(a.startsAt || "") || b.round-a.round)};
