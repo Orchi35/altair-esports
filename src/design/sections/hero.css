@@ -514,3 +514,11 @@
 @media (forced-colors:active){
   .site .brand-hero .brand-motto-line,.site .brand-hero .brand-motto strong{background:none;color:CanvasText;-webkit-text-fill-color:CanvasText}
 }
+/* Fix: the top-lit gradient is painted inside each line's box, so glyphs that ran past the box
+   (wide screens: line 2 was 680px in a 644px column at 1920px) became invisible. On tablet and
+   desktop the motto now sizes itself to its own column (container units), and each line's box is
+   as wide as its text, so the gradient always covers every glyph. */
+@media(min-width:681px){
+  .site .brand-hero .brand-motto{container-type:inline-size}
+  .site .brand-hero .brand-motto-line{width:max-content;max-width:none;font-size:min(1em,8.9cqi)}
+}
