@@ -1,3 +1,4 @@
+@layer legacy{
 .site .league-match-hub{--f-body:'Barlow',sans-serif;--f-display:'Barlow',sans-serif;--f-narrow:'Barlow',sans-serif;font-family:var(--f-body)}
 .hub-leagues{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:28px}
 .hub-leagues button{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:26px;border:1px solid #39506a;border-radius:16px;background:linear-gradient(125deg,#16283d,#0d1929);color:#cee0f4;cursor:pointer;text-align:left}
@@ -14,3 +15,17 @@
 .vpg-detail-stats{margin-top:32px}.vpg-detail-stats h2{font:700 24px/1.4 var(--f-body);margin:0 0 8px}.vpg-detail-stats p{color:#b9cbe0;margin-bottom:18px}.vpg-detail-stats table{min-width:780px}
 .vpg-detail-status{color:#bbcee2;margin:20px 0}.vpg-detail-links{display:flex;gap:20px;flex-wrap:wrap;margin-top:28px}.vpg-detail-links a{color:#bbdaf6}
 @media(max-width:600px){.hub-leagues{gap:12px}.hub-leagues button{padding:18px}.hub-leagues strong{font-size:21px}.hub-match-tools,.hub-archive{align-items:stretch;flex-direction:column}.site .league-match-hub .content-page-container{padding-inline:16px}}
+
+/* Filters take less room on phones so the data starts sooner */
+@media(max-width:600px){
+  .hub-leagues{margin-bottom:16px;gap:8px}
+  .hub-leagues button{gap:4px;padding:12px 14px;border-radius:12px}
+  .hub-leagues span{font-size:12px;letter-spacing:.04em}
+  .hub-leagues strong{font-size:17px}
+  .hub-tabs{flex-wrap:nowrap;gap:6px;padding-bottom:14px;margin-bottom:14px}
+  .hub-tabs button{flex:1 1 0;min-height:44px;padding:10px 8px;font-size:15px;white-space:nowrap}
+  .hub-tabs.hub-competitions button{flex:0 1 auto;padding-inline:12px}
+  .hub-match-tools{gap:10px;margin-bottom:14px}
+  .hub-match-tools h2{font-size:22px}
+}
+}

@@ -1,3 +1,4 @@
+@layer legacy{
 .site .vpg-player-profile{font-family:'Barlow',sans-serif;--f-display:'Barlow',sans-serif;--f-body:'Barlow',sans-serif}
 .site .vpg-player-profile .content-page-header h1{font-family:inherit;font-size:clamp(34px,5vw,64px);letter-spacing:-.02em;text-transform:none;overflow-wrap:anywhere}
 .vpg-profile-identity{display:grid;grid-template-columns:minmax(200px,.65fr) minmax(0,1.35fr);gap:32px;padding:28px;border:1px solid #3a536e;border-radius:20px;background:linear-gradient(125deg,#1b3047,#0d1929);box-shadow:0 20px 45px #0003}
@@ -11,3 +12,4 @@
 .player-league-switch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:32px}.player-league-switch button{display:flex;flex-direction:column;gap:8px;min-height:92px;text-align:left;padding:20px;border:1px solid #496580;border-radius:14px;background:#101e2e;color:#b5cce2;cursor:pointer;font:inherit}.player-league-switch button[aria-pressed=true]{background:#284761;border-color:#b4dcfa;box-shadow:inset 0 0 0 1px #b4dcfa;color:#f0f7ff}.player-league-switch span{font-size:11px;letter-spacing:.08em}.player-league-switch strong{font-size:21px}.player-league-switch button:focus-visible{outline:3px solid #b4dcfa;outline-offset:4px}.player-league-account{display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap;color:#c9dff2}.player-league-account a{white-space:nowrap}.nex-player-performance .vpg-match-teams strong{font-size:15px}
 @media(max-width:750px){.vpg-profile-identity{grid-template-columns:1fr;padding:20px}.vpg-profile-art{max-width:300px;width:100%;margin-inline:auto}.vpg-profile-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.site .vpg-player-profile .content-page-container{padding-inline:16px}}
 @media(max-width:400px){.vpg-profile-facts{grid-template-columns:1fr}.vpg-profile-metrics>div{padding:14px}}
+}

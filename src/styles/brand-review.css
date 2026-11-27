@@ -1,3 +1,4 @@
+@layer legacy{
 /* ALTAIR: navy, ice and silver. Kept separate for step-by-step design reviews. */
 .brand-hero .hero-match-card {
   position:relative; isolation:isolate; overflow:hidden; padding:24px 26px;
@@ -240,3 +241,4 @@
 .site .brand-hero .hero-countdown-unit small{font:500 12px/1.5 'Barlow',system-ui,sans-serif;letter-spacing:0;color:#c0d2e9;margin-top:7px}
 .site .brand-hero .hero-ctas .btn{font:500 14px/1.4 'Barlow',system-ui,sans-serif;letter-spacing:.015em;min-height:50px}
 @media(max-width:600px){.site .brand-hero .hero-match-meta{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px}.site .brand-hero .hero-match-meta>div:last-child{grid-column:1/-1}.site .brand-hero .hero-match-meta dd{font-size:16px}.site .brand-hero .hero-countdown-units{gap:8px}.site .brand-hero .hero-countdown-unit{min-width:0}.site .brand-hero .hero-countdown-unit small{font-size:11px}}
+}

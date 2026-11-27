@@ -1,3 +1,4 @@
+@layer legacy{
 /* SQUAD — PROFESSIONAL TEAM CENTRE */
 .squad{
   background:
@@ -369,4 +370,5 @@
   .p-ign{font-size:27px}
   .squad-refresh{margin-left:auto}
   .squad-refresh span{display:none}
+}
 }

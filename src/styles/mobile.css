@@ -1,3 +1,4 @@
+@layer legacy{
 /* ─────────────────────────────────────────────────────────────
    MOBILE INTEGRATION — PHONE-FIRST LAYOUT
    Final overrides live here so later desktop refinements cannot
@@ -277,4 +278,5 @@
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   html{scroll-behavior:auto}
+}
 }

@@ -1,0 +1,353 @@
+/*
+ * ALTAIR · Atlas design language
+ * ------------------------------------------------------------------
+ * Grounded in the club's name: Altair is the brightest star of Aquila.
+ *  - Night navy ground, a faint coordinate grid, constellation nodes as
+ *    structural markers.
+ *  - Ice blue is the interactive colour (links, active states, primary
+ *    actions).
+ *  - ALTAIR blue (the bright blue of the crest) is reserved for ALTAIR
+ *    itself: our row, our name, our score. Ice blue stays for links and
+ *    controls; ALTAIR blue is deeper and more saturated so the two never
+ *    read as the same thing.
+ *  - One type family (Archivo): wide cut for display, normal cut for
+ *    reading, tabular figures for every number.
+ *
+ * Legacy stylesheets live in `@layer legacy`; this file is unlayered, so
+ * it wins wherever it speaks without specificity fights. Element defaults
+ * go in `@layer atlas-base`, which sits *below* legacy so older component
+ * rules (Builder, Penalty Arena) keep precedence over bare element styles.
+ */
+
+/* ---------- Tokens ---------- */
+:root{
+  --a-night:#050c1b;
+  --a-deep:#071224;
+  --a-panel:#0c1a31;
+  --a-panel-2:#11223f;
+  --a-panel-3:#17305a;
+  --a-rule:rgba(160,196,240,.14);
+  --a-rule-2:rgba(160,196,240,.26);
+  --a-text:#e9eff7;
+  --a-text-2:#b8c6d8;
+  --a-muted:#8a9bb2;
+  --a-ice:#8fc4ff;
+  --a-ice-2:#5aa9ff;
+  --a-ice-soft:rgba(143,196,255,.12);
+  --a-star:#4ea8ff;            /* ALTAIR blue: our own data only (token name kept for compatibility) */
+  --a-star-soft:rgba(78,168,255,.13);
+  --a-win:#5fd4a0;
+  --a-loss:#f08a8a;
+  --a-draw:#a9b6c6;
+
+  --a-font:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --a-wide:118%;
+  --a-r1:4px;
+  --a-r2:10px;
+  --a-r3:18px;
+  --a-max:1200px;
+  --a-gutter:clamp(16px,4vw,48px);
+  --a-section:clamp(64px,9vw,120px);
+  --a-nav-h:72px;
+
+  /* Legacy tokens re-pointed so untouched components inherit the new palette and type. */
+  --bg:var(--a-night);
+  --surface-0:var(--a-deep);
+  --surface-1:var(--a-panel);
+  --surface-2:var(--a-panel-2);
+  --surface-3:var(--a-panel-3);
+  --line:var(--a-rule);
+  --line-2:var(--a-rule-2);
+  --text:var(--a-text);
+  --text-2:var(--a-text-2);
+  --muted:var(--a-muted);
+  --cyan:var(--a-ice);
+  --cyan-2:#c3e0ff;
+  --cyan-soft:var(--a-ice-soft);
+  --cyan-edge:var(--a-rule-2);
+  --f-display:var(--a-font);
+  --f-narrow:var(--a-font);
+  --f-body:var(--a-font);
+  --f-mono:var(--a-font);
+  --win:var(--a-win);
+  --loss:var(--a-loss);
+  --draw:var(--a-draw);
+  --gradient-accent-line:linear-gradient(90deg,var(--a-ice),transparent);
+  color-scheme:dark;
+}
+
+/* ---------- Element defaults (below legacy) ---------- */
+@layer atlas-base{
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{font-family:var(--a-font);font-size:16px;line-height:1.6;color:var(--a-text)}
+  h1,h2,h3,h4,h5,h6{text-wrap:balance}
+  p{text-wrap:pretty}
+}
+
+/* ---------- Page ground ----------
+ * Premium night ground, no grid. The crest is the site's light source, so the page reads like a
+ * stadium at night: one continuous sky that runs from midnight blue at the top through a faint
+ * indigo sheen into deep navy, broad floodlight pools falling alternately from the left and right
+ * edge every ~1100px as you scroll (rhythm between sections without boxes), a vignette that pulls
+ * the eye to the centre column (.site::before) and a fine grain (.site::after) so large dark areas
+ * never look flat. Atmosphere only; nothing here carries information.
+ */
+html body{
+  background-color:#050b19;
+  background-image:
+    radial-gradient(ellipse 78% 660px at -6% 640px,rgba(44,110,218,.26),rgba(30,80,170,.09) 42%,transparent 70%),
+    radial-gradient(ellipse 78% 660px at 106% 1720px,rgba(72,86,214,.22),rgba(44,60,170,.08) 42%,transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% -12%,rgba(28,68,148,.55),transparent 66%),
+    linear-gradient(168deg,#0a1b40 0%,#071127 28%,#050b1b 52%,#080b22 76%,#03070f 100%);
+  background-size:100% 2200px,100% 2200px,auto,auto;
+  background-repeat:repeat-y,repeat-y,no-repeat,no-repeat;
+  background-position:0 760px,0 760px,0 0,0 0;
+  background-attachment:scroll,scroll,fixed,fixed;
+  font-family:var(--a-font);
+  color:var(--a-text);
+  letter-spacing:0;
+}
+.site::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size:160px 160px;opacity:.06;
+}
+@media (forced-colors:active){.site::after{display:none}}
+.site{background:none}
+/* A legacy rule painted <main> a flat #080f1c, which hid the whole page ground. */
+.site main,.site #main-content{background:transparent}
+.site::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 125% 95% at 50% 42%,transparent 52%,rgba(1,3,10,.55) 100%);
+  -webkit-mask-image:none;mask-image:none;
+}
+::selection{background:rgba(143,196,255,.3);color:#fff}
+:focus-visible{outline:2px solid var(--a-ice);outline-offset:3px}
+.site .container,.site .content-page-container{width:min(100%,calc(var(--a-max) + 2 * var(--a-gutter)));max-width:none;margin-inline:auto;padding-inline:var(--a-gutter)}
+.site .section{padding-block:var(--a-section);border:0;background:none}
+.site .section::before,.site .section::after{display:none}
+
+/* ---------- Type roles ---------- */
+.site .sec-title,
+.site .content-page-header h1,
+.site .jersey-showcase-title,
+.site .mc-upcoming .sec-title,
+.site .alliance-home-copy h2,
+.site .follow-studio h2,
+.site .not-found h1{
+  margin:0;
+  font-family:var(--a-font);
+  font-stretch:var(--a-wide);
+  font-weight:700;
+  font-size:clamp(34px,4.4vw,58px);
+  line-height:1.02;
+  letter-spacing:-.015em;
+  text-transform:none;
+  color:var(--a-text);
+  text-shadow:none;
+  background:none;
+  -webkit-text-fill-color:currentColor;
+}
+.site .sec-title .accent,
+.site .content-page-header h1 .accent,
+.site .jersey-showcase-title span,
+.site .follow-studio h2 span,
+.site .alliance-home-copy h2 span{color:inherit;background:none;-webkit-text-fill-color:currentColor}
+
+/* Section marker: a constellation node and segment, then a plain label. */
+.site .sec-eyebrow,
+.site .content-page-eyebrow,
+.site .alliance-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  margin:0 0 18px;padding:0;border:0;background:none;
+  font:500 13px/1.4 var(--a-font);letter-spacing:.06em;
+  color:var(--a-ice);text-transform:none;
+}
+.site .sec-eyebrow::before,
+.site .content-page-eyebrow::before,
+.site .alliance-eyebrow::before{
+  content:"";flex:none;width:34px;height:7px;margin:0;border:0;
+  background:
+    radial-gradient(circle at 3.5px 3.5px,var(--a-ice) 2.5px,transparent 3px),
+    linear-gradient(90deg,var(--a-rule-2),var(--a-rule-2)) 8px 3px/26px 1px no-repeat;
+  box-shadow:none;
+}
+.site .sec-eyebrow::after{display:none}
+.site .sec-sub,
+.site .content-page-header p,
+.site .jersey-showcase-intro p{max-width:62ch;margin-top:16px;color:var(--a-text-2);font:400 17px/1.6 var(--a-font);letter-spacing:0;text-transform:none}
+.site .sec-hdr{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(28px,4vw,48px);padding:0;border:0}
+.site .sec-hdr-left{max-width:720px}
+
+/* ---------- Buttons and links ---------- */
+.site .btn,
+.site .sec-link,
+.site .roster-view-all,
+.site .alliance-button,
+.site .content-more,
+.site .hub-archive button,
+.site .follow-official,
+.site .hero-fixture-link{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:46px;padding:11px 20px;
+  border:1px solid var(--a-rule-2);border-radius:var(--a-r1);
+  background:transparent;color:var(--a-text);
+  font:600 15px/1.2 var(--a-font);letter-spacing:0;text-transform:none;text-decoration:none;white-space:nowrap;
+  box-shadow:none;cursor:pointer;
+  transition:background-color .18s ease,border-color .18s ease,color .18s ease,transform .18s ease;
+}
+.site .btn:hover,
+.site .sec-link:hover,
+.site .roster-view-all:hover,
+.site .content-more:hover,
+.site .hub-archive button:hover,
+.site .follow-official:hover,
+.site .hero-fixture-link:hover{border-color:var(--a-ice);color:#fff;background:var(--a-ice-soft);transform:none;box-shadow:none}
+.site .btn-primary,
+.site .alliance-button,
+.site .roster-view-all{border-color:var(--a-ice-2);background:var(--a-ice-2);color:#031024}
+.site .btn-primary:hover,
+.site .alliance-button:hover,
+.site .roster-view-all:hover{border-color:#8cc6ff;background:#8cc6ff;color:#031024}
+.site .btn-arrow,.site .sec-link-arrow,.site .roster-view-all span{display:none}
+.site .roster-view-all{margin-top:28px;width:auto;justify-content:center}
+.site a{text-underline-offset:4px}
+
+/* ---------- Navigation ---------- */
+.site .nav,.site .nav.scrolled{
+  height:var(--a-nav-h);padding-inline:var(--a-gutter);
+  border-bottom:1px solid transparent;
+  background:linear-gradient(180deg,#050c1bcc,#050c1b00);
+  box-shadow:none;backdrop-filter:none;
+  transition:background-color .2s ease,border-color .2s ease;
+}
+.site .nav.scrolled{background:#050c1bE6;border-bottom-color:var(--a-rule);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.site .nav .nav-logo{gap:10px}
+.site .nav .nav-logo-img{width:38px;height:38px}
+.site .nav .nav-altair-wordmark{width:118px}
+.site .nav .nav-links{gap:4px}
+.site .nav .nav-links>li>a,
+.site .nav .nav-club>summary{
+  position:relative;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:10px 12px;
+  border:0;border-radius:var(--a-r1);background:none;
+  color:var(--a-text-2);font:500 15px/1 var(--a-font);letter-spacing:0;text-transform:none;
+}
+.site .nav .nav-links>li>a:hover,.site .nav .nav-club>summary:hover{color:#fff;background:var(--a-ice-soft)}
+.site .nav .nav-links>li>a::after,.site .nav .nav-club>summary::after{
+  content:"";position:absolute;left:50%;bottom:4px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;
+  background:var(--a-ice);opacity:0;transform:scale(.4);transition:opacity .18s ease,transform .18s ease;
+}
+.site .nav .nav-links>li>a.active,.site .nav .nav-club>summary.active{color:#fff;background:none}
+.site .nav .nav-links>li>a.active::after,.site .nav .nav-club>summary.active::after{opacity:1;transform:none;box-shadow:0 0 8px var(--a-ice)}
+.site .nav .nav-club-panel{padding:8px;border:1px solid var(--a-rule-2);border-radius:var(--a-r2);background:#0a1730f5;box-shadow:0 24px 50px #0008}
+.site .nav .nav-club-panel a{padding:11px 12px;border-radius:var(--a-r1);font:500 15px/1.3 var(--a-font);color:var(--a-text-2)}
+.site .nav .nav-club-panel a:hover,.site .nav .nav-club-panel a:focus-visible,.site .nav .nav-club-panel a[aria-current]{background:var(--a-ice-soft);color:#fff}
+.site .nav .nav-cta{min-height:40px;padding:9px 16px;border:1px solid var(--a-ice-2);border-radius:var(--a-r1);background:var(--a-ice-2);color:#031024;font:600 14px/1 var(--a-font);letter-spacing:0;text-transform:none;box-shadow:none}
+.site .nav .nav-cta:hover{background:#8cc6ff;border-color:#8cc6ff;transform:none}
+.site .nav .nav-lang>.nav-burger{min-width:0;min-height:40px;padding:8px 12px;border:1px solid var(--a-rule-2);border-radius:var(--a-r1);background:transparent;box-shadow:none}
+.site .nav .nav-lang>.nav-burger:hover,.site .nav .nav-lang>.nav-burger.active{border-color:var(--a-ice);background:var(--a-ice-soft)}
+.site .nav .nav-lang-trigger-icon{font:600 13px/1 var(--a-font);color:var(--a-text)}
+.site .nav .nav-lang-panel{border-color:var(--a-rule-2);border-radius:var(--a-r2);background:#0a1730f7}
+.site .nav .nav-lang-option{min-height:0;border-color:var(--a-rule);border-radius:var(--a-r1);background:transparent}
+.site .nav .nav-lang-option.active{border-color:var(--a-ice);background:var(--a-ice-soft)}
+.site .nav .nav-menu-toggle{border:1px solid var(--a-rule-2);border-radius:var(--a-r1);background:transparent}
+.site .nav .nav-mobile-panel{border-color:var(--a-rule-2);background:#071224f8}
+.site .nav .nav-mobile-links a,.site .nav .nav-mobile-links summary{font:500 18px/1.3 var(--a-font);letter-spacing:0;text-transform:none;color:var(--a-text)}
+.site .nav .nav-mobile-primary{border-radius:var(--a-r1);background:var(--a-ice-2);color:#031024}
+
+/* ---------- Footer ---------- */
+.site .footer{position:relative;padding:72px 0 28px;border-top:1px solid var(--a-rule);background:var(--a-deep)}
+.site .footer::before{content:"";position:absolute;top:-4px;left:var(--a-gutter);width:7px;height:7px;border-radius:50%;background:var(--a-star);box-shadow:0 0 12px var(--a-star)}
+.site .footer-top{gap:40px}
+.site .footer-brand-name{font:700 22px/1.2 var(--a-font);font-stretch:var(--a-wide);letter-spacing:0;text-transform:none;color:var(--a-text)}
+.site .footer-bio{max-width:38ch;color:var(--a-text-2);font:400 15px/1.6 var(--a-font)}
+.site .footer-col-title{margin-bottom:14px;color:var(--a-ice);font:500 13px/1.4 var(--a-font);letter-spacing:.06em;text-transform:none}
+.site .footer-links a{color:var(--a-text-2);font:400 15px/1.5 var(--a-font);text-decoration:none}
+.site .footer-links a:hover{color:#fff;transform:none}
+.site .footer-bottom{margin-top:56px;padding-top:20px;border-top:1px solid var(--a-rule);color:var(--a-muted);font:400 13px/1.5 var(--a-font);letter-spacing:0;text-transform:none}
+.site .footer-legal a{color:var(--a-text-2)}
+
+/* ---------- Shared surfaces ---------- */
+.site .quick-status-card,
+.site .honour-card,
+.site .identity-value,
+.site .identity-statement,
+.site .identity-foundation,
+.site .league-player,
+.site .vpg-match,
+.site .content-match-card,
+.site .mc-upcoming-empty,
+.site .content-state,
+.site .alliance-home-layout,
+.site .follow-card{
+  border:1px solid var(--a-rule);
+  border-radius:var(--a-r2);
+  background:var(--a-panel);
+  box-shadow:none;
+}
+.site .content-match-card::before,.site .content-match-card::after,
+.site .quick-status-card::before,.site .quick-status-card::after,
+.site .honour-card::before,.site .honour-card::after{display:none}
+
+/* Segmented controls and tabs */
+.site .mc-season-picker,
+.site .mc-league-picker,
+.site .mc-upcoming-views,
+.site .hub-tabs,
+.site .league-squad-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 20px;padding:0;border:0;background:none}
+.site .mc-season-picker button,
+.site .mc-league-picker button,
+.site .mc-upcoming-views button,
+.site .hub-tabs button,
+.site .league-squad-tabs button,
+.site .jersey-view-picker button{
+  flex:0 0 auto;min-height:42px;padding:9px 16px;
+  border:1px solid var(--a-rule-2);border-radius:var(--a-r1);
+  background:transparent;color:var(--a-text-2);
+  font:500 15px/1.2 var(--a-font);letter-spacing:0;text-transform:none;box-shadow:none;cursor:pointer;
+  transition:background-color .18s ease,border-color .18s ease,color .18s ease;
+}
+.site .mc-season-picker button:hover,
+.site .mc-league-picker button:hover,
+.site .mc-upcoming-views button:hover,
+.site .hub-tabs button:hover,
+.site .league-squad-tabs button:hover,
+.site .jersey-view-picker button:hover{border-color:var(--a-ice);color:#fff}
+.site .mc-season-picker button[aria-pressed="true"],
+.site .mc-league-picker button[aria-pressed="true"],
+.site .mc-upcoming-views button[aria-pressed="true"],
+.site .hub-tabs button[aria-pressed="true"],
+.site .league-squad-tabs button[aria-pressed="true"],
+.site .jersey-view-picker button[aria-pressed="true"]{border-color:var(--a-ice);background:var(--a-ice-soft);color:#fff;box-shadow:inset 0 -2px 0 var(--a-ice)}
+.site .mc-league-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-width:560px}
+.site .mc-league-picker button{min-height:52px;font-size:16px;font-weight:600}
+
+/* ---------- Tables ---------- */
+.site .vpg-table-scroll{border:1px solid var(--a-rule);border-radius:var(--a-r2);background:var(--a-panel)}
+.site .vpg-table{background:transparent;font:400 15px/1.5 var(--a-font);font-variant-numeric:tabular-nums}
+.site .vpg-table th,.site .vpg-table td{border-bottom:1px solid var(--a-rule);color:var(--a-text-2)}
+.site .vpg-table thead th,.site .vpg-standings .vpg-table thead th{background:var(--a-panel-2);color:var(--a-muted);font:500 13px/1.3 var(--a-font);letter-spacing:.04em;box-shadow:inset 0 -1px 0 var(--a-rule-2)}
+.site .vpg-table tbody tr:hover{background:#ffffff06}
+.site .vpg-table .col-team{color:var(--a-text);font-weight:500}
+.site .vpg-table .col-points{color:var(--a-text)}
+.site .vpg-table tbody tr:last-child>*{border-bottom:0}
+.site .vpg-table .is-altair{background:linear-gradient(90deg,var(--a-star-soft),transparent 75%);box-shadow:inset 3px 0 0 var(--a-star)}
+.site .vpg-table .is-altair td,.site .vpg-table .is-altair th{color:#fff;border-bottom-color:rgba(78,168,255,.22)}
+.site .vpg-table .is-altair .col-rank,.site .vpg-table .is-altair .col-points strong{color:var(--a-star)}
+.site .vpg-table .is-altair .col-team::before{content:"✦";margin-right:8px;color:var(--a-star);font-size:12px}
+.site .vpg-notice{color:var(--a-muted);font:400 14px/1.6 var(--a-font)}
+.site .vpg-source{color:var(--a-ice)}
+.site .vpg-columns-toggle{border-radius:var(--a-r1);border-color:var(--a-rule-2);background:transparent;font-family:var(--a-font)}
+
+/* ALTAIR is always the ALTAIR-blue star. */
+.site .is-altair b,.site .vpg-match-teams .is-altair{color:var(--a-star)}
+
+/* ---------- Result signals ---------- */
+.site .match-outcome{border-radius:var(--a-r1);font-family:var(--a-font)}
+.site .match-outcome--win{--outcome-text:var(--a-win)}
+.site .match-outcome--loss{--outcome-text:var(--a-loss)}
+
+/* ---------- Motion respect ---------- */
+@media (prefers-reduced-motion:reduce){
+  .site .btn,.site .nav,.site .nav .nav-links>li>a::after{transition:none}
+}

@@ -1,3 +1,4 @@
+@layer legacy{
 /* MATCH CENTER — RESULTS & FIXTURES */
 #matches.section,
 #fixtures.section{
@@ -728,4 +729,5 @@
 @media (prefers-reduced-motion:reduce){
   .mc-panel-skeleton span{animation:none}
   .mc-tabs button::after{transition:none}
+}
 }

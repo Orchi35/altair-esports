@@ -12,8 +12,9 @@ import {
   formatMatchTime,
   formatTimezoneLabel,
 } from "../../utils/dateTime.js";
-import { FixtureCard } from "../fixtures/FixtureCard.jsx";
-import { ResultCard } from "../results/ResultCard.jsx";
+import { getRoutePath } from "../../app/routes.js";
+import { createMatchSlug } from "../../content/matches/index.js";
+import { MatchList } from "./MatchList.jsx";
 import { MatchDataState } from "./MatchDataState.jsx";
 import { PlayoffBracket } from "./PlayoffBracket.jsx";
 import { UpcomingSeason } from "./UpcomingSeason.jsx";
@@ -146,32 +147,29 @@ function NextMatchCard({ lang, copy, locale, matchCenter, refetch }) {
   );
 }
 
-function ResultsPanel({ lang, copy, matchCenter, refetch }) {
+function toArchiveRow(match, lang, locale) {
+  return {
+    ...match,
+    score:match.status === "finished" && match.score ? match.score : null,
+    competition:localizeMatchCompetition(match, lang),
+    href:getRoutePath("match-detail", locale, createMatchSlug(match)),
+  };
+}
+
+function ResultsPanel({ lang, locale, matchCenter, refetch }) {
   if (matchCenter.meta.status === "loading") return <MatchPanelSkeleton/>;
   if (!matchCenter.recentResults.length) {
     return <EmptyPanel kind="results" lang={lang} status={matchCenter.meta.status} refetch={refetch}/>;
   }
-  return (
-    <div className="results-grid mc-results-list">
-      {matchCenter.recentResults.map((match) => <ResultCard key={match.id} match={match} lang={lang} copy={copy}/>) }
-    </div>
-  );
+  return <MatchList matches={matchCenter.recentResults.map((match) => toArchiveRow(match, lang, locale))} lang={lang} mode="results"/>;
 }
 
-function FixturesPanel({ lang, copy, matchCenter, refetch }) {
+function FixturesPanel({ lang, locale, matchCenter, refetch }) {
   if (matchCenter.meta.status === "loading") return <MatchPanelSkeleton/>;
   if (!matchCenter.seasonMatches.length) {
     return <EmptyPanel kind="fixtures" lang={lang} status={matchCenter.meta.status} refetch={refetch}/>;
   }
-  return (
-    <div className="fix-grid mc-fixtures-list">
-      {matchCenter.seasonMatches.map((match) => (
-        match.status === "finished" && match.score
-          ? <ResultCard key={match.id} match={match} lang={lang} copy={copy}/>
-          : <FixtureCard key={match.id} match={match} lang={lang} copy={copy}/>
-      ))}
-    </div>
-  );
+  return <MatchList matches={matchCenter.seasonMatches.map((match) => toArchiveRow(match, lang, locale))} lang={lang} mode="fixtures" flagNext={false}/>;
 }
 
 export function StandingsPanel({ lang, copy, matchCenter, refetch }) {
@@ -232,6 +230,7 @@ export function MatchCenter({ lang, copy, locale, matchCenter, refetch, retryWai
   const [activeTab, setActiveTab] = useState(initialTab);
   const [seasonView, setSeasonView] = useState(typeof window !== "undefined" && getMatchCenterTabFromHash(window.location.hash) ? "archive" : "upcoming");
   const tabRefs = useRef({});
+  const tr = lang === "TR";
   const status = matchCenter.meta.status;
   const updated = formatLastUpdated(matchCenter.meta.lastSuccessfulAt, lang);
   useAnalyticsViewEvent(
@@ -279,31 +278,33 @@ export function MatchCenter({ lang, copy, locale, matchCenter, refetch, retryWai
 
   const panels = {
     playoffs:<PlayoffBracket lang={lang} copy={copy.matchCenter} playoffs={matchCenter.playoffs} status={matchCenter.meta.status} refetch={handleRetry}/>,
-    results:<ResultsPanel lang={lang} copy={copy} matchCenter={matchCenter} refetch={handleRetry}/>,
-    fixtures:<FixturesPanel lang={lang} copy={copy} matchCenter={matchCenter} refetch={handleRetry}/>,
+    results:<ResultsPanel lang={lang} locale={locale} matchCenter={matchCenter} refetch={handleRetry}/>,
+    fixtures:<FixturesPanel lang={lang} locale={locale} matchCenter={matchCenter} refetch={handleRetry}/>,
     standings:<StandingsPanel lang={lang} copy={copy} matchCenter={matchCenter} refetch={handleRetry}/>,
   };
 
   return (
-    <section className="section match-center" id="match-center" aria-label={copy.matchCenter.title.join(" ")} aria-busy={seasonView === "archive" && status === "loading"}>
+    <section className="section match-center" id="match-center" aria-labelledby="mc-home-title" aria-busy={seasonView === "archive" && status === "loading"}>
       <span className="legacy-hash-anchor" id="matches" aria-hidden="true"/>
       <span className="legacy-hash-anchor" id="results" aria-hidden="true"/>
       <span className="legacy-hash-anchor" id="fixtures" aria-hidden="true"/>
       <span className="legacy-hash-anchor" id="standings" aria-hidden="true"/>
       <span className="legacy-hash-anchor" id="playoffs" aria-hidden="true"/>
       <div className="container">
-        <div className="mc-season-picker" aria-label={lang === "TR" ? "Sezon seçimi" : "Season selection"}>
-          <button type="button" aria-pressed={seasonView === "upcoming"} onClick={() => setSeasonView("upcoming")}>{lang === "TR" ? "Yeni Sezon" : "New Season"}</button>
-          <button type="button" aria-pressed={seasonView === "archive"} onClick={() => setSeasonView("archive")}>{lang === "TR" ? "Geçmiş Sezon · EML Yaz Ligi" : "Archive · EML Summer League"}</button>
-        </div>
-        {seasonView === "upcoming" && <UpcomingSeason lang={lang}/>}
-        <div hidden={seasonView !== "archive"}>
-        {ACTIVE_COMPETITION.locked && <p className="mc-archive-label">{lang === "TR" ? "GEÇMİŞ SEZON · EML FC26 YAZ LİGİ — ALTAIR eSports sezonu çeyrek finalde tamamladı. Sezon kayıtları sabitlendi." : "SEASON ARCHIVE · EML FC26 SUMMER LEAGUE — ALTAIR eSports finished the season in the quarterfinals. Season records are frozen."}</p>}
-        <div className="mc-heading">
+        <header className="mc-head">
           <div>
-            <div className="sec-eyebrow">{copy.matchCenter.eyebrow}</div>
-            <h2 className="sec-title" id="match-center-title">{copy.matchCenter.title[0]} <span className="accent">{copy.matchCenter.title[1]}</span></h2>
-            <p className="sec-sub">{copy.matchCenter.sub}</p>
+            <div className="sec-eyebrow">{tr ? "Maç merkezi" : "Match centre"}</div>
+            <h2 className="sec-title" id="mc-home-title">{tr ? "Puan durumu ve maçlar" : "Standings and matches"}</h2>
+          </div>
+          <a className="sec-link mc-head-link" href={getRoutePath("matches", locale)}>{tr ? "Maç merkezini aç" : "Open the match centre"}</a>
+        </header>
+        {seasonView === "upcoming" && <UpcomingSeason lang={lang} onArchive={() => setSeasonView("archive")}/>}
+        <div className="mc-archive" hidden={seasonView !== "archive"}>
+        <div className="mc-heading mc-archive-banner">
+          <div>
+            <h3 className="mc-archive-title" id="match-center-title">{tr ? "Geçmiş sezon · EML FC26 Yaz Ligi" : "Past season · EML FC26 Summer League"}</h3>
+            {ACTIVE_COMPETITION.locked && <p className="mc-archive-label">{tr ? "ALTAIR eSports sezonu çeyrek finalde tamamladı. Sezon kayıtları sabitlendi." : "ALTAIR eSports finished the season in the quarterfinals. Season records are frozen."}</p>}
+            <button type="button" className="mc-archive-back" onClick={() => setSeasonView("upcoming")}>{tr ? "Güncel sezona dön" : "Back to the current season"}</button>
           </div>
           <div className="mc-verification" aria-live="polite">
             {status === "loading" && <span>{copy.matchCenter.loading}</span>}

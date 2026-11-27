@@ -1,13 +1,18 @@
 import { Breadcrumbs } from "../navigation/Breadcrumbs.jsx";
 import "../../styles/content-pages.css";
 
+const sameText = (left, right) => typeof left === "string" && typeof right === "string"
+  && left.trim().toLocaleLowerCase() === right.trim().toLocaleLowerCase();
+
 export function ContentPage({ breadcrumbLabel, breadcrumbs, children, eyebrow, intro, title, titleId = "content-page-title", className = "" }) {
+  // The breadcrumb already names the page; an eyebrow that only repeats it is dropped.
+  const showEyebrow = Boolean(eyebrow) && !sameText(eyebrow, title) && !sameText(eyebrow, breadcrumbs?.at(-1)?.label);
   return (
     <article className={`content-page ${className}`} aria-labelledby={titleId}>
       <div className="container content-page-container">
         <Breadcrumbs items={breadcrumbs} label={breadcrumbLabel}/>
         <header className="content-page-header">
-          <span className="content-page-eyebrow">{eyebrow}</span>
+          {showEyebrow && <span className="content-page-eyebrow">{eyebrow}</span>}
           <h1 id={titleId}>{title}</h1>
           {intro && <p>{intro}</p>}
         </header>

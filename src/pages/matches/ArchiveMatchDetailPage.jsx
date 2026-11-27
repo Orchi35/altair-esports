@@ -1,4 +1,5 @@
 import "./match-detail-studio.css";
+import { Scoreboard } from "./Scoreboard.jsx";
 import { getRoutePath } from "../../app/routes.js";
 import { ContentPage, ContentState } from "../../components/layout/ContentPage.jsx";
 import { findMatchBySlug, getAllMatches, getMatchEditorial, createMatchSlug } from "../../content/matches/index.js";
@@ -49,20 +50,29 @@ export default function MatchDetailPage({ copy, lang, locale, matchCenter, refet
   ];
 
   return (
-    <ContentPage className="match-detail-studio" breadcrumbLabel={copy.pages.common.matches} breadcrumbs={breadcrumbs} eyebrow={copy.pages.matchDetail.eyebrow} title={`${match.homeTeam.name} · ${match.awayTeam.name}`}>
+    <ContentPage className="match-detail-studio" breadcrumbLabel={copy.pages.common.matches} breadcrumbs={breadcrumbs} eyebrow={copy.pages.matchDetail.eyebrow} title={`${match.homeTeam.name}\u00a0· ${match.awayTeam.name}`}>
       {matchCenter.meta.status === "stale" && <p className="content-verification">{copy.pages.common.stale}</p>}
       {matchCenter.meta.status === "error" && <ContentState tone="error" action={<button type="button" onClick={handleRetry}>{copy.pages.common.retry}</button>}>{copy.pages.common.unavailable}</ContentState>}
-      <section className="detail-scoreboard" aria-label={pageTitle}>
-        <div className="detail-team"><span className="detail-team-mark" aria-hidden="true">{match.homeTeam.logo ? <img src={match.homeTeam.logo} alt="" width="84" height="84"/> : match.homeTeam.shortName}</span><h2>{match.homeTeam.name}</h2></div>
-        <div className="detail-score"><strong>{hasScore ? `${match.score.home} : ${match.score.away}` : formatMatchTime(match.startsAt, lang, match.timezone)}</strong><span>{hasScore ? copy.pages.matches.finished : formatTimezoneLabel(match.timezone, lang)}</span></div>
-        <div className="detail-team"><span className="detail-team-mark" aria-hidden="true">{match.awayTeam.logo ? <img src={match.awayTeam.logo} alt="" width="84" height="84"/> : match.awayTeam.shortName}</span><h2>{match.awayTeam.name}</h2></div>
-      </section>
-      <dl className="detail-facts">
-        <div><dt>{copy.pages.matchDetail.date}</dt><dd><time dateTime={match.startsAt}>{formatMatchDate(match.startsAt, lang, match.timezone)}</time></dd></div>
-        <div><dt>{copy.pages.matchDetail.competition}</dt><dd>{match.competition || copy.pages.common.unavailable}</dd></div>
-        <div><dt>{copy.pages.matchDetail.round}</dt><dd>{match.round || copy.pages.common.unavailable}</dd></div>
-        <div><dt>{copy.pages.matchDetail.status}</dt><dd>{copy.matchCenter.matchStatuses[match.status] || match.status}</dd></div>
-      </dl>
+      <Scoreboard
+        label={pageTitle}
+        lang={lang}
+        homeTeam={match.homeTeam}
+        awayTeam={match.awayTeam}
+        homeMark={match.homeTeam.logo ? <img src={match.homeTeam.logo} alt="" width="84" height="84"/> : match.homeTeam.shortName}
+        awayMark={match.awayTeam.logo ? <img src={match.awayTeam.logo} alt="" width="84" height="84"/> : match.awayTeam.shortName}
+        homeRole={lang === "TR" ? "Ev sahibi" : "Home"}
+        awayRole={lang === "TR" ? "Deplasman" : "Away"}
+        score={hasScore ? match.score : null}
+        pending={formatMatchTime(match.startsAt, lang, match.timezone)}
+        status={hasScore ? null : formatTimezoneLabel(match.timezone, lang)}
+      >
+        <dl className="detail-facts mc-score-facts">
+          <div><dt>{copy.pages.matchDetail.date}</dt><dd><time dateTime={match.startsAt}>{formatMatchDate(match.startsAt, lang, match.timezone)}</time></dd></div>
+          <div><dt>{copy.pages.matchDetail.competition}</dt><dd>{match.competition || copy.pages.common.unavailable}</dd></div>
+          <div><dt>{copy.pages.matchDetail.round}</dt><dd>{match.round || copy.pages.common.unavailable}</dd></div>
+          <div><dt>{copy.pages.matchDetail.status}</dt><dd>{copy.matchCenter.matchStatuses[match.status] || match.status}</dd></div>
+        </dl>
+      </Scoreboard>
       {match.streamUrl && (
         <div className="content-actions"><a href={match.streamUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackSocialDestination(match.streamUrl, locale)}>{copy.pages.matchDetail.stream}<span className="sr-only"> ({copy.pages.common.external})</span></a></div>
       )}

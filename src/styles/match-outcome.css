@@ -1,0 +1,6 @@
+/* ALTAIR result badge shared by match lists; same colours as the home "Güncel Form" chips */
+.match-outcome{display:inline-flex;align-items:center;gap:6px;min-height:26px;padding:3px 10px;border:1px solid var(--outcome-edge);border-radius:999px;background:var(--outcome-fill);color:var(--outcome-text);font:600 13px/1.2 var(--f-body);letter-spacing:.01em;white-space:nowrap}
+.match-outcome::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.match-outcome--win{--outcome-text:#9af0c8;--outcome-fill:rgba(16,185,129,.12);--outcome-edge:rgba(52,211,153,.45)}
+.match-outcome--loss{--outcome-text:#ffb4b4;--outcome-fill:rgba(239,68,68,.1);--outcome-edge:rgba(248,113,113,.42)}
+.match-outcome--draw{--outcome-text:#d3dbe6;--outcome-fill:rgba(148,163,184,.12);--outcome-edge:rgba(148,163,184,.4)}

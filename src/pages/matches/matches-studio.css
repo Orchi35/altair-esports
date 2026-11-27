@@ -1,3 +1,4 @@
+@layer legacy{
 .site .matches-studio{font-family:'Segoe UI',Arial,sans-serif;--f-display:'Segoe UI',Arial,sans-serif;--f-body:'Segoe UI',Arial,sans-serif;--f-narrow:'Segoe UI',Arial,sans-serif}
 .site .matches-studio .content-page-header h1{font-family:inherit;font-size:clamp(36px,5vw,60px);font-weight:650;line-height:1.2;letter-spacing:-.025em;text-transform:none}
 .site .matches-studio .content-page-header p{max-width:65ch;font-size:16px;line-height:1.8;color:#bcd0e7}
@@ -108,3 +109,35 @@
 @media(max-width:600px){.site .matches-studio .mc-standings-table thead th,.site .matches-studio .mc-standings-table tbody td{padding:15px 12px}.site .matches-studio .mc-standings-table tbody th{padding:14px 12px}.site .matches-studio .mc-standings-source{justify-content:flex-start}}
 
 .site .matches-studio #standings{scroll-margin-top:110px}.matches-archive-note{margin:0 0 18px;color:#b7cce5;font-size:13px;line-height:1.6}
+
+/* Result cards, compact pass: outcome first, half the height, whole card opens the match */
+.site .matches-studio .content-match-meta{display:flex;align-items:center;gap:10px}
+.site .matches-studio .content-match-meta>span:first-child{flex:1;min-width:0}
+.site .matches-studio .content-match-card[data-outcome]{border-left:3px solid var(--outcome-color)}
+.site .matches-studio .content-match-card[data-outcome="win"]{--outcome-color:#34d399}
+.site .matches-studio .content-match-card[data-outcome="loss"]{--outcome-color:#f87171}
+.site .matches-studio .content-match-card[data-outcome="draw"]{--outcome-color:#94a3b8}
+.site .matches-studio .content-match-teams{min-height:0;padding:20px;gap:14px;align-items:center;grid-template-columns:minmax(0,1fr) 96px minmax(0,1fr)}
+.site .matches-studio .content-match-teams>div{grid-template-rows:56px auto;gap:10px}
+.site .matches-studio .content-team-mark{width:56px;height:56px;border-radius:15px}
+.site .matches-studio .content-team-mark img{width:42px;height:42px}
+.site .matches-studio .content-match-teams b{min-height:0;font-size:16px;line-height:1.35;color:#c9daee;font-weight:600}
+.site .matches-studio .content-match-teams .is-altair b{color:#fff;font-weight:700}
+.site .matches-studio .content-match-teams .is-altair .content-team-mark{border-color:#429ef5a0}
+.site .matches-studio .content-match-score{height:60px;min-height:60px;margin-top:0;font-size:30px}
+.site .matches-studio .content-match-footer{padding:12px 20px}
+.site .matches-studio .content-match-footer a{position:static}
+.site .matches-studio .content-match-footer a::after{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit}
+.site .matches-studio .content-match-footer a:focus-visible{outline:3px solid #a9d2f5;outline-offset:3px}
+@media(max-width:480px){
+  .site .matches-studio .content-match-teams{padding:16px 12px;gap:8px;min-height:0;grid-template-columns:minmax(0,1fr) 76px minmax(0,1fr)}
+  .site .matches-studio .content-match-teams>div{grid-template-rows:48px auto;gap:8px}
+  .site .matches-studio .content-team-mark{width:48px;height:48px;border-radius:13px}
+  .site .matches-studio .content-team-mark img{width:36px;height:36px}
+  .site .matches-studio .content-match-teams b{font-size:14px}
+  .site .matches-studio .content-match-score{height:52px;min-height:52px;font-size:24px}
+  .site .matches-studio .content-match-meta,.site .matches-studio .content-match-footer{padding:12px 14px}
+  .site .matches-studio .content-match-footer{flex-direction:row;flex-wrap:nowrap;justify-content:space-between;align-items:center;text-align:left}
+  .site .matches-studio .content-match-footer a{flex:none;padding:8px 12px}
+}
+}

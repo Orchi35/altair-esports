@@ -1,3 +1,4 @@
+@layer legacy{
 /* HERO — ALTAIR SPACE CAMPAIGN */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
@@ -331,4 +332,5 @@
   .hero-h1{font-size:clamp(54px,18vw,74px)}
   .hero-h1--motto{font-size:clamp(32px,9vw,42px)}
   .hero-countdown-unit{padding-inline:4px}
+}
 }

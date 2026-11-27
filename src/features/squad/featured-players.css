@@ -1,3 +1,4 @@
+@layer legacy{
 .featured-players{
   padding-block:clamp(68px,8vw,104px);
   background:
@@ -83,4 +84,5 @@
 @media (prefers-reduced-motion:reduce){
   .featured-player-skeletons span{animation:none}
   .featured-player-media img{transition:none}
+}
 }

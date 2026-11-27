@@ -1,3 +1,4 @@
+@layer legacy{
 /* JERSEY SHOWCASE — OFFICIAL KIT CAMPAIGN */
 #jersey.section{
   padding-block:clamp(76px,9vw,132px);
@@ -192,3 +193,4 @@
  .site #jersey .jersey-showcase-details { margin-top:0; }
 }
 @media(prefers-reduced-motion:reduce) { .site #jersey .jersey-view-picker button { transition:none; } }
+}

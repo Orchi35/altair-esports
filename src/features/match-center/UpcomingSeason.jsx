@@ -1,31 +1,30 @@
-import { VpgCompetition } from "./VpgCompetition.jsx";
 import { useState } from "react";
-import catalog from "../../../public/data/seasons/catalog.json";
+import { CompetitionControls } from "./CompetitionControls.jsx";
+import { NexCompetition } from "./NexCompetition.jsx";
+import { VpgCompetition } from "./VpgCompetition.jsx";
 
-export function UpcomingSeason({ lang }) {
+/** Current season on the home page: one control bar, then the data. */
+export function UpcomingSeason({ lang, onArchive }) {
   const tr = lang === "TR";
-  const leagues = catalog.nextSeason.competitions;
-  const [leagueId, setLeagueId] = useState(leagues[0].id);
+  const [league, setLeague] = useState("vpg");
+  const [competition, setCompetition] = useState("elite");
   const [view, setView] = useState("standings");
-  const [cup,setCup]=useState(false);
-  const league = leagues.find((item) => item.id === leagueId);
-  const labels = tr ? { fixtures:"Fikstür", results:"Sonuçlar", standings:"Puan Durumu" } : { fixtures:"Fixtures", results:"Results", standings:"Standings" };
-  return <section className="mc-upcoming" aria-label={tr ? "Yeni sezon" : "New season"}>
-    <div className="sec-eyebrow">{tr ? "YENİ SEZON" : "NEW SEASON"}</div>
-    <h2 className="sec-title">{tr ? "Yeni Sezon Lig Bilgileri" : "New Season League Information"}</h2>
-    <p className="sec-sub">{tr ? "Liglerin fikstür, sonuç ve puan durumlarını buradan takip edebilirsiniz." : "Follow league fixtures, results and standings here."}</p>
-    <div className="mc-league-picker" aria-label={tr ? "Lig seçimi" : "Select league"}>
-      {leagues.map((item) => <button key={item.id} type="button" aria-pressed={leagueId === item.id} onClick={() => setLeagueId(item.id)}>{item.name}</button>)}
+  return (
+    <div className="mc-upcoming mc-season" aria-label={tr ? "Güncel sezon" : "Current season"} role="group">
+      <CompetitionControls
+        tr={tr}
+        league={league}
+        onLeague={setLeague}
+        competition={competition}
+        onCompetition={setCompetition}
+        view={view}
+        onView={setView}
+        onArchive={onArchive}
+        archiveLabel={tr ? "EML arşivi: geçmiş sezon, EML FC26 Yaz Ligi" : "EML archive: past season, EML FC26 Summer League"}
+      />
+      {league === "vpg"
+        ? <VpgCompetition key={`${competition}-${view}`} view={view} lang={lang} cup={competition === "cup"} variant="home"/>
+        : <NexCompetition key={view} view={view} locale={tr ? "tr" : "en"} variant="home"/>}
     </div>
-    {league.id === "vpg-elite" && <div className="mc-upcoming-views" role="group" aria-label={tr ? "VPG organizasyonu" : "VPG competition"}><button type="button" aria-pressed={!cup} onClick={()=>setCup(false)}>Elite B</button><button type="button" aria-pressed={cup} onClick={()=>setCup(true)}>European Pro Series HT</button></div>}
-    <div className="mc-upcoming-views" aria-label={tr ? "Veri türü" : "Data view"}>
-      {Object.entries(labels).map(([key, label]) => <button key={key} type="button" aria-pressed={view === key} onClick={() => setView(key)}>{label}</button>)}
-    </div>
-    {league.id === "vpg-elite" ? <VpgCompetition view={view} lang={lang} cup={cup}/> : <div className="mc-upcoming-empty" role="status" aria-live="polite">
-      <span>{league.name} · {labels[view]}</span>
-      <h3>{tr ? "Lig başlangıcı bekleniyor" : "Awaiting league start"}</h3>
-      <p>{tr ? "Nex Leagues katılımımız için lig henüz başlamadı. Fikstür, sonuçlar ve puan durumu lig bilgileri kesinleştiğinde burada yer alacak." : "The league has not started yet. Fixtures, results and standings will appear here once league details are confirmed."}</p>
-      <a href={league.sourceUrl} target="_blank" rel="noopener noreferrer">{tr ? "ALTAIR takım sayfası" : "ALTAIR team page"} ↗</a>
-    </div>}
-  </section>;
+  );
 }

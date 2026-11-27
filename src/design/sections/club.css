@@ -1,0 +1,210 @@
+/* Atlas · club section — owned by the club designer. Unlayered; loaded after atlas-sections.css. */
+
+/*
+ * Three rhythms for the club's story:
+ *  - #jersey   image-led: the kit on a full-bleed studio stage that turns front/back.
+ *  - #identity text-led: a manifesto, no boxes; 2025 is ALTAIR's own star (ALTAIR blue).
+ *  - #honours  data-led: a ledger where every title is one ALTAIR-blue node.
+ */
+
+/* ===================== Jersey: product stage ===================== */
+.site #jersey.section{padding-block:clamp(56px,7vw,104px);overflow:hidden}
+.site .kit{
+  --kit-studio:#626469;
+  container-type:inline-size;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(320px,400px);
+  grid-template-rows:1fr auto auto 1fr;
+  grid-template-areas:"stage ." "stage head" "stage spec" "stage .";
+  column-gap:clamp(40px,6vw,96px);
+}
+
+/* The stage bleeds from the page grid to the left edge of the viewport. */
+.site .kit-stage{grid-area:stage;position:relative;min-width:0;margin-left:calc((100cqw - 100vw) / 2)}
+.site .kit-turn{
+  position:relative;margin:0;
+  height:clamp(520px,82vh,820px);
+  overflow:hidden;
+  border-radius:0 var(--a-r3) var(--a-r3) 0;
+  background:radial-gradient(ellipse 70% 70% at 50% 45%,#7b7e85,var(--kit-studio) 55%,#4f5054);
+}
+.site .kit-face{
+  position:absolute;inset:0;
+  opacity:0;
+  transition:transform .3s cubic-bezier(.3,0,.2,1),opacity .14s linear;
+}
+.site .kit-face picture{display:block;width:100%;height:100%}
+.site .kit-face img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 18%}
+/* Turning the shirt: the outgoing side swings away and fades, the incoming side swings in. */
+.site .kit-turn[data-side="front"] .kit-face--front,
+.site .kit-turn[data-side="back"] .kit-face--back{
+  opacity:1;transform:perspective(1800px) rotateY(0);
+  transition:transform .3s cubic-bezier(.2,.7,.2,1),opacity .18s linear .1s;
+}
+.site .kit-turn[data-side="back"] .kit-face--front{transform:perspective(1800px) translateX(-4%) rotateY(28deg) scale(.97)}
+.site .kit-turn[data-side="front"] .kit-face--back{transform:perspective(1800px) translateX(4%) rotateY(-28deg) scale(.97)}
+
+/* View switch sits on the photo, aligned with the page grid. */
+.site .kit-views{
+  position:absolute;z-index:2;
+  left:max(16px,calc((100vw - 100cqw) / 2));bottom:clamp(16px,2.4vw,28px);
+  display:flex;gap:4px;margin:0;padding:4px;
+  border:1px solid rgba(233,239,247,.16);border-radius:calc(var(--a-r1) + 4px);
+  background:rgba(5,12,27,.74);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+}
+.site .kit-views button{
+  min-height:40px;padding:8px 16px;
+  border:0;border-radius:var(--a-r1);
+  background:transparent;color:var(--a-text-2);
+  box-shadow:none;
+}
+.site .kit-views button:hover{color:#fff;background:rgba(143,196,255,.1)}
+.site .kit-views button[aria-pressed="true"]{color:#fff;background:rgba(143,196,255,.18);box-shadow:inset 0 -2px 0 var(--a-ice)}
+.site .kit-views button:focus-visible{outline:2px solid var(--a-ice);outline-offset:2px}
+
+.site .kit-head{grid-area:head;min-width:0}
+.site .kit-title{font-size:clamp(40px,4.6vw,64px)}
+.site .kit-title span{display:inline}
+.site .kit-lede{max-width:40ch;margin:20px 0 0;color:var(--a-text-2);font:400 17px/1.6 var(--a-font)}
+
+/* Spec sheet */
+.site .kit-spec{grid-area:spec;min-width:0;margin-top:clamp(32px,4vw,48px)}
+.site .kit-spec-edition{
+  margin:0;padding-bottom:12px;border-bottom:1px solid var(--a-rule-2);
+  color:var(--a-text);font:600 14px/1.4 var(--a-font);font-variant-numeric:tabular-nums;letter-spacing:.01em;
+}
+.site .kit-spec-list{margin:0}
+.site .kit-spec-list>div{display:grid;grid-template-columns:minmax(88px,7.5em) minmax(0,1fr);gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid var(--a-rule)}
+.site .kit-spec-list dt{color:var(--a-muted);font:500 13px/1.4 var(--a-font);letter-spacing:.02em}
+.site .kit-spec-list dd{display:flex;align-items:center;gap:12px;margin:0;color:var(--a-text);font:500 16px/1.4 var(--a-font)}
+.site .kit-spec-mark{display:inline-flex;flex:none}
+.site .kit-spec-mark i{width:16px;height:16px;border-radius:50%;box-shadow:0 0 0 1px rgba(233,239,247,.35),0 0 0 3px var(--a-night)}
+.site .kit-spec-mark i+i{margin-left:-5px}
+.site .kit-spec-mark--stripes{
+  width:22px;height:16px;border-radius:3px;
+  background:repeating-linear-gradient(90deg,#f4f6f8 0 4px,#86b8e6 4px 8px);
+  box-shadow:0 0 0 1px rgba(233,239,247,.35);
+}
+
+@media(max-width:860px){
+  .site .kit{
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:none;
+    grid-template-areas:"head" "stage" "spec";
+    row-gap:28px;
+  }
+  .site .kit-stage{margin-inline:calc((100cqw - 100vw) / 2)}
+  .site .kit-turn{height:min(125vw,86vh);border-radius:0}
+  .site .kit-spec-list>div{grid-template-columns:84px minmax(0,1fr)}
+  .site .kit-spec{margin-top:0}
+  .site .kit-lede{max-width:none}
+}
+
+/* ===================== Identity: manifesto ===================== */
+.site .manifesto-head{margin-bottom:clamp(36px,5vw,64px)}
+.site .manifesto-title{font-size:clamp(40px,6vw,84px);line-height:.98;letter-spacing:-.025em}
+.site .manifesto-title span{display:block}
+
+.site .manifesto-body{
+  position:relative;
+  display:grid;grid-template-columns:minmax(180px,4fr) minmax(0,8fr);
+  gap:clamp(32px,6vw,96px);
+  padding-top:clamp(28px,4vw,44px);
+  border-top:1px solid var(--a-rule-2);
+}
+/* ALTAIR's own star sits where the line begins. */
+.site .manifesto-body::before{
+  content:"";position:absolute;top:-4px;left:0;width:7px;height:7px;border-radius:50%;
+  background:var(--a-star);box-shadow:0 0 12px rgba(78,168,255,.7);
+}
+.site .manifesto-origin{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-width:0}
+.site .manifesto-origin-label{color:var(--a-muted);font:500 13px/1.4 var(--a-font);letter-spacing:.02em}
+.site .manifesto-origin-year{
+  color:var(--a-star);
+  font:800 clamp(72px,9vw,136px)/.88 var(--a-font);font-stretch:var(--a-wide);
+  letter-spacing:-.04em;font-variant-numeric:tabular-nums;
+}
+.site .manifesto-origin-note{max-width:16ch;color:var(--a-text-2);font:500 15px/1.5 var(--a-font)}
+
+.site .manifesto-text{min-width:0}
+.site .manifesto-lede{max-width:32ch;margin:0;color:var(--a-text);font:500 clamp(21px,2.1vw,28px)/1.38 var(--a-font);letter-spacing:-.005em}
+.site .manifesto-story-title{margin:clamp(28px,3.4vw,44px) 0 0;color:var(--a-text);font:700 20px/1.25 var(--a-font);font-stretch:var(--a-wide)}
+.site .manifesto-story{max-width:62ch;margin:12px 0 0;color:var(--a-text-2);font:400 17px/1.7 var(--a-font)}
+.site .manifesto-creed{display:grid;gap:6px;max-width:62ch;margin:28px 0 0;padding-left:20px;border-left:2px solid var(--a-ice)}
+.site .manifesto-creed span{color:var(--a-muted);font:500 13px/1.4 var(--a-font);letter-spacing:.02em}
+.site .manifesto-creed strong{color:var(--a-text);font:600 clamp(18px,1.6vw,21px)/1.4 var(--a-font)}
+
+.site .manifesto-tenets{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,48px);
+  margin:clamp(56px,7vw,96px) 0 0;padding:0;list-style:none;
+}
+.site .manifesto-tenets li{position:relative;min-width:0;padding-top:20px;border-top:1px solid var(--a-rule)}
+.site .manifesto-tenets li::before{
+  content:"";position:absolute;top:-3px;left:0;width:5px;height:5px;border-radius:50%;background:var(--a-ice);
+}
+.site .manifesto-tenets h3{margin:0;color:var(--a-text);font:700 20px/1.25 var(--a-font);font-stretch:var(--a-wide);letter-spacing:-.005em;text-transform:none}
+.site .manifesto-tenets p{max-width:40ch;margin:10px 0 0;color:var(--a-text-2);font:400 15px/1.6 var(--a-font)}
+
+@media(max-width:860px){
+  .site .manifesto-body{grid-template-columns:minmax(0,1fr)}
+  .site .manifesto-origin{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:end;column-gap:20px;row-gap:6px}
+  .site .manifesto-origin-label{grid-column:1/-1}
+  .site .manifesto-origin-note{padding-bottom:6px}
+  .site .manifesto-tenets{grid-template-columns:minmax(0,1fr);gap:28px}
+}
+
+/* ===================== Honours: the record ===================== */
+.site .record-head{margin-bottom:clamp(28px,4vw,44px)}
+.site .record-list{margin:0;padding:0;list-style:none;border-top:1px solid var(--a-rule-2)}
+.site .record-row{
+  display:grid;
+  grid-template-columns:clamp(112px,13vw,184px) minmax(220px,360px) minmax(0,1fr);
+  grid-template-areas:"mark what tally";
+  align-items:center;column-gap:clamp(20px,3vw,40px);
+  padding:clamp(22px,2.6vw,32px) 0;
+  border-bottom:1px solid var(--a-rule);
+}
+.site .record-mark{grid-area:mark;color:var(--a-star);font:800 clamp(56px,6vw,88px)/.9 var(--a-font);font-stretch:var(--a-wide);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.site .record-mark small{margin-left:.04em;font-size:.46em;font-weight:600;letter-spacing:0;vertical-align:.62em;opacity:.8}
+.site .record-mark--final{font-size:clamp(24px,2.4vw,34px);line-height:1.1;letter-spacing:-.01em}
+.site .record-what{grid-area:what;min-width:0}
+.site .record-what h3{margin:0;color:var(--a-text);font:700 clamp(19px,1.8vw,24px)/1.25 var(--a-font);font-stretch:var(--a-wide);letter-spacing:-.005em;text-transform:none}
+.site .record-what p{display:flex;flex-wrap:wrap;gap:4px 18px;margin:8px 0 0;color:var(--a-muted);font:500 14px/1.4 var(--a-font)}
+.site .record-what p>:first-child{color:var(--a-text-2)}
+.site .record-what .record-note{display:block;max-width:62ch;color:var(--a-text-2);font-weight:400}
+
+/* Tally: one ALTAIR-blue node per title, constellations of five. */
+.site .record-tally{grid-area:tally;display:flex;flex-wrap:wrap;justify-content:flex-start;gap:14px 24px}
+.site .record-tally-group{position:relative;display:inline-flex;gap:16px}
+.site .record-tally-group::before{content:"";position:absolute;left:6px;right:6px;top:50%;height:1px;background:rgba(78,168,255,.38)}
+.site .record-tally i{position:relative;width:12px;height:12px;border-radius:50%;background:var(--a-star);box-shadow:0 0 8px rgba(78,168,255,.45)}
+.site .record-tally--final i{width:14px;height:14px;background:var(--a-night);border:1.5px solid var(--a-star);box-shadow:none}
+.site .record-tally--final .record-tally-group::before{display:none}
+
+/* Honours page: the full record */
+.site .record--page{display:grid;gap:clamp(40px,5vw,64px)}
+.site .record-summary{display:flex;flex-wrap:wrap;gap:20px clamp(40px,6vw,88px);margin:0}
+.site .record-summary>div{display:flex;flex-direction:column-reverse;gap:6px}
+.site .record-summary dt{color:var(--a-text-2);font:500 15px/1.4 var(--a-font)}
+.site .record-summary dd{margin:0;color:var(--a-star);font:800 clamp(56px,7vw,96px)/.9 var(--a-font);font-stretch:var(--a-wide);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.site .record--page .record-mark{font-size:clamp(48px,4.6vw,68px)}
+.site .record--page .record-mark--final{font-size:clamp(22px,2.2vw,30px)}
+.site .record-group h2{margin:0 0 16px;color:var(--a-text);font:700 clamp(22px,2.2vw,28px)/1.2 var(--a-font);font-stretch:var(--a-wide);letter-spacing:-.01em;text-transform:none}
+
+@media(max-width:680px){
+  .site .record-row{
+    grid-template-columns:104px minmax(0,1fr);
+    grid-template-areas:"mark what" "tally tally";
+    row-gap:16px;column-gap:18px;
+  }
+  .site .record-mark{font-size:52px}
+  .site .record-mark--final,.site .record--page .record-mark--final{font-size:20px}
+  .site .record-tally{justify-content:flex-start}
+  .site .record-row.is-final{grid-template-areas:"mark what"}
+  .site .record-row.is-final .record-tally{display:none}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .site .kit-face{transition:none}
+}

@@ -1,3 +1,4 @@
+@layer legacy{
 .not-found{
   min-height:clamp(620px,82vh,900px);
   padding:clamp(130px,16vw,210px) max(24px,calc((100vw - 1180px)/2));
@@ -40,4 +41,5 @@
   .not-found h1{font-size:clamp(38px,13vw,58px)}
   .not-found-actions{display:grid}
   .not-found-actions .btn{width:100%}
+}
 }

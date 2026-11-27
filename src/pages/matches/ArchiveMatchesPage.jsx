@@ -6,7 +6,9 @@ import { ContentPage, ContentState } from "../../components/layout/ContentPage.j
 import { useAnalyticsViewEvent } from "../../hooks/useAnalyticsViewEvent.js";
 import { ANALYTICS_EVENTS, trackEvent } from "../../services/analytics/index.js";
 import { formatLastUpdated } from "../../utils/dateTime.js";
+import { MatchList } from "../../features/match-center/MatchList.jsx";
 import { MatchSummaryCard } from "./MatchSummaryCard.jsx";
+import { toSummaryRow } from "./summaryRow.js";
 
 const PAGE_SIZE = 8;
 
@@ -79,7 +81,7 @@ export default function MatchesPage({ copy, lang, locale, matchCenter, refetch, 
             <div className="content-section-heading"><h2 id="upcoming-matches-title">{copy.pages.matches.upcoming}</h2><span>{upcoming.length}</span></div>
             {upcoming.length ? (
               <>
-                <div className="content-grid">{upcoming.slice(0, visibleUpcoming).map((match) => <MatchSummaryCard key={match.id} copy={copy} lang={lang} locale={locale} match={match}/>)}</div>
+                <MatchList matches={upcoming.slice(0, visibleUpcoming).map((match) => toSummaryRow(match, { copy, locale }))} lang={lang} mode="fixtures" className="content-match-card" linkClassName="content-match-footer"/>
                 {visibleUpcoming < upcoming.length && <button className="content-more" type="button" onClick={() => setVisibleUpcoming((value) => value + PAGE_SIZE)}>{copy.pages.common.showMore}</button>}
         </>
             ) : <ContentState>{status === "season-ended" ? copy.pages.matches.seasonEnded : copy.pages.matches.noUpcoming}</ContentState>}
@@ -89,7 +91,7 @@ export default function MatchesPage({ copy, lang, locale, matchCenter, refetch, 
             <div className="content-section-heading"><h2 id="recent-results-title">{copy.pages.matches.results}</h2><span>{results.length}</span></div>
             {results.length ? (
               <>
-                <div className="content-grid">{results.slice(0, visibleResults).map((match) => <MatchSummaryCard key={match.id} copy={copy} lang={lang} locale={locale} match={match}/>)}</div>
+                <ol className="mc-list mc-list--results">{results.slice(0, visibleResults).map((match) => <MatchSummaryCard key={match.id} copy={copy} lang={lang} locale={locale} match={match} mode="results"/>)}</ol>
                 {visibleResults < results.length && <button className="content-more" type="button" onClick={() => setVisibleResults((value) => value + PAGE_SIZE)}>{copy.pages.common.showMore}</button>}
         </>
             ) : <ContentState>{copy.pages.matches.noResults}</ContentState>}

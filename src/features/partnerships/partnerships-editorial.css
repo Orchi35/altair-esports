@@ -1,3 +1,4 @@
+@layer legacy{
 /* PARTNERSHIPS — EDITORIAL BRAND DECK */
 #sponsors.section{
   padding-top:clamp(78px,8vw,124px);
@@ -456,4 +457,5 @@
   .sponsor-visual-title span{font-size:27px}
   .sponsor-touchpoints-list{display:grid;grid-template-columns:repeat(2,1fr)}
   .sponsor-touchpoints-list span{justify-content:center}
+}
 }

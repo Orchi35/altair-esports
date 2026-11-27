@@ -1,3 +1,4 @@
+@layer legacy{
 .site #sponsors.alliance-home{background:#09111d;padding-block:clamp(65px,8vw,120px)}
 .site #sponsors.alliance-home .container{max-width:1280px}
 .alliance-home-layout{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:clamp(32px,6vw,88px)}
@@ -12,3 +13,4 @@
 .alliance-home-footer>p{font-size:13px;color:#9aafc7;margin:0}
 @media(max-width:850px){.alliance-home-layout{grid-template-columns:1fr 1fr;gap:28px}.site .alliance-home h2{font-size:36px}.alliance-visual--home{height:520px}}
 @media(max-width:650px){.alliance-home-layout{grid-template-columns:1fr}.alliance-visual--home{height:440px}.alliance-home-footer{margin-top:28px}.site .alliance-home h2{font-size:38px}}
+}
