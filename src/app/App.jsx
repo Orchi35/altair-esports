@@ -16,6 +16,16 @@ import "../styles/match-arena.css";
 import "../styles/match-center-redesign.css";
 import "../styles/site-harmony.css";
 import "../styles/roster-redesign.css";
+import "../styles/motion.css";
+import "../design/atlas.css";
+import "../design/atlas-sections.css";
+import "../design/sections/shell.css";
+import "../design/sections/hero.css";
+import "../design/sections/matches.css";
+import "../design/sections/squad.css";
+import "../design/sections/club.css";
+import "../design/sections/community.css";
+import "../design/brand-glow.css";
 import { AppShell } from "./AppShell.jsx";
 import { getRouteScrollTarget } from "./routes.js";
 import { OBSERVED_SECTION_IDS } from "./sectionRegistry.js";
@@ -162,11 +172,11 @@ export default function AltairFC() {
           <Hero copy={copy} lang={activeLang} locale={route.locale} matchCenter={matchCenter}/>
           <QuickTeamStatus lang={activeLang} copy={copy} matchCenter={matchCenter}/>
           <MatchCenter lang={activeLang} copy={copy} locale={route.locale} matchCenter={matchCenter} refetch={refetchMatchCenter} retryWaitSeconds={retryWaitSeconds} isRetryCoolingDown={isRetryCoolingDown}/>
-          <DeferredSection active={scrollTargetId === "jersey"} Component={JerseyShowcase} componentProps={{ copy }} id="jersey" minHeight="1180px" onReveal={handleDeferredReveal}/>
-          <DeferredSection active={scrollTargetId === "squad"} Component={Squad} componentProps={{ lang:activeLang, copy, locale:route.locale, compact:true }} id="squad" minHeight="760px" onReveal={handleDeferredReveal}/>
-          <DeferredSection active={scrollTargetId === "identity"} Component={ClubIdentity} componentProps={{ copy, locale:route.locale }} id="identity" minHeight="760px" onReveal={handleDeferredReveal}/>
-          <DeferredSection active={scrollTargetId === "honours"} Component={Honours} componentProps={{ copy, locale:route.locale }} id="honours" minHeight="680px" onReveal={handleDeferredReveal}/>
-          <DeferredSection active={scrollTargetId === "sponsors"} Component={PartnershipSection} componentProps={{ copy, locale:route.locale }} id="sponsors" minHeight="920px" onReveal={handleDeferredReveal}/>
+          <DeferredSection active={scrollTargetId === "jersey"} Component={JerseyShowcase} componentProps={{ copy }} id="jersey" minHeight="1030px" onReveal={handleDeferredReveal}/>
+          <DeferredSection active={scrollTargetId === "squad"} Component={Squad} componentProps={{ lang:activeLang, copy, locale:route.locale, compact:true }} id="squad" minHeight="890px" onReveal={handleDeferredReveal}/>
+          <DeferredSection active={scrollTargetId === "identity"} Component={ClubIdentity} componentProps={{ copy, locale:route.locale }} id="identity" minHeight="1150px" onReveal={handleDeferredReveal}/>
+          <DeferredSection active={scrollTargetId === "honours"} Component={Honours} componentProps={{ copy, locale:route.locale }} id="honours" minHeight="930px" onReveal={handleDeferredReveal}/>
+          <DeferredSection active={scrollTargetId === "sponsors"} Component={PartnershipSection} componentProps={{ copy, locale:route.locale }} id="sponsors" minHeight="630px" onReveal={handleDeferredReveal}/>
           <DeferredSection active={scrollTargetId === "broadcast"} Component={SocialHub} componentProps={{ copy, locale:route.locale }} id="broadcast" minHeight="760px" onReveal={handleDeferredReveal}/>
         </>
       ) : (

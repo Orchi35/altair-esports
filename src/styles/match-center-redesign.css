@@ -1,3 +1,4 @@
+@layer legacy{
 /* Match center: restrained stadium lighting and an editorial scoreboard. */
 #match-center .mc-playoff--archived-quarterfinal .mc-playoff-tree { grid-template-columns:minmax(0,1fr); min-width:0; }
 #match-center .mc-playoff--archived-quarterfinal .mc-playoff-ties { grid-template-columns:repeat(2,minmax(0,1fr)); }
@@ -149,3 +150,4 @@
 #match-center .mc-upcoming-empty p { color:#bdcde0; font-size:14px; }
 #match-center .mc-upcoming-empty a { display:inline-block; margin-top:22px; color:#b9d9ff; font-size:13px; }
 @media(max-width:600px) { #match-center .mc-league-picker { grid-template-columns:1fr; } }
+}

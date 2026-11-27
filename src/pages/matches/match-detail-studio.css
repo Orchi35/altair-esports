@@ -1,3 +1,4 @@
+@layer legacy{
 .site .match-detail-studio{font-family:'Segoe UI',Arial,sans-serif;--f-display:'Segoe UI',Arial,sans-serif;--f-body:'Segoe UI',Arial,sans-serif}
 .site .match-detail-studio .content-page-header h1{font:650 clamp(28px,4vw,48px)/1.25 'Segoe UI',Arial,sans-serif;text-transform:none;letter-spacing:-.025em;max-width:28ch;overflow-wrap:anywhere}
 .site .match-detail-studio .detail-scoreboard{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:28px;padding:clamp(26px,5vw,56px);border:1px solid #b3c9ef40;border-radius:22px;background:radial-gradient(ellipse at 0 20%,#267da666,transparent 55%),radial-gradient(ellipse at 100% 20%,#8455b566,transparent 55%),linear-gradient(130deg,#172b41,#1c1933);box-shadow:0 24px 50px #0006,inset 0 1px #ffffff18}
@@ -33,3 +34,4 @@
 .site .match-detail-studio .detail-facts>div:nth-child(2){background:linear-gradient(130deg,#1c3048,#132338);border-color:#a7c7eb40}
 .site .match-detail-studio .detail-facts>div:nth-child(3){background:linear-gradient(130deg,#2a415b,#1e3148);border-color:#a7c7eb40}
 .site .match-detail-studio .detail-facts>div:nth-child(4){background:linear-gradient(130deg,#20354d,#17283c);border-color:#a7c7eb40}
+}

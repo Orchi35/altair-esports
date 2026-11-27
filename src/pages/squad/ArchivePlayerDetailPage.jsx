@@ -50,7 +50,7 @@ export default function PlayerDetailPage({ copy, locale, slug }) {
             {stats.length ? <div className="verified-stats">{stats.map((stat) => <div key={stat.key}><strong>{stat.value}</strong><span>{stat.label}</span></div>)}</div> : <ContentState>{copy.pages.player.noStats}</ContentState>}
           </section>
           <div className="content-actions">
-            <a href={getRoutePath("squad", locale)}>{locale === "tr" ? "Kadroyu Gör" : "View Squad"} <span aria-hidden="true">→</span></a>
+            <a href={getRoutePath("squad", locale)}>{locale === "tr" ? "← Kadroya dön" : "← Back to squad"}</a>
             {player.profileUrl && <a href={player.profileUrl} target="_blank" rel="noopener noreferrer">{copy.pages.player.externalProfile} <span aria-hidden="true">↗</span><span className="sr-only"> ({copy.pages.common.external})</span></a>}
           </div>
         </div>

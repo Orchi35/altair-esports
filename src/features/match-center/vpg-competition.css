@@ -1,1 +1,42 @@
+@layer legacy{
 .vpg-notice{color:#b8cce5;font:400 12px/1.7 'Segoe UI',sans-serif;margin:18px 0}.vpg-notice a,.vpg-source{color:#c5dfff;text-underline-offset:4px}.vpg-matches{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.vpg-match{padding:22px;border:1px solid #a7c5e338;border-radius:14px;background:linear-gradient(125deg,#20354d,#122338);box-shadow:0 9px 20px #0003}.vpg-match-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#adc2dc;font-size:12px;padding-bottom:16px;border-bottom:1px solid #b6d3f022}.vpg-match-teams{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:16px;padding:24px 0 8px;text-align:center}.vpg-match-teams strong{font:600 15px/1.5 'Segoe UI',sans-serif;overflow-wrap:anywhere;color:#e8f2ff}.vpg-match-teams>span{font:650 25px/1.3 'Segoe UI',sans-serif;font-variant-numeric:tabular-nums;color:#d8eaff;white-space:nowrap}.vpg-table-scroll{overflow-x:auto;border:1px solid #a7c5e338;border-radius:14px}.vpg-table{width:100%;min-width:620px;border-collapse:collapse;background:#122237;font:400 14px/1.6 'Segoe UI',sans-serif;font-variant-numeric:tabular-nums}.vpg-table th,.vpg-table td{padding:14px;text-align:center;border-bottom:1px solid #aac7e51c;color:#c5d6eb}.vpg-table thead{background:#21364e}.vpg-table tbody th,.vpg-table thead th:nth-child(2){text-align:left}.vpg-table .is-altair{background:#2b4561}.vpg-table .is-altair th{color:white}.vpg-source{display:inline-block;margin-top:20px;font-size:13px}@media(max-width:760px){.vpg-matches{grid-template-columns:1fr}.vpg-match{padding:18px}.vpg-match-teams strong{font-size:13px}}
+
+/* Standings: scannable on phones, ALTAIR row easy to find, header follows the reader */
+.vpg-standings{position:relative}
+.vpg-columns-toggle{display:none;min-height:44px;margin:0 0 12px;padding:10px 14px;border:1px solid #a7c5e340;border-radius:10px;background:#122237;color:#d8e9ff;font:600 14px/1.3 var(--f-body);cursor:pointer;touch-action:manipulation}
+.vpg-columns-toggle::before{content:"";display:inline-grid;place-items:center;width:16px;height:16px;font-size:12px;line-height:1;margin-right:8px;border:1.5px solid currentColor;border-radius:4px}
+.vpg-columns-toggle[aria-pressed="true"]{border-color:#9cc8f5;background:#21364e;color:#fff}
+.vpg-columns-toggle[aria-pressed="true"]::before{content:"✓";background:#429ef5;border-color:#429ef5;color:#fff;font-weight:700}
+.vpg-columns-toggle:focus-visible{outline:3px solid #a9defb;outline-offset:3px}
+.vpg-standings:not(.is-expanded) .vpg-table-scroll{overflow:hidden;overflow:clip}
+.vpg-standings:not(.is-expanded) .vpg-table{min-width:0}
+.vpg-standings .vpg-table thead th{background:#21364e;color:#dbe8f7;font-weight:600;box-shadow:inset 0 -1px 0 #aac7e533}
+.vpg-standings:not(.is-expanded) .vpg-table thead th{position:sticky;top:72px;z-index:1}
+.vpg-table abbr{text-decoration:none;cursor:help}
+.vpg-table .col-rank{width:64px;color:#9fb6cf}
+.vpg-table .col-num{width:72px}
+.vpg-table .col-team{text-align:left;color:#e6f0fb;font-weight:500;overflow-wrap:anywhere}
+.vpg-table .col-points{color:#fff}
+.vpg-table .col-points strong{font-weight:700}
+.vpg-table tbody tr:hover{background:#18304a}
+.vpg-table .is-altair{background:linear-gradient(90deg,#2a5582,#21426480 70%);box-shadow:inset 4px 0 0 var(--cyan)}
+.vpg-table .is-altair td,.vpg-table .is-altair th{color:#fff;font-weight:700;border-bottom-color:#429ef555}
+.vpg-table .is-altair .col-rank{color:#a5d5ff}
+.vpg-table .is-altair .col-points strong{color:#a5d5ff}
+.vpg-match-teams .is-altair{color:#fff;font-weight:700}
+.vpg-match-top{align-items:center}
+.vpg-match[data-outcome]{border-left:3px solid var(--outcome-color,#a7c5e338)}
+.vpg-match[data-outcome="win"]{--outcome-color:#34d399}
+.vpg-match[data-outcome="loss"]{--outcome-color:#f87171}
+.vpg-match[data-outcome="draw"]{--outcome-color:#94a3b8}
+.vpg-match-link{min-height:44px;display:inline-flex;align-items:center}
+@media(max-width:640px){
+  .vpg-columns-toggle{display:inline-flex;align-items:center}
+  .vpg-standings:not(.is-expanded) .col-detail{display:none}
+  .vpg-standings.is-expanded .vpg-table{min-width:560px}
+  .vpg-table th,.vpg-table td{padding:12px 8px;font-size:14px}
+  .vpg-table .col-rank{width:40px}
+  .vpg-table .col-num{width:44px}
+  .vpg-table .col-points{width:48px}
+}
+}

@@ -16,6 +16,6 @@ export function LiveHero({ copy, lang, locale }) {
       recentResults:[],
     };
   }, [data, loading, failed, now]);
-  return <Hero copy={copy} lang={lang} locale={locale} matchCenter={matchCenter} sourceUrl="https://virtualprogaming.com/team/ALTAIR-eSports/matches" updatedAt={data?.updatedAt}/>;
+  return <Hero copy={copy} lang={lang} locale={locale} matchCenter={matchCenter} sourceUrl="https://virtualprogaming.com/team/ALTAIR-eSports/matches"/>;
 }
 

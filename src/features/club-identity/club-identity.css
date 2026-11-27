@@ -1,3 +1,4 @@
+@layer legacy{
 /* Club identity */
 .identity-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .identity-card{
@@ -233,4 +234,5 @@
   font-weight:800;
   letter-spacing:.12em;
   text-transform:uppercase;
+}
 }

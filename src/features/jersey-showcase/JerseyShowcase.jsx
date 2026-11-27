@@ -6,6 +6,15 @@ const JERSEY_SOURCES = {
   back:"/jersey/altair-jersey-back",
 };
 
+const IMAGE_SIZES = "(max-width: 860px) 100vw, 62vw";
+
+/* Swatches drawn from the kit itself, matched to the spec rows by position. */
+const SPEC_MARKS = [
+  { kind:"swatch", colours:["#f4f6f8", "#86b8e6"] },
+  { kind:"stripes" },
+  { kind:"swatch", colours:["#d9b765"] },
+];
+
 function JerseyImage({ alt, side }) {
   const source = JERSEY_SOURCES[side];
 
@@ -14,12 +23,12 @@ function JerseyImage({ alt, side }) {
       <source
         type="image/avif"
         srcSet={`${source}-480.avif 480w, ${source}-800.avif 800w, ${source}-1122.avif 1122w`}
-        sizes="(max-width: 680px) calc(100vw - 32px), (max-width: 1040px) 50vw, 610px"
+        sizes={IMAGE_SIZES}
       />
       <source
         type="image/webp"
         srcSet={`${source}-480.webp 480w, ${source}-800.webp 800w, ${source}-1122.webp 1122w`}
-        sizes="(max-width: 680px) calc(100vw - 32px), (max-width: 1040px) 50vw, 610px"
+        sizes={IMAGE_SIZES}
       />
       <img
         src={`${source}-800.webp`}
@@ -33,49 +42,57 @@ function JerseyImage({ alt, side }) {
   );
 }
 
+function SpecMark({ mark }) {
+  if (!mark) return null;
+  if (mark.kind === "stripes") return <span className="kit-spec-mark kit-spec-mark--stripes" aria-hidden="true"/>;
+  return (
+    <span className="kit-spec-mark" aria-hidden="true">
+      {mark.colours.map((colour) => <i key={colour} style={{ background:colour }}/>)}
+    </span>
+  );
+}
+
 export function JerseyShowcase({ copy }) {
   const content = copy.jersey;
   const [side, setSide] = useState("front");
 
   return (
     <section className="section jersey-showcase" id="jersey" aria-labelledby="jersey-title">
-      <div className="container jersey-showcase-container">
-        <header className="jersey-showcase-header">
-          <div>
-            <div className="sec-eyebrow">{content.eyebrow}</div>
-            <h2 className="jersey-showcase-title" id="jersey-title">
-              {content.title[0]} <span>{content.title[1]}</span>
-            </h2>
-          </div>
-          <div className="jersey-showcase-intro">
-            <span>{content.edition}</span>
-            <p>{content.sub}</p>
-          </div>
-        </header>
-
-        <div className="jersey-showcase-gallery" aria-label={content.galleryLabel}>
-          <figure className="jersey-showcase-card jersey-showcase-card-front">
-            <JerseyImage alt={side === "front" ? content.frontAlt : content.backAlt} side={side} />
-            <figcaption>
-              <span aria-hidden="true">{side === "front" ? "01 / 02" : "02 / 02"}</span>
-              <strong>{side === "front" ? content.frontLabel : content.backLabel}</strong>
-            </figcaption>
+      <div className="container jersey-showcase-container kit">
+        <div className="kit-stage">
+          <figure className="kit-turn" data-side={side}>
+            {["front", "back"].map((view) => (
+              <div className={`kit-face kit-face--${view}`} key={view} aria-hidden={view !== side}>
+                <JerseyImage alt={view === "front" ? content.frontAlt : content.backAlt} side={view}/>
+              </div>
+            ))}
           </figure>
 
-          <div className="jersey-view-picker">
+          <div className="jersey-view-picker kit-views" role="group" aria-label={content.galleryLabel}>
             <button type="button" aria-pressed={side === "front"} onClick={() => setSide("front")}>{content.frontLabel}</button>
             <button type="button" aria-pressed={side === "back"} onClick={() => setSide("back")}>{content.backLabel}</button>
           </div>
         </div>
 
-        <dl className="jersey-showcase-details">
-          {content.details.map((item) => (
-            <div key={item.label}>
-              <dt>{item.label}</dt>
-              <dd>{item.value}</dd>
-            </div>
-          ))}
-        </dl>
+        <header className="kit-head">
+          <div className="sec-eyebrow">{content.eyebrow}</div>
+          <h2 className="jersey-showcase-title kit-title" id="jersey-title">
+            {content.title[0]} <span>{content.title[1]}</span>
+          </h2>
+          <p className="kit-lede">{content.sub}</p>
+        </header>
+
+        <div className="kit-spec">
+          <p className="kit-spec-edition">{content.edition}</p>
+          <dl className="kit-spec-list">
+            {content.details.map((item, index) => (
+              <div key={item.label}>
+                <dt>{item.label}</dt>
+                <dd><SpecMark mark={SPEC_MARKS[index]}/>{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
     </section>
   );

@@ -1,3 +1,4 @@
+@layer legacy{
 /* CLUB IDENTITY — EDITORIAL MANIFESTO */
 #identity.section{
   padding-bottom:clamp(68px,7vw,104px);
@@ -159,4 +160,5 @@
   background:
     radial-gradient(circle at 85% 8%,rgba(251,191,36,.08),transparent 28%),
     linear-gradient(180deg,#050b14,#08111f);
+}
 }

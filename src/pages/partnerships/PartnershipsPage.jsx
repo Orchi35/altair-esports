@@ -1,45 +1,112 @@
-import {useState} from "react";
 import {getRoutePath} from "../../app/routes.js";
 import {Breadcrumbs} from "../../components/navigation/Breadcrumbs.jsx";
+import {getPublicPartnershipMetrics} from "../../config/partnershipMetrics.js";
+import {SOCIAL_CHANNELS} from "../../config/site.js";
+import {getVerifiedHonours} from "../../content/honours/index.js";
 import {PARTNERSHIP_CONTENT,getPartnershipAreas} from "../../content/partnerships/index.js";
 import {PartnershipInquiryForm} from "../../features/partnerships/PartnershipInquiryForm.jsx";
 import {PartnershipVisual} from "../../features/partnerships/PartnershipVisual.jsx";
 import {trackMediaKitAction} from "../../services/analytics/actions.js";
 import {PARTNERSHIP_PRESENTATION} from "./partnershipPresentation.js";
 import "../../styles/content-pages.css";
-import "./partnerships-page.css";
-import "../../features/partnerships/alliance.css";
-import "./collaboration-studio.css";
 
 function scrollToSection(event) {
  if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
  document.getElementById(event.currentTarget.hash.slice(1))?.scrollIntoView({block:"start"});
 }
 
-function PlacementPreview({kind,tr}) {
- if(kind==="jersey") return <PartnershipVisual locale={tr?"tr":"en"} variant="placement"/>;
- return <div className={`alliance-placement alliance-placement--${kind}`} aria-label={tr?"Örnek marka yerleşimi":"Example brand placement"}>
-  <div className="alliance-screen-bar"><span><i/><i/><i/></span><small>ALTAIR / {kind==="broadcast"?"MATCHDAY":"PENALTY ARENA"}</small></div>
-  <div className="alliance-screen-scene"><svg viewBox="0 0 600 300" fill="none" aria-hidden="true"><path d="M80 280L200 70H400L520 280Z M140 175H460 M300 70V280"/><ellipse cx="300" cy="175" rx="52" ry="32"/><path d="M244 280V235H356V280 M267 72V54H333V72"/></svg><img src="/logo-ui.png" alt="" width="120" height="120" loading="lazy"/><strong>{kind==="broadcast"?"MATCHDAY":"PENALTY ARENA"}</strong><span>ALTAIR eSports</span></div>
-  <div className="alliance-sponsor-strip"><span>{tr?"MARKANIZ":"YOUR BRAND"}</span><i aria-hidden="true"/><small>{tr?"Örnek marka alanı":"Example brand space"}</small></div>
- </div>;
+function formatDay(value,locale) {
+ const date=new Date(value);
+ if(Number.isNaN(date.getTime()))return null;
+ return new Intl.DateTimeFormat(locale==="tr"?"tr-TR":"en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"Europe/Istanbul"}).format(date);
 }
+
+function NewTabHint({tr}) {
+ return <>
+  <span className="sr-only">{tr?" (yeni sekmede açılır)":" (opens in a new tab)"}</span>
+  <svg className="cm-ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2h6v6M10 2 3 9" fill="none" stroke="currentColor" strokeWidth="1.5"/></svg>
+ </>;
+}
+
 export default function PartnershipsPage({copy,locale}) {
- const tr=locale==="tr",text=PARTNERSHIP_PRESENTATION[tr?"tr":"en"],content=PARTNERSHIP_CONTENT.locales[locale];
- const [selected,setSelected]=useState("broadcast");
- const current=text.choices.find(item=>item.key===selected);
- const formCopy={...content.form,title:text.formTitle,intro:text.formIntro};
- return <article className="content-page alliance-page alliance" aria-labelledby="alliance-title"><div className="container content-page-container">
+ const tr=locale==="tr",text=PARTNERSHIP_PRESENTATION[tr?"tr":"en"],content=PARTNERSHIP_CONTENT.locales[locale]||PARTNERSHIP_CONTENT.locales.tr;
+ const areas=getPartnershipAreas(locale);
+ const areaByKey=Object.fromEntries(areas.map(area=>[area.key,area]));
+ const honours=getVerifiedHonours();
+ const metrics=getPublicPartnershipMetrics(locale);
+ const kit=PARTNERSHIP_CONTENT.mediaKit;
+ const kitUpdated=formatDay(kit.updatedAt,locale);
+ const formCopy={...content.form,eyebrow:text.formEyebrow,title:text.formTitle,intro:text.formIntro};
+
+ return <article className="content-page cm-page" aria-labelledby="alliance-title"><div className="container content-page-container">
   <Breadcrumbs label={copy.pages.common.partnerships} items={[{label:copy.pages.common.home,href:getRoutePath("home",locale)},{label:copy.pages.common.partnerships}]}/>
-  <header className="alliance-hero"><div className="alliance-hero-copy"><span className="alliance-eyebrow">{text.eyebrow}</span><h1 id="alliance-title">{text.title}<br/><em>{text.accent}</em></h1><p>{text.intro}</p><div className="alliance-actions"><a className="alliance-button" href="#partnership-form" onClick={scrollToSection}>{text.cta}<span aria-hidden="true">↗</span></a><a className="alliance-text-link" href="#collaboration-formats" onClick={scrollToSection}>{text.explore}<span aria-hidden="true">↓</span></a></div><div className="alliance-hero-signature"><span aria-hidden="true"/><p>{tr?"BİRLİKTE OYNARIZ.":"WE PLAY TOGETHER."}<br/><b>{tr?"BİRLİKTE KAZANIRIZ.":"WE WIN TOGETHER."}</b></p></div></div><PartnershipVisual locale={locale}/></header>
-  <section className="alliance-about" aria-labelledby="alliance-about-title"><div><span className="alliance-eyebrow">{text.about}</span><h2 id="alliance-about-title">{text.statement}</h2></div><div><p>{text.aboutText}</p><dl>{text.facts.map(([value,label])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></div></section>
-  <section className="alliance-section" id="collaboration-formats" aria-labelledby="formats-title"><header className="alliance-heading"><div><span className="alliance-eyebrow">01 / {text.formats}</span><h2 id="formats-title">{text.formatsTitle}</h2></div><p>{text.formatsText}</p></header>
-   <div className="alliance-selectors" role="group" aria-label={text.formats}>{text.choices.map((item,i)=><button type="button" key={item.key} aria-pressed={selected===item.key} aria-controls="alliance-opportunity" onClick={()=>setSelected(item.key)}><span className="alliance-option-number">0{i+1}</span><span><strong>{item.name}</strong><small>{item.short}</small></span><span className="alliance-option-arrow" aria-hidden="true">↗</span></button>)}</div>
-   <div className="alliance-opportunity" id="alliance-opportunity"><div className="alliance-preview"><span className="alliance-preview-label">{text.preview}</span><PlacementPreview kind={selected} tr={tr}/></div><div className="alliance-opportunity-copy" aria-live="polite" aria-atomic="true"><span className="alliance-eyebrow">{current.label}</span><h3>{current.title}</h3><p>{current.text}</p><h4>{text.deliverables}</h4><ul>{current.items.map(item=><li key={item}>{item}</li>)}</ul><a href="#partnership-form" onClick={scrollToSection} className="alliance-text-link">{text.discuss}<span aria-hidden="true">↗</span></a></div></div><p className="alliance-note">{text.note}</p>
+
+  {/* 1 · What ALTAIR offers */}
+  <header className="cm-hero">
+   <div className="cm-hero-copy">
+    <span className="content-page-eyebrow">{text.eyebrow}</span>
+    <h1 id="alliance-title">{text.title}</h1>
+    <p className="cm-lede">{text.intro}</p>
+    <div className="cm-actions">
+     <a className="btn btn-primary" href="#partnership-form" onClick={scrollToSection}>{text.cta}</a>
+     <a className="btn" href={kit.htmlPath} target="_blank" rel="noopener noreferrer" onClick={()=>trackMediaKitAction("open",locale)}>{content.openMediaKit}<NewTabHint tr={tr}/></a>
+    </div>
+   </div>
+   <PartnershipVisual locale={locale}/>
+  </header>
+
+  {/* 2 · Who it reaches: verified facts only */}
+  <section className="cm-block cm-reach" id="club-reach" aria-labelledby="reach-title">
+   <div className="cm-reach-intro">
+    <h2 id="reach-title" className="cm-h2">{text.statement}</h2>
+    <p>{text.aboutText}</p>
+   </div>
+   <aside className="cm-kit" aria-labelledby="kit-title">
+    <h3 id="kit-title">{content.mediaTitle}</h3>
+    <p>{content.mediaIntro}</p>
+    <div className="cm-kit-actions">
+     <a className="btn" href={kit.htmlPath} target="_blank" rel="noopener noreferrer" onClick={()=>trackMediaKitAction("open",locale)}>{content.openMediaKit}<NewTabHint tr={tr}/></a>
+     <a className="cm-link" href={kit.pdfPath} download onClick={()=>trackMediaKitAction("download",locale)}>{content.downloadPdf}<span className="cm-kit-format">PDF</span></a>
+    </div>
+    {kitUpdated&&<small>{content.updated}: <time dateTime={kit.updatedAt}>{kitUpdated}</time></small>}
+   </aside>
+   <dl className="cm-ledger">
+    <div><dt>{text.facts.founded}</dt><dd><strong>2025</strong></dd></div>
+    <div><dt>{text.facts.focus}</dt><dd><strong>Pro Clubs</strong></dd></div>
+    <div className="cm-ledger-wide"><dt>{text.facts.honours}</dt><dd><ul className="cm-honours">{honours.map(honour=>{const item=honour.locales[tr?"tr":"en"];return <li key={honour.id}><b>{honour.mark}</b><span>{item.competition}<small>{item.result}</small></span></li>;})}</ul></dd></div>
+    <div className="cm-ledger-wide"><dt>{text.facts.channels}</dt><dd><ul className="cm-channels">{SOCIAL_CHANNELS.map(channel=><li key={channel.cls}><span>{channel.platform}</span><a href={channel.url} target="_blank" rel="noopener noreferrer" translate="no">{channel.handle}<NewTabHint tr={tr}/></a></li>)}</ul></dd></div>
+   </dl>
+   <div className="cm-metrics" aria-labelledby="metrics-title">
+    <h3 id="metrics-title">{content.metricsTitle}</h3>
+    {metrics.length ? <ul>{metrics.map(metric=><li key={metric.key}><strong>{metric.value}</strong><span>{metric.label}</span><small>{content.source}: {metric.source} · {metric.period} · {content.verifiedAt}: {formatDay(metric.verifiedAt,locale)}</small></li>)}</ul>
+     : <p>{content.metricsEmpty}</p>}
+   </div>
   </section>
-  <section className="alliance-section alliance-process" aria-labelledby="process-title"><header className="alliance-heading"><div><span className="alliance-eyebrow">02 / {text.process}</span><h2 id="process-title">{text.processTitle}</h2></div></header><ol>{text.steps.map(([title,body],i)=><li key={title}><span>0{i+1}</span><h3>{title}</h3><p>{body}</p></li>)}</ol></section>
-  <aside className="alliance-kit"><div className="alliance-kit-cover" aria-hidden="true"><img src="/logo-ui.png" alt="" width="64" height="64" loading="lazy"/><span>ALTAIR<br/>eSports</span><small>CLUB PROFILE ↗</small></div><div><span className="alliance-eyebrow">{text.kit}</span><h2>{text.kitTitle}</h2><p>{text.kitText}</p></div><a className="alliance-button alliance-button--outline" href={PARTNERSHIP_CONTENT.mediaKit.htmlPath} target="_blank" rel="noopener noreferrer" onClick={()=>trackMediaKitAction("open",locale)}>{text.kitCta}<span aria-hidden="true">↗</span></a></aside>
-  <section className="alliance-section alliance-faq" aria-labelledby="alliance-faq-title"><div><span className="alliance-eyebrow">03 / {text.faq}</span><h2 id="alliance-faq-title">{text.faqTitle}</h2></div><div>{text.questions.map(([q,a])=><details key={q}><summary>{q}<span aria-hidden="true">+</span></summary><p>{a}</p></details>)}</div></section>
-  <section className="partnership-form-section alliance-contact" id="partnership-form" aria-labelledby="partnership-form-title"><PartnershipInquiryForm areas={getPartnershipAreas(locale)} copy={formCopy} locale={locale}/></section>
+
+  {/* 3 · Partnership areas */}
+  <section className="cm-block cm-areas" id="collaboration-formats" aria-labelledby="formats-title">
+   <header className="cm-block-head"><h2 id="formats-title" className="cm-h2">{text.formatsTitle}</h2><p>{text.formatsText}</p></header>
+   <div className="cm-themes">
+    {text.themes.map(theme=><article className="cm-theme" key={theme.key} aria-labelledby={`theme-${theme.key}`}>
+     <div className="cm-theme-head"><h3 id={`theme-${theme.key}`}>{theme.title}</h3><p>{theme.text}</p></div>
+     <ul className="cm-theme-areas">{theme.areas.map(key=>areaByKey[key]).filter(Boolean).map(area=><li key={area.key}><h4>{area.title}</h4><p>{area.description}</p></li>)}</ul>
+    </article>)}
+   </div>
+   <div className="cm-areas-foot"><p className="cm-note">{content.capacityNote}</p><a className="cm-link" href="#partnership-form" onClick={scrollToSection}>{text.discuss}</a></div>
+  </section>
+
+  {/* 4 · How it works (a real sequence) */}
+  <section className="cm-block cm-process" aria-labelledby="process-title">
+   <h2 id="process-title" className="cm-h2">{text.processTitle}</h2>
+   <ol>{text.steps.map(([title,body],i)=><li key={title}><span className="cm-step" aria-hidden="true">{i+1}</span><h3>{title}</h3><p>{body}</p></li>)}</ol>
+  </section>
+
+  <section className="cm-block cm-faq" aria-labelledby="alliance-faq-title">
+   <h2 id="alliance-faq-title" className="cm-h2">{text.faqTitle}</h2>
+   <div className="cm-faq-list">{text.questions.map(([q,a])=><details key={q}><summary><span>{q}</span><i aria-hidden="true"/></summary><p>{a}</p></details>)}</div>
+  </section>
+
+  {/* 5 · Contact */}
+  <section className="partnership-form-section cm-contact" id="partnership-form" aria-labelledby="partnership-form-title"><PartnershipInquiryForm areas={areas} copy={formCopy} locale={locale}/></section>
  </div></article>;
 }

@@ -1,3 +1,4 @@
+@layer legacy{
 .squad-roster::after{content:"ALTAIR"}
 .squad-roster-heading{
   display:flex;align-items:flex-end;justify-content:space-between;gap:34px;
@@ -75,4 +76,4 @@
   .squad-featured{padding-inline:12px}
   .squad-roster-count strong{font-size:40px}
 }
-
+}

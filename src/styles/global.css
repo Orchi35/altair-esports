@@ -1,3 +1,4 @@
+@layer legacy{
 html,
 body,
 #root {
@@ -53,3 +54,4 @@ section[id]{scroll-margin-top:112px}
 }
 ::selection{background:rgba(34,211,238,.28);color:#fff}
 :focus-visible{outline:3px solid rgba(103,232,249,.95);outline-offset:4px}
+}

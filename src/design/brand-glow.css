@@ -1,0 +1,43 @@
+/*
+ * ALTAIR blue legibility.
+ * ALTAIR blue (#4ea8ff) sits on a navy ground and can sink into it. Every piece of text that is
+ * coloured ALTAIR blue gets the same lift: a tight halo of its own colour (it reads as lit, like the
+ * backlit crest) and a fine dark drop underneath (it separates from the ground). Loaded last so it
+ * applies over every section file. Only text in ALTAIR blue is listed here; nothing else glows.
+ */
+:root{
+  --a-star-lift:
+    0 0 1px rgba(120,190,255,.55),
+    0 0 14px rgba(78,168,255,.42),
+    0 1px 2px rgba(0,3,12,.75);
+}
+.site .is-altair b,
+.site .vpg-match-teams .is-altair,
+.site .vpg-table .is-altair .col-rank,
+.site .vpg-table .is-altair .col-team,
+.site .vpg-table .is-altair .col-team a,
+.site .vpg-table .is-altair .col-points strong,
+.site .vpg-table .is-altair .col-gap,
+.site .mc-standings-table .is-altair th span,
+.site .mc-m-team.is-altair .mc-m-name,
+.site .mc-m-team.is-altair .mc-m-score,
+.site .match-center .mc-next-team:has(.is-altair) strong,
+.site .match-center .mc-playoff-team.is-altair strong,
+.site .match-detail-studio .mc-score-digits .is-altair,
+.site .match-detail-studio .mc-score-team.is-altair h2,
+.site .match-detail-studio .vpg-detail-stats.is-altair .mc-stats-head h2,
+.site #team-status .ts-position,
+.site #team-status .ts-score b,
+.site .brand-hero .hero-fixture-team.is-altair,
+.site .identity-foundation-year,
+.site .honour-mark,
+.site .honours-record-mark,
+.site .record-mark,
+.site .record-summary dd,
+.site .cm-chart-end--altair b,
+.site .cm-honours b,
+.site .cm-plate-node--altair b,
+.site .quick-standing b,
+.site .quick-standing strong{
+  text-shadow:var(--a-star-lift);
+}

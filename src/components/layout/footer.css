@@ -1,3 +1,4 @@
+@layer legacy{
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    FOOTER
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
@@ -44,3 +45,4 @@
 .footer-bottom a{color:var(--text-2);text-decoration:underline;text-decoration-color:rgba(174,184,204,.45);text-underline-offset:4px;transition:color .2s ease}
 .footer-bottom a:hover{color:var(--cyan)}
 .footer-legal{display:flex;gap:24px;flex-wrap:wrap}
+}

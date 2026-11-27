@@ -1,3 +1,4 @@
+@layer legacy{
 /* NAVIGATION & MATCH STRIP — CORPORATE SYSTEM */
 .nav{
   height:74px;
@@ -196,4 +197,5 @@
     mask-image:linear-gradient(to right,transparent,black 12px,black calc(100% - 18px),transparent);
     -webkit-mask-image:linear-gradient(to right,transparent,black 12px,black calc(100% - 18px),transparent);
   }
+}
 }

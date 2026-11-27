@@ -113,7 +113,9 @@ test("Hero component renders the verified CTA state variants", () => {
     matchCenter:matchCenter("fresh"),
     clock:createFixedClock(NOW),
   }));
-  assert.match(upcoming, new RegExp(copy.hero.actions.countdown));
+  // Countdown state: the countdown is on screen, so the primary action is the broadcast link.
+  assert.match(upcoming, /id="hero-countdown"/);
+  assert.match(upcoming, new RegExp(copy.hero.actions.twitch));
   assert.doesNotMatch(upcoming, new RegExp(copy.hero.actions.watchLive));
 
   const live = renderToStaticMarkup(React.createElement(Hero, {

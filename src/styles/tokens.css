@@ -1,3 +1,4 @@
+@layer legacy{
 :root{
   /* surfaces */
   --bg:        #030711;
@@ -72,4 +73,5 @@
   --sec-y: clamp(60px, 9vw, 120px);
   --hero-frame-max: 920px;
   --side-rail: max(0px, calc((100vw - var(--hero-frame-max)) / 2));
+}
 }

@@ -24,7 +24,7 @@ function ClubMenu({ label, links, activeSection, onNavigate }) {
         ref.current.querySelector("summary").focus();
       }
     }}>
-      <summary className={links.some((link) => link[2] === activeSection) ? "active" : undefined}>{label}<span aria-hidden="true">⌄</span></summary>
+      <summary className={links.some((link) => link[2] === activeSection) ? "active" : undefined}>{label}<svg className="nav-club-caret" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5l3 3 3-3" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg></summary>
       <ul className="nav-club-panel">
         {links.map(([href, text, section]) => <li key={href}><a href={href} aria-current={activeSection === section ? "location" : undefined} onClick={() => {
           ref.current.removeAttribute("open");
@@ -153,103 +153,87 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
     options[nextIndex].focus();
   };
 
+
+  const selectSheetLanguage = (code) => {
+    if (code !== locale) trackLanguageSwitch(code, page);
+    onLanguageChange(code);
+    closeMobileMenu();
+  };
+
   const isTurkish = activeLang === "TR";
+  const isHome = page === "home";
   const joinLabel = isTurkish ? "Bize Katıl" : "Join Us";
+  const hereLabel = isTurkish ? "Buradasınız" : "You are here";
+  const homeHref = getRoutePath("home", locale);
+  const matchesLink = [getLocalizedSectionHref(locale, "match-center"), copy.nav.links.matchCenter, "match-center"];
+  const squadLink = [getRoutePath("squad", locale), isTurkish ? "Kadro" : "Squad", "squad"];
   const clubLinks = [
     [getLocalizedSectionHref(locale, "identity"), isTurkish ? "Hikâyemiz" : "Our Story", "identity"],
     [getRoutePath("honours", locale), isTurkish ? "Başarılar" : "Honours", "honours"],
     [getLocalizedSectionHref(locale, "jersey"), copy.nav.links.jersey, "jersey"],
   ];
-  const links = [
-    [getRoutePath("penalty", locale), locale === "tr" ? "Penaltı Arena" : "Penalty Arena", "penalty"],
+  const partnershipsLink = [getRoutePath("partnerships", locale), isTurkish ? "İş Birlikleri" : "Partnerships", "sponsors"];
+  const playLinks = [
+    [getRoutePath("penalty", locale), isTurkish ? "Penaltı Arena" : "Penalty Arena", "penalty"],
     [getRoutePath("builder", locale), "FC27 Builder", "builder"],
-    [getRoutePath("squad", locale), isTurkish ? "Takım" : "Team", "squad"],
-    [getLocalizedSectionHref(locale, "match-center"), copy.nav.links.matchCenter, "match-center"],
-    [getRoutePath("partnerships", locale), isTurkish ? "İş Birlikleri" : "Partnerships", "sponsors"],
   ];
+  const quickLinks = [
+    [matchesLink[0], isTurkish ? "Maçlar" : "Matches", "match-center"],
+    squadLink,
+  ];
+  // On the homepage the sheet marks "Home" only; scroll-spy marking stays on the desktop bar.
+  const isSheetCurrent = (sectionId) => !isHome && activeSection === sectionId;
+  const desktopLink = ([href, label, sectionId], extraClass) => (
+    <li key={href} className={extraClass}>
+      <a
+        href={href}
+        className={activeSection === sectionId ? "active" : undefined}
+        aria-current={activeSection === sectionId ? "location" : undefined}
+      >
+        {label}
+      </a>
+    </li>
+  );
+  const sheetLink = ([href, label, sectionId], size = "md") => {
+    const current = sectionId === "home" ? isHome : isSheetCurrent(sectionId);
+    return (
+      <li key={href}>
+        <a
+          href={href}
+          className={`nav-sheet-link nav-sheet-link--${size}${current ? " active" : ""}`}
+          aria-current={current ? "page" : undefined}
+          onClick={closeMobileMenu}
+        >
+          <span className="nav-sheet-node" aria-hidden="true"/>
+          <span className="nav-sheet-label">{label}</span>
+          {current && <span className="nav-sheet-here" aria-hidden="true">{hereLabel}</span>}
+        </a>
+      </li>
+    );
+  };
+
   return (
     <nav className={`nav${scrolled ? " scrolled" : ""}`} aria-label={activeLang === "TR" ? "Ana menü" : "Main navigation"}>
       <div className="nav-left">
-        <a href={getRoutePath("home", locale)} className="nav-logo" aria-label="ALTAIR eSports">
+        <a href={homeHref} className="nav-logo" aria-label="ALTAIR eSports">
           <img src="/logo-ui.png" alt="" aria-hidden="true" className="nav-logo-img" width="256" height="256" decoding="async" />
           <div className="nav-wm">
             <img className="nav-altair-wordmark" src="/altair-wordmark.svg" alt="ALTAIR" width="138" height="24"/>
-            
           </div>
         </a>
       </div>
       <ul className="nav-links">
+        {desktopLink(matchesLink)}
+        {desktopLink(squadLink)}
         <li><ClubMenu label={isTurkish ? "Kulüp" : "Club"} links={clubLinks} activeSection={activeSection}/></li>
-        {links.map(([href, label, sectionId]) => (
-          <li key={href}>
-            <a
-              href={href}
-              className={activeSection === sectionId ? "active" : undefined}
-              aria-current={activeSection === sectionId ? "location" : undefined}
-            >
-              {label}
-            </a>
-          </li>
-        ))}
+        {playLinks.map((link, index) => desktopLink(link, index === 0 ? "nav-group-start" : undefined))}
+        {desktopLink(partnershipsLink)}
+      </ul>
+      <ul className="nav-quick">
+        {quickLinks.map((link) => desktopLink(link))}
       </ul>
       <div className="nav-right">
         <a href={SITE_LINKS.discord} target="_blank" rel="noopener noreferrer" className="nav-cta">{joinLabel}</a>
-        <div className="nav-menu" ref={mobileMenuRef}>
-          <button
-            type="button"
-            className={`nav-menu-toggle${mobileMenuOpen ? " active" : ""}`}
-            aria-label={mobileMenuOpen ? copy.nav.menuClose : copy.nav.menu}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-navigation"
-            ref={mobileTriggerRef}
-            onClick={() => {
-              setMobileMenuOpen((open) => !open);
-              setLangMenuOpen(false);
-            }}
-          >
-            <span/>
-            <span/>
-          </button>
-          {mobileMenuOpen && (
-            <>
-              <button
-                type="button"
-                className="nav-mobile-backdrop"
-                aria-label={copy.nav.menuClose}
-                tabIndex="-1"
-                onClick={closeMobileMenu}
-              />
-              <div
-                className="nav-mobile-panel"
-                id="mobile-navigation"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="mobile-navigation-title"
-                ref={mobilePanelRef}
-              >
-                <div className="nav-mobile-head" id="mobile-navigation-title">{copy.nav.menu}</div>
-                <ul className="nav-mobile-links">
-                  <li><ClubMenu label={isTurkish ? "Kulüp" : "Club"} links={clubLinks} activeSection={activeSection} onNavigate={closeMobileMenu}/></li>
-                  {links.map(([href, label, sectionId]) => (
-                    <li key={href}>
-                      <a
-                        href={href}
-                        className={activeSection === sectionId ? "active" : undefined}
-                        aria-current={activeSection === sectionId ? "location" : undefined}
-                        onClick={closeMobileMenu}
-                      >
-                        {label}
-                      </a>
-                    </li>
-                  ))}
-                  <li>
-                    <a href={SITE_LINKS.discord} target="_blank" rel="noopener noreferrer" className="nav-mobile-primary" onClick={closeMobileMenu}>{joinLabel}</a>
-                  </li>
-                </ul>
-              </div>
-            </>
-          )}
-        </div>
         <div className="nav-lang" ref={langMenuRef}>
           <button
             type="button"
@@ -271,14 +255,10 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
               setMobileMenuOpen(false);
             }}
           >
-            <span className="nav-lang-trigger-main">
-              <span className="nav-lang-trigger-label">{activeLang === "TR" ? "Dil" : "Language"}</span>
-              <span className="nav-lang-trigger-value">{activeLang === "TR" ? "Türkçe" : "English"}</span>
-            </span>
             <span className="nav-lang-trigger-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg>
               <span>{activeLang}</span>
-              <span className="nav-lang-trigger-caret">⌄</span>
+              <svg className="nav-lang-trigger-caret" width="10" height="10" viewBox="0 0 10 10"><path d="M2 3.5l3 3 3-3" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </span>
           </button>
           {langMenuOpen && (
@@ -291,7 +271,6 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
             >
               <div className="nav-lang-head">
                 <span>{copy.nav.langHead}</span>
-                <span className="nav-lang-live">{activeLang}</span>
               </div>
               <div className="nav-lang-list">
                 {LANG_OPTIONS.map((option) => (
@@ -300,26 +279,111 @@ export function Navigation({ scrolled, activeLang, activeSection, locale, page, 
                     key={option.code}
                     className={`nav-lang-option${activeLang === option.code ? " active" : ""}`}
                     aria-pressed={activeLang === option.code}
+                    lang={option.locale}
                     onClick={() => selectLanguage(option.locale)}
                   >
                     <span className="nav-lang-main">
-                      <span className="nav-lang-code">{option.code}</span>
                       <span className="nav-lang-label">{option.label}</span>
-                      <span className="nav-lang-note">{option.note}</span>
+                      <span className="nav-lang-code">{option.code}</span>
                       {activeLang === option.code && <span className="sr-only">{copy.nav.selected}</span>}
                     </span>
-                    <span className="nav-lang-check" aria-hidden="true">{activeLang === option.code ? "✓" : ""}</span>
+                    <span className="nav-lang-check" aria-hidden="true"/>
                   </button>
                 ))}
               </div>
             </div>
           )}
         </div>
+        <div className="nav-menu" ref={mobileMenuRef}>
+          <button
+            type="button"
+            className={`nav-menu-toggle${mobileMenuOpen ? " active" : ""}`}
+            aria-label={mobileMenuOpen ? copy.nav.menuClose : copy.nav.menu}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
+            ref={mobileTriggerRef}
+            onClick={() => {
+              setMobileMenuOpen((open) => !open);
+              setLangMenuOpen(false);
+            }}
+          >
+            <span className="nav-menu-toggle-bars" aria-hidden="true"><span/><span/></span>
+            <span className="nav-menu-toggle-label" aria-hidden="true">{copy.nav.menu}</span>
+          </button>
+          {mobileMenuOpen && (
+            <>
+              <button
+                type="button"
+                className="nav-mobile-backdrop"
+                aria-label={copy.nav.menuClose}
+                tabIndex="-1"
+                onClick={closeMobileMenu}
+              />
+              <div
+                className="nav-mobile-panel nav-sheet"
+                id="mobile-navigation"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="mobile-navigation-title"
+                ref={mobilePanelRef}
+              >
+                <div className="nav-sheet-head">
+                  <span className="nav-mobile-head" id="mobile-navigation-title">{copy.nav.menu}</span>
+                  <button type="button" className="nav-sheet-close" onClick={closeMobileMenu}>
+                    <span>{isTurkish ? "Kapat" : "Close"}</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
+                  </button>
+                </div>
+                <div className="nav-sheet-body">
+                  <ul className="nav-mobile-links nav-sheet-primary">
+                    {sheetLink([homeHref, isTurkish ? "Ana Sayfa" : "Home", "home"], "lg")}
+                    {sheetLink(matchesLink, "lg")}
+                    {sheetLink(squadLink, "lg")}
+                  </ul>
+                  <div className="nav-sheet-groups">
+                    <section className="nav-sheet-group" aria-labelledby="nav-sheet-club">
+                      <h2 className="nav-sheet-group-title" id="nav-sheet-club">{isTurkish ? "Kulüp" : "Club"}</h2>
+                      <ul className="nav-mobile-links">
+                        {clubLinks.map((link) => sheetLink(link))}
+                        {sheetLink(partnershipsLink)}
+                      </ul>
+                    </section>
+                    <section className="nav-sheet-group" aria-labelledby="nav-sheet-play">
+                      <h2 className="nav-sheet-group-title" id="nav-sheet-play">{isTurkish ? "Oyna" : "Play"}</h2>
+                      <ul className="nav-mobile-links">
+                        {playLinks.map((link) => sheetLink(link))}
+                      </ul>
+                    </section>
+                  </div>
+                </div>
+                <div className="nav-sheet-foot">
+                  <div className="nav-sheet-lang" role="group" aria-labelledby="nav-sheet-lang-label">
+                    <span className="nav-sheet-lang-label" id="nav-sheet-lang-label">{copy.nav.langHead}</span>
+                    <div className="nav-sheet-lang-options">
+                      {[...LANG_OPTIONS].reverse().map((option) => (
+                        <button
+                          type="button"
+                          key={option.code}
+                          className="nav-sheet-lang-option"
+                          lang={option.locale}
+                          aria-pressed={activeLang === option.code}
+                          onClick={() => selectSheetLanguage(option.locale)}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <a href={SITE_LINKS.discord} target="_blank" rel="noopener noreferrer" className="nav-mobile-primary" onClick={closeMobileMenu}>
+                    {joinLabel}
+                    <span className="nav-sheet-external">Discord</span>
+                  </a>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );
 }
-
-
-
-

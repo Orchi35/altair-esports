@@ -1,3 +1,4 @@
+@layer legacy{
 /* Shared canvas and surface palette, including lazy-loaded sections. */
 :root {
   --altair-canvas:#080f1c;
@@ -71,4 +72,4 @@ body::before, body::after { display:none; }
   background:linear-gradient(115deg,#142136ed,#0d1829ed);
   border-bottom-color:var(--altair-edge);
 }
-
+}

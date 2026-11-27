@@ -1,3 +1,4 @@
+@layer legacy{
 /* CLUB HONOURS — COMPETITIVE LEDGER */
 .honours .sec-hdr{
   margin-bottom:clamp(40px,5vw,62px);
@@ -155,3 +156,4 @@
 .site #honours .honour-competition { margin:0; color:#edf4ff; font:700 18px/1.4 var(--f-body); letter-spacing:0; text-transform:none; overflow-wrap:anywhere; }
 .site #honours .sec-title { font:800 clamp(32px,4vw,48px)/1.15 var(--f-body); letter-spacing:-.03em; }
 @media(max-width:760px) { .site #honours .honours-grid { grid-template-columns:1fr; gap:14px; } .site #honours .honour-card { min-height:240px; } }
+}

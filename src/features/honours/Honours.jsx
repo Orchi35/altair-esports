@@ -1,33 +1,38 @@
 import { getRoutePath } from "../../app/routes.js";
+import { HonourMark, HonourTally } from "./HonourRecord.jsx";
+import { isFinalMark } from "./honourMarks.js";
 import "./honours.css";
 
 export function Honours({ copy, locale = "tr" }) {
+  const content = copy.honours;
+
   return (
-    <section className="section honours" id="honours">
-      <div className="container">
-        <div className="sec-hdr">
+    <section className="section honours" id="honours" aria-labelledby="honours-title">
+      <div className="container record">
+        <div className="sec-hdr record-head">
           <div className="sec-hdr-left">
-            <div className="sec-eyebrow">{copy.honours.eyebrow}</div>
-            <h2 className="sec-title">{copy.honours.title[0]} <span className="accent">{copy.honours.title[1]}</span></h2>
-            <p className="sec-sub">{copy.honours.sub}</p>
+            <div className="sec-eyebrow">{content.eyebrow}</div>
+            <h2 className="sec-title" id="honours-title">{content.title[0]} {content.title[1]}</h2>
+            <p className="sec-sub">{content.sub}</p>
           </div>
-          <a className="sec-link" href={getRoutePath("honours", locale)}>{copy.honours.view}<span aria-hidden="true">→</span></a>
+          <a className="sec-link" href={getRoutePath("honours", locale)}>{content.view}</a>
         </div>
 
-        <div className="honours-grid">
-          {copy.honours.items.map((honour) => (
-            <article key={`${honour.season}-${honour.competition}`} className="honour-card">
-              <div className="honour-card-head">
-                <span className="honour-season">{honour.season}</span>
-                <div className={`honour-mark${honour.mark === "F" ? " honour-mark--text" : ""}`}>{honour.mark === "F" ? honour.result : honour.mark.replace("×", "")}</div>
-                {honour.mark !== "F" && <div className="honour-result">{honour.result}</div>}
+        <ul className="record-list">
+          {content.items.map((honour) => (
+            <li key={`${honour.season}-${honour.competition}`} className={`record-row${isFinalMark(honour.mark) ? " is-final" : ""}`}>
+              <HonourMark mark={honour.mark} result={honour.result}/>
+              <div className="record-what">
+                <h3>{honour.competition}</h3>
+                <p>
+                  {!isFinalMark(honour.mark) && <span>{honour.result}</span>}
+                  <span>{honour.season}</span>
+                </p>
               </div>
-              <div className="honour-copy">
-                <h3 className="honour-competition">{honour.competition}</h3>
-              </div>
-            </article>
+              <HonourTally mark={honour.mark}/>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

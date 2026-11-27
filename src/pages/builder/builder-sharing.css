@@ -1,3 +1,4 @@
+@layer legacy{
 .builder-toolbar>div{flex-wrap:wrap;justify-content:flex-end}
 .builder-workspace .builder-toolbar .builder-export{background:linear-gradient(135deg,#20374d,#132335);border-color:#526f8d;color:#e1efff;font-weight:600}
 .builder-toolbar button:disabled{cursor:wait;opacity:.65}
@@ -12,3 +13,4 @@
 .builder-share-loading a,.builder-share-loading button{display:inline-block;margin:10px 16px 0 0;color:#c4e0ff}
 .builder-share-loading button{padding:10px 20px;border:1px solid #526f8d;border-radius:8px;background:#1d334b;cursor:pointer}
 @media(max-width:760px){.builder-toolbar>div{justify-content:flex-start}.builder-share{padding:16px}.builder-share>div{flex-wrap:wrap}.builder-share input{flex:1 1 200px}}
+}

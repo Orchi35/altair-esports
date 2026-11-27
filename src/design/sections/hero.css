@@ -1,0 +1,516 @@
+/* Atlas · hero section — owned by the hero designer. Unlayered; loaded after atlas-sections.css.
+ *
+ * The first viewport is one composition: who we are (motto + crest on Altair), what happens next
+ * (the fixture readout and its countdown) and how we are doing (the status readout docked under
+ * the hero, #team-status). The crest and constellation are the only bold element; everything
+ * else is type on the night ground, hairlines and constellation nodes.
+ */
+
+/* ---------- Section tokens ---------- */
+.site .brand-hero,
+.site #team-status{
+  --hero-edge:max(var(--a-gutter),calc((100% - var(--a-max)) / 2));
+  --hero-strip:156px;
+  --hero-node:
+    radial-gradient(circle at 3.5px 3.5px,var(--a-ice) 2.5px,transparent 3px),
+    linear-gradient(90deg,var(--a-rule-2),var(--a-rule-2)) 8px 3px/18px 1px no-repeat;
+}
+
+/* ===================== Hero frame ===================== */
+.site .brand-hero{
+  position:relative;
+  isolation:isolate;
+  display:grid;
+  grid-template-columns:minmax(0,1.12fr) minmax(300px,.8fr);
+  grid-template-areas:"motto art" "fixture art" "cta art";
+  grid-template-rows:auto auto auto;
+  align-content:center;
+  gap:0 clamp(32px,6vw,96px);
+  min-height:clamp(600px,calc(100svh - var(--hero-strip)),980px);
+  margin:0;
+  padding:calc(var(--a-nav-h) + clamp(20px,4.5vh,52px)) var(--hero-edge) clamp(24px,4vh,40px);
+  border:0;
+  background:
+    radial-gradient(circle at 77% 50%,#1a40765c 0,transparent 30%),
+    radial-gradient(ellipse 46% 62% at 77% 50%,#0c22442e,transparent 72%);
+  overflow:hidden;
+}
+.site .brand-hero::before,.site .brand-hero::after{display:none}
+.site .brand-hero .brand-hero-copy{display:contents}
+
+/* ---------- Motto (two-tone brand line) ---------- */
+.site .brand-hero .brand-motto{
+  grid-area:motto;
+  align-self:end;
+  margin:0;
+  font-family:var(--a-font);
+  font-stretch:var(--a-wide);
+  font-weight:600;
+  font-size:clamp(40px,3.9vw,56px);
+  line-height:1;
+  letter-spacing:-.025em;
+  color:var(--a-text);
+  text-wrap:initial;
+}
+.site .brand-hero .brand-motto-line{display:block;white-space:nowrap}
+.site .brand-hero .brand-motto-line+.brand-motto-line{margin-top:.1em}
+.site .brand-hero .brand-motto strong{color:var(--a-ice);font-weight:800;letter-spacing:-.02em}
+
+/* ---------- Fixture readout (was a boxed card) ---------- */
+.site .brand-hero .hero-match-card{
+  grid-area:fixture;
+  position:static;
+  width:auto;
+  max-width:620px;
+  margin:clamp(28px,5vh,52px) 0 0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:none;
+  box-shadow:none;
+  overflow:visible;
+  isolation:auto;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+  animation:none;
+}
+.site .brand-hero .hero-match-card::before,.site .brand-hero .hero-match-card::after{display:none}
+
+.site .brand-hero .hero-fixture-head{
+  display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;
+  margin:0 0 16px;padding:0 0 12px;
+  border-bottom:1px solid var(--a-rule);
+  font:500 14px/1.4 var(--a-font);color:var(--a-muted);
+}
+.site .brand-hero .hero-fixture-label{display:inline-flex;align-items:center;gap:10px;color:var(--a-ice)}
+.site .brand-hero .hero-fixture-label::before{content:"";flex:none;width:26px;height:7px;background:var(--hero-node)}
+.site .brand-hero .hero-fixture-competition{order:2;margin-left:auto;color:var(--a-text-2)}
+.site .brand-hero .hero-match-status{
+  order:1;display:inline-flex;align-items:center;gap:7px;min-height:0;padding:0;
+  border:0;border-radius:0;background:none;box-shadow:none;
+  font:600 14px/1.4 var(--a-font);letter-spacing:0;text-transform:none;color:var(--a-text);
+}
+.site .brand-hero .hero-match-status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--a-muted)}
+.site .brand-hero .hero-match-status--live{color:#fff}
+.site .brand-hero .hero-match-status--live::before{background:var(--a-loss);box-shadow:0 0 0 3px #f08a8a33}
+.site .brand-hero .hero-match-status--broadcast::before{background:var(--a-ice)}
+
+/* Fixture: two equal rows in home/away order; ALTAIR in ALTAIR blue; goals right-aligned when finished. */
+.site .brand-hero .hero-fixture-teams{display:grid;gap:4px;margin:0;max-width:560px}
+.site .brand-hero .hero-fixture-team{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:16px;
+  font:700 clamp(28px,2.6vw,38px)/1.08 var(--a-font);font-stretch:var(--a-wide);letter-spacing:-.015em;color:#fff;
+}
+.site .brand-hero .hero-fixture-name{min-width:0;overflow-wrap:anywhere;text-wrap:balance}
+.site .brand-hero .hero-fixture-team.is-altair{color:var(--a-star)}
+.site .brand-hero .hero-fixture-goals{min-width:1.2ch;text-align:right;font-variant-numeric:tabular-nums}
+/* Small separator so the two names never read as one long name. */
+.site .brand-hero .hero-fixture-vs{display:block;margin:0;font:500 14px/1.2 var(--a-font);letter-spacing:.04em;color:var(--a-muted)}
+
+.site .brand-hero .hero-kickoff{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;margin:14px 0 0}
+.site .brand-hero .hero-kickoff-time{display:inline-flex;align-items:baseline;gap:6px}
+.site .brand-hero .hero-kickoff-time time{font:700 28px/1.1 var(--a-font);font-stretch:var(--a-wide);font-variant-numeric:tabular-nums;color:var(--a-text)}
+.site .brand-hero .hero-kickoff-time small{font:500 13px/1 var(--a-font);letter-spacing:.02em;color:var(--a-muted)}
+.site .brand-hero .hero-kickoff-day{font:500 17px/1.4 var(--a-font);color:var(--a-text-2)}
+.site .brand-hero .hero-kickoff-day::first-letter{text-transform:uppercase}
+
+/* ---------- Countdown: a precise instrument ---------- */
+.site .brand-hero .hero-countdown{
+  display:grid;grid-template-columns:auto;justify-content:start;gap:10px;
+  margin:22px 0 0;padding:16px 0 0;border-top:1px solid var(--a-rule);
+}
+.site .brand-hero .hero-countdown-label{grid-column:1/-1;display:block;margin:0;font:500 13px/1.4 var(--a-font);letter-spacing:.02em;text-transform:none;color:var(--a-muted)}
+.site .brand-hero .hero-countdown-units{display:flex;gap:0;margin:0}
+.site .brand-hero .hero-countdown-unit{
+  display:grid;gap:4px;min-width:0;margin:0;padding:0 18px 0 0;
+  border:0;border-radius:0;background:none;text-align:left;
+}
+.site .brand-hero .hero-countdown-unit+.hero-countdown-unit{padding-left:18px;border-left:1px solid var(--a-rule)}
+.site .brand-hero .hero-countdown-unit strong{
+  display:block;font:700 clamp(32px,2.8vw,40px)/1 var(--a-font);font-stretch:var(--a-wide);
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em;color:#fff;
+}
+.site .brand-hero .hero-countdown-unit--seconds strong{color:var(--a-text-2);font-weight:500}
+.site .brand-hero .hero-countdown-unit small{display:block;margin:0;font:500 12px/1.2 var(--a-font);letter-spacing:.02em;text-transform:none;color:var(--a-muted)}
+
+
+/* ---------- Loading and empty ---------- */
+.site .brand-hero .hero-fixture-loading{display:grid;gap:12px}
+.site .brand-hero .hero-skeleton{display:block;height:40px;width:min(100%,360px);border-radius:var(--a-r1);background:var(--a-panel-2)}
+.site .brand-hero .hero-skeleton--line{height:22px;width:min(70%,240px);background:var(--a-panel)}
+.site .brand-hero .hero-match-message{margin:0;font:500 14px/1.5 var(--a-font);color:var(--a-muted)}
+.site .brand-hero .hero-match-message--empty{max-width:24ch;font:700 clamp(24px,2.4vw,32px)/1.15 var(--a-font);font-stretch:var(--a-wide);letter-spacing:-.01em;color:var(--a-text);text-wrap:balance}
+
+/* ---------- Actions: one primary, one quiet link ---------- */
+.site .brand-hero .hero-ctas{grid-area:cta;display:flex;flex-wrap:wrap;align-items:center;gap:10px 28px;width:auto;margin:30px 0 0;animation:none}
+.site .brand-hero .hero-ctas .hero-cta-primary{min-height:48px;padding:12px 24px;font:600 16px/1.2 var(--a-font)}
+.site .brand-hero .hero-cta-secondary{
+  display:inline-flex;align-items:center;min-height:44px;
+  color:var(--a-ice);font:600 15px/1.2 var(--a-font);
+  text-decoration:underline;text-decoration-color:var(--a-rule-2);text-decoration-thickness:1px;text-underline-offset:6px;
+  transition:color .18s ease,text-decoration-color .18s ease;
+}
+.site .brand-hero .hero-cta-secondary:hover{color:#fff;text-decoration-color:var(--a-ice)}
+
+/* ---------- Crest on Altair ---------- */
+.site .brand-hero .brand-art{
+  grid-area:art;align-self:center;justify-self:center;
+  position:relative;width:min(100%,420px);max-width:none;margin:0;
+}
+.site .brand-hero .brand-art img{display:block;width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 24px 30px #0006) drop-shadow(0 0 36px #348fee2e)}
+
+/* ===================== Status readout (#team-status), docked under the hero ===================== */
+.site #team-status.quick-status{
+  position:relative;margin:0;padding:0 0 clamp(28px,4vh,44px);min-height:0;
+  border:0;background:none;box-shadow:none;
+}
+.site #team-status.quick-status::before,.site #team-status.quick-status::after{display:none}
+.site #team-status .ts-readout{border-top:1px solid var(--a-rule-2)}
+.site #team-status .ts-strip{
+  display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr);
+  margin:0;border-bottom:1px solid var(--a-rule);
+}
+.site #team-status .ts-cell{min-width:0;padding:18px 24px 20px;border-left:1px solid var(--a-rule)}
+.site #team-status .ts-cell:first-child{padding-left:0;border-left:0}
+.site #team-status .ts-cell dt{display:flex;align-items:baseline;gap:8px;margin:0 0 10px;font:500 14px/1.3 var(--a-font);color:var(--a-text-2)}
+.site #team-status .ts-cell dt span{font-size:13px;color:var(--a-muted)}
+.site #team-status .ts-cell dd{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;min-height:40px;margin:0}
+
+.site #team-status .ts-score{flex:none;font:700 34px/1 var(--a-font);font-stretch:var(--a-wide);font-variant-numeric:tabular-nums;color:var(--a-text)}
+.site #team-status .ts-score b{color:var(--a-star)}
+.site #team-status .ts-score>span[aria-hidden]{padding-inline:4px;color:var(--a-muted);font-weight:500}
+.site #team-status .ts-opponent{min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:500 16px/1.3 var(--a-font);color:var(--a-text)}
+.site #team-status .ts-outcome{display:inline-flex;align-items:center;gap:6px;font:600 13px/1.2 var(--a-font);color:var(--a-draw)}
+.site #team-status .ts-outcome::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.site #team-status .ts-outcome--w{color:var(--a-win)}
+.site #team-status .ts-outcome--l{color:var(--a-loss)}
+
+.site #team-status .ts-position{font:700 34px/1 var(--a-font);font-stretch:var(--a-wide);font-variant-numeric:tabular-nums;color:var(--a-star)}
+.site #team-status .ts-points{font:500 16px/1.3 var(--a-font);font-variant-numeric:tabular-nums;color:var(--a-text)}
+.site #team-status .ts-aside{flex-basis:100%;margin-top:4px;font:400 13px/1.3 var(--a-font);color:var(--a-muted)}
+
+.site #team-status .ts-form{display:flex;align-items:center;gap:6px}
+.site #team-status .ts-form-chip{
+  display:inline-grid;place-items:center;width:32px;height:32px;
+  border:1px solid currentColor;border-radius:var(--a-r1);
+  font:700 13px/1 var(--a-font);font-variant-numeric:tabular-nums;color:var(--a-draw);background:transparent;
+}
+.site #team-status .ts-form-chip--w{color:var(--a-win);background:#5fd4a014}
+.site #team-status .ts-form-chip--l{color:var(--a-loss);background:#f08a8a14}
+
+.site #team-status .ts-empty,
+.site #team-status .ts-unavailable{font:400 14px/1.4 var(--a-font);color:var(--a-text-2)}
+.site #team-status .ts-unavailable{margin:0;padding:22px 0;border-bottom:1px solid var(--a-rule)}
+.site #team-status .ts-skeleton{display:block;width:min(100%,180px);height:34px;border-radius:var(--a-r1);background:var(--a-panel-2)}
+.site #team-status .quick-status-note{
+  margin:0;padding:10px 0 0;text-align:right;
+  font:400 13px/1.4 var(--a-font);letter-spacing:0;text-transform:none;color:var(--a-muted);
+}
+
+/* ===================== Tablet ===================== */
+@media (max-width:1000px){
+  .site .brand-hero{grid-template-columns:minmax(0,1fr) minmax(220px,.62fr);column-gap:32px}
+  .site .brand-hero .brand-motto{font-size:clamp(30px,4.6vw,56px)}
+  .site .brand-hero .hero-countdown{grid-template-columns:1fr}
+  .site #team-status .ts-cell{padding-inline:16px}
+}
+
+/* ===================== Phones ===================== */
+@media (max-width:680px){
+  .site .brand-hero,.site #team-status{--hero-strip:0px}
+  .site .brand-hero{
+    grid-template-columns:minmax(0,1fr) clamp(92px,29vw,124px);
+    grid-template-areas:"motto art" "fixture fixture" "cta cta";
+    align-content:start;
+    gap:0 12px;
+    min-height:0;
+    padding:calc(var(--a-nav-h) + 18px) var(--a-gutter) 22px;
+    background:radial-gradient(circle at 86% calc(var(--a-nav-h) + 70px),#1a40765c 0,transparent 120px);
+  }
+  .site .brand-hero .brand-motto{align-self:center;font-size:clamp(28px,8.4vw,36px);line-height:1.02}
+  .site .brand-hero .brand-motto-line{white-space:normal}
+  .site .brand-hero .brand-motto-line+.brand-motto-line{margin-top:.22em}
+  .site .brand-hero .brand-art{width:100%;align-self:center}
+
+  .site .brand-hero .hero-match-card{max-width:none;margin-top:24px}
+  .site .brand-hero .hero-fixture-head{margin-bottom:12px;padding-bottom:10px;font-size:13px}
+  .site .brand-hero .hero-fixture-team{font-size:clamp(24px,7vw,30px)}
+  .site .brand-hero .hero-kickoff{margin-top:8px;gap:2px 12px}
+  .site .brand-hero .hero-kickoff-time time{font-size:22px}
+  .site .brand-hero .hero-kickoff-day{font-size:15px}
+  .site .brand-hero .hero-countdown{margin-top:14px;padding-top:12px;gap:8px}
+  .site .brand-hero .hero-countdown-units{justify-content:space-between}
+  .site .brand-hero .hero-countdown-unit{flex:1 1 0;padding-right:10px}
+  .site .brand-hero .hero-countdown-unit+.hero-countdown-unit{padding-left:12px}
+  .site .brand-hero .hero-countdown-unit strong{font-size:30px}
+
+  .site .brand-hero .hero-ctas{margin-top:20px;gap:8px 20px}
+  .site .brand-hero .hero-ctas .hero-cta-primary{flex:1 1 auto;padding-inline:18px}
+
+  .site #team-status.quick-status{padding-bottom:28px}
+  .site #team-status .ts-strip{grid-template-columns:1fr}
+  .site #team-status .ts-cell{
+    display:grid;grid-template-columns:96px minmax(0,1fr);align-items:center;column-gap:12px;
+    padding:11px 0;border-left:0;border-top:1px solid var(--a-rule);
+  }
+  .site #team-status .ts-cell:first-child{border-top:0}
+  .site #team-status .ts-cell dt{display:grid;gap:0;margin:0;font-size:13px}
+  .site #team-status .ts-cell dt span{font-size:12px}
+  .site #team-status .ts-cell dd{min-height:0;gap:2px 10px}
+  .site #team-status .ts-score,.site #team-status .ts-position{font-size:24px}
+  .site #team-status .ts-opponent{font-size:15px;flex:1 1 0}
+  .site #team-status .ts-outcome{flex-basis:100%;font-size:12px}
+  .site #team-status .ts-points{font-size:15px}
+  .site #team-status .ts-aside{margin-top:0;font-size:12px}
+  .site #team-status .ts-form-chip{width:28px;height:28px;font-size:12px}
+  .site #team-status .quick-status-note{text-align:left;font-size:12px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .site .brand-hero .hero-cta-secondary{transition:none}
+}
+
+/* ===================== Backlit crest =====================
+ * The crest is the hero's one bold element, so it gets a light source of its own: a white core
+ * and blue bloom directly behind it (the PNG's silhouette blocks the centre, so light only escapes
+ * around the edges), a fine corona of rays, a wide haze that lifts the navy around it, and light
+ * pooling on the ground. The crest itself gets a rim light from its own alpha edge.
+ * --bl-x / --bl-y are set by Hero.jsx on a fine pointer (parallax against the cursor).
+ */
+.site .brand-hero .brand-backlight{
+  position:absolute;inset:-46%;z-index:0;pointer-events:none;
+  transform:translate3d(var(--bl-x,0px),var(--bl-y,0px),0);
+  transition:transform .9s var(--ease-out-expo,cubic-bezier(.16,1,.3,1));
+}
+.site .brand-hero .brand-backlight>span{position:absolute;border-radius:50%;mix-blend-mode:screen}
+.site .brand-hero .brand-backlight-haze{
+  inset:-30%;
+  background:radial-gradient(circle,rgba(36,98,196,.34) 0%,rgba(22,62,132,.2) 26%,rgba(10,32,72,.08) 46%,transparent 64%);
+}
+.site .brand-hero .brand-backlight-rays{
+  inset:6%;
+  background:
+    repeating-conic-gradient(from 3deg,rgba(196,228,255,.22) 0deg .8deg,transparent .8deg 9deg),
+    repeating-conic-gradient(from 0deg,rgba(150,205,255,.12) 0deg 2.2deg,transparent 2.2deg 17deg);
+  -webkit-mask-image:radial-gradient(circle,transparent 21%,#000 29%,rgba(0,0,0,.55) 44%,transparent 66%);
+  mask-image:radial-gradient(circle,transparent 21%,#000 29%,rgba(0,0,0,.55) 44%,transparent 66%);
+  filter:blur(1.2px);
+}
+.site .brand-hero .brand-backlight-bloom{
+  inset:20%;
+  background:radial-gradient(circle,rgba(176,218,255,.62) 0%,rgba(96,170,255,.36) 24%,rgba(46,118,230,.16) 44%,transparent 68%);
+  filter:blur(10px);
+}
+.site .brand-hero .brand-backlight-core{
+  inset:31%;
+  background:radial-gradient(circle,#ffffff 0%,rgba(236,246,255,.95) 22%,rgba(160,210,255,.55) 44%,transparent 70%);
+  filter:blur(14px);
+}
+.site .brand-hero .brand-backlight-floor{
+  left:24%;right:24%;top:76%;height:9%;
+  background:radial-gradient(ellipse at center,rgba(110,180,255,.42) 0%,rgba(60,130,240,.16) 45%,transparent 72%);
+  filter:blur(10px);
+}
+/* Rim light: the crest's own edge catches the light behind it, and it casts onto the ground. */
+.site .brand-hero .brand-art img{
+  filter:
+    drop-shadow(0 0 1px rgba(226,242,255,.95))
+    drop-shadow(0 0 10px rgba(150,205,255,.65))
+    drop-shadow(0 0 34px rgba(70,150,255,.4))
+    drop-shadow(0 30px 34px rgba(0,4,16,.6));
+}
+@media(max-width:680px){
+  .site .brand-hero .brand-backlight{inset:-38%}
+  .site .brand-hero .brand-backlight-rays{opacity:.7}
+  .site .brand-hero .brand-backlight-haze{inset:-20%}
+}
+@media (forced-colors:active){.site .brand-hero .brand-backlight{display:none}}
+
+/* ===================== Score band =====================
+ * No boxes. The readout is an editorial band on the night ground: three columns of large wide-cut
+ * figures separated by hairlines that fade at both ends, with a soft horizontal light passing
+ * behind the band. Colour only where it means something: ALTAIR's own score and position in ALTAIR
+ * blue, the result word in its result colour, and the form letters in their result colours, with
+ * older matches dimmer and the newest at full strength (so "newest on the right" is visible).
+ */
+.site #team-status .ts-readout{position:relative;border-top:0;padding:clamp(18px,2.4vw,28px) 0 0}
+.site #team-status .ts-readout::before{
+  content:"";position:absolute;left:-10%;right:-10%;top:0;bottom:-8px;z-index:-1;pointer-events:none;
+  background:
+    linear-gradient(90deg,transparent,rgba(143,196,255,.22) 30%,rgba(143,196,255,.22) 70%,transparent) top/100% 1px no-repeat,
+    radial-gradient(60% 120% at 50% 50%,rgba(40,96,196,.16),transparent 70%);
+}
+.site #team-status .ts-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:0}
+.site #team-status .ts-cell,
+.site #team-status .ts-cell:first-child{
+  position:relative;min-width:0;padding:6px clamp(20px,3vw,44px) 8px;
+  border:0;border-radius:0;background:none;box-shadow:none;
+}
+.site #team-status .ts-cell:first-child{padding-left:0}
+.site #team-status .ts-cell+.ts-cell::before{
+  content:"";position:absolute;left:0;top:4%;bottom:4%;width:1px;
+  background:linear-gradient(180deg,transparent,var(--a-rule-2) 25%,var(--a-rule-2) 75%,transparent);
+}
+.site #team-status .ts-cell dt{margin:0 0 10px;font:500 13px/1.3 var(--a-font);letter-spacing:.04em;color:var(--a-text-2)}
+.site #team-status .ts-cell dt span{color:var(--a-muted)}
+.site #team-status .ts-cell dd{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;min-height:0;margin:0}
+.site #team-status .ts-score,
+.site #team-status .ts-position{font:700 clamp(52px,5vw,74px)/.92 var(--a-font);font-stretch:var(--a-wide);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.site #team-status .ts-score{color:var(--a-text)}
+.site #team-status .ts-score b,.site #team-status .ts-position{color:var(--a-star);text-shadow:0 0 28px rgba(78,168,255,.25)}
+.site #team-status .ts-score>span[aria-hidden]{padding-inline:.06em;color:var(--a-muted);font-weight:400}
+.site #team-status .ts-opponent{font:600 18px/1.25 var(--a-font);color:var(--a-text)}
+.site #team-status .ts-points{font:600 18px/1.25 var(--a-font);color:var(--a-text)}
+.site #team-status .ts-outcome{font:600 14px/1.2 var(--a-font)}
+.site #team-status .ts-aside{flex-basis:100%;margin-top:6px;font:400 13px/1.4 var(--a-font);color:var(--a-muted)}
+.site #team-status .ts-aside--strong{color:var(--a-text-2)}
+
+/* Form: result letters, no boxes. Oldest dimmest, newest full strength. */
+.site #team-status .ts-form{display:flex;align-items:flex-end;gap:clamp(12px,1.4vw,18px);padding-top:4px}
+.site #team-status .ts-form-chip{
+  position:relative;display:inline-block;width:auto;height:auto;min-width:0;padding:0 0 8px;
+  border:0;border-radius:0;background:none;box-shadow:none;
+  font:700 clamp(30px,2.6vw,38px)/1 var(--a-font);font-stretch:var(--a-wide);color:var(--a-draw);
+}
+.site #team-status .ts-form-chip::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:currentColor}
+.site #team-status .ts-form-chip--w{color:var(--a-win);background:none}
+.site #team-status .ts-form-chip--l{color:var(--a-loss);background:none}
+.site #team-status .ts-form-chip--d{color:var(--a-draw);background:none}
+.site #team-status .ts-form-chip:nth-last-child(5){opacity:.42}
+.site #team-status .ts-form-chip:nth-last-child(4){opacity:.55}
+.site #team-status .ts-form-chip:nth-last-child(3){opacity:.68}
+.site #team-status .ts-form-chip:nth-last-child(2){opacity:.82}
+.site #team-status .ts-form-chip:last-child{opacity:1;text-shadow:0 0 18px currentColor}
+.site #team-status .quick-status-note{margin-top:18px}
+
+@media(max-width:900px){
+  .site #team-status .ts-strip{grid-template-columns:1fr}
+  .site #team-status .ts-cell,.site #team-status .ts-cell:first-child{padding:18px 0}
+  .site #team-status .ts-cell+.ts-cell::before{left:0;right:0;top:0;bottom:auto;width:auto;height:1px;background:linear-gradient(90deg,transparent,var(--a-rule-2) 20%,var(--a-rule-2) 80%,transparent)}
+  .site #team-status .ts-score,.site #team-status .ts-position{font-size:52px}
+  .site #team-status .ts-form-chip{font-size:30px}
+}
+@media(max-width:680px){
+  /* Label above the figures so names never truncate on phones. */
+  .site #team-status .ts-cell,.site #team-status .ts-cell:first-child{display:block}
+  .site #team-status .ts-cell dt{display:flex;gap:8px;margin-bottom:8px}
+  .site #team-status .ts-opponent{white-space:normal;overflow:visible;text-overflow:clip;font-size:16px}
+}
+@media(max-width:680px){
+  /* Compact band on phones: last match and position side by side, form full width below. */
+  .site #team-status .ts-readout{padding-top:14px}
+  .site #team-status .ts-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .site #team-status .ts-cell,.site #team-status .ts-cell:first-child{padding:10px 0 12px}
+  .site #team-status .ts-cell--standing{padding-left:16px}
+  .site #team-status .ts-cell--form{grid-column:1/-1;padding-top:14px}
+  .site #team-status .ts-cell+.ts-cell::before{background:none}
+  .site #team-status .ts-cell--standing::before{content:"";position:absolute;left:0;top:10%;bottom:10%;width:1px;height:auto;right:auto;background:linear-gradient(180deg,transparent,var(--a-rule-2) 25%,var(--a-rule-2) 75%,transparent)}
+  .site #team-status .ts-cell--form::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;width:auto;bottom:auto;background:linear-gradient(90deg,transparent,var(--a-rule-2) 20%,var(--a-rule-2) 80%,transparent)}
+  .site #team-status .ts-cell dt{flex-wrap:wrap;gap:2px 6px;margin-bottom:6px;font-size:12px}
+  .site #team-status .ts-cell dt span{font-size:12px}
+  .site #team-status .ts-cell dd{gap:4px 10px}
+  .site #team-status .ts-score,.site #team-status .ts-position{font-size:38px}
+  .site #team-status .ts-opponent,.site #team-status .ts-points{flex-basis:100%;font-size:14px}
+  .site #team-status .ts-outcome{font-size:12px}
+  .site #team-status .ts-aside{margin-top:2px;font-size:12px}
+  .site #team-status .ts-form{gap:12px}
+  .site #team-status .ts-form-chip{padding-bottom:6px;font-size:24px}
+  .site #team-status .quick-status-note{margin-top:10px;font-size:11px}
+}
+/* The backlight is wider than the crest on purpose; keep it inside the page on narrow phones. */
+.site .brand-hero{overflow-x:clip}
+/* The band's light runs past the column on purpose; clip it at the section edge. */
+.site #team-status{overflow-x:clip}
+
+/* ===================== Decluttered fixture =====================
+ * Same information, fewer lines and a clear structure:
+ *   motto (smaller, still the headline)
+ *   Sıradaki maç ··························· VPG Elite B
+ *   LWG Symphony  vs  ALTAIR eSports        ← one matchup line
+ *   Başlama            │ Maça kalan süre     ← "when" and "how long", side by side,
+ *   23:45 TSİ          │ 03 03 58 35           figures at the same size
+ *   30 Kasım Pazartesi │ gün saat dk sn
+ *   [Twitch Kanalı]  Maç Merkezine Git
+ * Labels are small and muted; only figures and names carry weight.
+ */
+.site .brand-hero .brand-motto{font-size:clamp(40px,4.4vw,64px)}
+.site .brand-hero .hero-match-card{margin-top:clamp(28px,4vh,44px)}
+
+.site .brand-hero .hero-fixture-teams{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 14px;max-width:none}
+.site .brand-hero .hero-fixture-team{display:inline-flex;align-items:baseline;gap:12px;font-size:clamp(26px,2.3vw,34px)}
+.site .brand-hero .hero-fixture-team--away{flex-direction:row-reverse}
+.site .brand-hero .hero-fixture-goals{min-width:0;text-align:left}
+.site .brand-hero .hero-fixture-vs{display:inline;font-size:15px;letter-spacing:.06em}
+
+.site .brand-hero .hero-when{
+  display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:0;
+  margin:22px 0 0;padding:18px 0 0;border-top:1px solid var(--a-rule);
+}
+.site .brand-hero .hero-when-label,
+.site .brand-hero .hero-countdown-label{display:block;margin:0 0 8px;font:500 12px/1.3 var(--a-font);letter-spacing:.04em;color:var(--a-muted)}
+.site .brand-hero .hero-when .hero-kickoff{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin:0;padding-right:clamp(24px,3.4vw,44px)}
+.site .brand-hero .hero-when .hero-kickoff-time time{font-size:34px;line-height:1}
+.site .brand-hero .hero-when .hero-kickoff-day{font-size:14px;color:var(--a-text-2)}
+.site .brand-hero .hero-when .hero-countdown{
+  display:block;margin:0;padding:0 0 0 clamp(24px,3.4vw,44px);border:0;border-left:1px solid var(--a-rule);
+}
+.site .brand-hero .hero-when .hero-countdown-unit{padding:0 14px 0 0}
+.site .brand-hero .hero-when .hero-countdown-unit+.hero-countdown-unit{padding-left:14px}
+.site .brand-hero .hero-when .hero-countdown-unit strong{font-size:34px;line-height:1}
+.site .brand-hero .hero-when .hero-countdown-unit small{margin-top:4px;font-size:12px}
+.site .brand-hero .hero-ctas{margin-top:clamp(26px,3.6vh,36px)}
+
+@media(max-width:680px){
+  .site .brand-hero .hero-fixture-team{font-size:clamp(22px,6.6vw,26px)}
+  .site .brand-hero .hero-when{margin-top:16px;padding-top:14px}
+  .site .brand-hero .hero-when .hero-kickoff{padding-right:16px}
+  .site .brand-hero .hero-when .hero-countdown{padding-left:16px}
+  .site .brand-hero .hero-when .hero-kickoff-time time,
+  .site .brand-hero .hero-when .hero-countdown-unit strong{font-size:24px}
+  .site .brand-hero .hero-when .hero-countdown-unit{padding-right:8px}
+  .site .brand-hero .hero-when .hero-countdown-unit+.hero-countdown-unit{padding-left:8px}
+  .site .brand-hero .hero-when .hero-kickoff-day{font-size:13px}
+  .site .brand-hero .hero-when .hero-countdown-unit small{font-size:11px}
+}
+/* One matchup line; the away block keeps "vs" (or "–") attached to its team when the line wraps. */
+.site .brand-hero .hero-fixture-team{font-size:clamp(24px,2.1vw,30px)}
+.site .brand-hero .hero-fixture-team--away{flex-direction:row}
+.site .brand-hero .hero-fixture-away{display:inline-flex;align-items:baseline;gap:14px;white-space:nowrap;min-width:0}
+.site .brand-hero .hero-fixture-away .hero-fixture-team{white-space:normal}
+.site .brand-hero .hero-fixture-vs{color:var(--a-muted);font-weight:500}
+@media(max-width:680px){.site .brand-hero .hero-fixture-team{font-size:clamp(20px,6vw,24px)}}
+/* Keep the smaller motto from overriding the tablet and phone sizes. */
+@media(max-width:1100px){.site .brand-hero .brand-motto{font-size:clamp(30px,4.6vw,52px)}}
+@media(max-width:680px){.site .brand-hero .brand-motto{font-size:clamp(26px,7.6vw,34px)}}
+
+/* ===================== Hero height =====================
+ * The hero no longer stretches to the viewport (which left a large empty band above the motto).
+ * It hugs its content with breathing room proportional to the screen: ~7% of the viewport height
+ * above (48–80px under the bar) and a little less below, so the status band follows naturally.
+ * Phones keep their own compact spacing.
+ */
+@media(min-width:681px){
+  .site .brand-hero{
+    min-height:0;align-content:start;
+    padding-top:calc(var(--a-nav-h) + clamp(48px,7vh,80px));
+    padding-bottom:clamp(36px,5vh,60px);
+  }
+}
+/* ===================== Top-lit motto =====================
+ * The headline letters are lit from above: brightest at the top of each glyph, settling into their
+ * own colour towards the baseline (white for the words, ice blue for "BİRLİKTE"). Same colours as
+ * before, just shaded, so contrast stays high everywhere.
+ */
+.site .brand-hero .brand-motto-line{
+  background:linear-gradient(180deg,#ffffff 0%,#dbe9f8 70%,#b9cbe0 100%);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+}
+.site .brand-hero .brand-motto strong{
+  background:linear-gradient(180deg,#d6ecff 0%,#8fc4ff 75%,#6aaef5 100%);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+}
+@media (forced-colors:active){
+  .site .brand-hero .brand-motto-line,.site .brand-hero .brand-motto strong{background:none;color:CanvasText;-webkit-text-fill-color:CanvasText}
+}

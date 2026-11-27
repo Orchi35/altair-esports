@@ -1,3 +1,4 @@
+@layer legacy{
 .site #squad .container { max-width:1280px; }
 .site #squad .roster-view-all {
   display:flex; align-items:center; justify-content:space-between; gap:28px;
@@ -281,4 +282,5 @@
 .site .content-player-grid .p-card .p-profile,
 .site #squad .squad-grid .p-card .p-profile {
   background:#0d1b2d; border-top-color:#87add540; color:#c9e1ff;
+}
 }

@@ -1,3 +1,4 @@
+@layer legacy{
 /* Arena lighting stays behind content and never intercepts interaction. */
 #team-status.quick-status {
   padding-block:24px 16px;
@@ -332,3 +333,4 @@
 .site #match-center .mc-standings-source{display:flex;align-items:center;justify-content:flex-end;min-height:54px;padding:16px 22px;background:#0c1929;border-top:1px solid #a8bfdc25;font:600 13px/1.5 'Segoe UI',Arial,sans-serif;letter-spacing:0;text-transform:none;color:#bfd7f4;text-underline-offset:5px}
 .site #match-center .mc-standings-scroll:focus-visible{outline:2px solid #c5dcf8;outline-offset:-3px}
 @media(max-width:600px){.site #match-center .mc-standings-table thead th,.site #match-center .mc-standings-table tbody td{padding:15px 12px}.site #match-center .mc-standings-table tbody th{padding:14px 12px}.site #match-center .mc-standings-source{justify-content:flex-start}}
+}

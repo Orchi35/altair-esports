@@ -1,3 +1,4 @@
+@layer legacy{
 .content-page{min-height:72vh;padding:clamp(112px,13vw,168px) 0 clamp(72px,10vw,132px);background:radial-gradient(circle at 82% 5%,rgba(34,211,238,.08),transparent 28%),linear-gradient(180deg,#06111f 0,var(--bg) 34%)}
 .content-page-container{width:min(100%,1220px)}
 .content-breadcrumbs{margin-bottom:clamp(28px,4vw,52px);font-family:var(--f-narrow);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
@@ -56,3 +57,4 @@
 @media(max-width:680px){.content-page{padding-top:104px}.content-grid,.honours-list,.content-news-grid{grid-template-columns:1fr}.content-filter{grid-template-columns:1fr}.content-match-teams{gap:7px}.content-team-mark{width:34px;height:34px;flex-basis:34px;font-size:9px}.content-match-teams b{font-size:15px}.content-match-footer{align-items:flex-start;flex-direction:column}.detail-scoreboard{grid-template-columns:1fr 70px 1fr;gap:8px;padding:20px 10px}.detail-team-mark{width:64px}.detail-team h2{font-size:18px}.detail-facts{grid-template-columns:1fr}.detail-facts>div{border-right:0}.detail-nav{flex-direction:column}.content-player-grid{grid-template-columns:1fr}.player-profile-meta{grid-template-columns:1fr}.verified-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.honours-record{grid-template-columns:1fr}.content-section-heading{align-items:flex-start;flex-direction:column}.content-state{align-items:flex-start;flex-direction:column}}
 @media(max-width:360px){.content-page-container{padding-inline:16px}.content-match-card{padding:16px}.content-match-teams b{font-size:13px}.verified-stats{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.content-page *{scroll-behavior:auto!important;transition-duration:.01ms!important}}
+}

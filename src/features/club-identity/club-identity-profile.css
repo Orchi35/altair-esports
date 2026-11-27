@@ -1,3 +1,4 @@
+@layer legacy{
 .site #identity .container { max-width:1280px; }
 .site #identity .identity-statement::after { display:none; }
 .site #identity .sec-title { font:800 clamp(32px,4vw,52px)/1.12 var(--f-body); letter-spacing:-.03em; text-shadow:none; }
@@ -32,4 +33,5 @@
  .site #identity .identity-value h3 { margin-top:14px; }
  .site #identity .sec-hdr { align-items:flex-start; flex-direction:column; }
  .site #identity .identity-watermark { width:80%; top:30%; }
+}
 }

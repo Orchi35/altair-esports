@@ -106,10 +106,10 @@ test("home squad keeps the localized route and accessible league selection", () 
 });
 
 test("Turkish and English roster headings are explicit", () => {
-  assert.equal(UI_COPY.TR.squad.eyebrow, "TAKIM");
-  assert.deepEqual(UI_COPY.TR.squad.title, ["ALTAIR", "KADROSU"]);
-  assert.equal(UI_COPY.EN.squad.eyebrow, "TEAM");
-  assert.deepEqual(UI_COPY.EN.squad.title, ["ALTAIR", "ROSTER"]);
+  assert.equal(UI_COPY.TR.squad.eyebrow, "Takım");
+  assert.deepEqual(UI_COPY.TR.squad.title, ["ALTAIR", "kadrosu"]);
+  assert.equal(UI_COPY.EN.squad.eyebrow, "Team");
+  assert.deepEqual(UI_COPY.EN.squad.title, ["ALTAIR", "roster"]);
 });
 
 

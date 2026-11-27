@@ -1,3 +1,4 @@
+@layer legacy{
 /* Builder workspace refresh: calm surfaces, readable controls, and clear states. */
 .builder-page .content-page-container{max-width:1500px}
 .builder-page .content-page-header{margin:18px 0 26px}
@@ -133,3 +134,4 @@
 .builder-attribute input[type=range]{grid-row:3}
 .builder-stat-scale{grid-row:4}
 @container(max-width:330px){.builder-attribute-cost{grid-row:3}.builder-attribute input[type=range]{grid-row:4}.builder-stat-scale{grid-row:5}}
+}
